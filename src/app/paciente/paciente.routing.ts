@@ -1,0 +1,17 @@
+import { Routes } from '@angular/router';
+
+import {CadastroComponent} from './cadastro/cadastro.component';
+import { ListagemComponent } from './listagem/listagem.component';
+
+
+//import {TABLE_DEMO_ROUTES} from './table/routes';
+
+export const PacienteRoutes: Routes = [
+  {
+    path: '',
+    children: [
+      {path: 'cadastro_paciente', component: CadastroComponent},
+      {path: 'listagem_paciente', component: ListagemComponent}
+    ]
+  }
+];

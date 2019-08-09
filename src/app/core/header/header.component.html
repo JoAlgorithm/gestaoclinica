@@ -1,0 +1,49 @@
+<mat-toolbar class="main-header" color="primary">
+  <button (click)="toggleSidenav.emit()" mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <!--<div class="branding">-->
+    <!--<div class="logo"></div>-->
+  <div >
+    <section >
+      <h1><!--{{nomeClina}}-->CENTRO MEDICO VITALLE</h1>
+   
+    </section>
+    
+
+  </div>
+  <div class="search-bar" fxFlex>
+    <!--<form class="search-form" [ngStyle.xs]="{display: 'none'}">
+      <mat-icon>search</mat-icon>
+      <input type="text" placeholder="Search" autofocus="true" />
+    </form>-->
+  </div>
+  <!--<button (click)="fullScreenToggle()" mat-icon-button>
+    <mat-icon>fullscreen</mat-icon>
+  </button>-->
+  <!--<button (click)="toggleNotificationSidenav.emit()" mat-icon-button class="ml-xs overflow-visible">
+    <mat-icon>notifications</mat-icon>
+    <span class="notification-label">5</span>
+  </button>-->
+  <button [matMenuTriggerFor]="user" mat-icon-button class="ml-xs">
+    <mat-icon>person</mat-icon>
+  </button>
+  <mat-menu #user="matMenu" x-position="before">
+    <button mat-menu-item>
+      <mat-icon>settings</mat-icon>
+      Definições
+    </button>
+    <button mat-menu-item>
+      <mat-icon>account_box</mat-icon>
+      Perfil
+    </button>
+    <!--<button mat-menu-item>
+      <mat-icon>notifications_off</mat-icon>
+      Disable notifications
+    </button>-->
+    <button mat-menu-item (click)='logout()'>
+      <mat-icon>exit_to_app</mat-icon>
+      Terminar sessão
+    </button>
+  </mat-menu>
+</mat-toolbar>

@@ -1,0 +1,299 @@
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+
+    <!--DADOS MESTRES DO PACIENTE-->
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>DADOS DO PACIENTE</ng-template>
+
+        <!--NOME DO PACIENTE-->
+        <mat-form-field style="width: 33%">
+            <input matInput placeholder="Nome completo" formControlName="paciente_nome" [(ngModel)]="paciente.nome" required>
+        </mat-form-field>
+
+        <!--APELIDO DO PACIENTE-->
+        <mat-form-field style="width: 33%">
+          <input matInput placeholder="Nome completo" formControlName="paciente_apelido" [(ngModel)]="paciente.apelido" required>
+      </mat-form-field>
+
+      <!--GENERO-->
+      <mat-form-field style="width: 33%">
+        <mat-select placeholder="Genero" formControlName="paciente_sexo" [(ngModel)]="paciente.genero" required >
+            <mat-option *ngFor="let genero of generos" [value]="genero.value">
+                {{genero.viewValue}}
+            </mat-option>
+        </mat-select>
+      </mat-form-field>
+          
+      <!--DATA DE NASCIMENTO-->
+      <mat-form-field style="width: 33%">
+          
+          <input matInput [matDatepicker]="picker1" placeholder="Data de nascimento" formControlName="paciente_data_nascimento" [(ngModel)]="paciente.data_nascimento"  required>
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+  
+        <!--DOCUMNTO IDENTIFICACAO-->
+        <mat-form-field style="width: 33%">
+          <mat-select placeholder="Documento de identificacao" formControlName="paciente_documento_identificacao" [(ngModel)]="paciente.documento_identificacao" required >
+              <mat-option *ngFor="let documento_identificacao of documentos_identificacao" [value]="documento_identificacao.value">
+                  {{documento_identificacao.viewValue}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!--NR DE IDENTIFICACAO-->
+        <mat-form-field style="width: 33%">
+            <input matInput placeholder="Nr de documento" formControlName="paciente_nr_documento" [(ngModel)]="paciente.nr_documento" required>
+        </mat-form-field>
+
+        <!--localidade DE IDENTIFICACAO-->
+        <mat-form-field style="width: 33%">
+          <input matInput placeholder="Localidade" formControlName="paciente_localidade" [(ngModel)]="paciente.localidade" required>
+        </mat-form-field>
+
+        <!--Bairro DE IDENTIFICACAO-->
+        <mat-form-field style="width: 33%">
+          <input matInput placeholder="Bairro" formControlName="paciente_bairro" [(ngModel)]="paciente.bairro" required>
+        </mat-form-field>
+
+        <!--Avenida DE IDENTIFICACAO-->
+        <mat-form-field style="width: 33%">
+          <input matInput placeholder="Avenida" formControlName="paciente_avenida" [(ngModel)]="paciente.avenida" required>
+        </mat-form-field>
+
+         <!--Rua DE IDENTIFICACAO-->
+         <mat-form-field style="width: 33%">
+          <input matInput placeholder="Rua" formControlName="paciente_rua" [(ngModel)]="paciente.rua" required>
+        </mat-form-field>
+
+        <!--Casa DE IDENTIFICACAO-->
+        <mat-form-field style="width: 33%">
+          <input matInput placeholder="Casa" formControlName="paciente_casa" [(ngModel)]="paciente.casa" required>
+        </mat-form-field>
+
+        <!--Celula DE IDENTIFICACAO-->
+        <mat-form-field style="width: 33%">
+          <input matInput placeholder="Celula" formControlName="paciente_celula" [(ngModel)]="paciente.celula" required>
+        </mat-form-field>
+
+        <!--quarteirao DE IDENTIFICACAO-->
+        <mat-form-field style="width: 33%">
+          <input matInput placeholder="Quarteirao" formControlName="paciente_quarteirao" [(ngModel)]="paciente.quarteirao" required>
+        </mat-form-field>
+
+        
+        <!--posto_admnistrativo DE IDENTIFICACAO-->
+        <mat-form-field style="width: 33%">
+          <input matInput placeholder="Posto admnistrativo" formControlName="paciente_posto_admnistrativo" [(ngModel)]="paciente.posto_admnistrativo" required>
+        </mat-form-field>
+
+        
+        <!--distrito DE IDENTIFICACAO-->
+        <mat-form-field style="width: 33%">
+          <input matInput placeholder="Distrito" formControlName="paciente_distrito" [(ngModel)]="paciente.distrito" required>
+        </mat-form-field>
+
+      <!--PROVINCIA-->
+        <mat-form-field style="width: 33%">
+          <mat-select placeholder="Provincia" formControlName="paciente_provincia" [(ngModel)]="paciente.provincia" required >
+              <mat-option *ngFor="let provincia of provincias" [value]="provincia.value">
+                  {{provincia.viewValue}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!--LOCAL DE EMISSAO--
+        <mat-form-field style="width: 33%">
+            <input matInput placeholder="Local de emissao" formControlName="paciente_local_emissao" [(ngModel)]="paciente.local_emissao" required>
+        </mat-form-field>
+
+        <!--DATA DE EMISSAO--
+        <mat-form-field style="width: 33%">
+            <input matInput [matDatepicker]="picker3" placeholder="Data de missao" formControlName="paciente_data_emissao" [(ngModel)]="paciente.data_emissao" required>
+            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+            <mat-datepicker #picker3></mat-datepicker>      
+        </mat-form-field>
+
+        <!--DATA DE VALIDADE--
+        <mat-form-field style="width: 33%">
+            <input matInput [matDatepicker]="picker4" placeholder="Data de validade" formControlName="paciente_data_validade" [(ngModel)]="paciente.data_validade">
+            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+            <mat-datepicker #picker4></mat-datepicker>
+        </mat-form-field>
+
+        <!--NACIONALIDADE--
+        <mat-form-field style="width: 33%">
+            <input matInput placeholder="Nacionalidade" formControlName="paciente_nacionalidade" [(ngModel)]="paciente.nacionalidade" required>
+        </mat-form-field>
+
+        <!--PROVINCIA--
+        <mat-form-field style="width: 33%">
+            <mat-select placeholder="Provincia" formControlName="paciente_provincia" [(ngModel)]="paciente.provincia" required >
+                <mat-option *ngFor="let provincia of provincias" [value]="provincia.value">
+                    {{provincia.viewValue}}
+                </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!--CIDADE--
+        <mat-form-field style="width: 33%">
+            <input matInput placeholder="Cidade" formControlName="paciente_cidade" [(ngModel)]="paciente.cidade" required>
+        </mat-form-field>
+
+        <!--ENDERECO--
+        <mat-form-field style="width: 33%">
+            <input matInput placeholder="Endereco" formControlName="paciente_endereco" [(ngModel)]="paciente.endereco" required>
+        </mat-form-field>-->
+
+        
+    
+        <!--FOTO-->
+        <!--<mat-form-field style="width: 33%">
+            <input placeholder="Foto" type="file" class="ng-hide">
+          <div style="width: 33%">
+              <input placeholder="Foto" >hidden (change)="onFileSelected()" #fileInput type="file">
+            <button mat-icon-button type="file" color="primary" (click)="fileInput.click()" fxFlex>
+                <mat-icon aria-label="Example icon-button with a heart icon">attach_file</mat-icon>
+            </button>
+
+            button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
+            <input hidden (change)="onFileSelected()" #fileInput type="file" id="file">
+
+          </div>
+        /mat-form-field>-->       
+        <!--<choose-file layout="row">
+            <input placeholder="Foto" type="file" class="ng-hide">
+            <div>
+              <md-button id="uploadButton" class="md-fab md-mini"><md-icon class="material-icons">attach_file</md-icon></md-button>
+            </div>
+          </choose-file>   -->
+
+
+      <div>
+        <button mat-button matStepperNext>SEGUINTE</button>
+        <!--<button mat-raised-button color="primary" matStepperNext>CONTINUAR CADASTRO</button>-->
+        
+        <!--<button mat-icon-button color="primary" matStepperNext>CADASTRAR
+            <mat-icon aria-label="Example icon-button with a heart icon">check_circle_outline</mat-icon>
+        </button>-->
+      </div>
+
+
+          
+
+
+
+      </form>
+    </mat-step>
+
+     <!--DADOS MESTRES DO ENCARREGADO-->
+     <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+          <ng-template matStepLabel>PESSOA DE REFERENCIA</ng-template>
+        
+      <!--NOME DO ESTUDANTE-->
+      <mat-form-field style="width: 33%">
+          <input matInput placeholder="Nome" formControlName="paciente_referencia_nome" [(ngModel)]="paciente.referencia_nome" required>
+      </mat-form-field>
+
+      <!--Apelido DO ESTUDANTE-->
+      <mat-form-field style="width: 33%">
+          <input matInput placeholder="Apelido" formControlName="paciente_referencia_apelido" [(ngModel)]="paciente.referencia_apelido" required>
+      </mat-form-field>
+
+      <!--Telefone DO ESTUDANTE-->
+      <mat-form-field style="width: 33%">
+          <input matInput placeholder="Telefone" formControlName="paciente_referencia_telefone" [(ngModel)]="paciente.referencia_telefone" required>
+      </mat-form-field>
+
+      <div>
+          <button mat-button matStepperPrevious>VOLTAR</button>
+          <button mat-button (click)="registarPaciente()">FINALIZAR CADASTRO</button>
+      </div>
+
+      </form>
+     </mat-step> 
+
+    <!-- <mat-step>
+      <ng-template matStepLabel>CONFIRMAÇÁO</ng-template>
+      
+     <mat-card-content>
+        <h4 class="mt-0 mb-1">Dados Pessoais</h4>
+        <div fxLayout="row" layout-align="center">            
+
+          <div class="pr-1" fxFlex>
+            <div fxLayout="column" class="mb-1">
+              <span class="text-md">ESTUDANTE</span>
+              <strong>{{estudante.nome}}</strong>
+            </div>
+
+            <div fxLayout="column" class="mb-1">
+              <span class="text-md">Data de Nascimento</span>
+              <strong>{{estudante.data_nascimento | date:'dd/MM/yyyy'}}</strong>
+            </div>
+            
+            <div fxLayout="column" class="mb-1">
+              <span class="text-md">Genero</span>
+              <strong>{{estudante.genero}}</strong>
+            </div>
+
+            <div fxLayout="column" class="mb-1">
+              <span class="text-md">Documento: {{estudante.documento_identificacao}}</span>
+              <strong>{{estudante.nr_documento}} - Emitido em {{estudante.local_emissao}} - Valido ate {{estudante.data_validade | date:'dd/MM/yyyy'}}</strong>
+            </div>
+
+            <div fxLayout="column" class="mb-1">
+              <span class="text-md">Nacionalidade</span>
+              <strong>{{estudante.nacionalidade}}</strong>
+            </div>
+
+            <div fxLayout="column">
+              <span class="text-md">Provincia</span>
+              <strong>{{estudante.provincia}}</strong>
+            </div>
+
+          </div>
+          <div class="pl-1" fxFlex>
+
+            <div fxLayout="column" class="mb-1">
+              <span class="text-md">ENCARREGADO</span>
+              <strong>{{encarregado.nome}}</strong>
+            </div>
+
+            <div fxLayout="column" class="mb-1">
+                <span class="text-md">Documento: {{encarregado.documento_identificacao}}</span>
+                <strong>{{encarregado.nr_documento}}</strong>
+            </div>
+
+            <div fxLayout="column" class="mb-1">
+                <span class="text-md">Nacionalidade</span>
+                <strong>{{encarregado.nacionalidade}}</strong>
+              </div>
+
+            <div fxLayout="column" class="mb-1">
+              <span class="text-md">Telefone</span>
+              <strong>{{encarregado.telefone1}}</strong>
+              <strong ng-if="encarregado.telefone2">{{encarregado.telefone2}}</strong>
+            </div>
+
+            <div fxLayout="column">
+              <span class="text-md">Email</span>
+              <strong>{{encarregado.email}}</strong>
+            </div>
+
+          </div>
+        </div>
+      </mat-card-content>
+      
+
+      <div>
+      <button mat-button matStepperPrevious>VOLTAR</button>
+      <button mat-button (click)="registarEstudante(estudante)">CADASTRAR</button>
+      <!--<button mat-button (click)="stepper.reset()">Reset</button>--
+      </div>
+
+      
+
+    </mat-step>-->
+  </mat-horizontal-stepper>
+  
