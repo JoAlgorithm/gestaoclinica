@@ -10,14 +10,19 @@
       <mat-table [dataSource]="dataSourse" matSort>
         
       <!-- Progress Column -->
-      <ng-container matColumnDef="nome">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
-        <mat-cell *matCellDef="let row"> {{row.nome}}</mat-cell>
+      <ng-container matColumnDef="nid">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> NID </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.nid}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="apelido">
           <mat-header-cell *matHeaderCellDef mat-sort-header> Apelido </mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.apelido}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="nome">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.nome}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="sexo">
@@ -50,6 +55,14 @@
               <mat-icon>create</mat-icon>
             </button></mat-cell>
       </ng-container>
+
+      <ng-container matColumnDef="consulta">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Consulta </mat-header-cell>
+        <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="marcarConsulta(row)" matTooltip="Marcar consulta para {{row.nome}} {{row.apelido}}">
+            <mat-icon>class</mat-icon>
+          </button></mat-cell>
+    </ng-container>
+      
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;">

@@ -6,7 +6,10 @@ import { CustomValidators } from 'ng2-validation';
 //const URL = 'https://evening-anchorage-3159.herokuapp.com/api/';
 import { PacienteService } from '../../services/paciente.service';
 import {MatSnackBar} from '@angular/material';
-import { format } from 'url';
+//import { format } from 'url';
+import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
+import { Inject} from '@angular/core';
 
 @Component({
   selector: 'app-cadastro',
@@ -56,12 +59,14 @@ export class CadastroComponent implements OnInit {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
 
+  pacientes: Paciente[];
+
   constructor(private _formBuilder: FormBuilder,
     private pacienteService: PacienteService,
-    public snackBar: MatSnackBar) {
+    public snackBar: MatSnackBar, private router: Router) {
 
     this.paciente = new Paciente();
-    /*this.paciente.nome = "Luis"
+    this.paciente.nome = "Luis"
     this.paciente.apelido = "Jo"
     this.paciente.sexo = "Masculino"
     this.paciente.datanascimento = new Date();
@@ -79,10 +84,10 @@ export class CadastroComponent implements OnInit {
     this.paciente.provincia = "Nampula";
 
     //Dados da pessoa de referencia
-    this.paciente.referencia_nome = "siza";
-    this.paciente.referencia_apelido = "jo";
-    this.paciente.referencia_telefone = "258828498183";
-*/
+    this.paciente.referencia_nome = "Siza";
+    this.paciente.referencia_apelido = "Jo";
+    this.paciente.referencia_telefone = "828498183";
+
    }
    
   ngOnInit() {
@@ -94,35 +99,60 @@ export class CadastroComponent implements OnInit {
       paciente_documento_identificacao: ['', Validators.required],
       paciente_nr_documento: ['', Validators.required],     
 
-      paciente_localidade: ['', Validators.required],   
+      paciente_localidade: [''],   
       paciente_bairro: ['', Validators.required],  
       paciente_avenida: ['', Validators.required],  
       paciente_rua: ['', Validators.required],
-      paciente_casa: ['', Validators.required],
-      paciente_celula: ['', Validators.required],
+      paciente_casa: [''],
+      paciente_celula: [''],
       paciente_quarteirao: ['', Validators.required],
-      paciente_posto_admnistrativo: ['', Validators.required],
+      paciente_posto_admnistrativo: [''],
       paciente_distrito: ['', Validators.required],
       paciente_provincia: ['', Validators.required],
     });
 
     this.secondFormGroup = this._formBuilder.group({
-      paciente_referencia_nome: ['', Validators.required],
-      paciente_referencia_apelido: ['', Validators.required],
-      paciente_referencia_telefone: ['', Validators.required],
+      paciente_referencia_nome: [''],
+      paciente_referencia_apelido: [''],
+      paciente_referencia_telefone: ['']
+      //paciente_referencia_telefone: ['', Validators.compose([Validators.required, Validators.minLength(9), Validators.maxLength(9)])],
     });
+
+    this.pacienteService.getPacientes().subscribe(data => {
+      this.pacientes = data.map(e => {
+        return {
+          id: e.payload.doc.id,
+          ...e.payload.doc.data(),
+        } as Paciente;
+      });
+
+      if(typeof this.pacientes !== 'undefined' && this.pacientes.length > 0){
+        this.paciente.nid = Math.max.apply(Math, this.pacientes.map(function(o) { return o.nid; }));
+        this.paciente.nid = this.paciente.nid+1;
+        this.paciente.id = this.paciente.nid+'';
+      }else{
+        this.paciente.nid =  +(new Date().getFullYear()+'001');
+        this.paciente.id = this.paciente.nid+'';
+      }
+    })
 
   }
 
   //pacientes: Paciente[];
+  getNID(){
+
+  }
 
   registarPaciente(){
 
-    this.paciente.id = "123456"
+    //this.paciente.id = "123456"
+
+    this.paciente.status_historia_clinica = false;
     let data = Object.assign({}, this.paciente);
 
     this.pacienteService.createPaciente(data)
     .then( res => {
+      this.router.navigateByUrl("/paciente/listagem_paciente")
       this.openSnackBar("Paciente cadastrado com sucesso");
     }).catch( err => {
       console.log("ERRO: " + err.message)

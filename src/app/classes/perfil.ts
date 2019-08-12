@@ -3,4 +3,9 @@ export interface Perfil {
     //editor?: boolean;
     financeiro?:boolean;
     admin?: boolean;
+
+    //perfis
+    //Recepcionista
+    //Medico
+    //Admin
  }

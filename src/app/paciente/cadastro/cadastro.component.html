@@ -1,5 +1,7 @@
 <mat-horizontal-stepper [linear]="isLinear" #stepper>
 
+
+
     <!--DADOS MESTRES DO PACIENTE-->
     <mat-step [stepControl]="firstFormGroup">
       <form [formGroup]="firstFormGroup">
@@ -7,17 +9,17 @@
 
         <!--NOME DO PACIENTE-->
         <mat-form-field style="width: 33%">
-            <input matInput placeholder="Nome completo" formControlName="paciente_nome" [(ngModel)]="paciente.nome" required>
+            <input matInput placeholder="Nome" formControlName="paciente_nome" [(ngModel)]="paciente.nome" required>
         </mat-form-field>
 
         <!--APELIDO DO PACIENTE-->
         <mat-form-field style="width: 33%">
-          <input matInput placeholder="Nome completo" formControlName="paciente_apelido" [(ngModel)]="paciente.apelido" required>
+          <input matInput placeholder="Apelido" formControlName="paciente_apelido" [(ngModel)]="paciente.apelido" required>
       </mat-form-field>
 
       <!--GENERO-->
       <mat-form-field style="width: 33%">
-        <mat-select placeholder="Genero" formControlName="paciente_sexo" [(ngModel)]="paciente.genero" required >
+        <mat-select placeholder="Genero" formControlName="paciente_sexo" [(ngModel)]="paciente.sexo" required >
             <mat-option *ngFor="let genero of generos" [value]="genero.value">
                 {{genero.viewValue}}
             </mat-option>
@@ -48,7 +50,12 @@
 
         <!--localidade DE IDENTIFICACAO-->
         <mat-form-field style="width: 33%">
-          <input matInput placeholder="Localidade" formControlName="paciente_localidade" [(ngModel)]="paciente.localidade" required>
+          <input matInput placeholder="Localidade" formControlName="paciente_localidade" [(ngModel)]="paciente.localidade">
+        </mat-form-field>
+
+        <!--distrito DE IDENTIFICACAO-->
+        <mat-form-field style="width: 33%">
+          <input matInput placeholder="Distrito" formControlName="paciente_distrito" [(ngModel)]="paciente.distrito" required>
         </mat-form-field>
 
         <!--Bairro DE IDENTIFICACAO-->
@@ -68,12 +75,12 @@
 
         <!--Casa DE IDENTIFICACAO-->
         <mat-form-field style="width: 33%">
-          <input matInput placeholder="Casa" formControlName="paciente_casa" [(ngModel)]="paciente.casa" required>
+          <input matInput placeholder="Casa" formControlName="paciente_casa" [(ngModel)]="paciente.casa">
         </mat-form-field>
 
         <!--Celula DE IDENTIFICACAO-->
         <mat-form-field style="width: 33%">
-          <input matInput placeholder="Celula" formControlName="paciente_celula" [(ngModel)]="paciente.celula" required>
+          <input matInput placeholder="Celula" formControlName="paciente_celula" [(ngModel)]="paciente.celula">
         </mat-form-field>
 
         <!--quarteirao DE IDENTIFICACAO-->
@@ -84,14 +91,11 @@
         
         <!--posto_admnistrativo DE IDENTIFICACAO-->
         <mat-form-field style="width: 33%">
-          <input matInput placeholder="Posto admnistrativo" formControlName="paciente_posto_admnistrativo" [(ngModel)]="paciente.posto_admnistrativo" required>
+          <input matInput placeholder="Posto admnistrativo" formControlName="paciente_posto_admnistrativo" [(ngModel)]="paciente.posto_admnistrativo">
         </mat-form-field>
 
         
-        <!--distrito DE IDENTIFICACAO-->
-        <mat-form-field style="width: 33%">
-          <input matInput placeholder="Distrito" formControlName="paciente_distrito" [(ngModel)]="paciente.distrito" required>
-        </mat-form-field>
+        
 
       <!--PROVINCIA-->
         <mat-form-field style="width: 33%">
@@ -193,17 +197,17 @@
         
       <!--NOME DO ESTUDANTE-->
       <mat-form-field style="width: 33%">
-          <input matInput placeholder="Nome" formControlName="paciente_referencia_nome" [(ngModel)]="paciente.referencia_nome" required>
+          <input matInput placeholder="Nome" formControlName="paciente_referencia_nome" [(ngModel)]="paciente.referencia_nome">
       </mat-form-field>
 
       <!--Apelido DO ESTUDANTE-->
       <mat-form-field style="width: 33%">
-          <input matInput placeholder="Apelido" formControlName="paciente_referencia_apelido" [(ngModel)]="paciente.referencia_apelido" required>
+          <input matInput placeholder="Apelido" formControlName="paciente_referencia_apelido" [(ngModel)]="paciente.referencia_apelido">
       </mat-form-field>
 
       <!--Telefone DO ESTUDANTE-->
       <mat-form-field style="width: 33%">
-          <input matInput placeholder="Telefone" formControlName="paciente_referencia_telefone" [(ngModel)]="paciente.referencia_telefone" required>
+          <input matInput placeholder="Telefone" formControlName="paciente_referencia_telefone" [(ngModel)]="paciente.referencia_telefone" minlength="9" maxlength="9">
       </mat-form-field>
 
       <div>

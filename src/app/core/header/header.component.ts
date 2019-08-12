@@ -13,12 +13,12 @@ export class HeaderComponent {
   @Output() toggleSidenav = new EventEmitter<void>();
   @Output() toggleNotificationSidenav = new EventEmitter<void>();
 
-  //nomeClina:any;
+  nomeClina:any;
   constructor(private authService: AuthService) {
   }
 
   ngOnInit() {
-    //this.nomeClina = this.authService.get_clinica_nome;
+    this.nomeClina = this.authService.get_clinica_nome;
   }
 
   fullScreenToggle(): void {

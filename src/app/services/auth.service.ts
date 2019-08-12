@@ -41,7 +41,7 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
         console.log("logado");
       } else {
         localStorage.setItem('myclinica_user', null);
-        JSON.parse(localStorage.getItem('user'));
+        JSON.parse(localStorage.getItem('myclinica_user'));
         this.router.navigate(['/']);
         console.log("deslogado");
       }
@@ -100,20 +100,35 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
 
     // Returns true when user is looged in and email is verified
     get isLoggedIn(): boolean {
-      const user = JSON.parse(localStorage.getItem('user'));
+      const user = JSON.parse(localStorage.getItem('myclinica_user'));
       return (user !== null && user.emailVerified !== false) ? true : false;
     }
 
     //Returns user info
     get get_clinica_id(): string {
       const user = JSON.parse(localStorage.getItem('myclinica_user'));
-      return user.escola_id;
+      return user.clinica_id;
     }
 
     //Returns user info
     get get_clinica_nome(): string {
       const user = JSON.parse(localStorage.getItem('myclinica_user'));
       return user.clinica;
+    }
+
+    get get_user_displayName(): string {
+      const user = JSON.parse(localStorage.getItem('myclinica_user'));
+      return user.displayName;
+    }
+
+    get get_uid(): string {
+      const user = JSON.parse(localStorage.getItem('myclinica_user'));
+      return user.uid;
+    }
+
+    get get_perfil(): string{
+      const user = JSON.parse(localStorage.getItem('myclinica_user'));
+      return user.perfil;
     }
 
     //get User
@@ -170,14 +185,17 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
     this.itemDoc = this.afs.doc('users/'+uid);
     this.item = this.itemDoc.valueChanges();
 
+    console.log("uid: "+uid)
+
     this.itemDoc.ref.get().then(function(doc) {
       if (doc.exists) {
         var invoice = doc.data();
         console.log('Invoice data: ', doc.data());
         localStorage.setItem('myclinica_user', JSON.stringify(doc.data()));
-      }/*else{
-        localStorage.setItem('myclinica_user', JSON.stringify(doc.data()));
-      }*/
+      }else{
+        console.log("user not finded")
+        //localStorage.setItem('myclinica_user', JSON.stringify(doc.data()));
+      }
     })
   }
   /*
@@ -192,7 +210,7 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
    // Sign out 
    SignOut() {
     return this.afAuth.auth.signOut().then(() => {
-      localStorage.removeItem('user');
+      localStorage.removeItem('myclinica_user');
       localStorage.removeItem('myclinica_user');
       this.router.navigate(['sign-in']);
     })
