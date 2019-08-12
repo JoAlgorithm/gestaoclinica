@@ -57,6 +57,7 @@ import { AppComponent } from './app.component';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './services/auth.service';
 import { AngularFireAuth } from '@angular/fire/auth';
+//import { ConsultasComponent } from './consultas/consultas.component';
 
 
 
@@ -85,6 +86,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AccordionAnchorDirective,
     AccordionLinkDirective,
     AccordionDirective,
+    //ConsultasComponent,
   ],
   imports: [
     BrowserModule,

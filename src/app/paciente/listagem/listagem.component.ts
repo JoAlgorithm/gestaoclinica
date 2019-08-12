@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { Inject} from '@angular/core';
 import { Consulta } from '../../classes/consulta';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-listagem',
@@ -25,7 +26,7 @@ export class ListagemComponent implements OnInit {
   consulta: Consulta;
 
   constructor(public dialog: MatDialog, public authService: AuthService,
-    private pacienteService: PacienteService,public snackBar: MatSnackBar){ 
+    private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router){ 
     this.consulta = new Consulta();
  }
 
@@ -55,6 +56,7 @@ export class ListagemComponent implements OnInit {
     this.pacienteService.marcarConsulta(data)
     .then( res => {
       this.openSnackBar("Consulta agendada com sucesso");
+      this.router.navigateByUrl("/consultas")
     }).catch( err => {
       console.log("ERRO: " + err.message)
       this.openSnackBar("Ocorreu um erro ao marcar a consulta. Contacte o Admin do sistema.");

@@ -39,9 +39,17 @@ const MENUITEMS:Menu[] = [
     children: [
       {state: 'cadastro_paciente', name: 'Cadastro de paciente'},
       {state: 'listagem_paciente', name: 'Lista de pacientes'},
-      {state: 'listagem_paciente', name: 'Consultas'}
+      
     ]
-  }/*,
+  },
+  {
+    state: 'consultas',
+    name: 'CONSULTAS',
+    type: 'link',
+    icon: 'assignment_ind',
+  },
+  
+  /*,
   {
     state: 'financeiro',
     name: 'FINANÇAS',

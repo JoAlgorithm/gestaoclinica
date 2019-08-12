@@ -54,20 +54,18 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import 'hammerjs';
 
-import { PacienteRoutes } from './paciente.routing';
-
 //import {AutocompleteDemoComponent} from './autocomplete/autocomplete-demo';
-import {CadastroComponent} from './cadastro/cadastro.component';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { from } from 'rxjs';
 import { PacienteService } from '../services/paciente.service';
-import { ListagemComponent } from './listagem/listagem.component';
+import { ConsultasComponent, CancelarConsultaDialog } from './consultas.component';
+import { ConsultasRoutes } from './consultas.routing';
 
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(PacienteRoutes),
+    RouterModule.forChild(ConsultasRoutes),
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -125,11 +123,12 @@ import { ListagemComponent } from './listagem/listagem.component';
     
   ],
   declarations: [
-    CadastroComponent,
-    ListagemComponent,
+    ConsultasComponent,
+    CancelarConsultaDialog
   ],
   entryComponents: [
+    CancelarConsultaDialog
   ],
 })
 
-export class PacienteComponentsModule {}
+export class ConsultasModule {}

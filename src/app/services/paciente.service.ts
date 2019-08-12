@@ -35,8 +35,13 @@ export class PacienteService {
     this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).delete();
   }
 
+  //CONSULTAS
   marcarConsulta(consulta:Consulta){
     return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/consultas').add(consulta);
+  }
+
+  getConsultas(){
+    return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/consultas').snapshotChanges();
   }
 
 }

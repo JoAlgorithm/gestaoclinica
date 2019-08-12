@@ -1,0 +1,72 @@
+<mat-tab-group>
+  <mat-tab label = "CONSULTAS PENDENTES" icon = "assignment_ind"> 
+    
+      <mat-card class="example-card">
+          <mat-card-header>
+          <!--<mat-card-title>Shiba Inu</mat-card-title>
+          <mat-card-subtitle>Dog Breed</mat-card-subtitle>-->
+          <div class="example-header">
+              <mat-form-field>
+               
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Pesquisar">
+              <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+          </div>
+          </mat-card-header>
+          <mat-card-content>
+              <div class="example-container mat-elevation-z8">
+                  <mat-table [dataSource]="dataSourse" matSort>
+                    
+                  <!-- Progress Column -->
+                  <ng-container matColumnDef="data">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Data </mat-header-cell>
+                      <mat-cell *matCellDef="let row"> {{row.data.toDate() | date:'dd/MM hh:mm:ss'}}</mat-cell>
+                  </ng-container>
+        
+                  <ng-container matColumnDef="nid">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> NID </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.paciente.nid}}</mat-cell>
+                  </ng-container>
+            
+                  <ng-container matColumnDef="apelido">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Apelido </mat-header-cell>
+                      <mat-cell *matCellDef="let row">{{row.paciente.apelido}}</mat-cell>
+                  </ng-container>
+            
+                  <ng-container matColumnDef="nome">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.paciente.nome}}</mat-cell>
+                  </ng-container>
+            
+                  <ng-container matColumnDef="cancelar">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Cancelar </mat-header-cell>
+                      <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="openDialog(row)" matTooltip="Cancelar consulta">  
+                          <mat-icon>cancel</mat-icon>
+                        </button></mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="atender">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Atender </mat-header-cell>
+                      <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="detalhes(row)" matTooltip="Atender paciente {{row.paciente.apelido}}">
+                          <mat-icon>check</mat-icon>
+                        </button></mat-cell>
+                  </ng-container>
+            
+                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumns;">
+                  </mat-row>
+                  </mat-table>
+                  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            
+              </div>
+          </mat-card-content>
+      </mat-card>
+
+      
+      
+    
+  </mat-tab>
+  <mat-tab label = "CONSULTAS EM ANDAMENTO"> Banana </mat-tab>
+  <mat-tab label = "CONSULTAS ENCERRADAS"> Carrot </mat-tab>
+  <mat-tab label = "CONSULTAS CANCELADAS"> Carrot </mat-tab>
+</mat-tab-group>

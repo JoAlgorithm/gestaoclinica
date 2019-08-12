@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Cancelamento da consulta de {{data.consulta.paciente.nome}}</h1>
+<div mat-dialog-content>
+  <p>Preencha a justifica do cancelamento da consulta</p>
+  <mat-form-field style="width: 100%">
+    <input matInput [(ngModel)]="justificativa">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Desistir</button>
+  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>OK</button>
+</div>
