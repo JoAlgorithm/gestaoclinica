@@ -40,8 +40,6 @@
           <mat-cell *matCellDef="let row">{{row.referencia_telefone}}</mat-cell>
       </ng-container>
       
-      
-
       <ng-container matColumnDef="detalhe">
           <mat-header-cell *matHeaderCellDef mat-sort-header> Detalhes </mat-header-cell>
           <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="detalhes(row)">
@@ -58,10 +56,16 @@
 
       <ng-container matColumnDef="consulta">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Consulta </mat-header-cell>
-        <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="marcarConsulta(row)" matTooltip="Marcar consulta para {{row.nome}} {{row.apelido}}">
+        <mat-cell *matCellDef="let row">
+          <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Marcar consulta para {{row.nome}} {{row.apelido}}">
             <mat-icon>class</mat-icon>
-          </button></mat-cell>
-    </ng-container>
+          </button>
+          <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="marcarConsulta(row)">Consulta Medica</button>
+              <button mat-menu-item>Diagnostico auxiliar</button>
+          </mat-menu>
+        </mat-cell>
+      </ng-container>
       
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

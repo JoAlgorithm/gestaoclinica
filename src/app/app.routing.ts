@@ -29,7 +29,10 @@ export const AppRoutes: Routes = [{
   {
     path: 'consultas',
     loadChildren: './consultas/consultas.module#ConsultasModule'
-    //loadChildren: './consultas/consultas.module#ConsultasComponentsModule'
+  },
+  {
+    path: 'configuracoes',
+    loadChildren: './configuracoes/configuracoes.module#ConsultasModule'
   }],
 
 }, {

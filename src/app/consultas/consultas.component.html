@@ -1,21 +1,25 @@
 <mat-tab-group>
+
+  <!--TAB DE CONSULTAS PENDENTES-->
   <mat-tab label = "CONSULTAS PENDENTES" icon = "assignment_ind"> 
     
       <mat-card class="example-card">
+          
           <mat-card-header>
-          <!--<mat-card-title>Shiba Inu</mat-card-title>
-          <mat-card-subtitle>Dog Breed</mat-card-subtitle>-->
+          <!--CAMPO DE PESQUISA-->
           <div class="example-header">
               <mat-form-field>
-               
-              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Pesquisar">
-              <mat-icon matSuffix>search</mat-icon>
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Pesquisar">
+                <mat-icon matSuffix>search</mat-icon>
               </mat-form-field>
           </div>
           </mat-card-header>
+
           <mat-card-content>
+
+              <!--DIV COM A TABELA DE CONSULTAS PENDENTES-->
               <div class="example-container mat-elevation-z8">
-                  <mat-table [dataSource]="dataSourse" matSort>
+                  <mat-table [dataSource]="dataSoursePendentes" matSort>
                     
                   <!-- Progress Column -->
                   <ng-container matColumnDef="data">
@@ -52,8 +56,8 @@
                         </button></mat-cell>
                   </ng-container>
             
-                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                  <mat-row *matRowDef="let row; columns: displayedColumns;">
+                  <mat-header-row *matHeaderRowDef="displayedColumnsPendentes"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumnsPendentes;">
                   </mat-row>
                   </mat-table>
                   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
@@ -68,5 +72,70 @@
   </mat-tab>
   <mat-tab label = "CONSULTAS EM ANDAMENTO"> Banana </mat-tab>
   <mat-tab label = "CONSULTAS ENCERRADAS"> Carrot </mat-tab>
-  <mat-tab label = "CONSULTAS CANCELADAS"> Carrot </mat-tab>
+
+
+  
+  <mat-tab label = "CONSULTAS CANCELADAS"> 
+
+    <mat-card class="example-card">
+          
+            <mat-card-header>
+            <!--CAMPO DE PESQUISA-->
+            <div class="example-header">
+                <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Pesquisar">
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+            </mat-card-header>
+    
+            <mat-card-content>
+    
+                <!--DIV COM A TABELA DE CONSULTAS CANCELADAS-->
+                <div class="example-container mat-elevation-z8">
+                    <mat-table [dataSource]="dataSourseCanceladas" matSort>
+                        
+                    <ng-container matColumnDef="data">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Data </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.data.toDate() | date:'dd/MM hh:mm:ss'}}</mat-cell>
+                    </ng-container>
+            
+                    <ng-container matColumnDef="nid">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> NID </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.paciente.nid}}</mat-cell>
+                    </ng-container>
+                
+                    <ng-container matColumnDef="apelido">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Apelido </mat-header-cell>
+                        <mat-cell *matCellDef="let row">{{row.paciente.apelido}}</mat-cell>
+                    </ng-container>
+                
+                    <ng-container matColumnDef="nome">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.paciente.nome}}</mat-cell>
+                    </ng-container>
+                
+                    <ng-container matColumnDef="justificativa">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Justificativa </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.justificativa_cancelamento}}</mat-cell>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="cancelador">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Responsavel </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.cancelador}}</mat-cell>
+                    </ng-container>
+                
+                    <mat-header-row *matHeaderRowDef="displayedColumnsCanceladas"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumnsCanceladas;">
+                    </mat-row>
+                    </mat-table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+  </mat-tab>
+
+
 </mat-tab-group>

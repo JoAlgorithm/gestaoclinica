@@ -1,0 +1,133 @@
+<mat-tab-group>
+<!--DADOS GERAIS / CADASTRO DE PRECO DE CONSULTA-->
+  <mat-tab label = "DADOS GERAIS">
+      <mat-card class="example-card">
+
+          <mat-card-content>
+            <!--FORMULARIO DE CADASTRO DE DADOS GERAIS-->
+            <h5>ATUALIZE OS DADOS GERAIS DA CLINICA</h5>
+
+            <form [formGroup]="dados_geraisFormGroup">
+                <ng-template matStepLabel>DADOS DO PACIENTE</ng-template>
+          
+                  <!--NOME DA CLINICA
+                  <mat-form-field style="width: 33%">
+                      <input matInput placeholder="Nome" formControlName="clinica_nome" [(ngModel)]="clinica.nome" required>
+                  </mat-form-field>-->
+
+                  <!--PAIS DA CLINICA-->
+                  <mat-form-field style="width: 33%">
+                      <input matInput placeholder="Pais" formControlName="clinica_pais" [(ngModel)]="clinica.pais" required> 
+                  </mat-form-field>
+
+                  <!--PROVINCIA DA CLINICA-->
+                  <mat-form-field style="width: 33%">
+                      <input matInput placeholder="Provincia" formControlName="clinica_provincia" [(ngModel)]="clinica.provincia" required> 
+                  </mat-form-field>
+
+                  <!--CIDADE DA CLINICA-->
+                  <mat-form-field style="width: 33%">
+                      <input matInput placeholder="Cidade" formControlName="clinica_cidade" [(ngModel)]="clinica.cidade" required> 
+                  </mat-form-field>
+
+                  <!--ENDERECEO DA CLINICA-->
+                  <mat-form-field style="width: 66%">
+                      <input matInput placeholder="Endereco" formControlName="clinica_endereco" [(ngModel)]="clinica.endereco" required> 
+                  </mat-form-field>
+
+                  <!--PRECO CONSULTA DA CLINICA-->
+                  <mat-form-field style="width: 33%">
+                      <input matInput placeholder="Preco de consulta" formControlName="clinica_preco_consulta" [(ngModel)]="clinica.preco_consulta" required> 
+                  </mat-form-field>
+
+            </form>
+            <div>
+              <button mat-icon-button>
+                  <mat-icon aria-label="Example icon-button with a heart icon" matTooltip="Atualizar dados da clinica" (click)="atualizarClinica()">check_circle</mat-icon>
+              </button>
+            </div>
+            
+
+          </mat-card-content>
+
+      </mat-card>
+  </mat-tab>
+
+
+
+  <!--CADASTRO DE PRECOS DE CONSULTA MEDICA E DIAGNOSTICO AUXILIAR-->
+  <mat-tab label = "DIAGNOSTICO AUXILIAR"> 
+    
+    <mat-card class="example-card">
+        <mat-card-content>
+
+          <!--FORMULARIO DE CADASTRO DE DIAGNOSTICO AUX-->
+          <h5>FORMULARIO DE CADASTRO DE DIAGNOSTICO AUXILIAR</h5>
+          <form [formGroup]="cadastro_diagnosticoFormGroup">
+              <ng-template matStepLabel>DADOS DO PACIENTE</ng-template>
+        
+                <!--NOME DO DIAGNOSITOC-->
+                <mat-form-field style="width: 45%">
+                    <input matInput placeholder="Nome" formControlName="diagnostico_nome" [(ngModel)]="diagnostico.nome" required>
+                </mat-form-field>
+
+                 <!--PRECO DO DIAGNOSITOC-->
+                 <mat-form-field style="width: 45%">
+                    <input matInput placeholder="Preco" formControlName="diagnostico_preco" [(ngModel)]="diagnostico.preco" required>
+                </mat-form-field>
+                
+                <button mat-icon-button (click)="registarDiagnostico()" matTooltip="REGISTAR NOVO DIAGNOSTICO">
+                    <mat-icon>add_circle</mat-icon>
+                </button>
+          </form>
+
+          <h5>LISTA DE DIAGNOSTICOS AUXILIARES</h5>
+
+          <!--DIV COM A TABELA DE CONSULTAS PENDENTES-->
+          <div class="example-container mat-elevation-z8">
+              <mat-table [dataSource]="dataSourseDiagnostico" matSort>
+                
+                <ng-container matColumnDef="nome">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.nome}}</mat-cell>
+                </ng-container>
+      
+                <ng-container matColumnDef="preco">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Preco </mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{row.preco}}</mat-cell>
+                </ng-container>
+          
+                <ng-container matColumnDef="editar">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Editar </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="openDialog(row)" matTooltip="Editar">  
+                        <mat-icon>create</mat-icon>
+                    </button></mat-cell>
+                </ng-container>
+          
+                <ng-container matColumnDef="remover">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Remover </mat-header-cell>
+                  <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="openDialog(row)" matTooltip="Remover">  
+                      <mat-icon>delete</mat-icon>
+                  </button></mat-cell>
+                </ng-container>
+        
+                <mat-header-row *matHeaderRowDef="displayedColumnsDiagnostico"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumnsDiagnostico;">
+                </mat-row>
+              </mat-table>
+              <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        
+          </div>
+
+
+
+
+        </mat-card-content>
+    </mat-card>
+
+  </mat-tab>
+
+
+
+  <mat-tab label = "LISTA DE USUARIOS"> em desenvolvimento </mat-tab>
+</mat-tab-group>

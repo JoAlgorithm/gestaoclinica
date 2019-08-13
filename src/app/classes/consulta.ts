@@ -2,7 +2,14 @@ import { Paciente } from "./paciente";
 
 export class Consulta { 
 
+
+    id?:String;
+
     data?:Date; //data em que a consulta foi marcada
+
+    data_atendimento?:Date; //data em que a consulta foi atendida
+
+    data_cancelamento?:Date; //data em que a consulta foi cancelada
     
     /*
     *Quem marcou a consulta

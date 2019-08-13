@@ -25,7 +25,13 @@
     <mat-icon>notifications</mat-icon>
     <span class="notification-label">5</span>
   </button>-->
-  <button [matMenuTriggerFor]="user" mat-icon-button class="ml-xs">
+
+
+  <button mat-icon-button class="ml-xs" (click)='logout()'matTooltip="Terminar sessao">
+      <mat-icon>lock_open</mat-icon>
+  </button>
+
+  <!--<button [matMenuTriggerFor]="user" mat-icon-button class="ml-xs">
     <mat-icon>person</mat-icon>
   </button>
   <mat-menu #user="matMenu" x-position="before">
@@ -37,13 +43,9 @@
       <mat-icon>account_box</mat-icon>
       Perfil
     </button>
-    <!--<button mat-menu-item>
-      <mat-icon>notifications_off</mat-icon>
-      Disable notifications
-    </button>-->
     <button mat-menu-item (click)='logout()'>
       <mat-icon>exit_to_app</mat-icon>
       Terminar sessão
     </button>
-  </mat-menu>
+  </mat-menu>-->
 </mat-toolbar>

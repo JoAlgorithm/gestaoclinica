@@ -48,6 +48,12 @@ const MENUITEMS:Menu[] = [
     type: 'link',
     icon: 'assignment_ind',
   },
+  {
+    state: 'configuracoes',
+    name: 'CONFIGURACOES',
+    type: 'link',
+    icon: 'build',
+  },
   
   /*,
   {

@@ -44,4 +44,9 @@ export class PacienteService {
     return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/consultas').snapshotChanges();
   }
 
+  updateConsulta(consulta:Consulta){
+    //delete estudante.id;
+    return this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/consultas/' + consulta.id).update(consulta);
+  }
+
 }

@@ -161,10 +161,6 @@ export class CadastroComponent implements OnInit {
   }
 
   openSnackBar(mensagem) {
-    /*this.snackBar.openFromComponent(null, {
-    duration: 2000,
-    announcementMessage: mensagem
-    });*/
     this.snackBar.open(mensagem, null,{
       duration: 2000
     })
