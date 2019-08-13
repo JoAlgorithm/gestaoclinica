@@ -16,7 +16,7 @@ export class ConsultasComponent implements OnInit {
 
   //Atributos da tabela de consultas PENDENTES
   dataSoursePendentes: MatTableDataSource<Consulta>; //Tabela de consultas pendentes
-  displayedColumnsPendentes = ['data','nid','apelido', 'nome', , 'cancelar', 'atender'];
+  displayedColumnsPendentes = ['data','tipo','nid','apelido', 'nome', 'preco' , 'cancelar', 'atender'];
   @ViewChild(MatPaginator) paginatorPendentes: MatPaginator;
   @ViewChild(MatSort) sortPendentes: MatSort;
 

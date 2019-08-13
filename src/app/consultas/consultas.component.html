@@ -26,6 +26,11 @@
                       <mat-header-cell *matHeaderCellDef mat-sort-header> Data </mat-header-cell>
                       <mat-cell *matCellDef="let row"> {{row.data.toDate() | date:'dd/MM hh:mm:ss'}}</mat-cell>
                   </ng-container>
+
+                  <ng-container matColumnDef="tipo">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </mat-header-cell>
+                      <mat-cell *matCellDef="let row"> {{row.tipo}}</mat-cell>
+                  </ng-container>
         
                   <ng-container matColumnDef="nid">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> NID </mat-header-cell>
@@ -41,6 +46,11 @@
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
                     <mat-cell *matCellDef="let row"> {{row.paciente.nome}}</mat-cell>
                   </ng-container>
+
+                  <ng-container matColumnDef="preco">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Preco </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.preco_consulta_medica}}</mat-cell>
+                      </ng-container>
             
                   <ng-container matColumnDef="cancelar">
                       <mat-header-cell *matHeaderCellDef mat-sort-header> Cancelar </mat-header-cell>

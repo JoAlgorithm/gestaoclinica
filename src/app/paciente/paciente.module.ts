@@ -61,7 +61,8 @@ import {CadastroComponent} from './cadastro/cadastro.component';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { from } from 'rxjs';
 import { PacienteService } from '../services/paciente.service';
-import { ListagemComponent } from './listagem/listagem.component';
+import { ListagemComponent, DiagnosticosDialog } from './listagem/listagem.component';
+import { ConfiguracoesService } from '../services/configuracoes.service';
 
 
 @NgModule({
@@ -121,14 +122,17 @@ import { ListagemComponent } from './listagem/listagem.component';
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
     PacienteService,
-    AngularFirestore
+    AngularFirestore,
+    ConfiguracoesService
     
   ],
   declarations: [
     CadastroComponent,
     ListagemComponent,
+    DiagnosticosDialog
   ],
   entryComponents: [
+    DiagnosticosDialog
   ],
 })
 

@@ -1,8 +1,7 @@
 import { Paciente } from "./paciente";
+import { DiagnosticoAuxiliar } from "./diagnostico_aux";
 
 export class Consulta { 
-
-
     id?:String;
 
     data?:Date; //data em que a consulta foi marcada
@@ -35,4 +34,10 @@ export class Consulta {
 
     justificativa_cancelamento?:String;
     cancelador?: String; //Quem cancelou a consulta
+
+    diagnosticos?: DiagnosticoAuxiliar[];
+
+    tipo?:String; //Uma consulta pode ser "CONSULTA MEDICA" OU "DIAGNOSTICO AUX"
+
+    preco_consulta_medica?:Number;
 }

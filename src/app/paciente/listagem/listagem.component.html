@@ -61,8 +61,8 @@
             <mat-icon>class</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="marcarConsulta(row)">Consulta Medica</button>
-              <button mat-menu-item>Diagnostico auxiliar</button>
+              <button mat-menu-item (click)="marcarConsulta(row, 'Consulta Medica')">Consulta Medica</button>
+              <button mat-menu-item (click)="openDialog(row)">Diagnostico auxiliar</button>
           </mat-menu>
         </mat-cell>
       </ng-container>
