@@ -68,7 +68,7 @@ export class Paciente {
     ps_situacao_laboral?:String;
     ps_status_familiar?:String;
     ps_suporte?:String;
-    ps_fatores_stressantes?:String;
+    ps_fatores_stressantes?:String[];
     ps_fatores_risco_estilo_vida?:String;
     ps_fatores_risco_trabalho?:String[];
     ps_fatores_risco_trabalho_especificacao?:String;

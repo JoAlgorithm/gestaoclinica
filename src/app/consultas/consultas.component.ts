@@ -158,6 +158,24 @@ export class ConsultasComponent implements OnInit {
     {value: 'De saúde', viewValue: 'De saúde'}
   ];
 
+  ps_fatores_risco_estilo_vida = [
+    {value: 'Álcool', viewValue: 'Álcool'},
+    {value: 'Tabaco', viewValue: 'Tabaco'},
+    {value: 'Cafeína', viewValue: 'Cafeína'},
+    {value: 'Dieta', viewValue: 'Dieta'},
+    {value: 'Drogas', viewValue: 'Drogas'},
+    {value: 'Outros', viewValue: 'Outros'}
+  ];
+
+  ps_fatores_risco_trabalho = [
+    {value: 'Álcool', viewValue: 'Álcool'},
+    {value: 'Tabaco', viewValue: 'Tabaco'},
+    {value: 'Cafeína', viewValue: 'Cafeína'},
+    {value: 'Dieta', viewValue: 'Dieta'},
+    {value: 'Drogas', viewValue: 'Drogas'},
+    {value: 'Outros', viewValue: 'Outros'}
+  ];
+
 
   constructor(  public dialogRef: MatDialogRef<AtenderConsultaDialog>,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
@@ -203,10 +221,10 @@ export class ConsultasComponent implements OnInit {
 
 //DIALOG CANCELAMENTO DE CONSULTA
 @Component({
-  selector: 'cancelar-consulta-dialog',
-  templateUrl: 'cancelar-consulta.html',
-  })
-  export class CancelarConsultaDialog {
+selector: 'cancelar-consulta-dialog',
+templateUrl: 'cancelar-consulta.html',
+})
+export class CancelarConsultaDialog {
 
   constructor(  public dialogRef: MatDialogRef<CancelarConsultaDialog>,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
@@ -237,4 +255,4 @@ export class ConsultasComponent implements OnInit {
     })
   }
 
-  }
+}

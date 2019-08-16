@@ -75,7 +75,11 @@
                 </div>
                 
                 <div>
+                    <button mat-button>GRAVAR</button>
                     <button mat-button matStepperNext>SEGUINTE</button>
+                    <!--<button mat-icon-button matTooltip="Seguinte" matStepperNext>   
+                        <mat-icon>arrow_right_alt</mat-icon>
+                    </button>-->
                 </div>
                 
             </mat-step>
@@ -131,6 +135,7 @@
                 </div>
 
                 <div>
+                    <button mat-button>GRAVAR</button>
                     <button mat-button matStepperPrevious>VOLTAR</button>
                     <button mat-button matStepperNext>SEGUINTE</button>
                 </div>
@@ -165,15 +170,36 @@
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field style="width: 50%">
+                <mat-form-field style="width: 33%">
                     <mat-select placeholder="Factores stressantes" [(ngModel)]="data.consulta.ps_fatores_stressantes" multiple>
                         <mat-option *ngFor="let ps_fator_stressante of ps_fatores_stressantes" [value]="ps_fator_stressante.value">
                             {{ps_fator_stressante.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
+
+                <mat-form-field style="width: 33%">
+                    <mat-select placeholder="Factores de risco ligados ao estilo de vida" [(ngModel)]="data.consulta.ps_fatores_risco_estilo_vida" multiple>
+                        <mat-option *ngFor="let ps_fator_risco_estilo_vida of ps_fatores_risco_estilo_vida" [value]="ps_fator_risco_estilo_vida.value">
+                            {{ps_fator_risco_estilo_vida.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field style="width: 33%">
+                    <mat-select placeholder="Factores de risco ligados ao trabalho" [(ngModel)]="data.consulta.ps_fatores_risco_trabalho" multiple>
+                        <mat-option *ngFor="let ps_fator_risco_trabalho of ps_fatores_risco_trabalho" [value]="ps_fator_risco_trabalho.value">
+                            {{ps_fator_risco_trabalho.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field style="width: 99%">
+                    <input matInput placeholder="Especificação" [(ngModel)]="data.consulta.ps_fatores_risco_trabalho_especificacao">
+                </mat-form-field>
                 
                 <div>
+                    <button mat-button>GRAVAR</button>
                     <button mat-button matStepperPrevious>VOLTAR</button>
                     <button mat-button matStepperNext>SEGUINTE</button>
                 </div>
