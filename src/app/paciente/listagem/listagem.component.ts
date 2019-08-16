@@ -95,7 +95,7 @@ export class ListagemComponent implements OnInit {
 
   openDialog(row: Paciente): void {
     let dialogRef = this.dialog.open(DiagnosticosDialog, {
-    width: '600px',
+    width: '700px',
     data: { paciente: row, diagnosticos: this.diagnosticos }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -103,28 +103,35 @@ export class ListagemComponent implements OnInit {
     });
   }
 
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSourse.filter = filterValue;
+  }
+
 }
 
 
 
 @Component({
-  selector: 'Diagnosticos-dialog',
+  selector: 'diagnosticos-dialog',
   templateUrl: 'diagnosticos.component.html',
   })
   export class DiagnosticosDialog {
 
   diagnosticoFormGroup: FormGroup;
-  diagnosticos: DiagnosticoAuxiliar[];
+  diagnosticos: DiagnosticoAuxiliar[] = [];
   diagnostico:DiagnosticoAuxiliar;
 
   dataSourse: MatTableDataSource<DiagnosticoAuxiliar>;
-  displayedColumns = ['nome','preco', 'editar'];
+  displayedColumns = ['nome','preco', 'remover'];
 
+  consulta?: Consulta;
+  preco_total:Number = 0;
 
-  constructor(  public dialogRef: MatDialogRef<DiagnosticosDialog>,
+  constructor(  public dialogRef: MatDialogRef<DiagnosticosDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
-
     this.diagnostico = new DiagnosticoAuxiliar();
 
     this.diagnosticoFormGroup = this._formBuilder.group({
@@ -134,27 +141,47 @@ export class ListagemComponent implements OnInit {
     this.diagnosticoFormGroup.controls['diagnostico_preco'].disable();
 
     this.dataSourse=new MatTableDataSource(this.diagnosticos);
+  }
+  
+  addDiognostico(diagnostico:DiagnosticoAuxiliar){
+    this.diagnosticos.push(diagnostico);
 
+    this.preco_total = +this.preco_total + +diagnostico.preco;
+
+    this.dataSourse=new MatTableDataSource(this.diagnosticos);
+    this.diagnostico = new DiagnosticoAuxiliar();
+  }
+
+  removeDiagostico(diagnostico:DiagnosticoAuxiliar){
+    this.diagnosticos.splice(this.diagnosticos.indexOf(diagnostico), 1);
+    this.dataSourse=new MatTableDataSource(this.diagnosticos);
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
- /*cancelarConsulta(consulta:Consulta){
-    this.dialogRef.close();
-    consulta.cancelador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
-    consulta.status = "Cancelada";
-    consulta.data_cancelamento = new Date();
-    let data = Object.assign({}, consulta);
-    
-    this.pacienteService.updateConsulta(data)
+  marcarConsulta(paciente:Paciente){
+    this.consulta.data = new Date();
+    this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+    this.consulta.paciente = paciente;
+    this.consulta.status = "Aberta";
+    this.consulta.tipo = "DIAGNOSTICO AUX";
+    //this.preco_total
+
+    ///this.consulta.preco_consulta_medica = this.clinica.preco_consulta;
+
+    let data = Object.assign({}, this.consulta);
+
+    this.pacienteService.marcarConsulta(data)
     .then( res => {
-      //this.openSnackBar("Consulta cancelada com sucesso");
+      this.openSnackBar("Consulta agendada com sucesso");
+      this.router.navigateByUrl("/consultas")
     }).catch( err => {
       console.log("ERRO: " + err.message)
+      this.openSnackBar("Ocorreu um erro ao marcar a consulta. Contacte o Admin do sistema.");
     });
- }*/
+  }
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{

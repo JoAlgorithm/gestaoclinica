@@ -18,7 +18,6 @@ export const AppRoutes: Routes = [{
   path: '',
   component: AdminLayoutComponent,
   children: [{
-    //path: '',
     path: '',
     loadChildren: './dashboard/dashboard.module#DashboardModule'
   },
@@ -32,7 +31,11 @@ export const AppRoutes: Routes = [{
   },
   {
     path: 'configuracoes',
-    loadChildren: './configuracoes/configuracoes.module#ConsultasModule'
+    loadChildren: './configuracoes/configuracoes.module#ConfiguracoesModule'
+  },
+  {
+    path: 'atendimento',
+    loadChildren: './atendimento/atendimento.module#AtendimentoModule'
   }],
 
 }, {

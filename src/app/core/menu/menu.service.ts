@@ -52,7 +52,7 @@ const MENUITEMS:Menu[] = [
     state: 'configuracoes',
     name: 'CONFIGURACOES',
     type: 'link',
-    icon: 'build',
+    icon: 'settings',
   },
   
   /*,

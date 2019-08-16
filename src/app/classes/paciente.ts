@@ -10,7 +10,7 @@ export class Paciente {
     nr_documento_identificacao?:string;
     localidade?:string;
     bairro?:string;
-    avenidade?:string;
+    avenida?:string;
     rua?:string;
     casa?:string;
     celula?:string;
@@ -46,6 +46,7 @@ export class Paciente {
     hr_d_neurologia?:boolean;
     hr_d_psiquiatrica?:boolean;
     hr_alergia?:boolean;
+    hr_alergia_especificacao?:String;
 
     //Historico familiar
     //Todas variaveis dessa seccao iniciam com hf_
@@ -60,10 +61,17 @@ export class Paciente {
     hf_d_tubo_digestivo?:boolean;
     hf_d_hemorragia?:boolean;
     hf_outras?:boolean;
+    hf_outras_especificacao?:String;
 
     //Historia psico-social
     //Todas variaveis dessa seccao iniciam com ps_
-    ps_situacao_laboral?:boolean;
-    ps_status_familiar?:boolean;
+    ps_situacao_laboral?:String;
+    ps_status_familiar?:String;
+    ps_suporte?:String;
+    ps_fatores_stressantes?:String;
+    ps_fatores_risco_estilo_vida?:String;
+    ps_fatores_risco_trabalho?:String[];
+    ps_fatores_risco_trabalho_especificacao?:String;
+
 
  }

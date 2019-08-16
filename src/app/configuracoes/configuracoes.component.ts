@@ -57,7 +57,7 @@ export class ConfiguracoesComponent implements OnInit {
       });
       this.dataSourseDiagnostico=new MatTableDataSource(this.diagnosticos.sort((a, b) => a.nome > b.nome ? 1 : -1));
       this.dataSourseDiagnostico.paginator = this.paginatorDiagnostico;
-      this.dataSourseDiagnostico.sort = this.sortDiagnostico;
+      //this.dataSourseDiagnostico.sort = this.sortDiagnostico;
     })
 
 

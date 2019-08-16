@@ -58,14 +58,15 @@ import 'hammerjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { from } from 'rxjs';
 import { PacienteService } from '../services/paciente.service';
-import { ConsultasComponent, CancelarConsultaDialog, AtenderConsultaDialog } from './consultas.component';
-import { ConsultasRoutes } from './consultas.routing';
+import { ConfiguracoesService } from '../services/configuracoes.service';
+import { AtendimentoRoutes } from './atendimento.routing';
+import { AtendimentoComponent } from './atendimento.component';
 
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(ConsultasRoutes),
+    RouterModule.forChild(AtendimentoRoutes),
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -119,18 +120,14 @@ import { ConsultasRoutes } from './consultas.routing';
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
     PacienteService,
-    AngularFirestore
-    
+    AngularFirestore,
+    ConfiguracoesService
   ],
   declarations: [
-    ConsultasComponent,
-    CancelarConsultaDialog,
-    AtenderConsultaDialog
+    AtendimentoComponent
   ],
   entryComponents: [
-    CancelarConsultaDialog,
-    AtenderConsultaDialog
   ],
 })
 
-export class ConsultasModule {}
+export class AtendimentoModule {}

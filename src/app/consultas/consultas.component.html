@@ -61,8 +61,9 @@
 
                   <ng-container matColumnDef="atender">
                       <mat-header-cell *matHeaderCellDef mat-sort-header> Atender </mat-header-cell>
-                      <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="detalhes(row)" matTooltip="Atender paciente {{row.paciente.apelido}}">
-                          <mat-icon>check</mat-icon>
+                      <!--<mat-cell *matCellDef="let row"> <button mat-icon-button [routerLink]="['/atendimento', {consulta: row}]" matTooltip="Atender paciente {{row.paciente.apelido}}">-->
+                      <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="atenderPaciente(row)"  matTooltip="Atender paciente {{row.paciente.apelido}}">   
+                            <mat-icon>check</mat-icon>
                         </button></mat-cell>
                   </ng-container>
             
@@ -103,35 +104,35 @@
     
                 <!--DIV COM A TABELA DE CONSULTAS CANCELADAS-->
                 <div class="example-container mat-elevation-z8">
-                    <mat-table [dataSource]="dataSourseCanceladas" matSort>
+                    <mat-table [dataSource]="dataSourseCanceladas" >
                         
                     <ng-container matColumnDef="data">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Data </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef > Data </mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{row.data.toDate() | date:'dd/MM hh:mm:ss'}}</mat-cell>
                     </ng-container>
             
                     <ng-container matColumnDef="nid">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> NID </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef > NID </mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{row.paciente.nid}}</mat-cell>
                     </ng-container>
                 
                     <ng-container matColumnDef="apelido">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Apelido </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef > Apelido </mat-header-cell>
                         <mat-cell *matCellDef="let row">{{row.paciente.apelido}}</mat-cell>
                     </ng-container>
                 
                     <ng-container matColumnDef="nome">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{row.paciente.nome}}</mat-cell>
                     </ng-container>
                 
                     <ng-container matColumnDef="justificativa">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Justificativa </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> Justificativa </mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{row.justificativa_cancelamento}}</mat-cell>
                     </ng-container>
     
                     <ng-container matColumnDef="cancelador">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Responsavel </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef> Responsavel </mat-header-cell>
                         <mat-cell *matCellDef="let row"> {{row.cancelador}}</mat-cell>
                     </ng-container>
                 

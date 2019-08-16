@@ -29,7 +29,7 @@
       <!--DATA DE NASCIMENTO-->
       <mat-form-field style="width: 33%">
           
-          <input matInput [matDatepicker]="picker1" placeholder="Data de nascimento" formControlName="paciente_data_nascimento" [(ngModel)]="paciente.data_nascimento"  required>
+          <input matInput [matDatepicker]="picker1" placeholder="Data de nascimento" formControlName="paciente_data_nascimento" [(ngModel)]="paciente.datanascimento"  required>
           <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
           <mat-datepicker #picker1></mat-datepicker>
       </mat-form-field>
@@ -45,7 +45,7 @@
 
         <!--NR DE IDENTIFICACAO-->
         <mat-form-field style="width: 33%">
-            <input matInput placeholder="Nr de documento" formControlName="paciente_nr_documento" [(ngModel)]="paciente.nr_documento" required>
+            <input matInput placeholder="Nr de documento" formControlName="paciente_nr_documento" [(ngModel)]="paciente.nr_documento_identificacao" required>
         </mat-form-field>
 
         <!--localidade DE IDENTIFICACAO-->

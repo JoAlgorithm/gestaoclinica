@@ -6,7 +6,7 @@ export class Consulta {
 
     data?:Date; //data em que a consulta foi marcada
 
-    data_atendimento?:Date; //data em que a consulta foi atendida
+    data_atendimento?:Date; //data em que a consulta iniciou a ser atendida
 
     data_cancelamento?:Date; //data em que a consulta foi cancelada
     

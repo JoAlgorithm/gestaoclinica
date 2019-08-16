@@ -74,7 +74,7 @@ export class CadastroComponent implements OnInit {
     this.paciente.nr_documento_identificacao = "Bilhete de identidade"
     this.paciente.localidade = "Nacala";
     this.paciente.bairro = "Mocone";
-    this.paciente.avenidade = "Eduardo Mondlane";
+    this.paciente.avenida = "Eduardo Mondlane";
     this.paciente.rua = "Baixa";
     this.paciente.casa = "123";
     this.paciente.celula = "B";

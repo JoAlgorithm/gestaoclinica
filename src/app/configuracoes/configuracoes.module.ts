@@ -131,4 +131,4 @@ import { ConfiguracoesService } from '../services/configuracoes.service';
   ],
 })
 
-export class ConsultasModule {}
+export class ConfiguracoesModule {}
