@@ -29,7 +29,7 @@ export class PacienteService {
 
   updatePaciente(paciente: Paciente){
     //delete estudante.id;
-    this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).update(paciente);
+    return this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).update(paciente);
   }
 
   deletePaciente(paciente: Paciente){

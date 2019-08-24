@@ -1,0 +1,178 @@
+<mat-tab-group>
+  
+    <mat-tab label = "DIAGNOSTICOS PENDENTES"> 
+      <mat-card class="example-card">
+      
+          <mat-card-header>
+          <!--CAMPO DE PESQUISA-->
+          <div class="example-header">
+              <mat-form-field>
+                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Pesquisar">
+                  <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+          </div>
+          </mat-card-header>
+  
+          <mat-card-content>
+  
+              <!--DIV COM A TABELA DE DIAGNOSTICOS PENDENTES-->
+              <mat-table [dataSource]="dataSourse" matSort>
+    
+                <!-- Progress Column -->
+                <ng-container matColumnDef="nid">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> NID </mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{row.paciente.nid}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="apelido">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Apelido </mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{row.paciente.apelido}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="nome">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{row.paciente.nome}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="diagnosticos_aux">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Diagnosticos_aux </mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{row.lista_diagnosticos_aux}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="valor_pagar">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Valor a pagar </mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{row.preco_diagnosticos}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{row.status}}</mat-cell>
+                </ng-container>
+                
+                <ng-container matColumnDef="imprimir">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Imprimir </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="detalhes(row)">
+                        <mat-icon>print</mat-icon>
+                      </button></mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="faturar">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Faturar </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="editar(row)">
+                        <mat-icon>local_atm</mat-icon>
+                      </button></mat-cell>
+                </ng-container>
+            
+                <!--<ng-container matColumnDef="consulta">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Consulta </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Marcar consulta para {{row.nome}} {{row.apelido}}">
+                      <mat-icon>class</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="marcarConsulta(row, 'Consulta Medica')">Consulta Medica</button>
+                        <button mat-menu-item (click)="openDialog(row)">Diagnostico auxiliar</button>
+                    </mat-menu>
+                  </mat-cell>
+                </ng-container>-->
+                
+            
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;">
+                </mat-row>
+                </mat-table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+              
+          </mat-card-content>
+      </mat-card>
+    </mat-tab>
+  
+    <mat-tab label = "PACIENTES INTERNADOS"> 
+      TO BE DEVELOPED
+    </mat-tab>
+  
+</mat-tab-group>
+
+
+
+
+  <!--
+    <div class="example-header">
+  <mat-form-field>
+   
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Pesquisar">
+  <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+</div>
+
+<div class="example-container mat-elevation-z8">
+    <mat-table [dataSource]="dataSourse" matSort>
+      
+    <!-- Progress Column --
+    <ng-container matColumnDef="nid">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> NID </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.paciente.nid}}</mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="apelido">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Apelido </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.paciente.apelido}}</mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="nome">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.paciente.nome}}</mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="diagnosticos_aux">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Diagnosticos_aux </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.lista_diagnosticos_aux}}</mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="valor_pagar">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Valor a pagar </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.preco_diagnosticos}}</mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.status}}</mat-cell>
+      </ng-container>
+      
+      <ng-container matColumnDef="imprimir">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Imprimir </mat-header-cell>
+          <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="detalhes(row)">
+              <mat-icon>print</mat-icon>
+            </button></mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="faturar">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Faturar </mat-header-cell>
+          <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="editar(row)">
+              <mat-icon>local_atm</mat-icon>
+            </button></mat-cell>
+      </ng-container>
+  
+      <!--<ng-container matColumnDef="consulta">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Consulta </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Marcar consulta para {{row.nome}} {{row.apelido}}">
+            <mat-icon>class</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="marcarConsulta(row, 'Consulta Medica')">Consulta Medica</button>
+              <button mat-menu-item (click)="openDialog(row)">Diagnostico auxiliar</button>
+          </mat-menu>
+        </mat-cell>
+      </ng-container>--
+      
+  
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;">
+      </mat-row>
+      </mat-table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  
+  </div>
+  
+  -->

@@ -5,6 +5,9 @@ import { PacienteService } from './../services/paciente.service';
 import { Paciente } from '../classes/paciente';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { c } from '@angular/core/src/render3';
+import { ConfiguracoesService } from '../services/configuracoes.service';
+import { DiagnosticoAuxiliar } from '../classes/diagnostico_aux';
 
 @Component({
   selector: 'app-consultas',
@@ -27,12 +30,29 @@ export class ConsultasComponent implements OnInit {
   @ViewChild(MatPaginator) paginatorCanceladas: MatPaginator;
   @ViewChild(MatSort) sortCanceladas: MatSort;
 
+  //Atributos da tabela de consultas ENCERRADAS
+  dataSourseEncerradas: MatTableDataSource<Consulta>; //Tabela de consultas canceladas
+  displayedColumnsEncerradas = ['data','nid','apelido', 'nome', 'diagnostico','tratamento','internamento', 'detalhes'];
+  @ViewChild(MatPaginator) paginatorEncerradass: MatPaginator;
+  @ViewChild(MatSort) sortEncerradas: MatSort;
+
+
+  //Atributos da tabela de consultas EM DIAGNOSTICO OU INTERNAMENTO
+  dataSourseAndamento: MatTableDataSource<Consulta>; //Tabela de consultas canceladas
+  displayedColumnsEAndamento = ['data','nid','apelido', 'nome', 'diagnostico','status','atender'];
+  @ViewChild(MatPaginator) paginatorAndamento: MatPaginator;
+  @ViewChild(MatSort) sortAndamento: MatSort;
+
   
 
   justificativa:String = ""; //variavel usada para pegar justificativa caso a consulta seja cancelada
 
+  diagnosticos:DiagnosticoAuxiliar[];
+
+  
+
   constructor(private pacienteService: PacienteService, public authService: AuthService,
-    public dialog: MatDialog, public snackBar: MatSnackBar, private router: Router) {
+    public dialog: MatDialog, public snackBar: MatSnackBar, private router: Router, public configServices:ConfiguracoesService) {
    }
 
   ngOnInit() {
@@ -58,6 +78,27 @@ export class ConsultasComponent implements OnInit {
       );
       this.dataSourseCanceladas.paginator = this.paginatorCanceladas;
       //this.dataSourseCanceladas.sort = this.sortCanceladas;
+
+      //Consultas ENCERRADAS
+      this.dataSourseEncerradas=new MatTableDataSource(
+        this.consultas.filter(c =>c.status === "Encerrada").sort((a, b) => a.data_encerramento > b.data_encerramento ? 1 : -1)
+      );
+      this.dataSourseEncerradas.paginator = this.paginatorEncerradass;
+
+      //Consultas EM ATENDIMENTO
+      this.dataSourseAndamento=new MatTableDataSource(
+        this.consultas.filter(c =>c.status === "Diagnostico" || c.status === "Internamento").sort((a, b) => a.data > b.data ? 1 : -1)
+      );
+      this.dataSourseAndamento.paginator = this.paginatorAndamento;
+    })
+
+    this.configServices.getDiagnosticos().subscribe(data => {
+      this.diagnosticos = data.map(e => {
+        return {
+          id: e.payload.doc.id,
+          ...e.payload.doc.data(),
+        } as DiagnosticoAuxiliar;
+      })
     })
   }
 
@@ -67,7 +108,7 @@ export class ConsultasComponent implements OnInit {
     data: { consulta: row }
     });
     dialogRef.afterClosed().subscribe(result => {
-    console.log("result "+result);
+      //console.log("result "+result);
     });
   }
 
@@ -81,10 +122,21 @@ export class ConsultasComponent implements OnInit {
   
 
   atenderPaciente(consulta:Consulta){
+
+    consulta.diagnosticos_aux.forEach(d => {
+      console.log("Diagnostico aux do pacientes "+d.nome)
+    });
+
+    let dataSourseHistConsultas: MatTableDataSource<Consulta>; //Tabela de consultas pendentes
+    dataSourseHistConsultas=new MatTableDataSource(
+      this.consultas.filter(c =>c.status === "Encerrada" && c.paciente.nid == consulta.paciente.nid).sort((a, b) => a.data_encerramento > b.data_encerramento ? 1 : -1)
+    );
+
     let dialogRef = this.dialog.open(AtenderConsultaDialog, {
       width: '1000px',
       height: '600px',
-      data: { consulta: consulta }
+      data: { consulta: consulta, consultas: dataSourseHistConsultas, 
+      diagnosticos: this.diagnosticos as DiagnosticoAuxiliar[] }
       });
       dialogRef.afterClosed().subscribe(result => {
       console.log("result "+result);
@@ -120,7 +172,7 @@ export class ConsultasComponent implements OnInit {
 
 }
 
-//DIALOG ATENDIMENTO DE CONSULTA
+//DIALOG ATENDIMENTO DE CONSULTA ---------------------------------------------------------------
 @Component({
   selector: 'atender-consulta-dialog',
   templateUrl: 'atender-consulta.html',
@@ -176,6 +228,14 @@ export class ConsultasComponent implements OnInit {
     {value: 'Outros', viewValue: 'Outros'}
   ];
 
+  //Atributos da tabela de HISTORICO DE CONSULTAS
+  //dataSourseHistConsultas: MatTableDataSource<Consulta>; //Tabela de consultas pendentes
+  displayedColumnsHistConsultas = ['data','diagnostico','tratamento','internamento', 'detalhes'];
+  @ViewChild(MatPaginator) paginatorHistConsultas: MatPaginator;
+
+  //temHistorico = false;
+
+  
 
   constructor(  public dialogRef: MatDialogRef<AtenderConsultaDialog>,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
@@ -183,8 +243,81 @@ export class ConsultasComponent implements OnInit {
     
   }
 
+  atualizarDadosGerais(paciente:Paciente, consultas:Consulta[]){
+    //Ao atualizar o objecto Paciente atualiza-se os dados na tabela de pacientes e em todas as consultas desse paciente
+    let data = Object.assign({}, paciente);
+    
+    this.pacienteService.updatePaciente(data)
+    .then( res => {
+
+      consultas.forEach(c => {
+        c.paciente = paciente;
+        let d = Object.assign({}, c);
+        this.pacienteService.updateConsulta(c)
+        .then(r =>{})
+        .catch(er =>{
+          this.openSnackBar("Ocorreu um erro ao atualizar os dados. Consulte o Admin do sistema.");
+        })
+      });
+
+      this.openSnackBar("Dados gerais do paciente atualizados com sucesso");
+
+    }).catch( err => {
+      this.openSnackBar("Ocorreu um erro ao atualizar os dados. Consulte o Admin do sistema.");
+    });
+  }
+
+  encerrarConsulta(consulta:Consulta){
+    consulta.status = "Encerrada";
+    consulta.encerrador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+    consulta.data_encerramento = new Date();
+
+    let data = Object.assign({}, consulta);
+
+    this.pacienteService.updateConsulta(data)
+    .then( res => {
+      this.dialogRef.close();
+      this.openSnackBar("Consulta encerrada com sucesso");
+    }).catch( err => {
+      console.log("ERRO: " + err.message)
+    });
+  }
+
+  aguardarDiagnostico(consulta:Consulta){
+
+    consulta.diagnosticos_aux.forEach(d => {
+      console.log("Diagnosticos aux marcados: "+d.nome)
+    });
+
+
+    consulta.status = "Diagnostico";
+    consulta.data_diagnostico = new Date();
+    consulta.marcador_diagnostico = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+    let data = Object.assign({}, consulta);
+
+    this.pacienteService.updateConsulta(data)
+    .then( res => {
+      this.dialogRef.close();
+      this.openSnackBar("Paciente dispensado para diagnostico");
+    }).catch( err => {
+      console.log("ERRO: " + err.message)
+    });
+
+  }
+
   ngOnInit() {
     this.dialogRef.updateSize('80%', '90%');
+
+    /*this.data.consultas.forEach(c => {
+      if (c.status === "Encerrada"){
+        console.log('consolta de '+c.nome)
+      }
+    });
+
+    this.dataSourseHistConsultas =new MatTableDataSource(
+      this.data.consultas.filter(c =>c.status === "Encerrada").sort((a, b) => a.data > b.data ? 1 : -1)
+    );
+    this.dataSourseHistConsultas .paginator = this.paginatorHistConsultas;*/
   }
 
   onNoClick(): void {
@@ -198,7 +331,7 @@ export class ConsultasComponent implements OnInit {
     })
   }
 
-  step = 0;
+  step = 2;
   setStep(index: number) {
     this.step = index;
   }
@@ -219,7 +352,7 @@ export class ConsultasComponent implements OnInit {
 
 
 
-//DIALOG CANCELAMENTO DE CONSULTA
+//DIALOG CANCELAMENTO DE CONSULTA ---------------------------------------------------------------
 @Component({
 selector: 'cancelar-consulta-dialog',
 templateUrl: 'cancelar-consulta.html',

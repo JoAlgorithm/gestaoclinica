@@ -60,6 +60,7 @@ import { from } from 'rxjs';
 import { PacienteService } from '../services/paciente.service';
 import { ConsultasComponent, CancelarConsultaDialog, AtenderConsultaDialog } from './consultas.component';
 import { ConsultasRoutes } from './consultas.routing';
+import { ConfiguracoesService } from '../services/configuracoes.service';
 
 
 @NgModule({
@@ -119,8 +120,8 @@ import { ConsultasRoutes } from './consultas.routing';
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
     PacienteService,
-    AngularFirestore
-    
+    AngularFirestore,
+    ConfiguracoesService
   ],
   declarations: [
     ConsultasComponent,

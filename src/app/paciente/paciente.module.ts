@@ -63,6 +63,7 @@ import { from } from 'rxjs';
 import { PacienteService } from '../services/paciente.service';
 import { ListagemComponent, DiagnosticosDialog } from './listagem/listagem.component';
 import { ConfiguracoesService } from '../services/configuracoes.service';
+import { PendentesComponent } from './pendentes/pendentes.component';
 
 
 @NgModule({
@@ -129,7 +130,8 @@ import { ConfiguracoesService } from '../services/configuracoes.service';
   declarations: [
     CadastroComponent,
     ListagemComponent,
-    DiagnosticosDialog
+    DiagnosticosDialog,
+    PendentesComponent
   ],
   entryComponents: [
     DiagnosticosDialog

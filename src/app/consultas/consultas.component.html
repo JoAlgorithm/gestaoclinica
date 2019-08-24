@@ -18,7 +18,6 @@
           <mat-card-content>
 
               <!--DIV COM A TABELA DE CONSULTAS PENDENTES-->
-              <div class="example-container mat-elevation-z8">
                   <mat-table [dataSource]="dataSoursePendentes" matSort>
                     
                   <!-- Progress Column -->
@@ -48,9 +47,9 @@
                   </ng-container>
 
                   <ng-container matColumnDef="preco">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Preco </mat-header-cell>
-                        <mat-cell *matCellDef="let row"> {{row.preco_consulta_medica}}</mat-cell>
-                      </ng-container>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Preco </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.preco_consulta_medica}}</mat-cell>
+                 </ng-container> 
             
                   <ng-container matColumnDef="cancelar">
                       <mat-header-cell *matHeaderCellDef mat-sort-header> Cancelar </mat-header-cell>
@@ -72,8 +71,6 @@
                   </mat-row>
                   </mat-table>
                   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-            
-              </div>
           </mat-card-content>
       </mat-card>
 
@@ -81,8 +78,152 @@
       
     
   </mat-tab>
-  <mat-tab label = "CONSULTAS EM ANDAMENTO"> Banana </mat-tab>
-  <mat-tab label = "CONSULTAS ENCERRADAS"> Carrot </mat-tab>
+
+
+
+
+
+
+  <mat-tab label = "CONSULTAS EM ANDAMENTO">
+    <mat-card class="example-card">
+        
+        <mat-card-header>
+        <!--CAMPO DE PESQUISA-->
+        <div class="example-header">
+            <mat-form-field>
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Pesquisar">
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+        </mat-card-header>
+
+        <mat-card-content>
+
+            <!--DIV COM A TABELA DE CONSULTAS EM ANDAMENTO (OU INTERNAMENTO OU AGUARDANDO DIAGNOSTICO)-->
+                <mat-table [dataSource]="dataSourseAndamento" matSort>
+                    
+                <ng-container matColumnDef="data">
+                    <mat-header-cell *matHeaderCellDef > Data </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.data.toDate() | date:'dd/MM hh:mm:ss'}}</mat-cell>
+                </ng-container>
+        
+                <ng-container matColumnDef="nid">
+                    <mat-header-cell *matHeaderCellDef > NID </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.paciente.nid}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="apelido">
+                    <mat-header-cell *matHeaderCellDef > Apelido </mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{row.paciente.apelido}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="nome">
+                    <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.paciente.nome}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="diagnostico">
+                    <mat-header-cell *matHeaderCellDef> Diagnostico </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.diagnostico_final}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.status}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="atender">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Atender </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="atenderPaciente(row)"  matTooltip="Atender paciente {{row.paciente.apelido}}">   
+                          <mat-icon>check</mat-icon>
+                      </button></mat-cell>
+                </ng-container>
+            
+                <mat-header-row *matHeaderRowDef="displayedColumnsEAndamento"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumnsEAndamento;">
+                </mat-row>
+                </mat-table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            
+        </mat-card-content>
+    </mat-card>
+
+  </mat-tab>
+
+
+
+
+
+
+  <mat-tab label = "CONSULTAS ENCERRADAS"> 
+    <mat-card class="example-card">
+    
+        <mat-card-header>
+        <!--CAMPO DE PESQUISA-->
+        <div class="example-header">
+            <mat-form-field>
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Pesquisar">
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+        </mat-card-header>
+
+        <mat-card-content>
+
+            <!--DIV COM A TABELA DE CONSULTAS ENCERRADAS-->
+                <mat-table [dataSource]="dataSourseEncerradas" matSort>
+                    
+                <ng-container matColumnDef="data">
+                    <mat-header-cell *matHeaderCellDef > Data </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.data.toDate() | date:'dd/MM hh:mm:ss'}}</mat-cell>
+                </ng-container>
+        
+                <ng-container matColumnDef="nid">
+                    <mat-header-cell *matHeaderCellDef > NID </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.paciente.nid}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="apelido">
+                    <mat-header-cell *matHeaderCellDef > Apelido </mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{row.paciente.apelido}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="nome">
+                    <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.paciente.nome}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="diagnostico">
+                    <mat-header-cell *matHeaderCellDef> Diagnostico </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.diagnostico_final}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="tratamento">
+                    <mat-header-cell *matHeaderCellDef> Tratamento </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.tratamento_efetuar}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="internamento">
+                    <mat-header-cell *matHeaderCellDef> Internamento </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.internamento}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="detalhes">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Detalhes </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Detalhes da consulta">  
+                        <mat-icon>list</mat-icon>
+                        </button></mat-cell>
+                </ng-container>
+            
+                <mat-header-row *matHeaderRowDef="displayedColumnsEncerradas"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumnsEncerradas;">
+                </mat-row>
+                </mat-table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            
+        </mat-card-content>
+    </mat-card>
+  </mat-tab>
 
 
   
@@ -103,7 +244,6 @@
             <mat-card-content>
     
                 <!--DIV COM A TABELA DE CONSULTAS CANCELADAS-->
-                <div class="example-container mat-elevation-z8">
                     <mat-table [dataSource]="dataSourseCanceladas" >
                         
                     <ng-container matColumnDef="data">
@@ -142,7 +282,6 @@
                     </mat-table>
                     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
                 
-                </div>
             </mat-card-content>
         </mat-card>
 

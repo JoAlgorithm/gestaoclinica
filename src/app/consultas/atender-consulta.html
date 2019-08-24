@@ -3,7 +3,7 @@
 <mat-accordion class="example-headers-align">
 
     <!-- ---------------- DADOS GERAIS ---------------- -->
-    <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
+    <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="false">
 
         <mat-expansion-panel-header>
             <mat-panel-title>
@@ -14,8 +14,8 @@
         <mat-horizontal-stepper [linear]="isLinear" #stepper>
 
             <!--HISTORIA PREGRESSA-->
-            <mat-step [stepControl]="hstPregressaFormGroup">
-                <ng-template matStepLabel>HISTORIA PREGRESSA</ng-template>
+            <mat-step>
+                <ng-template matStepLabel>HISTORIA PREGRESSA </ng-template>
 
                 <div fxLayout="row" layout-align="center">
 
@@ -23,7 +23,7 @@
                         <div fxLayout="column" class="mb-1">
                             <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.paciente.hr_hospitalizacoes">Hospitalizações</mat-checkbox>
                         </div>
-            
+                        
                         <div fxLayout="column" class="mb-1">
                             <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.paciente.hr_transfusoes_sanguineas">Transfusões sanguíneas</mat-checkbox>
                         </div>
@@ -56,18 +56,18 @@
                             <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.paciente.hr_d_digestiva">D. Digestiva</mat-checkbox>
                         </div>
                         <div fxLayout="column" class="mb-1">
-                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.hr_d_genitourinaria">D. Genitourinária</mat-checkbox>
+                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.paciente.hr_d_genitourinaria">D. Genitourinária</mat-checkbox>
                         </div>
                         <div fxLayout="column" class="mb-1">
-                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.hr_d_neurologia">D. Neurológica</mat-checkbox>
+                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.paciente.hr_d_neurologia">D. Neurológica</mat-checkbox>
                         </div>
                         <div fxLayout="column" class="mb-1">
-                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.hr_d_psiquiatrica">D. Psiquiátrica</mat-checkbox>
+                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.paciente.hr_d_psiquiatrica">D. Psiquiátrica</mat-checkbox>
                         </div>
                         <div fxLayout="column" class="mb-1">
-                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.hr_alergia">D. Alergia(s)</mat-checkbox>
+                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.paciente.hr_alergia">D. Alergia(s)</mat-checkbox>
                             <mat-form-field>
-                                <input matInput type="text" placeholder="Especifique">
+                                <input matInput type="text" [(ngModel)]="data.consulta.paciente.hr_alergia_especificacao" placeholder="Especifique">
                             </mat-form-field>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                 </div>
                 
                 <div>
-                    <button mat-button>GRAVAR</button>
+                    <button mat-button (click)="atualizarDadosGerais(data.consulta.paciente, data.consultas)">GRAVAR</button>
                     <button mat-button matStepperNext>SEGUINTE</button>
                     <!--<button mat-icon-button matTooltip="Seguinte" matStepperNext>   
                         <mat-icon>arrow_right_alt</mat-icon>
@@ -85,7 +85,7 @@
             </mat-step>
 
             <!--HISTORIA FAMILIAR-->
-            <mat-step [stepControl]="histFamiliarFormGroup">
+            <mat-step>
                 <ng-template matStepLabel>HISTORIA FAMILIAR</ng-template>
 
                 <div fxLayout="row" layout-align="center">
@@ -119,15 +119,15 @@
                             <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.paciente.hf_d_urogenital">D. Urogenital</mat-checkbox>
                         </div>
                         <div fxLayout="column" class="mb-1">
-                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.hf_d_tubo_digestivo">D. do tubo digestivo</mat-checkbox>
+                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.paciente.hf_d_tubo_digestivo">D. do tubo digestivo</mat-checkbox>
                         </div>
                         <div fxLayout="column" class="mb-1">
-                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.hf_d_hemorragia">D. Hemorrágica</mat-checkbox>
+                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.paciente.hf_d_hemorragia">D. Hemorrágica</mat-checkbox>
                         </div>
                         <div fxLayout="column" class="mb-1">
-                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.hf_outras">Outra(s)</mat-checkbox>
+                            <mat-checkbox class="example-margin" [(ngModel)]="data.consulta.paciente.hf_outras">Outra(s)</mat-checkbox>
                             <mat-form-field>
-                                <input matInput type="text" placeholder="Especifique">
+                                <input matInput type="text" [(ngModel)]="data.consulta.paciente.hf_outras_especificacao" placeholder="Especifique">
                             </mat-form-field>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                 </div>
 
                 <div>
-                    <button mat-button>GRAVAR</button>
+                    <button mat-button (click)="atualizarDadosGerais(data.consulta.paciente, data.consultas)">GRAVAR</button>
                     <button mat-button matStepperPrevious>VOLTAR</button>
                     <button mat-button matStepperNext>SEGUINTE</button>
                 </div>
@@ -143,11 +143,11 @@
             </mat-step>
 
             <!--HISTORIA PSICO-SOCIAL-->
-            <mat-step [stepControl]="histPsicoSocialFormGroup">
+            <mat-step>
                 <ng-template matStepLabel>HISTORIA PSICO-SOCIAL</ng-template>
 
                 <mat-form-field style="width: 33%">
-                    <mat-select placeholder="Situacao laboral" [(ngModel)]="data.consulta.ps_situacao_laboral">
+                    <mat-select placeholder="Situacao laboral" [(ngModel)]="data.consulta.paciente.ps_situacao_laboral">
                         <mat-option *ngFor="let situacao_laboral of ps_situacoes_laborais" [value]="situacao_laboral.value">
                             {{situacao_laboral.viewValue}}
                         </mat-option>
@@ -155,7 +155,7 @@
                 </mat-form-field>
 
                 <mat-form-field style="width: 33%">
-                    <mat-select placeholder="Status familiar" [(ngModel)]="data.consulta.ps_status_familiar">
+                    <mat-select placeholder="Status familiar" [(ngModel)]="data.consulta.paciente.ps_status_familiar">
                         <mat-option *ngFor="let status_familiar of ps_status_familiares" [value]="status_familiar.value">
                             {{status_familiar.viewValue}}
                         </mat-option>
@@ -163,7 +163,7 @@
                 </mat-form-field>
 
                 <mat-form-field style="width: 33%">
-                    <mat-select placeholder="Suporte" [(ngModel)]="data.consulta.ps_suporte">
+                    <mat-select placeholder="Suporte" [(ngModel)]="data.consulta.paciente.ps_suporte">
                         <mat-option *ngFor="let ps_suporte of ps_suportes" [value]="ps_suporte.value">
                             {{ps_suporte.viewValue}}
                         </mat-option>
@@ -171,7 +171,7 @@
                 </mat-form-field>
 
                 <mat-form-field style="width: 33%">
-                    <mat-select placeholder="Factores stressantes" [(ngModel)]="data.consulta.ps_fatores_stressantes" multiple>
+                    <mat-select placeholder="Factores stressantes" [(ngModel)]="data.consulta.paciente.ps_fatores_stressantes" multiple>
                         <mat-option *ngFor="let ps_fator_stressante of ps_fatores_stressantes" [value]="ps_fator_stressante.value">
                             {{ps_fator_stressante.viewValue}}
                         </mat-option>
@@ -179,7 +179,7 @@
                 </mat-form-field>
 
                 <mat-form-field style="width: 33%">
-                    <mat-select placeholder="Factores de risco ligados ao estilo de vida" [(ngModel)]="data.consulta.ps_fatores_risco_estilo_vida" multiple>
+                    <mat-select placeholder="Factores de risco ligados ao estilo de vida" [(ngModel)]="data.consulta.paciente.ps_fatores_risco_estilo_vida" multiple>
                         <mat-option *ngFor="let ps_fator_risco_estilo_vida of ps_fatores_risco_estilo_vida" [value]="ps_fator_risco_estilo_vida.value">
                             {{ps_fator_risco_estilo_vida.viewValue}}
                         </mat-option>
@@ -187,7 +187,7 @@
                 </mat-form-field>
 
                 <mat-form-field style="width: 33%">
-                    <mat-select placeholder="Factores de risco ligados ao trabalho" [(ngModel)]="data.consulta.ps_fatores_risco_trabalho" multiple>
+                    <mat-select placeholder="Factores de risco ligados ao trabalho" [(ngModel)]="data.consulta.paciente.ps_fatores_risco_trabalho" multiple>
                         <mat-option *ngFor="let ps_fator_risco_trabalho of ps_fatores_risco_trabalho" [value]="ps_fator_risco_trabalho.value">
                             {{ps_fator_risco_trabalho.viewValue}}
                         </mat-option>
@@ -195,11 +195,11 @@
                 </mat-form-field>
 
                 <mat-form-field style="width: 99%">
-                    <input matInput placeholder="Especificação" [(ngModel)]="data.consulta.ps_fatores_risco_trabalho_especificacao">
+                    <input matInput placeholder="Especificação" [(ngModel)]="data.consulta.paciente.ps_fatores_risco_trabalho_especificacao">
                 </mat-form-field>
                 
                 <div>
-                    <button mat-button>GRAVAR</button>
+                    <button mat-button (click)="atualizarDadosGerais(data.consulta.paciente, data.consultas)">GRAVAR</button>
                     <button mat-button matStepperPrevious>VOLTAR</button>
                     <button mat-button matStepperNext>SEGUINTE</button>
                 </div>
@@ -222,39 +222,98 @@
     </mat-expansion-panel>
 
     <!-- ---------------- HISTORICO DE CONSULTAS ---------------- -->
-    <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle="true">
+    <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle="false">
 
         <mat-expansion-panel-header>
             <mat-panel-title>
             HISTORICO DE CONSULTAS
             </mat-panel-title>
         </mat-expansion-panel-header>
-        <mat-form-field>
-            <input matInput placeholder="Country">
-        </mat-form-field>
-        <mat-action-row>
-            <button mat-button color="warn" (click)="prevStep()">Previous</button>
-            <button mat-button color="primary" (click)="nextStep()">Next</button>
-        </mat-action-row>
+        
+        <!--DIV COM A TABELA DE CONSULTAS ENCERRADAS-->
+            <mat-table [dataSource]="data.consultas" matSort>
+                    
+                <!-- Progress Column -->
+                <ng-container matColumnDef="data">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Data </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.data.toDate() | date:'dd/MM hh:mm:ss'}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="diagnostico">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Diagnostico </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.diagnostico_final}}</mat-cell>
+                </ng-container>
+        
+                <ng-container matColumnDef="tratamento">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Tratamento </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.tratamento_efetuar}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="internamento">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Internamento </mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{row.internamento}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="detalhes">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Detalhes </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Detalhes da consulta">  
+                        <mat-icon>list</mat-icon>
+                        </button></mat-cell>
+                </ng-container>
+            
+                <mat-header-row *matHeaderRowDef="displayedColumnsHistConsultas"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumnsHistConsultas;">
+                </mat-row>
+            </mat-table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 
     </mat-expansion-panel>
 
     <!-- ---------------- CONSULTA ATUAL ---------------- -->
-    <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle="true">
+    <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle="false">
 
         <mat-expansion-panel-header>
             <mat-panel-title>
                 CONSULTA ATUAL
             </mat-panel-title>
         </mat-expansion-panel-header>
-        <mat-form-field>
-            <input matInput placeholder="Date" [matDatepicker]="picker" (focus)="picker.open()" readonly>
+        
+        <mat-form-field style="width: 49%">
+            <input matInput placeholder="Queixas principais" [(ngModel)]="data.consulta.queixas_principais">
         </mat-form-field>
-        <mat-datepicker #picker></mat-datepicker>
-        <mat-action-row>
-            <button mat-button color="warn" (click)="prevStep()">Previous</button>
-            <button mat-button color="primary" (click)="nextStep()">End</button>
-        </mat-action-row>
+
+        <mat-form-field style="width: 49%">
+            <input matInput placeholder="Historia da doença atual" [(ngModel)]="data.consulta.historia_doenca_atual">
+        </mat-form-field>
+
+        <mat-form-field style="width: 49%">
+            <mat-select placeholder="Diagnosticos auxiliares" [(ngModel)]="data.consulta.diagnosticos_aux" multiple>
+                <mat-option *ngFor="let diagnostico of data.diagnosticos" [value]="diagnostico">
+                    {{diagnostico.nome}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!--
+            <mat-select placeholder="Factores stressantes" [(ngModel)]="data.consulta.paciente.ps_fatores_stressantes" multiple>
+                <mat-option *ngFor="let ps_fator_stressante of ps_fatores_stressantes" [value]="ps_fator_stressante.value">
+                    {{ps_fator_stressante.viewValue}}
+                </mat-option>
+            </mat-select>
+        -->
+
+        <mat-form-field style="width: 49%">
+            <input matInput placeholder="Diagnostico final" [(ngModel)]="data.consulta.diagnostico_final">
+        </mat-form-field>
+
+        <mat-form-field style="width: 49%">
+            <input matInput placeholder="Tratamento a efetuar" [(ngModel)]="data.consulta.tratamento_efetuar">
+        </mat-form-field>
+
+        <div>
+            <button mat-button>INTERNAR</button>
+            <button mat-button (click)="aguardarDiagnostico(data.consulta)">AGUARDAR DIAGNOSTICOS AUX</button>
+            <button mat-button (click)="encerrarConsulta(data.consulta)">ENCERRAR CONSULTA</button>
+        </div>
 
     </mat-expansion-panel>
 </mat-accordion>
