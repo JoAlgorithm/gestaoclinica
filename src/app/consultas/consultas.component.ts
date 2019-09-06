@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { c } from '@angular/core/src/render3';
 import { ConfiguracoesService } from '../services/configuracoes.service';
 import { DiagnosticoAuxiliar } from '../classes/diagnostico_aux';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-consultas',
@@ -87,7 +88,7 @@ export class ConsultasComponent implements OnInit {
 
       //Consultas EM ATENDIMENTO
       this.dataSourseAndamento=new MatTableDataSource(
-        this.consultas.filter(c =>c.status === "Diagnostico" || c.status === "Internamento").sort((a, b) => a.data > b.data ? 1 : -1)
+        this.consultas.filter(c =>c.status === "Diagnostico" || c.status === "Internamento" || c.status === "Em andamento").sort((a, b) => a.data > b.data ? 1 : -1)
       );
       this.dataSourseAndamento.paginator = this.paginatorAndamento;
     })
@@ -107,9 +108,9 @@ export class ConsultasComponent implements OnInit {
     width: '400px',
     data: { consulta: row }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    /*dialogRef.afterClosed().subscribe(result => {
       //console.log("result "+result);
-    });
+    });*/
   }
 
   applyFilter(filterValue: string) {
@@ -123,9 +124,9 @@ export class ConsultasComponent implements OnInit {
 
   atenderPaciente(consulta:Consulta){
 
-    consulta.diagnosticos_aux.forEach(d => {
+    /*consulta.diagnosticos_aux.forEach(d => {
       console.log("Diagnostico aux do pacientes "+d.nome)
-    });
+    });*/
 
     let dataSourseHistConsultas: MatTableDataSource<Consulta>; //Tabela de consultas pendentes
     dataSourseHistConsultas=new MatTableDataSource(
@@ -137,10 +138,10 @@ export class ConsultasComponent implements OnInit {
       height: '600px',
       data: { consulta: consulta, consultas: dataSourseHistConsultas, 
       diagnosticos: this.diagnosticos as DiagnosticoAuxiliar[] }
-      });
-      dialogRef.afterClosed().subscribe(result => {
-      console.log("result "+result);
-      });
+    });
+    dialogRef.afterClosed().subscribe(result => {
+     // console.log("result "+result);
+    });
 
 
     //let data = Object.assign({}, consulta);
@@ -228,6 +229,8 @@ export class ConsultasComponent implements OnInit {
     {value: 'Outros', viewValue: 'Outros'}
   ];
 
+  diagnosticos_alternativo: String[] = [];
+
   //Atributos da tabela de HISTORICO DE CONSULTAS
   //dataSourseHistConsultas: MatTableDataSource<Consulta>; //Tabela de consultas pendentes
   displayedColumnsHistConsultas = ['data','diagnostico','tratamento','internamento', 'detalhes'];
@@ -235,39 +238,72 @@ export class ConsultasComponent implements OnInit {
 
   //temHistorico = false;
 
-  
+  toppings = new FormControl();
 
   constructor(  public dialogRef: MatDialogRef<AtenderConsultaDialog>,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
-  public pacienteService: PacienteService,  public snackBar: MatSnackBar) {
+  public pacienteService: PacienteService,  public snackBar: MatSnackBar, public configServices:ConfiguracoesService) {
     
   }
 
-  atualizarDadosGerais(paciente:Paciente, consultas:Consulta[]){
+  atualizarDadosGerais(paciente:Paciente, consultaAtual:Consulta, consultas:Consulta[]){
     //Ao atualizar o objecto Paciente atualiza-se os dados na tabela de pacientes e em todas as consultas desse paciente
+    //console.log("hf_diabete_mellitus: " + paciente.hf_diabete_mellitus)
     let data = Object.assign({}, paciente);
+
     
-    this.pacienteService.updatePaciente(data)
-    .then( res => {
+    //Atualizar dados do paciente na tabela paciente
+      this.pacienteService.updatePaciente(data)
+      .then( res => {
 
-      consultas.forEach(c => {
-        c.paciente = paciente;
-        let d = Object.assign({}, c);
-        this.pacienteService.updateConsulta(c)
-        .then(r =>{})
-        .catch(er =>{
+          //Atualizar dados do paciente na consulta atual
+          this.pacienteService.updateConsulta(Object.assign({}, consultaAtual))
+          .then(re =>{
+            this.openSnackBar("Dados gerais do paciente atualizados com sucesso");
+          
+            /*//Como o objeto paciente é gravado estaticamente dentro de cada consulta entao deve-se atualizar os dados desse 
+            // paciente em todas outras consultas (alem da atual que ja foi gravada) para garantir que a info do paciente esteja atualizada
+            if(consultas){
+              //Se o array nao estiver vazio
+              consultas.forEach(c => {
+                c.paciente = paciente;
+                let d = Object.assign({}, c);
+                this.pacienteService.updateConsulta(c)
+                .then(r =>{
+                  this.openSnackBar("Dados gerais do paciente atualizados com sucesso");
+                  console.log("Cadastrado com sucesso")
+                })
+                .catch(er =>{
+                  this.openSnackBar("Ocorreu um erro ao atualizar os dados. Consulte o Admin do sistema.");
+                  console.log("Erro ao atualizar dados do paciente na consulta: "+er.message)
+                })
+              })
+            }else{
+              //Se for a primeira consulta
+              this.openSnackBar("Dados gerais do paciente atualizados com sucesso");
+            }
+
+          })
+          .catch(erro => {
+            this.openSnackBar("Ocorreu um erro ao atualizar os dados. Consulte o Admin do sistema.");
+            console.log("Erro ao atualizar dados do paciente na consulta: "+er.message)
+          })*/
+        }).catch(erro => {
           this.openSnackBar("Ocorreu um erro ao atualizar os dados. Consulte o Admin do sistema.");
+            console.log("Erro ao atualizar dados do paciente na consulta: "+erro.message)
         })
+
+      }).catch( err => {
+        this.openSnackBar("Ocorreu um erro ao atualizar os dados. Consulte o Admin do sistema.");
+        console.log("Erro ao atualizar dados do paciente: "+err.message)
       });
-
-      this.openSnackBar("Dados gerais do paciente atualizados com sucesso");
-
-    }).catch( err => {
-      this.openSnackBar("Ocorreu um erro ao atualizar os dados. Consulte o Admin do sistema.");
-    });
+    
   }
 
   encerrarConsulta(consulta:Consulta){
+
+    
+
     consulta.status = "Encerrada";
     consulta.encerrador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
     consulta.data_encerramento = new Date();
@@ -285,6 +321,32 @@ export class ConsultasComponent implements OnInit {
 
   aguardarDiagnostico(consulta:Consulta){
 
+    //REMOVER DIAGNOSTICOS QUE NAO TENHAM SIDO FATURADOS
+    consulta.diagnosticos_aux = []
+    /*consulta.diagnosticos_aux.forEach( (element, index) => {
+      if(element.faturado == false) consulta.diagnosticos_aux.splice(index,1);
+    });*/
+    
+    //ADICIONAR DIAGNOSTICOS SEM MEXER NOS
+    this.diagnosticos_alternativo.forEach(d => {
+      
+      this.data.diagnosticos.forEach(element => {
+        //console.log("ELEMENT "+element.nome)
+        if (d === element.nome){
+
+          if(consulta.diagnosticos_aux.includes(element)){
+
+          }else{
+            consulta.diagnosticos_aux.push(element);
+            console.log("PUSH ALTERNATIVO: "+d)
+          }
+
+          
+        }
+      });
+
+    });
+
     consulta.diagnosticos_aux.forEach(d => {
       console.log("Diagnosticos aux marcados: "+d.nome)
     });
@@ -300,6 +362,7 @@ export class ConsultasComponent implements OnInit {
       this.dialogRef.close();
       this.openSnackBar("Paciente dispensado para diagnostico");
     }).catch( err => {
+      this.dialogRef.close();
       console.log("ERRO: " + err.message)
     });
 
@@ -307,6 +370,27 @@ export class ConsultasComponent implements OnInit {
 
   ngOnInit() {
     this.dialogRef.updateSize('80%', '90%');
+
+    /*this.configServices.getDiagnosticos().subscribe(data => {
+      this.diagnosticos = data.map(e => {
+        return {
+          id: e.payload.doc.id,
+          ...e.payload.doc.data(),
+        } as DiagnosticoAuxiliar;
+      })
+    })*/
+
+    if(this.data.consulta.diagnosticos_aux){
+      this.data.consulta.diagnosticos_aux.forEach(element => {
+        console.log("DIAGNOSITOCOS funcionand"+element.nome)
+        //this.toppings.setValue(element);
+        this.diagnosticos_alternativo.push(element.nome);
+      });
+    }
+    
+
+
+    //this.toppings.setValue(this.data.consulta.diagnosticos_aux);
 
     /*this.data.consultas.forEach(c => {
       if (c.status === "Encerrada"){

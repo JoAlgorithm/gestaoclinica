@@ -5,6 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { AuthService } from './auth.service';
 import { Consulta } from '../classes/consulta';
 import { Subject, Observable } from 'rxjs';
+import { Faturacao } from '../classes/faturacao';
 
 
 @Injectable()
@@ -49,6 +50,12 @@ export class PacienteService {
     //delete estudante.id;
     return this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/consultas/' + consulta.id).update(consulta);
   }
+
+  //FATURACOES
+  faturar(faturacao:Faturacao){
+    return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/faturacao').add(faturacao);
+  }
+
 
   //ENVIAR CONSULTAS DE UM COMPONENT PARA O OUTRO
   /*private subject = new Subject<Consulta>();

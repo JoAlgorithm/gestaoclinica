@@ -36,6 +36,7 @@ export class Consulta {
     * Ao inves de considerarmos o Status "Em atendimento" usaremos:
     * Internamento: quando o paciente tiver sido internado
     * Diagnostico: quando o paciente estiver sendo diagnosticado
+    * Em atendimento: o diagnostico ja foi encerrado pela rececionista
     */
     status?:String;
 

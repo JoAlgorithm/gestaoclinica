@@ -75,7 +75,7 @@
                 </div>
                 
                 <div>
-                    <button mat-button (click)="atualizarDadosGerais(data.consulta.paciente, data.consultas)">GRAVAR</button>
+                    <button mat-button (click)="atualizarDadosGerais(data.consulta.paciente, data.consulta, data.consultas)">GRAVAR</button>
                     <button mat-button matStepperNext>SEGUINTE</button>
                     <!--<button mat-icon-button matTooltip="Seguinte" matStepperNext>   
                         <mat-icon>arrow_right_alt</mat-icon>
@@ -135,7 +135,7 @@
                 </div>
 
                 <div>
-                    <button mat-button (click)="atualizarDadosGerais(data.consulta.paciente, data.consultas)">GRAVAR</button>
+                    <button mat-button (click)="atualizarDadosGerais(data.consulta.paciente, data.consulta, data.consultas)">GRAVAR</button>
                     <button mat-button matStepperPrevious>VOLTAR</button>
                     <button mat-button matStepperNext>SEGUINTE</button>
                 </div>
@@ -199,7 +199,7 @@
                 </mat-form-field>
                 
                 <div>
-                    <button mat-button (click)="atualizarDadosGerais(data.consulta.paciente, data.consultas)">GRAVAR</button>
+                    <button mat-button (click)="atualizarDadosGerais(data.consulta.paciente, data.consulta, data.consultas)">GRAVAR</button>
                     <button mat-button matStepperPrevious>VOLTAR</button>
                     <button mat-button matStepperNext>SEGUINTE</button>
                 </div>
@@ -287,12 +287,21 @@
         </mat-form-field>
 
         <mat-form-field style="width: 49%">
-            <mat-select placeholder="Diagnosticos auxiliares" [(ngModel)]="data.consulta.diagnosticos_aux" multiple>
-                <mat-option *ngFor="let diagnostico of data.diagnosticos" [value]="diagnostico">
+            <mat-select placeholder="Diagnosticos auxiliares" [(ngModel)]="diagnosticos_alternativo" multiple>
+                <mat-option *ngFor="let diagnostico of data.diagnosticos" [value]="diagnostico.nome">
                     {{diagnostico.nome}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
+
+        <!--<mat-form-field style="width: 49%">
+            <mat-select placeholder="Diagnosticos auxiliares" [formControl]="toppings" [(ngModel)]="data.consulta.diagnosticos_aux" multiple>
+                <mat-option *ngFor="let diagnostico of diagnosticos" [value]="diagnostico">
+                    {{diagnostico.nome}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>-->
+
         <!--
             <mat-select placeholder="Factores stressantes" [(ngModel)]="data.consulta.paciente.ps_fatores_stressantes" multiple>
                 <mat-option *ngFor="let ps_fator_stressante of ps_fatores_stressantes" [value]="ps_fator_stressante.value">
