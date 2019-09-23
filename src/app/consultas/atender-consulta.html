@@ -288,7 +288,7 @@
 
         <mat-form-field style="width: 49%">
             <mat-select placeholder="Diagnosticos auxiliares" [(ngModel)]="diagnosticos_alternativo" multiple>
-                <mat-option *ngFor="let diagnostico of data.diagnosticos" [value]="diagnostico.nome">
+                <mat-option *ngFor="let diagnostico of data.diagnosticos" [value]="diagnostico.nome" [disabled]="diagnostico.faturado">
                     {{diagnostico.nome}}
                 </mat-option>
             </mat-select>

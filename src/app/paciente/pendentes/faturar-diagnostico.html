@@ -1,0 +1,58 @@
+<h1 mat-dialog-title>Faturar diagnosticos</h1>
+<div mat-dialog-content>
+  <p>Selecione os diagnosticos solicitados a faturar</p>
+
+   <mat-table [dataSource]="dataSource" matSort>
+
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                                [checked]="selection.hasValue() && isAllSelected()"
+                                [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                [aria-label]="checkboxLabel()">
+                </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                                (change)="$event ? selection.toggle(row) : null"
+                                [checked]="selection.isSelected(row)"
+                                [aria-label]="checkboxLabel(row)">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+        
+        <!-- Nome do diagnostico -->
+        <ng-container matColumnDef="nome">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Diagnostico Aux </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.nome}}</mat-cell>
+        </ng-container>
+
+        <!-- Valor a pagar (preco) -->
+        <ng-container matColumnDef="preco">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Valor a pagar </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.preco}}</mat-cell>
+        </ng-container>
+
+         
+        
+
+        <!--<ng-container matColumnDef="remover">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Remover </mat-header-cell>
+            <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="removeDiagostico(row)" matTooltip="Remover {{row.nome}}">  
+                    <mat-icon>delete</mat-icon>
+            </button></mat-cell>
+        </ng-container>-->
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+        </mat-row>
+    </mat-table>
+  
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button cdkFocusInitial (click)="faturar()">Faturar</button>
+  <!--<button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial (click)="cancelarConsulta(data.consulta)">OK</button>-->
+</div> 

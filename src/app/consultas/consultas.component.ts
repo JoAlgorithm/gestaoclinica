@@ -68,27 +68,28 @@ export class ConsultasComponent implements OnInit {
 
       //Consultas PENDENTES
       this.dataSoursePendentes=new MatTableDataSource(
-        this.consultas.filter(c =>c.status === "Aberta").sort((a, b) => a.data > b.data ? 1 : -1)
+        this.consultas.filter(c =>c.status === "Aberta" && c.tipo === "Consulta Medica").sort((a, b) => a.data > b.data ? 1 : -1)
       );
-      this.dataSoursePendentes.paginator = this.paginatorPendentes;
+      setTimeout(() => this.dataSoursePendentes.paginator = this.paginatorPendentes);
       this.dataSoursePendentes.sort = this.sortPendentes;
 
       //Consultas CANCELADAS
       this.dataSourseCanceladas=new MatTableDataSource(
-        this.consultas.filter(c =>c.status === "Cancelada").sort((a, b) => a.data > b.data ? 1 : -1)
+        this.consultas.filter(c =>c.status === "Cancelada" && c.tipo === "Consulta Medica").sort((a, b) => a.data > b.data ? 1 : -1)
       );
       this.dataSourseCanceladas.paginator = this.paginatorCanceladas;
       //this.dataSourseCanceladas.sort = this.sortCanceladas;
 
       //Consultas ENCERRADAS
       this.dataSourseEncerradas=new MatTableDataSource(
-        this.consultas.filter(c =>c.status === "Encerrada").sort((a, b) => a.data_encerramento > b.data_encerramento ? 1 : -1)
+        this.consultas.filter(c =>c.status === "Encerrada" && c.tipo === "Consulta Medica").sort((a, b) => a.data_encerramento > b.data_encerramento ? 1 : -1)
       );
-      this.dataSourseEncerradas.paginator = this.paginatorEncerradass;
+      setTimeout(() => this.dataSourseEncerradas.paginator = this.paginatorEncerradass);
+      
 
       //Consultas EM ATENDIMENTO
       this.dataSourseAndamento=new MatTableDataSource(
-        this.consultas.filter(c =>c.status === "Diagnostico" || c.status === "Internamento" || c.status === "Em andamento").sort((a, b) => a.data > b.data ? 1 : -1)
+        this.consultas.filter(c => (c.status === "Diagnostico" || c.status === "Internamento" || c.status === "Em andamento") && c.tipo === "Consulta Medica").sort((a, b) => a.data > b.data ? 1 : -1)
       );
       this.dataSourseAndamento.paginator = this.paginatorAndamento;
     })
@@ -130,8 +131,25 @@ export class ConsultasComponent implements OnInit {
 
     let dataSourseHistConsultas: MatTableDataSource<Consulta>; //Tabela de consultas pendentes
     dataSourseHistConsultas=new MatTableDataSource(
-      this.consultas.filter(c =>c.status === "Encerrada" && c.paciente.nid == consulta.paciente.nid).sort((a, b) => a.data_encerramento > b.data_encerramento ? 1 : -1)
+      this.consultas.filter(c =>c.status === "Encerrada" && c.tipo == "Consulta Medica" && c.paciente.nid == consulta.paciente.nid).sort((a, b) => a.data_encerramento > b.data_encerramento ? 1 : -1)
     );
+    
+    //A tabela de diagnosticos é enviada para o dialog pura
+    // porém se algum diagnostico tiver sido faturado esse deve se tornar nao editável daí que verificamos se existe algum
+    // diagnostico faturado para passar true para a vaiavel faturado e ir tornar esse nao editavel la nao tela
+    if (consulta.diagnosticos_aux){
+      consulta.diagnosticos_aux.forEach(d => {
+        this.diagnosticos.forEach(diagno => {
+          if(d.id == diagno.id){
+            
+            if(d.faturado){
+              diagno.faturado = true;
+            }
+          }
+        })
+      })
+    }
+    
 
     let dialogRef = this.dialog.open(AtenderConsultaDialog, {
       width: '1000px',
@@ -172,6 +190,11 @@ export class ConsultasComponent implements OnInit {
   
 
 }
+
+
+
+
+
 
 //DIALOG ATENDIMENTO DE CONSULTA ---------------------------------------------------------------
 @Component({
@@ -322,10 +345,7 @@ export class ConsultasComponent implements OnInit {
   aguardarDiagnostico(consulta:Consulta){
 
     //REMOVER DIAGNOSTICOS QUE NAO TENHAM SIDO FATURADOS
-    consulta.diagnosticos_aux = []
-    /*consulta.diagnosticos_aux.forEach( (element, index) => {
-      if(element.faturado == false) consulta.diagnosticos_aux.splice(index,1);
-    });*/
+    //consulta.diagnosticos_aux = []
     
     //ADICIONAR DIAGNOSTICOS SEM MEXER NOS
     this.diagnosticos_alternativo.forEach(d => {
@@ -334,12 +354,25 @@ export class ConsultasComponent implements OnInit {
         //console.log("ELEMENT "+element.nome)
         if (d === element.nome){
 
-          if(consulta.diagnosticos_aux.includes(element)){
-
+          if(consulta.diagnosticos_aux){//verficar se a lista de diagnosticos nao esta nula
+            if(consulta.diagnosticos_aux.includes(element)){
+            }else{
+              //Garantir que diagnosticos faturados nao sejam repetidos
+              if(element.faturado != true){
+                consulta.diagnosticos_aux.push(element);
+                console.log("PUSH ALTERNATIVO: "+d)
+              }  
+            }
           }else{
-            consulta.diagnosticos_aux.push(element);
-            console.log("PUSH ALTERNATIVO: "+d)
+            consulta.diagnosticos_aux = []; //Ja que o array esta nulo precisa ser instanciado
+            //Garantir que diagnosticos faturados nao sejam repetidos
+            if(element.faturado != true){
+              consulta.diagnosticos_aux.push(element);
+              console.log("PUSH ALTERNATIVO: "+d)
+            }
           }
+          
+          
 
           
         }
@@ -347,8 +380,13 @@ export class ConsultasComponent implements OnInit {
 
     });
 
+    //Se nao tiver sido selecionado nenhum diagnostico aux entao nao deve passar
+    let selecionado = false
     consulta.diagnosticos_aux.forEach(d => {
       console.log("Diagnosticos aux marcados: "+d.nome)
+      if(d.faturado != true){
+        selecionado = true; //significa que tem pelo menos 1 selecionad que nao tenha sido faturado
+      }
     });
 
 
@@ -357,14 +395,29 @@ export class ConsultasComponent implements OnInit {
     consulta.marcador_diagnostico = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
     let data = Object.assign({}, consulta);
 
-    this.pacienteService.updateConsulta(data)
-    .then( res => {
-      this.dialogRef.close();
-      this.openSnackBar("Paciente dispensado para diagnostico");
-    }).catch( err => {
-      this.dialogRef.close();
-      console.log("ERRO: " + err.message)
-    });
+
+    //console.log("-----------------------")
+    //console.log("Diagnosticos selecionados:")
+    //consulta.diagnosticos_aux.forEach(element => {
+      //console.log("NOME: "+element.nome + " FATURADO: "+ element.faturado)
+    //});
+
+    //console.log("SELECIONADO: "+selecionado)
+
+    
+    if(selecionado){
+      this.pacienteService.updateConsulta(data)
+      .then( res => {
+        this.dialogRef.close();
+        this.openSnackBar("Paciente dispensado para diagnostico");
+      }).catch( err => {
+        this.dialogRef.close();
+        console.log("ERRO: " + err.message)
+      });
+    }else{
+      this.openSnackBar("Selecione pelo menos um diagnostico aux");
+    }
+    
 
   }
 
@@ -382,7 +435,7 @@ export class ConsultasComponent implements OnInit {
 
     if(this.data.consulta.diagnosticos_aux){
       this.data.consulta.diagnosticos_aux.forEach(element => {
-        console.log("DIAGNOSITOCOS funcionand"+element.nome)
+        //console.log("DIAGNOSITOCOS funcionand"+element.nome)
         //this.toppings.setValue(element);
         this.diagnosticos_alternativo.push(element.nome);
       });

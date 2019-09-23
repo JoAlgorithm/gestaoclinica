@@ -162,10 +162,12 @@ export class ListagemComponent implements OnInit {
   }
 
   marcarConsulta(paciente:Paciente){
+    this.consulta = new Consulta();
     this.consulta.data = new Date();
     this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
     this.consulta.paciente = paciente;
-    this.consulta.status = "Aberta";
+    this.consulta.diagnosticos_aux = this.diagnosticos;
+    this.consulta.status = "Diagnostico";
     this.consulta.tipo = "DIAGNOSTICO AUX";
     //this.preco_total
 
@@ -175,6 +177,7 @@ export class ListagemComponent implements OnInit {
 
     this.pacienteService.marcarConsulta(data)
     .then( res => {
+      this.dialogRef.close();
       this.openSnackBar("Consulta agendada com sucesso");
       this.router.navigateByUrl("/consultas")
     }).catch( err => {

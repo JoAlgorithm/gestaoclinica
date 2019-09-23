@@ -54,7 +54,7 @@ import {
 
 import { AppRoutes } from './app.routing';
 import { AppComponent } from './app.component';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestore';
 import { AuthService } from './services/auth.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 //import { AtendimentoComponent } from './atendimento/atendimento.component';
@@ -95,6 +95,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
+    //AngularFirestoreModule.enablePersistence(),
     AngularFireDatabaseModule,
     
     //AngularFirestore,
