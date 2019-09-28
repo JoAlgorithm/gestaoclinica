@@ -59,87 +59,88 @@
           </div>
         </mat-card>
       </div>
-
-      <div fxFlex.gt-sm="50" fxFlex.gt-xs="80" fxFlex="100">
-        <mat-card>
-          <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
-            Receita anual com Consulta Medica &nbsp; <span class="font-weight-bold mat-text-sucess">46,68</span>
-            <span fxFlex></span>
-            <button mat-icon-button mat-button-sm [matMenuTriggerFor]="card2" aria-label="Open card menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-          </mat-card-subtitle>
-          <mat-menu #card2="matMenu" x-position="before">
-            <button mat-menu-item>
-              <mat-icon>settings</mat-icon>
-              Settings
-            </button>
-            <button mat-menu-item>
-              <mat-icon>more</mat-icon>
-              View More
-            </button>
-            <button mat-menu-item>
-              <mat-icon>notifications_off</mat-icon>
-              Disable notifications
-            </button>
-            <button mat-menu-item>
-              <mat-icon>exit_to_app</mat-icon>
-              Remove Panel
-            </button>
-          </mat-menu>
-          <mat-card-content>
-            <canvas height="200" baseChart class="chart"
-              [datasets]="ComboChartData"
-              [labels]="comboChartLabels"
-              [options]="ComboChartOptions"
-              [colors]="chartColors"
-              [legend]="comboChartLegend"
-              [chartType]="barChartType"></canvas>
-          </mat-card-content>
-        </mat-card>
-      </div>
-
-      <div fxFlex.gt-sm="50" fxFlex.gt-xs="80" fxFlex="100">
-        <mat-card>
-          <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
-            Receita anual com Diagnostico &nbsp; <span class="font-weight-bold mat-text-warn">-46,68</span>
-            <span fxFlex></span>
-            <button mat-icon-button mat-button-sm [matMenuTriggerFor]="card2" aria-label="Open card menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-          </mat-card-subtitle>
-          <mat-menu #card2="matMenu" x-position="before">
-            <button mat-menu-item>
-              <mat-icon>settings</mat-icon>
-              Settings
-            </button>
-            <button mat-menu-item>
-              <mat-icon>more</mat-icon>
-              View More
-            </button>
-            <button mat-menu-item>
-              <mat-icon>notifications_off</mat-icon>
-              Disable notifications
-            </button>
-            <button mat-menu-item>
-              <mat-icon>exit_to_app</mat-icon>
-              Remove Panel
-            </button>
-          </mat-menu>
-          <mat-card-content>
-            <canvas height="200" baseChart class="chart"
-              [datasets]="ComboChartData"
-              [labels]="comboChartLabels"
-              [options]="ComboChartOptions"
-              [colors]="chartColors"
-              [legend]="comboChartLegend"
-              [chartType]="barChartType"></canvas>
-          </mat-card-content>
-        </mat-card>
-      </div>
-
 </div>
 
+<div fxLayout="row wrap" >
+        <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" fxFlex="100">
+          <mat-card>
+            <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
+              RECEITA ANUAL &nbsp; <span class="font-weight-bold mat-text-sucess">{{total_valor | currency:' ':'symbol':'1.2-2'}} MZN</span>
+              <span fxFlex></span>
+              <!--<button mat-icon-button mat-button-sm [matMenuTriggerFor]="card2" aria-label="Open card menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>-->
+            </mat-card-subtitle>
+            <mat-menu #card2="matMenu" x-position="before">
+              <button mat-menu-item>
+                <mat-icon>settings</mat-icon>
+                Settings
+              </button>
+              <button mat-menu-item>
+                <mat-icon>more</mat-icon>
+                View More
+              </button>
+              <button mat-menu-item>
+                <mat-icon>notifications_off</mat-icon>
+                Disable notifications
+              </button>
+              <button mat-menu-item>
+                <mat-icon>exit_to_app</mat-icon>
+                Remove Panel
+              </button>
+            </mat-menu>
+            <mat-card-content>
+              <canvas height="200" baseChart class="chart"
+                [datasets]="ComboChartData"
+                [labels]="comboChartLabels"
+                [options]="ComboChartOptions"
+                [colors]="chartColors"
+                [legend]="comboChartLegend"
+                [chartType]="barChartType"></canvas>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div fxFlex.gt-sm="50%" fxFlex="100">
+          <mat-card>
+            <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
+              ATENDIMENTOS MENSALISADOS <!--&nbsp; <span class="font-weight-bold mat-text-primary">+458,90</span>
+              <span fxFlex></span>-->
+              <!--<button mat-icon-button mat-button-sm [matMenuTriggerFor]="card1" aria-label="Open card menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>-->
+            </mat-card-subtitle>
+            <mat-menu #card1="matMenu" x-position="before">
+              <button mat-menu-item>
+                <mat-icon>settings</mat-icon>
+                Settings
+              </button>
+              <button mat-menu-item>
+                <mat-icon>more</mat-icon>
+                View More
+              </button>
+              <button mat-menu-item>
+                <mat-icon>notifications_off</mat-icon>
+                Disable notifications
+              </button>
+              <button mat-menu-item>
+                <mat-icon>exit_to_app</mat-icon>
+                Remove Panel
+              </button>
+            </mat-menu>
+            <mat-card-content>
+              <canvas height="200" baseChart class="chart"
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [colors]="chartColors"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"></canvas>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+</div>
 
 
 <!--       <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">

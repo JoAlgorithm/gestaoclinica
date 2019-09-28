@@ -80,7 +80,7 @@ export class ListagemComponent implements OnInit {
     this.pacienteService.marcarConsulta(data)
     .then( res => {
       this.openSnackBar("Consulta agendada com sucesso");
-      this.router.navigateByUrl("/consultas")
+      //this.router.navigateByUrl("/consultas")
     }).catch( err => {
       console.log("ERRO: " + err.message)
       this.openSnackBar("Ocorreu um erro ao marcar a consulta. Contacte o Admin do sistema.");

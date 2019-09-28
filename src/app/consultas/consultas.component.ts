@@ -9,6 +9,7 @@ import { c } from '@angular/core/src/render3';
 import { ConfiguracoesService } from '../services/configuracoes.service';
 import { DiagnosticoAuxiliar } from '../classes/diagnostico_aux';
 import { FormControl } from '@angular/forms';
+import { Faturacao } from '../classes/faturacao';
 
 @Component({
   selector: 'app-consultas',
@@ -323,20 +324,79 @@ export class ConsultasComponent implements OnInit {
     
   }
 
+  getMes(number): String{
+    console.log("Get mes "+number)
+    switch(number) { 
+      case 1: { 
+         return "Janeiro";
+      } 
+      case 2: { 
+         return "Fevereiro"; 
+      } 
+      case 3: { 
+         return "Marco"; 
+      }
+      case 4: { 
+        return "Abril"; 
+      }
+      case 5: { 
+        return "Maio"; 
+      }
+      case 6: { 
+        return "Junho"; 
+      }
+      case 7: { 
+        return "Julho"; 
+      }
+      case 8: { 
+        return "Agosto"; 
+      }  
+      case 9: { 
+        return "Setembro"; 
+      }
+      case 10: { 
+        return "Outubro"; 
+      }
+      case 11: { 
+        return "Novembro"; 
+      }
+      case 12: { 
+        return "Dezembro"; 
+      }
+      default: { 
+         //statements; 
+         break; 
+      } 
+   } 
+  }
+
   encerrarConsulta(consulta:Consulta){
-
-    
-
     consulta.status = "Encerrada";
     consulta.encerrador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
     consulta.data_encerramento = new Date();
 
     let data = Object.assign({}, consulta);
 
+    //Faturar consulta
+    let faturacao = new Faturacao();
+    faturacao.categoria = "CONSULTA_MEDICA";
+    faturacao.valor = consulta.preco_consulta_medica;
+    faturacao.data = new Date();
+    faturacao.consulta = consulta;
+    faturacao.faturador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+    faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
+    faturacao.ano = new Date().getFullYear();
+    let f = Object.assign({},faturacao);
+
     this.pacienteService.updateConsulta(data)
+
     .then( res => {
-      this.dialogRef.close();
-      this.openSnackBar("Consulta encerrada com sucesso");
+      this.pacienteService.faturar(f).then(r => {
+        this.dialogRef.close();
+        this.openSnackBar("Consulta encerrada com sucesso");
+      }).catch(r =>{ 
+      })
+
     }).catch( err => {
       console.log("ERRO: " + err.message)
     });

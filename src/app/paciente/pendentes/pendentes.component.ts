@@ -110,6 +110,7 @@ export class PendentesComponent implements OnInit {
   }
 
   getMes(number): String{
+    console.log("Get mes "+number)
     switch(number) { 
       case 1: { 
          return "Janeiro";
@@ -162,7 +163,8 @@ export class PendentesComponent implements OnInit {
     this.faturacao.data = new Date();
     this.faturacao.consulta = consulta;
     this.faturacao.diagnostico_aux = consulta.diagnosticos_aux;
-    this.faturacao.mes = this.getMes( +new Date().getMonth()+ +1);
+    
+    this.faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
     this.faturacao.ano = new Date().getFullYear();
 
     console.log("Faturacao mes "+this.faturacao.mes+" ano "+this.faturacao.ano)
@@ -298,15 +300,66 @@ export class PendentesComponent implements OnInit {
       })
     }
 
+    getMes(number): String{
+      console.log("Get mes "+number)
+      switch(number) { 
+        case 1: { 
+           return "Janeiro";
+        } 
+        case 2: { 
+           return "Fevereiro"; 
+        } 
+        case 3: { 
+           return "Marco"; 
+        }
+        case 4: { 
+          return "Abril"; 
+        }
+        case 5: { 
+          return "Maio"; 
+        }
+        case 6: { 
+          return "Junho"; 
+        }
+        case 7: { 
+          return "Julho"; 
+        }
+        case 8: { 
+          return "Agosto"; 
+        }  
+        case 9: { 
+          return "Setembro"; 
+        }
+        case 10: { 
+          return "Outubro"; 
+        }
+        case 11: { 
+          return "Novembro"; 
+        }
+        case 12: { 
+          return "Dezembro"; 
+        }
+        default: { 
+           //statements; 
+           break; 
+        } 
+     } 
+    }
+
     faturar(){ 
       let faturacao = new Faturacao();
-      faturacao.categoria = this.consulta.tipo;
+      //faturacao.categoria = this.consulta.tipo;
+      
+      faturacao.categoria = "DIAGNOSTICO_AUX";
       faturacao.valor = 0;
       faturacao.data = new Date();
       faturacao.consulta = this.consulta;
       //faturacao.diagnostico_aux = consulta.diagnosticos_aux;
       //this.faturacao.diagnostico_aux = this.consultas.
       faturacao.faturador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+
+      faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
+      faturacao.ano = new Date().getFullYear();
 
       /*if(this.consulta.tipo == "Consulta Medica"){
         this.consulta.status = "Em andamento";
@@ -330,6 +383,8 @@ export class PendentesComponent implements OnInit {
 
         } 
       });
+
+      
 
       //Se todos os itens tiverem sido faturados a consulta:
       // encerra se for do tipo Diagnostico
