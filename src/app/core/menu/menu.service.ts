@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 export interface BadgeItem {
   type: string;
@@ -33,9 +34,6 @@ const MENUITEMS:Menu[] = [
     name: 'RECEPCAO',
     type: 'sub',
     icon: 'local_library',
-    /*badge: [
-      {type: 'red', value: '5'}
-    ],*/
     children: [
       {state: 'cadastro_paciente', name: 'Cadastro de paciente'},
       {state: 'listagem_paciente', name: 'Lista de pacientes'},
@@ -54,35 +52,119 @@ const MENUITEMS:Menu[] = [
     type: 'link',
     icon: 'settings',
   },
-  
-  /*,
+];
+
+const MENUITEMS_RECECIONISTA:Menu[] = [
   {
-    state: 'financeiro',
-    name: 'FINANÇAS',
+    state: 'dashboard',
+    //state: 'home',
+    name: 'INICIO',
+    type: 'link',
+    icon: 'home'
+  },
+  {
+    state: 'paciente',
+    name: 'RECEPCAO',
     type: 'sub',
-    icon: 'monetization_on',
+    icon: 'local_library',
     children: [
-      {state: 'pagamento_mensalidades', name: 'Mensalidade'},
-      {state: 'lista_mensalidades', name: 'Relatório'}
+      {state: 'cadastro_paciente', name: 'Cadastro de paciente'},
+      {state: 'listagem_paciente', name: 'Lista de pacientes'},
+      {state: 'pendentes_paciente', name: 'Pendentes'},
     ]
-  }*/
-  
-  /*,
+  }  
+];
+
+const MENUITEMS_MEDICO:Menu[] = [
   {
-    state: 'http://primer.nyasha.me/docs',
-    name: 'DOCS',
-    type: 'extTabLink',
-    icon: 'local_library'
-  }*/
+    state: 'dashboard',
+    //state: 'home',
+    name: 'INICIO',
+    type: 'link',
+    icon: 'home'
+  },
+  {
+    state: 'consultas',
+    name: 'CONSULTAS',
+    type: 'link',
+    icon: 'assignment_ind',
+  }
 ];
 
 @Injectable()
 export class MenuService {
+
+  //MENUITEMS:Menu[] = [];
+  
+  constructor(private authService: AuthService){}
+  
+
+
   getAll(): Menu[] {
+    /*switch(this.authService.get_perfil) { 
+      case "Admnistrativo": { 
+         //statements; 
+         console.log("Admnistrativo")
+
+         //MENUITEMS.push(menu);
+         break; 
+      } 
+      case "Rececionista": { 
+         //statements; 
+         return MENUITEMS_RECECIONISTA;
+         //break; 
+      } 
+      case "Medico": { 
+        //statements; 
+        return MENUITEMS_MEDICO;
+        //break; 
+      } 
+      default: { 
+         //statements; 
+         return MENUITEMS;
+         //break; 
+      }
+      return MENUITEMS;
+   } */ 
+
     return MENUITEMS;
   }
 
   add(menu: Menu) {
-    MENUITEMS.push(menu);
+    console.log("Menu "+this.authService.get_perfil)
+    switch(this.authService.get_perfil) { 
+      case "Admnistrativo": { 
+         //statements; 
+         console.log("Admnistrativo")
+
+         MENUITEMS.push(menu);
+         break; 
+      } 
+      case "Rececionista": { 
+         //statements; 
+         console.log("Rececionista")
+         if(menu.name == "RECEPCAO"){
+          MENUITEMS.push(menu);
+         }
+         break; 
+      } 
+      case "Medico": { 
+        //statements; 
+        console.log("Medico")
+        if(menu.name == "CONSULTAS"){
+          MENUITEMS.push(menu);
+         }
+        MENUITEMS.push(menu);
+        break; 
+      } 
+      default: { 
+         //statements; 
+         console.log("Admin")
+         MENUITEMS.push(menu);
+         break; 
+      } 
+   } 
+    
+
   }
 }

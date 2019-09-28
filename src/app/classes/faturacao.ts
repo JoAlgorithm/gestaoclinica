@@ -6,6 +6,8 @@ export class Faturacao {
     id?: string; //Firebase ID
 
     data?: Date; //Data da faturacao
+    mes?: String; //Mes
+    ano?: Number; //Ano
 
     valor?: Number; //Valor faturado
 

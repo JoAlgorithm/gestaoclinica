@@ -8,7 +8,7 @@
             <h5>ATUALIZE OS DADOS GERAIS DA CLINICA</h5>
 
             <form [formGroup]="dados_geraisFormGroup">
-                <ng-template matStepLabel>DADOS DO PACIENTE</ng-template>
+                <!--<ng-template matStepLabel>DADOS DO PACIENTE</ng-template>-->
           
                   <!--NOME DA CLINICA
                   <mat-form-field style="width: 33%">
@@ -64,7 +64,7 @@
           <!--FORMULARIO DE CADASTRO DE DIAGNOSTICO AUX-->
           <h5>FORMULARIO DE CADASTRO DE DIAGNOSTICO AUXILIAR</h5>
           <form [formGroup]="cadastro_diagnosticoFormGroup">
-              <ng-template matStepLabel>DADOS DO PACIENTE</ng-template>
+              <!--<ng-template matStepLabel>DADOS DO PACIENTE</ng-template>-->
         
                 <!--NOME DO DIAGNOSITOC-->
                 <mat-form-field style="width: 45%">
@@ -129,5 +129,73 @@
 
 
 
-  <mat-tab label = "LISTA DE USUARIOS"> em desenvolvimento </mat-tab>
+  <mat-tab label = "GESTAO DE USUARIOS">
+    <mat-card class="example-card">
+        <mat-card-content>
+
+            <!--FORMULARIO DE CADASTRO DE USUARIOS--
+            <h5>FORMULARIO DE CADASTRO DE USUARIOS</h5>
+            <form [formGroup]="cadastro_userFormGroup">
+                <!--NOME DO USUARIO--
+                <mat-form-field style="width: 31%">
+                    <input matInput placeholder="Nome" formControlName="user_displayName" [(ngModel)]="user.displayName" required>
+                </mat-form-field>
+
+                <!--EMAIL DO USUARIO--
+                <mat-form-field style="width: 31%">
+                    <input matInput placeholder="Email" formControlName="user_email" [(ngModel)]="user.email" required>
+                </mat-form-field>
+                
+                    <!--PERFIL DO USUARIO--
+                    <mat-form-field style="width: 31%">
+                        <mat-select placeholder="Perfil" formControlName="user_perfil" [(ngModel)]="user.perfil" required>
+                            <mat-option *ngFor="let perfil of perfis" [value]="perfil.value">
+                                {{perfil.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                
+                <button mat-icon-button (click)="editarPerfil()" matTooltip="ATUALIZAR PERFIL">
+                    <mat-icon>add_circle</mat-icon>
+                </button>
+            </form>-->
+
+            <h5>LISTA DE USUARIOS CADASTRADOS</h5>
+            <!--DIV COM A TABELA DE CONSULTAS PENDENTES-->
+            <div class="example-container mat-elevation-z8">
+                <mat-table [dataSource]="dataSourseUser">
+                    
+                    <ng-container matColumnDef="displayName">
+                        <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.displayName}}</mat-cell>
+                    </ng-container>
+        
+                    <ng-container matColumnDef="email">
+                        <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.email}}</mat-cell>
+                    </ng-container>
+            
+                    <ng-container matColumnDef="perfil">
+                        <mat-header-cell *matHeaderCellDef> Perfil </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.perfil}}</mat-cell>
+                    </ng-container>
+            
+                    <!--<ng-container matColumnDef="editar">
+                        <mat-header-cell *matHeaderCellDef> Editar </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Remover">  
+                            <mat-icon>edit</mat-icon>
+                        </button></mat-cell>
+                    </ng-container>-->
+            
+                    <mat-header-row *matHeaderRowDef="displayedColumnsUser"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumnsUser;">
+                    </mat-row>
+                </mat-table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator> 
+            </div>
+
+        </mat-card-content>
+    </mat-card>
+  </mat-tab>
+
 </mat-tab-group>

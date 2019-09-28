@@ -6,8 +6,12 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { Router } from "@angular/router";
 import { auth } from 'firebase';
 import { map } from '@firebase/util';
-import { Observable } from 'rxjs';
-
+//import { Observable, BehaviorSubject } from 'rxjs';
+//import { MatSnackBar } from '@angular/material';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/switchMap';
 
 @Injectable()
 export class AuthService {
@@ -17,21 +21,36 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
 
   userData: any; // Save logged in user data
 
+  user: BehaviorSubject<User> = new BehaviorSubject(null);
+
   constructor(
+    //public snackBar: MatSnackBar,
     public afs: AngularFirestore,   // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,  
     public ngZone: NgZone // NgZone service to remove outside scope warning
   ) { 
+
+    /*this.afAuth.authState
+      .switchMap(auth => {
+        if (auth) {
+          /// signed in
+          return this.afs.doc(`users/${auth.uid}`); //this.afs.object('users/' + auth.uid)
+        } else {
+          /// not signed in
+          return Observable.of(null)
+        }
+      })
+      .subscribe(user => {
+        this.user.next(user)
+      })*/
+
+    
     // Saving user data in localstorage when 
     //logged in and setting up null when logged out
     this.afAuth.authState.subscribe(user => {
       if (user) {
         this.userData = user;
-        //this.userData.uid
-        //this.userData.escola = "Escolinha Nene"
-        //console.log("Escola "+this.userData.escola)
-
         localStorage.setItem('myclinica_user', JSON.stringify(this.userData));
         JSON.parse(localStorage.getItem('myclinica_user'));
 
@@ -39,13 +58,18 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
 
         this.router.navigate(['/dashboard']);
         console.log("logado");
+        this.router.navigate(['/dashboard']);
+        return this.afs.doc(`users/${user.uid}`);
       } else {
-        localStorage.setItem('myclinica_user', null);
+        /*localStorage.setItem('myclinica_user', null);
         JSON.parse(localStorage.getItem('myclinica_user'));
         this.router.navigate(['/']);
-        console.log("deslogado");
+        console.log("deslogado");*/
+        return Observable.of(null)
       }
     })
+
+
   }
 
     //Fazer login com email/senha 
@@ -54,13 +78,15 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
       return this.afAuth.auth.signInWithEmailAndPassword(email, password)
         .then((result) => {
           this.ngZone.run(() => {
+            console.log("fazendo signin")
             this.SetUserData(result.user);
+            //this.SetUserDataLocal(result.user.uid);
             this.router.navigate(['/dashboard']);
           });
           
         }).catch((error) => {
-          console.log("DEU ERRO: " + error.message)
-          
+          console.log("DEU ERRO: " + error.message )
+          //this.openSnackBar("Ocorreu um erro ao fazer login. Verifique o email e senha e tente novamente.");
           //window.alert(error.message)
         })
     }
@@ -69,15 +95,22 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
    //Criar conta com email/senha 
   // Sign up with email/password
   SignUp(email, password) {
-    return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
-      .then((result) => {
+    return this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+      /*.then((result) => {
         // Call the SendVerificaitonMail() function when new user sign 
         //up and returns promise 
-        this.SendVerificationMail();
-        this.SetUserData(result.user);
+        //this.SendVerificationMail();
+        //this.SetUserData(result.user);
+
+        user.uid = result.user.uid;
+        console.log("uid created: "+user.uid)
+        let data = Object.assign({}, user);
+        this.configServices.createUser(data);
+
+        
       }).catch((error) => {
         window.alert(error.message)
-      })
+      })*/
   }
 
    // Send email verfificaiton when new user sign up
@@ -113,6 +146,7 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
     //Returns user info
     get get_clinica_nome(): string {
       const user = JSON.parse(localStorage.getItem('myclinica_user'));
+      console.log("Clinica nome "+user.clinica);
       return user.clinica;
     }
 
@@ -173,6 +207,7 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
       cidade: user.cidade,
       provincia: user.provincia,
     }
+    this.SetUserDataLocal(userData.uid);
     return userRef.set(userData, {
       merge: true
     })
@@ -235,14 +270,16 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
   }
 
   // determines if user has matching role
-private checkAuthorization(user: User, allowedRoles: string[]): boolean {
-  if (!user) return false
-  for (const role of allowedRoles) {
-    if ( user.perfil[role] ) {
-      return true
+  private checkAuthorization(user: User, allowedRoles: string[]): boolean {
+    if (!user) return false
+    for (const role of allowedRoles) {
+      if ( user.perfil[role] ) {
+        return true
+      }
     }
+    return false
   }
-  return false
-}
+
+ 
 
 }

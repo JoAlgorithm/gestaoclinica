@@ -1,18 +1,148 @@
-<!--<div fxLayout="row wrap" >
-        <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">
-          <mat-card class="card-widget mat-teal">
-            <div mat-card-widget>
-              <div mat-card-float-icon>
-                <mat-icon>person</mat-icon>
-              </div>
-              <div class="pl-0">
-                <h2 mat-card-widget-title>{{estudantes?.length}}</h2>
-                <p>Estudantes</p>
-              </div>
-            </div>
-          </mat-card>
+<div fxLayout="row wrap" >
+
+    <!-- CARTAO COM TOTAL DE PACIENTES CADASTRADOS NA CLINICA -->
+    <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">
+      <mat-card class="card-widget mat-teal">
+        <div mat-card-widget>
+          <div mat-card-float-icon>
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="pl-0">
+            <h2 mat-card-widget-title>{{pacientes?.length}}</h2>
+            <p>Pacientes cadastrados</p>
+          </div>
         </div>
-        <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">
+      </mat-card>
+    </div>
+
+    <!-- CARTAO COM TOTAL DE DIAGNOSTICOS AUX CADASTRADOS -->
+    <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">
+        <mat-card class="card-widget mat-indigo">
+          <div mat-card-widget>
+            <div mat-card-float-icon>
+              <mat-icon>airline_seat_recline_extra</mat-icon>
+            </div>
+            <div class="pl-0">
+              <h2 mat-card-widget-title>{{diagnosticos?.length}}</h2>
+              <p>Diagnosticos disponiveis</p>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+      <!-- CARTAO COM TOTAL DE CONSULTAS MEDICAS ATENDIDAS -->
+      <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">
+        <mat-card class="card-widget mat-red">
+          <div mat-card-widget>
+            <div mat-card-float-icon>
+              <mat-icon>enhanced_encryption</mat-icon>
+            </div>
+            <div class="pl-0">
+              <h2 mat-card-widget-title>{{consultas_encerradas_medicas}}</h2>
+              <p>Consultas medicas atendidas</p>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+      <!-- CARTAO COM TOTAL DE CONSULTAS MEDICAS ATENDIDAS -->
+      <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100" style="width: 80%">
+        <mat-card class="card-widget mat-purple">
+          <div mat-card-widget>
+            <div mat-card-float-icon>
+              <mat-icon>local_hospital</mat-icon>
+            </div>
+            <div class="pl-0">
+              <h2 mat-card-widget-title>{{consultas_encerradas_diagnosticos}}</h2>
+              <p>Diagnosticos aux efetuados</p>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+      <div fxFlex.gt-sm="50" fxFlex.gt-xs="80" fxFlex="100">
+        <mat-card>
+          <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
+            Receita anual com Consulta Medica &nbsp; <span class="font-weight-bold mat-text-sucess">46,68</span>
+            <span fxFlex></span>
+            <button mat-icon-button mat-button-sm [matMenuTriggerFor]="card2" aria-label="Open card menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </mat-card-subtitle>
+          <mat-menu #card2="matMenu" x-position="before">
+            <button mat-menu-item>
+              <mat-icon>settings</mat-icon>
+              Settings
+            </button>
+            <button mat-menu-item>
+              <mat-icon>more</mat-icon>
+              View More
+            </button>
+            <button mat-menu-item>
+              <mat-icon>notifications_off</mat-icon>
+              Disable notifications
+            </button>
+            <button mat-menu-item>
+              <mat-icon>exit_to_app</mat-icon>
+              Remove Panel
+            </button>
+          </mat-menu>
+          <mat-card-content>
+            <canvas height="200" baseChart class="chart"
+              [datasets]="ComboChartData"
+              [labels]="comboChartLabels"
+              [options]="ComboChartOptions"
+              [colors]="chartColors"
+              [legend]="comboChartLegend"
+              [chartType]="barChartType"></canvas>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div fxFlex.gt-sm="50" fxFlex.gt-xs="80" fxFlex="100">
+        <mat-card>
+          <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
+            Receita anual com Diagnostico &nbsp; <span class="font-weight-bold mat-text-warn">-46,68</span>
+            <span fxFlex></span>
+            <button mat-icon-button mat-button-sm [matMenuTriggerFor]="card2" aria-label="Open card menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </mat-card-subtitle>
+          <mat-menu #card2="matMenu" x-position="before">
+            <button mat-menu-item>
+              <mat-icon>settings</mat-icon>
+              Settings
+            </button>
+            <button mat-menu-item>
+              <mat-icon>more</mat-icon>
+              View More
+            </button>
+            <button mat-menu-item>
+              <mat-icon>notifications_off</mat-icon>
+              Disable notifications
+            </button>
+            <button mat-menu-item>
+              <mat-icon>exit_to_app</mat-icon>
+              Remove Panel
+            </button>
+          </mat-menu>
+          <mat-card-content>
+            <canvas height="200" baseChart class="chart"
+              [datasets]="ComboChartData"
+              [labels]="comboChartLabels"
+              [options]="ComboChartOptions"
+              [colors]="chartColors"
+              [legend]="comboChartLegend"
+              [chartType]="barChartType"></canvas>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+</div>
+
+
+
+<!--       <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">
           <mat-card class="card-widget mat-purple">
             <div mat-card-widget>
               <div mat-card-float-icon>

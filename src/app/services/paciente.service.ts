@@ -6,12 +6,23 @@ import { AuthService } from './auth.service';
 import { Consulta } from '../classes/consulta';
 import { Subject, Observable } from 'rxjs';
 import { Faturacao } from '../classes/faturacao';
-
+import * as _ from 'lodash';
+import 'rxjs/add/operator/map'
 
 @Injectable()
 export class PacienteService {
 
-  constructor(private firestore: AngularFirestore, private authService: AuthService) { }
+  constructor(private firestore: AngularFirestore, private authService: AuthService) {
+    /*let a = "";
+    authService.user.map(user => {
+      /// Set an array of user roles, ie ['admin', 'author', ...]
+      //return this.userRoles = _.keys(_.get(user, 'roles'))
+      return _.keys(_.get(user, 'perfil'));
+      //console.log("Perfil "+a);
+      //console.log("User "+user)
+    })
+    .subscribe()*/
+  }
 
 
   //METODOS RELACIONADOS A ENTIDADE ESTUDANTE
@@ -54,6 +65,10 @@ export class PacienteService {
   //FATURACOES
   faturar(faturacao:Faturacao){
     return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/faturacao').add(faturacao);
+  }
+
+  getFaturacoes(){
+    return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/faturacao').snapshotChanges();
   }
 
 

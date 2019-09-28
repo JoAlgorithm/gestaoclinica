@@ -15,10 +15,18 @@ export class HeaderComponent {
 
   nomeClina:any;
   constructor(private authService: AuthService) {
+    /*while(this.nomeClina){
+      this.nomeClina = this.authService.get_clinica_nome
+    }*/
+    //setTimeout(() => this.nomeClina = this.authService.get_clinica_nome);
+
+    /*const user = JSON.parse(localStorage.getItem("myclinica_user"));
+    console.log(user);
+    this.nomeClina = user.clinica;*/
   }
 
   ngOnInit() {
-    setTimeout(() => this.nomeClina = this.authService.get_clinica_nome);
+    this.nomeClina = this.authService.get_clinica_nome;
   }
 
   fullScreenToggle(): void {

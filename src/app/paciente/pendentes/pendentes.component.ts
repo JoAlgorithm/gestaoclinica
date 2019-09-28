@@ -109,6 +109,51 @@ export class PendentesComponent implements OnInit {
     this.dataSourse.filter = filterValue;
   }
 
+  getMes(number): String{
+    switch(number) { 
+      case 1: { 
+         return "Janeiro";
+      } 
+      case 2: { 
+         return "Fevereiro"; 
+      } 
+      case 3: { 
+         return "Marco"; 
+      }
+      case 4: { 
+        return "Abril"; 
+      }
+      case 5: { 
+        return "Maio"; 
+      }
+      case 6: { 
+        return "Junho"; 
+      }
+      case 7: { 
+        return "Julho"; 
+      }
+      case 8: { 
+        return "Agosto"; 
+      }  
+      case 9: { 
+        return "Setembro"; 
+      }
+      case 10: { 
+        return "Outubro"; 
+      }
+      case 11: { 
+        return "Novembro"; 
+      }
+      case 12: { 
+        return "Dezembro"; 
+      }
+      default: { 
+         //statements; 
+         break; 
+      } 
+   } 
+  }
+
   faturarDiagnostico(consulta: Consulta){
 
     this.faturacao = new Faturacao();
@@ -117,6 +162,11 @@ export class PendentesComponent implements OnInit {
     this.faturacao.data = new Date();
     this.faturacao.consulta = consulta;
     this.faturacao.diagnostico_aux = consulta.diagnosticos_aux;
+    this.faturacao.mes = this.getMes( +new Date().getMonth()+ +1);
+    this.faturacao.ano = new Date().getFullYear();
+
+    console.log("Faturacao mes "+this.faturacao.mes+" ano "+this.faturacao.ano)
+    //console.log("NEW DATE Month: "+(+data.getFullYear()))
     //this.faturacao.diagnostico_aux = this.consultas.
     this.faturacao.faturador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
 

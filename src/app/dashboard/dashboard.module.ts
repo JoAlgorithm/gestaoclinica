@@ -11,6 +11,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { AgmCoreModule } from '@agm/core';
+import { ConfiguracoesService } from '../services/configuracoes.service';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { AgmCoreModule } from '@agm/core';
     //{provide: OverlayContainer, useClass: FullscreenOverlayContainer},
     PacienteService,
     AngularFirestore,
+    ConfiguracoesService
     
   ],
   declarations: [ DashboardComponent ]
