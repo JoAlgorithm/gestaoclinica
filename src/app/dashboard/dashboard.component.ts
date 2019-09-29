@@ -6,6 +6,10 @@ import { DiagnosticoAuxiliar } from '../classes/diagnostico_aux';
 import { Consulta } from '../classes/consulta';
 import { Faturacao } from '../classes/faturacao';
 
+import * as jsPDF from 'jspdf';
+import { format } from 'util';
+//import { format } from 'path';
+
 @Component({
   //selector: 'app-dashboard',
   selector: 'dashboard',
@@ -69,30 +73,33 @@ export class DashboardComponent {
   }
 
   ngOnInit() {
-    this.pacienteService.getPacientes().subscribe(data => {
+    //let doc = new jsPDF();
+    //doc.save("PDF")
+
+    this.pacienteService.getPacientes().snapshotChanges().subscribe(data => {
       this.pacientes = data.map(e => {
         return {
-          id: e.payload.doc.id,
-          ...e.payload.doc.data(),
+          id: e.payload.key,
+          ...e.payload.val(),
         } as Paciente;
       })      
     })
 
-    this.configService.getDiagnosticos().subscribe(data => {
+    this.configService.getDiagnosticos().snapshotChanges().subscribe(data => {
       this.diagnosticos = data.map(e => {
         return {
-          id: e.payload.doc.id,
-          ...e.payload.doc.data(),
+          id: e.payload.key,
+          ...e.payload.val(),
         } as DiagnosticoAuxiliar;
       })
     })
 
-    this.pacienteService.getConsultas().subscribe(data => {
+    this.pacienteService.getConsultas().snapshotChanges().subscribe(data => {
       this.consultas = data.map(e => {
         return {
-          id: e.payload.doc.id,
+          id: e.payload.key,
           //diagnosticos_aux: e.payload.doc.data()['diagnosticos_aux'] as DiagnosticoAuxiliar[],
-          ...e.payload.doc.data(),
+          ...e.payload.val(),
         } as Consulta;
       })
       this.consultas_encerradas_medicas = this.consultas.filter( c => c.status === "Encerrada" && c.tipo == "Consulta Medica").length;
@@ -100,9 +107,12 @@ export class DashboardComponent {
       this.consultas_encerradas_diagnosticos = this.consultas.filter( c => c.status === "Encerrada" && c.tipo == "DIAGNOSTICO AUX").length;
       this.consultas.filter( c => c.tipo == "Consulta Medica").forEach(element => {
         //console.log(element.diagnosticos_aux)
-        if(element.diagnosticos_aux.length>0){
-          this.consultas_encerradas_diagnosticos = +this.consultas_encerradas_diagnosticos + +1;
+        if(element.diagnosticos_aux){
+          if(element.diagnosticos_aux.length>0){
+            this.consultas_encerradas_diagnosticos = +this.consultas_encerradas_diagnosticos + +1;
+          }
         }
+        
       });
 
 
@@ -115,17 +125,17 @@ export class DashboardComponent {
       });*/
     })
 
-    this.pacienteService.getFaturacoes().subscribe(data => {
+    this.pacienteService.getFaturacoes().snapshotChanges().subscribe(data => {
       this.faturacoes = data.map(e => {
         return {
-          id: e.payload.doc.id,
-          data: e.payload.doc.data()['data'] as Date,
-          ...e.payload.doc.data(),
+          id: e.payload.key,
+          data: e.payload.val()['data'] as Date,
+          ...e.payload.val(),
         } as Faturacao;
       }) 
       
       this.faturacoes.forEach(element => {
-        console.log("Mes: "+ element.mes+" Ano: "+element.ano+" Categoria: "+element.categoria) 
+        //console.log("Mes: "+ element.mes+" Ano: "+element.ano+" Categoria: "+element.categoria) 
         this.total_valor = +this.total_valor + +element.valor;
 
         if(element.categoria == "DIAGNOSTICO_AUX"){

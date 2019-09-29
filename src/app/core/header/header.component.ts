@@ -26,7 +26,8 @@ export class HeaderComponent {
   }
 
   ngOnInit() {
-    this.nomeClina = this.authService.get_clinica_nome;
+    // setTimeout(() => this.nomeClina  =  this.authService.get_clinica_nome);
+    this.nomeClina  =  this.authService.get_clinica_nome;
   }
 
   fullScreenToggle(): void {

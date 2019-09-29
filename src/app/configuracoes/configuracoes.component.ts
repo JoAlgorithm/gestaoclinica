@@ -74,11 +74,11 @@ export class ConfiguracoesComponent implements OnInit {
       diagnostico_preco: ['', Validators.required],
     });
 
-    this.configServices.getDiagnosticos().subscribe(data => {
+    this.configServices.getDiagnosticos().snapshotChanges().subscribe(data => {
       this.diagnosticos = data.map(e => {
         return {
-          id: e.payload.doc.id,
-          ...e.payload.doc.data(),
+          id: e.payload.key,
+          ...e.payload.val(),
         } as DiagnosticoAuxiliar;
       });
       this.dataSourseDiagnostico=new MatTableDataSource(this.diagnosticos.sort((a, b) => a.nome > b.nome ? 1 : -1));
@@ -122,11 +122,11 @@ export class ConfiguracoesComponent implements OnInit {
     this.user.endereco = this.clinica.endereco+"";
     this.user.cidade = this.clinica.cidade+"";
 
-    this.configServices.getUsers().subscribe(data => {
+    this.configServices.getUsers().snapshotChanges().subscribe(data => {
       this.users = data.map(e => {
         return {
-          uid: e.payload.doc.id,
-          ...e.payload.doc.data(),
+          uid: e.payload.key,
+          ...e.payload.val(),
         } as User;
       });
 
@@ -152,9 +152,9 @@ export class ConfiguracoesComponent implements OnInit {
       this.diagnostico = new DiagnosticoAuxiliar();
       this.cadastro_diagnosticoFormGroup.reset;
       this.openSnackBar("Paciente cadastrado com sucesso");
-    }).catch( err => {
+    }, err=>{
       this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
-    });
+    })
   }
 
   atualizarClinica(){
@@ -165,14 +165,14 @@ export class ConfiguracoesComponent implements OnInit {
       this.openSnackBar("Dados atualizados com sucesso");
 
       //Limpar usuario
-      this.user = new User();
+      /*this.user = new User();
       this.user.clinica = this.authService.get_clinica_nome;
       this.user.clinica_id = this.authService.get_clinica_id;
       this.user.emailVerified = true;
       this.user.photoURL = "";
       this.user.provincia = this.clinica.provincia+"";
       this.user.endereco = this.clinica.endereco+"";
-      this.user.cidade = this.clinica.cidade+"";
+      this.user.cidade = this.clinica.cidade+"";*/
 
     }).catch( err => {
       this.openSnackBar("Ocorreu um erro ao atualizar os dados. Contacte o admnistrador do sistema");

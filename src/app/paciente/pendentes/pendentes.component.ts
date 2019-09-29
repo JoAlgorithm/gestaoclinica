@@ -28,12 +28,12 @@ export class PendentesComponent implements OnInit {
     private pacienteService: PacienteService,public snackBar: MatSnackBar) { }
 
     ngOnInit() {
-      this.pacienteService.getConsultas().subscribe(data => {
+      this.pacienteService.getConsultas().snapshotChanges().subscribe(data => {
         this.consultas = data.map(e => {
           return {
-            id: e.payload.doc.id,
-            paciente: e.payload.doc.data()['paciente'] as Paciente,
-            ...e.payload.doc.data(),
+            id: e.payload.key,
+            paciente: e.payload.val()['paciente'] as Paciente,
+            ...e.payload.val(),
           } as Consulta;
         })
 
@@ -219,9 +219,12 @@ export class PendentesComponent implements OnInit {
               console.log("ERRO: " + er.message)
             })
             
-          }).catch( err => {
+          }, err=>{
             console.log("ERRO: " + err.message)
-          });
+          })
+          /*.catch( err => {
+            console.log("ERRO: " + err.message)
+          });*/
 
         }
       });
@@ -420,9 +423,9 @@ export class PendentesComponent implements OnInit {
           console.log("ERRO: " + er.message)
         })
         
-      }).catch( err => {
+      }, err=>{
         console.log("ERRO: " + err.message)
-      });
+      })
       
       
     }//FIM DO METODO FATURAR

@@ -38,11 +38,11 @@ export class ListagemComponent implements OnInit {
  }
 
   ngOnInit() {
-    this.pacienteService.getPacientes().subscribe(data => {
+    this.pacienteService.getPacientes().snapshotChanges().subscribe(data => {
       this.pacientes = data.map(e => {
         return {
-          id: e.payload.doc.id,
-          ...e.payload.doc.data(),
+          id: e.payload.key,
+          ...e.payload.val(),
         } as Paciente;
       })
       this.dataSourse=new MatTableDataSource(this.pacientes.sort((a, b) => a.nid - b.nid));
@@ -56,11 +56,11 @@ export class ListagemComponent implements OnInit {
       this.clinica = c;
     })
 
-    this.configServices.getDiagnosticos().subscribe(data => {
+    this.configServices.getDiagnosticos().snapshotChanges().subscribe(data => {
       this.diagnosticos = data.map(e => {
         return {
-          id: e.payload.doc.id,
-          ...e.payload.doc.data(),
+          id: e.payload.key,
+          ...e.payload.val(),
         } as DiagnosticoAuxiliar;
       })
     })
@@ -68,7 +68,15 @@ export class ListagemComponent implements OnInit {
 
   
   marcarConsulta(paciente, tipo){
-    this.consulta.data = new Date();
+
+    let dia = new Date().getDate();
+    let mes = +(new Date().getMonth()) + +1;
+    let ano = new Date().getFullYear();
+
+    this.consulta.data = dia +"/"+mes+"/"+ano;
+    console.log("Data "+this.consulta.data);
+
+
     this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
     this.consulta.paciente = paciente;
     this.consulta.status = "Aberta";
@@ -81,10 +89,11 @@ export class ListagemComponent implements OnInit {
     .then( res => {
       this.openSnackBar("Consulta agendada com sucesso");
       //this.router.navigateByUrl("/consultas")
-    }).catch( err => {
+    }, err => {
       console.log("ERRO: " + err.message)
       this.openSnackBar("Ocorreu um erro ao marcar a consulta. Contacte o Admin do sistema.");
-    });
+
+    })
   }
 
   openSnackBar(mensagem) {
@@ -162,8 +171,13 @@ export class ListagemComponent implements OnInit {
   }
 
   marcarConsulta(paciente:Paciente){
+    let dia = new Date().getDate();
+    let mes = +(new Date().getMonth()) + +1;
+    let ano = new Date().getFullYear();
+    //dia +"/"+mes+"/"+ano;
+
     this.consulta = new Consulta();
-    this.consulta.data = new Date();
+    this.consulta.data = dia +"/"+mes+"/"+ano;
     this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
     this.consulta.paciente = paciente;
     this.consulta.diagnosticos_aux = this.diagnosticos;
@@ -179,11 +193,11 @@ export class ListagemComponent implements OnInit {
     .then( res => {
       this.dialogRef.close();
       this.openSnackBar("Consulta agendada com sucesso");
-      this.router.navigateByUrl("/consultas")
-    }).catch( err => {
+      //this.router.navigateByUrl("/consultas")
+    }, err => {
       console.log("ERRO: " + err.message)
       this.openSnackBar("Ocorreu um erro ao marcar a consulta. Contacte o Admin do sistema.");
-    });
+    })
   }
 
   openSnackBar(mensagem) {

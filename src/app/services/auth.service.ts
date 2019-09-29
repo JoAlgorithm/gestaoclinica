@@ -12,6 +12,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/switchMap';
+import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +25,7 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
   user: BehaviorSubject<User> = new BehaviorSubject(null);
 
   constructor(
+    private db: AngularFireDatabase,
     //public snackBar: MatSnackBar,
     public afs: AngularFirestore,   // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
@@ -50,26 +52,37 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
     //logged in and setting up null when logged out
     this.afAuth.authState.subscribe(user => {
       if (user) {
-        this.userData = user;
-        localStorage.setItem('myclinica_user', JSON.stringify(this.userData));
-        JSON.parse(localStorage.getItem('myclinica_user'));
-
-        this.SetUserDataLocal(user.uid);
-
+        //console.log("logado");
+        this.SetUserData(user);
         this.router.navigate(['/dashboard']);
-        console.log("logado");
-        this.router.navigate(['/dashboard']);
-        return this.afs.doc(`users/${user.uid}`);
+        return this.db.object(`users/${user.uid}`);
+
+        //this.userData = user;
+        //localStorage.setItem('myclinica_user', JSON.stringify(this.userData));
+        //JSON.parse(localStorage.getItem('myclinica_user'));
+        //this.SetUserDataLocal(user.uid);
+        //return this.afs.doc(`users/${user.uid}`);  
       } else {
         /*localStorage.setItem('myclinica_user', null);
         JSON.parse(localStorage.getItem('myclinica_user'));
         this.router.navigate(['/']);
         console.log("deslogado");*/
+        this.router.navigate(['/']);
         return Observable.of(null)
       }
     })
 
 
+  }
+
+  getAll() {
+    return this.db.list('users');
+      /*.snapshotChanges()
+      .pipe(
+        map(changes => {
+          return changes.map(c => ({ key: c.payload.key, ...c.payload.val() }));
+        })
+      );*/
   }
 
     //Fazer login com email/senha 
@@ -78,7 +91,7 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
       return this.afAuth.auth.signInWithEmailAndPassword(email, password)
         .then((result) => {
           this.ngZone.run(() => {
-            console.log("fazendo signin")
+            //console.log("fazendo signin")
             this.SetUserData(result.user);
             //this.SetUserDataLocal(result.user.uid);
             this.router.navigate(['/dashboard']);
@@ -145,8 +158,11 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
 
     //Returns user info
     get get_clinica_nome(): string {
+      setTimeout(() => {
+
+      })
       const user = JSON.parse(localStorage.getItem('myclinica_user'));
-      console.log("Clinica nome "+user.clinica);
+      //console.log("Clinica nome "+user.clinica);
       return user.clinica;
     }
 
@@ -192,32 +208,27 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
   //Setting up user data when sign in with username/password, 
   //sign up with username/password and sign in with social auth  
   //provider in Firestore database using AngularFirestore + AngularFirestoreDocument service
+  //item: Observable<any>;
   SetUserData(user) {
-    const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
-    const userData: User = {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      emailVerified: user.emailVerified,
-      clinica: user.clinica,
-      perfil: user.perfil,
-      clinica_id: user.clinica_id,
-      endereco: user.endereco,
-      cidade: user.cidade,
-      provincia: user.provincia,
-    }
+    //const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
+    //const userRef: Observable<any> = this.db.object(`users/${user.uid}`).valueChanges();  
+    this.db.object(`users/${user.uid}`).snapshotChanges().subscribe(data => {
+      let userData: User = {
+        uid: data.payload.key,
+        ...data.payload.val()
+      } as User;
+      localStorage.setItem('myclinica_user', JSON.stringify(userData));
+    })  
+    /*
     this.SetUserDataLocal(userData.uid);
     return userRef.set(userData, {
       merge: true
     })
-  }
+  }*/
 
-  //gravar dados do user no localstorage
-  itemDoc: AngularFirestoreDocument<string>;
-  item: Observable<string>;
-  SetUserDataLocal(uid) {
-    this.itemDoc = this.afs.doc('users/'+uid);
+
+    //OLD ---------------
+    /*this.itemDoc = this.afs.doc('users/'+uid);
     this.item = this.itemDoc.valueChanges();
 
     console.log("uid: "+uid)
@@ -229,9 +240,8 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
         localStorage.setItem('myclinica_user', JSON.stringify(doc.data()));
       }else{
         console.log("user not finded")
-        //localStorage.setItem('myclinica_user', JSON.stringify(doc.data()));
       }
-    })
+    })*/
   }
   /*
   addItem(name: string) {
@@ -247,7 +257,8 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
     return this.afAuth.auth.signOut().then(() => {
       localStorage.removeItem('myclinica_user');
       localStorage.removeItem('myclinica_user');
-      this.router.navigate(['sign-in']);
+      //this.router.navigate(['sign-in']);
+      this.router.navigate(['/']);
     })
   }
 

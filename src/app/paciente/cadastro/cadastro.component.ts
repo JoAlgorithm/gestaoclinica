@@ -66,7 +66,7 @@ export class CadastroComponent implements OnInit {
     public snackBar: MatSnackBar, private router: Router) {
 
     this.paciente = new Paciente();
-    /*this.paciente.nome = "Luis"
+    this.paciente.nome = "Luis"
     this.paciente.apelido = "Jo"
     this.paciente.sexo = "Masculino"
     this.paciente.datanascimento = new Date();
@@ -86,7 +86,7 @@ export class CadastroComponent implements OnInit {
     //Dados da pessoa de referencia
     this.paciente.referencia_nome = "Siza";
     this.paciente.referencia_apelido = "Jo";
-    this.paciente.referencia_telefone = "828498183";*/
+    this.paciente.referencia_telefone = "828498183";
 
    }
    
@@ -118,11 +118,11 @@ export class CadastroComponent implements OnInit {
       //paciente_referencia_telefone: ['', Validators.compose([Validators.required, Validators.minLength(9), Validators.maxLength(9)])],
     });
 
-    this.pacienteService.getPacientes().subscribe(data => {
+    this.pacienteService.getPacientes().snapshotChanges().subscribe(data => {
       this.pacientes = data.map(e => {
         return {
-          id: e.payload.doc.id,
-          ...e.payload.doc.data(),
+          id: e.payload.key,
+          ...e.payload.val(),
         } as Paciente;
       });
 
@@ -154,9 +154,9 @@ export class CadastroComponent implements OnInit {
     .then( res => {
       this.router.navigateByUrl("/paciente/listagem_paciente")
       this.openSnackBar("Paciente cadastrado com sucesso");
-    }).catch( err => {
+    }, err=> {
       console.log("ERRO: " + err.message)
-    });
+    })
 
   }
 

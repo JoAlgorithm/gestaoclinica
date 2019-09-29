@@ -4,15 +4,15 @@ import { DiagnosticoAuxiliar } from "./diagnostico_aux";
 export class Consulta { 
     id?:String;
 
-    data?:Date; //data em que a consulta foi marcada
+    data?:string; //data em que a consulta foi marcada
 
-    data_atendimento?:Date; //data em que a consulta iniciou a ser atendida
+    data_atendimento?:string; //data em que a consulta iniciou a ser atendida
 
-    data_cancelamento?:Date; //data em que a consulta foi cancelada
+    data_cancelamento?:string; //data em que a consulta foi cancelada
 
-    data_encerramento?:Date; //data em que a consulta foi cancelada
+    data_encerramento?:string; //data em que a consulta foi cancelada
 
-    data_diagnostico?:Date; //data em que a consulta mudou de Aberta para Diagnostico
+    data_diagnostico?:string; //data em que a consulta mudou de Aberta para Diagnostico
     
     /*
     *Quem marcou a consulta

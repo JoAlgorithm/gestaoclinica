@@ -23,7 +23,7 @@
                   <!-- Progress Column -->
                   <ng-container matColumnDef="data">
                       <mat-header-cell *matHeaderCellDef mat-sort-header> Data </mat-header-cell>
-                      <mat-cell *matCellDef="let row"> {{row.data.toDate() | date:'dd/MM hh:mm:ss'}}</mat-cell>
+                      <mat-cell *matCellDef="let row"> {{row.data}}</mat-cell>
                   </ng-container>
 
                   <ng-container matColumnDef="tipo">
@@ -104,7 +104,8 @@
                     
                 <ng-container matColumnDef="data">
                     <mat-header-cell *matHeaderCellDef > Data </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.data.toDate() | date:'dd/MM hh:mm:ss'}}</mat-cell>
+                    <!--<mat-cell *matCellDef="let row"> {{row.data.toDate() | date:'dd/MM hh:mm:ss'}}</mat-cell>-->
+                    <mat-cell *matCellDef="let row"> {{row.data}}</mat-cell>
                 </ng-container>
         
                 <ng-container matColumnDef="nid">
@@ -175,7 +176,8 @@
                     
                 <ng-container matColumnDef="data">
                     <mat-header-cell *matHeaderCellDef > Data </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.data.toDate() | date:'dd/MM hh:mm:ss'}}</mat-cell>
+                    <!--<mat-cell *matCellDef="let row"> {{row.data.toDate() | date:'dd/MM hh:mm:ss'}}</mat-cell>-->
+                    <mat-cell *matCellDef="let row"> {{row.data}}</mat-cell>
                 </ng-container>
         
                 <ng-container matColumnDef="nid">
@@ -248,7 +250,7 @@
                         
                     <ng-container matColumnDef="data">
                         <mat-header-cell *matHeaderCellDef > Data </mat-header-cell>
-                        <mat-cell *matCellDef="let row"> {{row.data.toDate() | date:'dd/MM hh:mm:ss'}}</mat-cell>
+                        <mat-cell *matCellDef="let row"> {{row.data}}</mat-cell>
                     </ng-container>
             
                     <ng-container matColumnDef="nid">

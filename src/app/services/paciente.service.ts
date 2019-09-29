@@ -8,11 +8,13 @@ import { Subject, Observable } from 'rxjs';
 import { Faturacao } from '../classes/faturacao';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/map'
+import { AngularFireDatabase } from '@angular/fire/database';
 
 @Injectable()
 export class PacienteService {
 
-  constructor(private firestore: AngularFirestore, private authService: AuthService) {
+  constructor(private db: AngularFireDatabase,
+    private firestore: AngularFirestore, private authService: AuthService) {
     /*let a = "";
     authService.user.map(user => {
       /// Set an array of user roles, ie ['admin', 'author', ...]
@@ -29,46 +31,51 @@ export class PacienteService {
 
   //Retorna a lista de estudantes
   getPacientes() {
-    return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/pacientes').snapshotChanges();
-    //return this.firestore.collection('clinicas/OCLHdnLLuQa9AbYJaDrw/pacientes').snapshotChanges();
+    //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/pacientes').snapshotChanges();
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/pacientes');
   }
 
   //Cadastra o estudante
   createPaciente(paciente: Paciente){
-    return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/pacientes').add(paciente);
-    //return this.firestore.collection('clinicas/OCLHdnLLuQa9AbYJaDrw/pacientes').add(paciente);
+    //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/pacientes').add(paciente);
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/pacientes').push(paciente);
   }
 
   updatePaciente(paciente: Paciente){
-    //delete estudante.id;
-    return this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).update(paciente);
+    //return this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).update(paciente);
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/pacientes/').update(paciente.id, paciente)
   }
 
   deletePaciente(paciente: Paciente){
-    this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).delete();
+    //this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).delete();
+    return this.db.object('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).remove();
   }
 
   //CONSULTAS
   marcarConsulta(consulta:Consulta){
-    return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/consultas').add(consulta);
+    //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/consultas').add(consulta);
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/consultas').push(consulta);
   }
 
   getConsultas(){
-    return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/consultas').snapshotChanges();
+    //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/consultas').snapshotChanges();
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/consultas');
   }
 
   updateConsulta(consulta:Consulta){
-    //delete estudante.id;
-    return this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/consultas/' + consulta.id).update(consulta);
+    //return this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/consultas/' + consulta.id).update(consulta);
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/consultas/').update(consulta.id+"", consulta);
   }
 
   //FATURACOES
   faturar(faturacao:Faturacao){
-    return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/faturacao').add(faturacao);
+    //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/faturacao').add(faturacao);
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/faturacao').push(faturacao);
   }
 
   getFaturacoes(){
-    return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/faturacao').snapshotChanges();
+    //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/faturacao').snapshotChanges();
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/faturacao');
   }
 
 

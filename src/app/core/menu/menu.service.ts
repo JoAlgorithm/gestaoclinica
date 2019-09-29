@@ -101,13 +101,10 @@ export class MenuService {
 
 
   getAll(): Menu[] {
-    /*switch(this.authService.get_perfil) { 
+    switch(this.authService.get_perfil) { 
       case "Admnistrativo": { 
          //statements; 
-         console.log("Admnistrativo")
-
-         //MENUITEMS.push(menu);
-         break; 
+         return MENUITEMS;
       } 
       case "Rececionista": { 
          //statements; 
@@ -124,10 +121,10 @@ export class MenuService {
          return MENUITEMS;
          //break; 
       }
-      return MENUITEMS;
-   } */ 
+      //return MENUITEMS;
+   } 
 
-    return MENUITEMS;
+    //return MENUITEMS;
   }
 
   add(menu: Menu) {

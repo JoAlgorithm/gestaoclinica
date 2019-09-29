@@ -58,12 +58,12 @@ export class ConsultasComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.pacienteService.getConsultas().subscribe(data => {
+    this.pacienteService.getConsultas().snapshotChanges().subscribe(data => {
       this.consultas = data.map(e => {
         return {
-          id: e.payload.doc.id,
-          paciente: e.payload.doc.data()['paciente'] as Paciente,
-          ...e.payload.doc.data(),
+          id: e.payload.key,
+          paciente: e.payload.val()['paciente'] as Paciente,
+          ...e.payload.val(),
         } as Consulta;
       })
 
@@ -95,11 +95,11 @@ export class ConsultasComponent implements OnInit {
       this.dataSourseAndamento.paginator = this.paginatorAndamento;
     })
 
-    this.configServices.getDiagnosticos().subscribe(data => {
+    this.configServices.getDiagnosticos().snapshotChanges().subscribe(data => {
       this.diagnosticos = data.map(e => {
         return {
-          id: e.payload.doc.id,
-          ...e.payload.doc.data(),
+          id: e.payload.key,
+          ...e.payload.val(),
         } as DiagnosticoAuxiliar;
       })
     })
@@ -371,9 +371,14 @@ export class ConsultasComponent implements OnInit {
   }
 
   encerrarConsulta(consulta:Consulta){
+    let dia = new Date().getDate();
+    let mes = +(new Date().getMonth()) + +1;
+    let ano = new Date().getFullYear();
+    //dia +"/"+mes+"/"+ano;
+    
     consulta.status = "Encerrada";
     consulta.encerrador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
-    consulta.data_encerramento = new Date();
+    consulta.data_encerramento = dia +"/"+mes+"/"+ano;
 
     let data = Object.assign({}, consulta);
 
@@ -394,7 +399,8 @@ export class ConsultasComponent implements OnInit {
       this.pacienteService.faturar(f).then(r => {
         this.dialogRef.close();
         this.openSnackBar("Consulta encerrada com sucesso");
-      }).catch(r =>{ 
+      }, r =>{
+        console.log("ERRO: " + r.message)
       })
 
     }).catch( err => {
@@ -443,15 +449,19 @@ export class ConsultasComponent implements OnInit {
     //Se nao tiver sido selecionado nenhum diagnostico aux entao nao deve passar
     let selecionado = false
     consulta.diagnosticos_aux.forEach(d => {
-      console.log("Diagnosticos aux marcados: "+d.nome)
+      //console.log("Diagnosticos aux marcados: "+d.nome)
       if(d.faturado != true){
         selecionado = true; //significa que tem pelo menos 1 selecionad que nao tenha sido faturado
       }
     });
 
+    let dia = new Date().getDate();
+    let mes = +(new Date().getMonth()) + +1;
+    let ano = new Date().getFullYear();
+    //dia +"/"+mes+"/"+ano;
 
     consulta.status = "Diagnostico";
-    consulta.data_diagnostico = new Date();
+    consulta.data_diagnostico =dia +"/"+mes+"/"+ano;
     consulta.marcador_diagnostico = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
     let data = Object.assign({}, consulta);
 
@@ -565,10 +575,15 @@ export class CancelarConsultaDialog {
   }
 
   cancelarConsulta(consulta:Consulta){
+    let dia = new Date().getDate();
+    let mes = +(new Date().getMonth()) + +1;
+    let ano = new Date().getFullYear();
+    //dia +"/"+mes+"/"+ano;
+    
     this.dialogRef.close();
     consulta.cancelador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
     consulta.status = "Cancelada";
-    consulta.data_cancelamento = new Date();
+    consulta.data_cancelamento = dia +"/"+mes+"/"+ano;
     let data = Object.assign({}, consulta);
     
     this.pacienteService.updateConsulta(data)
