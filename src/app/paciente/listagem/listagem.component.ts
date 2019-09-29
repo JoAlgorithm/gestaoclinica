@@ -33,6 +33,8 @@ export class ListagemComponent implements OnInit {
 
   diagnosticos:DiagnosticoAuxiliar[];
 
+  condutas:CondutaClinica[];
+
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
     private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router){ 
     this.consulta = new Consulta();
@@ -63,6 +65,15 @@ export class ListagemComponent implements OnInit {
           id: e.payload.key,
           ...e.payload.val(),
         } as DiagnosticoAuxiliar;
+      })
+    })
+
+    this.configServices.getCondutasClinica().snapshotChanges().subscribe(data => {
+      this.condutas = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as CondutaClinica;
       })
     })
   }
@@ -113,6 +124,16 @@ export class ListagemComponent implements OnInit {
     });
   }
 
+  openConduta(row: Paciente): void {
+    let dialogRef = this.dialog.open(CondutasDialog, {
+    width: '700px',
+    data: { paciente: row, condutas: this.condutas }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+    console.log("result "+result);
+    });
+  }
+
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
@@ -156,15 +177,20 @@ export class ListagemComponent implements OnInit {
   }
   
   addConduta(conduta:CondutaClinica){
-    this.condutas.push(conduta);
+    if(conduta.nome){
+      this.condutas.push(conduta);
 
-    this.preco_total = +this.preco_total + +conduta.preco;
-
-    this.dataSourse=new MatTableDataSource(this.condutas);
-    this.conduta = new CondutaClinica();
+      this.preco_total = +this.preco_total + +conduta.preco;
+  
+      this.dataSourse=new MatTableDataSource(this.condutas);
+      this.conduta = new CondutaClinica();
+    }else{
+      this.openSnackBar("Selecione uma conduta auxiliar");
+    }
+    
   }
 
-  removeDiagostico(conduta:CondutaClinica){
+  removeConduta(conduta:CondutaClinica){
     this.condutas.splice(this.condutas.indexOf(conduta), 1);
     this.dataSourse=new MatTableDataSource(this.condutas);
   }

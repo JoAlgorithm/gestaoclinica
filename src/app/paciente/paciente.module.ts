@@ -61,7 +61,7 @@ import {CadastroComponent} from './cadastro/cadastro.component';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { from } from 'rxjs';
 import { PacienteService } from '../services/paciente.service';
-import { ListagemComponent, DiagnosticosDialog } from './listagem/listagem.component';
+import { ListagemComponent, DiagnosticosDialog, CondutasDialog } from './listagem/listagem.component';
 import { ConfiguracoesService } from '../services/configuracoes.service';
 import { PendentesComponent, FaturarDialog } from './pendentes/pendentes.component';
 
@@ -132,11 +132,13 @@ import { PendentesComponent, FaturarDialog } from './pendentes/pendentes.compone
     ListagemComponent,
     DiagnosticosDialog,
     PendentesComponent,
-    FaturarDialog
+    FaturarDialog,
+    CondutasDialog
   ],
   entryComponents: [
     DiagnosticosDialog,
-    FaturarDialog
+    FaturarDialog,
+    CondutasDialog
   ],
 })
 

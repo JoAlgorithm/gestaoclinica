@@ -1,0 +1,58 @@
+<h1 mat-dialog-title>Agendar Condutas Clinicas para {{data.paciente.nome}} {{data.paciente.apelido}}</h1>
+<div mat-dialog-content>
+  <p>Selecione as condutas clinicas solicitadas pelo cliente</p>
+
+  <form [formGroup]="condutaFormGroup">
+    <mat-form-field style="width: 45%">
+        <mat-select placeholder="Conduta clinica" formControlName="conduta_nome" [(ngModel)]="conduta" required>
+            <mat-option *ngFor="let conduta of data.condutas" [value]="conduta">
+                {{conduta.nome}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field style="width: 45%">
+        <input matInput placeholder="Preco" formControlName="conduta_preco" [(ngModel)]="conduta.preco" required>
+    </mat-form-field>
+
+    <button mat-icon-button (click)="addConduta(conduta)" matTooltip="Agendar {{conduta.nome}}">
+            <mat-icon>add_circle</mat-icon>
+    </button>
+   </form>
+
+   <mat-table [dataSource]="dataSourse" matSort>
+        
+        <ng-container matColumnDef="tipo">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.tipo.nome}}</mat-cell>
+        </ng-container> 
+    
+        <ng-container matColumnDef="nome">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.nome}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="preco">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Preco (MZN) </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.preco| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="remover">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Remover </mat-header-cell>
+            <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="removeConduta(row)" matTooltip="Remover {{row.nome}}">  
+                    <mat-icon>delete</mat-icon>
+            </button></mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;">
+        </mat-row>
+    </mat-table>
+  
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button cdkFocusInitial >OK</button>
+  <!--<button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial (click)="cancelarConsulta(data.consulta)">OK</button>-->
+</div> 
