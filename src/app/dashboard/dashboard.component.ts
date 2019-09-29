@@ -147,24 +147,38 @@ export class DashboardComponent {
                break;
             } 
             case "Fevereiro": { 
-               break;
+              this.fev_diagnostico = +this.fev_diagnostico + +1;
+              this.fev_consulta_valor = +this.fev_consulta_valor+ +element.valor;
+              break;
             } 
             case "Marco": { 
+              this.marc_diagnostico = +this.marc_diagnostico + +1;
+              this.marc_consulta_valor = +this.marc_consulta_valor+ +element.valor;
               break ; 
             }
             case "Abril": { 
+              this.abril_diagnostico = +this.abril_diagnostico + +1;
+              this.abril_consulta_valor = +this.abril_consulta_valor+ +element.valor;
               break ; 
             }
             case "Maio": { 
+              this.maio_diagnostico = +this.maio_diagnostico + +1;
+              this.maio_consulta_valor = +this.maio_consulta_valor+ +element.valor;
               break ; 
             }
             case "Junho": { 
+              this.junho_diagnostico = +this.junho_diagnostico + +1;
+              this.junho_consulta_valor = +this.junho_consulta_valor+ +element.valor;
               break ; 
             }
             case "Julho": { 
+              this.julh_diagnostico = +this.julh_diagnostico + +1;
+              this.julh_consulta_valor = +this.julh_consulta_valor+ +element.valor;
               break; 
             }
             case "Agosto": { 
+              this.agos_diagnostico = +this.agos_diagnostico + +1;
+              this.agos_consulta_valor = +this.agos_consulta_valor+ +element.valor;
               break; 
             }  
             case "Setembro": { 
@@ -173,12 +187,18 @@ export class DashboardComponent {
               break; 
             }
             case "Outubro": { 
+              this.out_diagnostico = +this.out_diagnostico + +1;
+              this.out_consulta_valor = +this.out_consulta_valor+ +element.valor;
               break; 
             }
             case "Novembro": { 
+              this.nov_diagnostico = +this.nov_diagnostico + +1;
+              this.nov_consulta_valor = +this.nov_consulta_valor+ +element.valor;
               break; 
             }
             case "Dezembro": { 
+              this.dez_diagnostico = +this.dez_diagnostico + +1;
+              this.dez_consulta_valor = +this.dez_consulta_valor+ +element.valor;
               break; 
             }
             default: { 
@@ -196,24 +216,38 @@ export class DashboardComponent {
                break;
             } 
             case "Fevereiro": { 
-               break;
+              this.fev_consulta_nr = +this.fev_consulta_nr + +1;
+              this.fev_consulta_valor = +this.fev_consulta_valor+ +element.valor;
+              break;
             } 
             case "Marco": { 
+              this.marc_consulta_nr = +this.marc_consulta_nr + +1;
+              this.marc_consulta_valor = +this.marc_consulta_valor+ +element.valor;
               break ; 
             }
             case "Abril": { 
+              this.abril_consulta_nr = +this.abril_consulta_nr + +1;
+              this.abril_consulta_valor = +this.abril_consulta_valor+ +element.valor;
               break ; 
             }
             case "Maio": { 
+              this.maio_consulta_nr = +this.maio_consulta_nr + +1;
+              this.maio_consulta_valor = +this.maio_consulta_valor+ +element.valor;
               break ; 
             }
             case "Junho": { 
+              this.junho_consulta_nr = +this.junho_consulta_nr + +1;
+              this.junho_consulta_valor = +this.junho_consulta_valor+ +element.valor;
               break ; 
             }
             case "Julho": { 
+              this.julh_consulta_nr = +this.julh_consulta_nr + +1;
+              this.julh_consulta_valor = +this.julh_consulta_valor+ +element.valor;
               break; 
             }
             case "Agosto": { 
+              this.agos_consulta_nr = +this.agos_consulta_nr + +1;
+              this.agos_consulta_valor = +this.agos_consulta_valor+ +element.valor;
               break; 
             }  
             case "Setembro": { 
@@ -222,12 +256,18 @@ export class DashboardComponent {
               break; 
             }
             case "Outubro": { 
+              this.out_consulta_nr = +this.out_consulta_nr + +1;
+              this.out_consulta_valor = +this.out_consulta_valor+ +element.valor;
               break; 
             }
             case "Novembro": { 
+              this.nov_consulta_nr = +this.nov_consulta_nr + +1;
+              this.nov_consulta_valor = +this.nov_consulta_valor+ +element.valor;
               break; 
             }
             case "Dezembro": { 
+              this.dez_consulta_nr = +this.dez_consulta_nr + +1;
+              this.dez_consulta_valor = +this.dez_consulta_valor+ +element.valor;
               break; 
             }
             default: { 

@@ -8,6 +8,9 @@ import { Clinica } from '../classes/clinica';
 import 'rxjs/add/operator/take';
 import { User } from '../classes/user';
 import { AuthService } from '../services/auth.service';
+import { CategoriaConsulta } from '../classes/categoria_consulta';
+import { CondutaClinica } from '../classes/conduta_clinica';
+import { TipoCondutaClinica } from '../classes/tipo_conduta_clinica';
 
 @Component({
   selector: 'app-configuracoes',
@@ -59,12 +62,39 @@ export class ConfiguracoesComponent implements OnInit {
   @ViewChild(MatPaginator) paginatorUser: MatPaginator;
   @ViewChild(MatSort) sortUser: MatSort;
 
+  /*
+  * VARIAVEIS DA TAB CONSULTAS MEDICAS
+  */
+  categoria_consulta: CategoriaConsulta;
+  categorias_consulta: CategoriaConsulta[];
+  categorias_consultaFormGroup: FormGroup;
+  
+  //ATRIBUTOS DA TABELA
+  dataSourseCategoriaC: MatTableDataSource<CategoriaConsulta>;
+  displayedColumnsCategoriaC = ['nome','preco', 'editar'];
+  @ViewChild(MatPaginator) paginatorCategoriaC: MatPaginator;
+  @ViewChild(MatSort) sortCategoriaC: MatSort;
+
   constructor(private _formBuilder: FormBuilder, public configServices: ConfiguracoesService, public snackBar: MatSnackBar,
     private authService: AuthService) {
     this.diagnostico = new DiagnosticoAuxiliar();
-    
+    this.categoria_consulta = new CategoriaConsulta();
+    this.conduta_clinica = new CondutaClinica();
   }
 
+  /*
+  * VARIAVEIS DA TAB CONDUTAS CLINICAS
+  */
+  tipos_conduta_clinica: TipoCondutaClinica[];
+  conduta_clinica: CondutaClinica;
+  condutas_clinica: CondutaClinica[];
+  condutas_clinicaFormGroup: FormGroup;
+
+  //ATRIBUTOS DA TABELA
+  dataSourseCondutaC: MatTableDataSource<CondutaClinica>;
+  displayedColumnsCondutaC = ['tipo','nome','preco', 'editar'];
+  @ViewChild(MatPaginator) paginatorCondutaC: MatPaginator;
+  @ViewChild(MatSort) sortCondutaC: MatSort;
 
 
   ngOnInit() {
@@ -107,7 +137,6 @@ export class ConfiguracoesComponent implements OnInit {
     
 
     //TAB GESTAO DE USUARIOS
-    //TAB DIAGNOSTICO AUXILIAR
     this.cadastro_userFormGroup = this._formBuilder.group({
       user_displayName: ['', Validators.required],
       user_email: ['', Validators.required],
@@ -130,16 +159,61 @@ export class ConfiguracoesComponent implements OnInit {
         } as User;
       });
 
-      this.users.forEach(element => {
-        //console.log(element.displayName +" comparando "+element.clinica_id +" com "+this.authService.get_clinica_id)
-        //console.log(element.clinica_id+"" == this.authService.get_clinica_id+"")
-      });
-
       this.dataSourseUser=new MatTableDataSource(
         this.users.filter(u => u.clinica_id+"" === this.authService.get_clinica_id+"").sort((a, b) => a.displayName > b.displayName ? 1 : -1)
       );
       this.dataSourseUser.paginator = this.paginatorUser;
-      //this.dataSourseDiagnostico.sort = this.sortDiagnostico;
+    })
+
+
+    //TAB CONSULTAS MEDICAS (CATEGORIACONSULTA)
+    this.categorias_consultaFormGroup = this._formBuilder.group({
+      cs_nome: ['', Validators.required],
+      cs_preco: ['', Validators.required]
+    });
+
+    this.configServices.getCategoriasConsulta().snapshotChanges().subscribe(data => {
+      this.categorias_consulta = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as CategoriaConsulta;
+      });
+      this.dataSourseCategoriaC=new MatTableDataSource(
+        this.categorias_consulta.sort((a, b) => a.nome > b.nome ? 1 : -1)
+      );
+      this.dataSourseCategoriaC.paginator = this.paginatorCategoriaC;
+    })
+
+
+    //TAB CONDUTAS CLINICAS
+    this.configServices.getTiposCondutaClinica().snapshotChanges().subscribe(data => {
+      this.tipos_conduta_clinica = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as CondutaClinica;
+      });
+      this.tipos_conduta_clinica.sort((a, b) => a.id > b.id ? 1 : -1)
+    })
+
+    this.condutas_clinicaFormGroup = this._formBuilder.group({
+      conduta_tipo: ['', Validators.required],
+      conduta_nome: ['', Validators.required],
+      conduta_preco: ['', Validators.required]
+    });
+
+    this.configServices.getCondutasClinica().snapshotChanges().subscribe(data => {
+      this.condutas_clinica = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as CondutaClinica;
+      });
+      this.dataSourseCondutaC = new MatTableDataSource(
+        this.condutas_clinica.sort((a, b) => a.tipo.id > b.tipo.id ? 1 : -1)
+      );
+      this.dataSourseCondutaC.paginator = this.paginatorCondutaC;
     })
 
   }//FIM ngOnInit
@@ -151,7 +225,42 @@ export class ConfiguracoesComponent implements OnInit {
     .then( res => {
       this.diagnostico = new DiagnosticoAuxiliar();
       this.cadastro_diagnosticoFormGroup.reset;
-      this.openSnackBar("Paciente cadastrado com sucesso");
+      this.openSnackBar("Diagnostico cadastrado com sucesso");
+    }, err=>{
+      this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+    })
+  }
+
+  registarCategoriaConsulta(){
+    let data = Object.assign({}, this.categoria_consulta);
+
+    /*this.categoria_consulta = new CategoriaConsulta();
+    this.categorias_consultaFormGroup.reset;
+    Object.keys(this.categorias_consultaFormGroup.controls).forEach(key => {
+      console.log("key "+key)
+      this.categorias_consultaFormGroup.get(key).setErrors(null) ;
+    });*/
+    
+
+    this.configServices.createCategoriaConsulta(data)
+    .then( res => {
+      this.categoria_consulta = new CategoriaConsulta();
+      this.categorias_consultaFormGroup.reset;
+      this.categorias_consultaFormGroup.valid === true;
+      this.openSnackBar("Consulta medica cadastrada com sucesso");
+    }, err=>{
+      this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+    })
+  }
+
+  registarCondutaClinica(){
+    let data = Object.assign({}, this.conduta_clinica);
+
+    this.configServices.createCondutaClinica(data)
+    .then( res => {
+      this.conduta_clinica = new CondutaClinica();
+      this.condutas_clinicaFormGroup.reset;
+      this.openSnackBar("Conduta clinica cadastrada com sucesso");
     }, err=>{
       this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
     })

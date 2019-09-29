@@ -8,4 +8,8 @@ export class Clinica {
     pais?:String;
 
     preco_consulta?:Number;
+
+    logo_pdf?:string;
+
+    moeda?:string; //Nao esta em uso
 }

@@ -1,5 +1,6 @@
 import { Paciente } from "./paciente";
 import { DiagnosticoAuxiliar } from "./diagnostico_aux";
+import { CategoriaConsulta } from "./categoria_consulta";
 
 export class Consulta { 
     id?:String;
@@ -64,22 +65,11 @@ export class Consulta {
     preco_consulta_medica?:Number;
     preco_diagnosticos?:Number;
 
-    //
 
     lista_diagnosticos_aux?:String = "";
 
-    /*lista_diagnosticos(): string {
-        let diagnosticos:string = "";
-        this.diagnosticos_aux.forEach(d => {
 
-            if (diagnosticos = ""){
-                diagnosticos = d.nome + "";
-            }else{
-                diagnosticos = diagnosticos + " ; "+d.nome
-            }
-        });
-        return diagnosticos;
-    }*/
-
+    //Uma consulta pode ter uma categoria se for do tipo Consulta medica ex: Medicina geral, Cirurgia, etc
+    categoria?: CategoriaConsulta; 
 
 }

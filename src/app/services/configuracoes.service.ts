@@ -5,6 +5,8 @@ import { DiagnosticoAuxiliar } from '../classes/diagnostico_aux';
 import { Clinica } from '../classes/clinica';
 import { User } from '../classes/user';
 import { AngularFireDatabase } from '@angular/fire/database';
+import { CategoriaConsulta } from '../classes/categoria_consulta';
+import { CondutaClinica } from '../classes/conduta_clinica';
 
 @Injectable()
 export class ConfiguracoesService {
@@ -21,6 +23,31 @@ export class ConfiguracoesService {
   createDiagnostico(diagnostico: DiagnosticoAuxiliar){
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/diagnosticos').add(diagnostico);
     return this.db.list('clinicas/'+this.authService.get_clinica_id + '/diagnosticos').push(diagnostico);
+  }
+
+  //Retorna a lista de CATEGORIAS DE CONSULTAs
+  getCategoriasConsulta() {
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/categoriasconsulta');
+  }
+
+  //Cadastra o CATEGORIAS DE CONSULTAS
+  createCategoriaConsulta(categoriaConsulta: CategoriaConsulta){
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/categoriasconsulta').push(categoriaConsulta);
+  }
+
+  //Retorna a lista de CONDUTAS CLLINICAS
+  getCondutasClinica() {
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/condutasclinicas');
+  }
+
+  //Retorna a lista de TIPOS CONDUTAS CLLINICAS
+  getTiposCondutaClinica() {
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/tiposcondutaclinica');
+  }
+
+  //Cadastra o CATEGORIAS DE CONSULTAS
+  createCondutaClinica(condutaclinicas: CondutaClinica){
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/condutasclinicas').push(condutaclinicas);
   }
 
   //Atualizar dados da CLINICA

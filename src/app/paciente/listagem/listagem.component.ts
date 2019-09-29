@@ -12,6 +12,7 @@ import { Clinica } from '../../classes/clinica';
 import 'rxjs/add/operator/take';
 import { DiagnosticoAuxiliar } from '../../classes/diagnostico_aux';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { CondutaClinica } from '../../classes/conduta_clinica';
 
 @Component({
   selector: 'app-listagem',
@@ -102,7 +103,7 @@ export class ListagemComponent implements OnInit {
     })
   }
 
-  openDialog(row: Paciente): void {
+  openDiagnostico(row: Paciente): void {
     let dialogRef = this.dialog.open(DiagnosticosDialog, {
     width: '700px',
     data: { paciente: row, diagnosticos: this.diagnosticos }
@@ -119,6 +120,98 @@ export class ListagemComponent implements OnInit {
   }
 
 }
+
+
+
+
+@Component({
+  selector: 'condutas-dialog',
+  templateUrl: 'condutas.component.html',
+  })
+  export class CondutasDialog {
+
+  condutaFormGroup: FormGroup;
+  condutas: CondutaClinica[] = [];
+  conduta: CondutaClinica;
+
+  dataSourse: MatTableDataSource<CondutaClinica>;
+  displayedColumns = ['tipo','nome', 'preco', 'remover'];
+
+  consulta?: Consulta;
+  preco_total:Number = 0;
+
+  constructor(public dialogRef: MatDialogRef<CondutasDialog>, private router: Router,
+  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
+  public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
+    this.conduta = new CondutaClinica();
+
+    this.condutaFormGroup = this._formBuilder.group({
+      conduta_tipo: ['', Validators.required],
+      conduta_nome: ['', Validators.required],
+      conduta_preco: ['', Validators.required]
+    });
+    this.condutaFormGroup.controls['conduta_preco'].disable();
+
+    this.dataSourse=new MatTableDataSource(this.condutas);
+  }
+  
+  addConduta(conduta:CondutaClinica){
+    this.condutas.push(conduta);
+
+    this.preco_total = +this.preco_total + +conduta.preco;
+
+    this.dataSourse=new MatTableDataSource(this.condutas);
+    this.conduta = new CondutaClinica();
+  }
+
+  removeDiagostico(conduta:CondutaClinica){
+    this.condutas.splice(this.condutas.indexOf(conduta), 1);
+    this.dataSourse=new MatTableDataSource(this.condutas);
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  /*marcarConsulta(paciente:Paciente){
+    let dia = new Date().getDate();
+    let mes = +(new Date().getMonth()) + +1;
+    let ano = new Date().getFullYear();
+    //dia +"/"+mes+"/"+ano;
+
+    this.consulta = new Consulta();
+    this.consulta.data = dia +"/"+mes+"/"+ano;
+    this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+    this.consulta.paciente = paciente;
+    this.consulta.diagnosticos_aux = this.diagnosticos;
+    this.consulta.status = "Diagnostico";
+    this.consulta.tipo = "DIAGNOSTICO AUX";
+
+    let data = Object.assign({}, this.consulta);
+
+    this.pacienteService.marcarConsulta(data)
+    .then( res => {
+      this.dialogRef.close();
+      this.openSnackBar("Consulta agendada com sucesso");
+    }, err => {
+      console.log("ERRO: " + err.message)
+      this.openSnackBar("Ocorreu um erro ao marcar a consulta. Contacte o Admin do sistema.");
+    })
+  }*/
+
+  openSnackBar(mensagem) {
+    this.snackBar.open(mensagem, null,{
+      duration: 2000
+    })
+  }
+
+  }
+
+
+
+
+
+
 
 
 

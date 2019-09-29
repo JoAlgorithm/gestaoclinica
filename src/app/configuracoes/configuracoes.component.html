@@ -53,7 +53,63 @@
       </mat-card>
   </mat-tab>
 
+  <!--TAB CONSULTAS MEDICAS (CRIACAO DE CATEGORIAS DE CONSULTAS MEDICAS)-->
+  <mat-tab label = "CONSULTAS MEDICAS">
+        <mat-card class="example-card">
+                <mat-card-content>
+                
+                    <!--FORMULARIO DE CATEGORIA CONSULTA-->
+                    <h5>FORMULARIO DE CADASTRO DE CONSULTA MEDICA</h5>
+                    <form [formGroup]="categorias_consultaFormGroup">
+                    
+                            <!--NOME DO DIAGNOSITOC-->
+                            <mat-form-field style="width: 45%">
+                                <input matInput placeholder="Nome" formControlName="cs_nome" [(ngModel)]="categoria_consulta.nome" required>
+                            </mat-form-field>
+            
+                            <!--PRECO DO DIAGNOSITOC-->
+                            <mat-form-field style="width: 45%">
+                                <input matInput placeholder="Preco" formControlName="cs_preco" [(ngModel)]="categoria_consulta.preco" required>
+                            </mat-form-field>
+                            
+                            <button mat-icon-button (click)="registarCategoriaConsulta()" matTooltip="REGISTAR CONSULTA MEDICA">
+                                <mat-icon>add_circle</mat-icon>
+                            </button>
+                    </form>
 
+                    <!--DIV COM A TABELA DE CONSULTAS PENDENTES-->
+                    <div class="example-container mat-elevation-z8">
+                            <mat-table [dataSource]="dataSourseCategoriaC">
+                            
+                            <ng-container matColumnDef="nome">
+                                <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.nome}}</mat-cell>
+                            </ng-container>
+                    
+                            <ng-container matColumnDef="preco">
+                                <mat-header-cell *matHeaderCellDef> Preco (MZN) </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.preco| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+                            </ng-container>
+                        
+                            <ng-container matColumnDef="editar">
+                                <mat-header-cell *matHeaderCellDef> Editar </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Editar">  
+                                    <mat-icon>create</mat-icon>
+                                </button></mat-cell>
+                            </ng-container>
+                    
+                            <mat-header-row *matHeaderRowDef="displayedColumnsCategoriaC"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumnsCategoriaC;">
+                            </mat-row>
+                            </mat-table>
+                            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    
+                        </div>
+
+
+                </mat-card-content>
+        </mat-card>
+  </mat-tab>
 
   <!--CADASTRO DE PRECOS DE CONSULTA MEDICA E DIAGNOSTICO AUXILIAR-->
   <mat-tab label = "DIAGNOSTICO AUXILIAR"> 
@@ -93,20 +149,20 @@
                 </ng-container>
       
                 <ng-container matColumnDef="preco">
-                  <mat-header-cell *matHeaderCellDef> Preco </mat-header-cell>
-                  <mat-cell *matCellDef="let row"> {{row.preco}}</mat-cell>
+                  <mat-header-cell *matHeaderCellDef> Preco (MZN) </mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{row.preco| currency:' ':'symbol':'1.2-2'}}</mat-cell>
                 </ng-container>
           
                 <ng-container matColumnDef="editar">
                     <mat-header-cell *matHeaderCellDef> Editar </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="openDialog(row)" matTooltip="Editar">  
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Editar">  
                         <mat-icon>create</mat-icon>
                     </button></mat-cell>
                 </ng-container>
           
                 <ng-container matColumnDef="remover">
                   <mat-header-cell *matHeaderCellDef> Remover </mat-header-cell>
-                  <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="openDialog(row)" matTooltip="Remover">  
+                  <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Remover">  
                       <mat-icon>delete</mat-icon>
                   </button></mat-cell>
                 </ng-container>
@@ -125,6 +181,79 @@
         </mat-card-content>
     </mat-card>
 
+  </mat-tab>
+
+  <!--TAB CONDUTAS CLINICAS-->
+  <mat-tab label = "CONDUTAS CLINICAS">
+        <mat-card class="example-card">
+            <mat-card-content>
+
+                <!--FORMULARIO DE CADASTRO DE CONDUTA CLINICA-->
+                <h5>FORMULARIO DE CADASTRO DE CONDUTA CLINICA</h5>
+                <form [formGroup]="condutas_clinicaFormGroup">
+                    <!--<ng-template matStepLabel>DADOS DO PACIENTE</ng-template>-->
+                
+                        <!--TIPO DE CONDUTA CLINICA-->
+                        <mat-form-field style="width: 31%">
+                            <mat-select placeholder="Tipo" formControlName="conduta_tipo" [(ngModel)]="conduta_clinica.tipo" required>
+                                <mat-option *ngFor="let tipo of tipos_conduta_clinica" [value]="tipo">
+                                    {{tipo.nome}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <!--NOME DA CONDUTA CLINICA-->
+                        <mat-form-field style="width: 31%">
+                            <input matInput placeholder="Nome" formControlName="conduta_nome" [(ngModel)]="conduta_clinica.nome" required>
+                        </mat-form-field>
+
+                        <!--PRECO DA CONDUTA CLINICA-->
+                        <mat-form-field style="width: 31%">
+                            <input matInput placeholder="Preco" formControlName="conduta_preco" [(ngModel)]="conduta_clinica.preco" required>
+                        </mat-form-field>
+                        
+                        <button mat-icon-button (click)="registarCondutaClinica()" matTooltip="REGISTAR NOVO DIAGNOSTICO">
+                            <mat-icon>add_circle</mat-icon>
+                        </button>
+                </form>
+
+                <h5>LISTA DE CONDUTAS CLINICAS</h5>
+                <!--DIV COM A TABELA DE CONSULTAS PENDENTES-->
+                <div class="example-container mat-elevation-z8">
+                        <mat-table [dataSource]="dataSourseCondutaC">
+
+                        <ng-container matColumnDef="tipo">
+                            <mat-header-cell *matHeaderCellDef> Tipo </mat-header-cell>
+                            <mat-cell *matCellDef="let row"> {{row.tipo.nome}}</mat-cell>
+                        </ng-container>
+                        
+                        <ng-container matColumnDef="nome">
+                            <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+                            <mat-cell *matCellDef="let row"> {{row.nome}}</mat-cell>
+                        </ng-container>
+                
+                        <ng-container matColumnDef="preco">
+                            <mat-header-cell *matHeaderCellDef> Preco (MZN) </mat-header-cell>
+                            <mat-cell *matCellDef="let row"> {{row.preco| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+                        </ng-container>
+                    
+                        <ng-container matColumnDef="editar">
+                            <mat-header-cell *matHeaderCellDef> Editar </mat-header-cell>
+                            <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Editar">  
+                                <mat-icon>create</mat-icon>
+                            </button></mat-cell>
+                        </ng-container>
+                
+                        <mat-header-row *matHeaderRowDef="displayedColumnsCondutaC"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumnsCondutaC;">
+                        </mat-row>
+                        </mat-table>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                
+                    </div>
+
+            </mat-card-content>
+        </mat-card>
   </mat-tab>
 
 
