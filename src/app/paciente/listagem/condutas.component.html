@@ -4,7 +4,7 @@
 <!--(change)="onSelect($event.target.value)"-->
   <form [formGroup]="condutaFormGroup">
     <mat-form-field style="width: 31%">
-        <mat-select placeholder="Tipo conduta" formControlName="conduta_tipo" [(ngModel)]="conduta.tipo" (selectionChange)="onSelect(conduta.tipo)" required>
+        <mat-select placeholder="Tipo conduta" formControlName="conduta_tipo" [(ngModel)]="tipoconduta" (selectionChange)="onSelect(tipoconduta)" required>
             <mat-option *ngFor="let tipoconduta of data.tiposconduta" [value]="tipoconduta">
                 {{tipoconduta.nome}}
             </mat-option>
@@ -61,6 +61,6 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancelar</button>
-  <button mat-button cdkFocusInitial >OK</button>
+  <button mat-button cdkFocusInitial (click)="faturar(data.paciente)">Faturar {{preco_total| currency:' ':'symbol':'1.2-2'}} MZN</button>
   <!--<button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial (click)="cancelarConsulta(data.consulta)">OK</button>-->
 </div> 

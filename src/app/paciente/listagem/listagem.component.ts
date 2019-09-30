@@ -14,6 +14,7 @@ import { DiagnosticoAuxiliar } from '../../classes/diagnostico_aux';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CondutaClinica } from '../../classes/conduta_clinica';
 import { TipoCondutaClinica } from '../../classes/tipo_conduta_clinica';
+import { Faturacao } from '../../classes/faturacao';
 
 @Component({
   selector: 'app-listagem',
@@ -167,6 +168,7 @@ export class ListagemComponent implements OnInit {
   condutaFormGroup: FormGroup;
   condutas: CondutaClinica[] = [];
   conduta: CondutaClinica;
+  tipoconduta: TipoCondutaClinica;
 
   dataSourse: MatTableDataSource<CondutaClinica>;
   displayedColumns = ['tipo','nome', 'preco', 'remover'];
@@ -177,11 +179,13 @@ export class ListagemComponent implements OnInit {
   tiposcondutas_param: TipoCondutaClinica[]; //Passadas no parametro data
   condutas_param: CondutaClinica[]; //Passadas no parametro data
   condutas_alternativas: CondutaClinica[];
-
+  
+  
   constructor(public dialogRef: MatDialogRef<CondutasDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.conduta = new CondutaClinica();
+    this.tipoconduta = new TipoCondutaClinica();
 
     this.condutaFormGroup = this._formBuilder.group({
       conduta_tipo: ['', Validators.required],
@@ -212,6 +216,7 @@ export class ListagemComponent implements OnInit {
   }
 
   removeConduta(conduta:CondutaClinica){
+    this.preco_total = +this.preco_total - +conduta.preco;
     this.condutas.splice(this.condutas.indexOf(conduta), 1);
     this.dataSourse=new MatTableDataSource(this.condutas);
   }
@@ -219,21 +224,6 @@ export class ListagemComponent implements OnInit {
   onSelect(tipo_conduta_clinica: TipoCondutaClinica) {
     this.conduta = new CondutaClinica();
     this.data.condutas = null;
-
-    console.log(tipo_conduta_clinica.nome)
-    console.log("dados condutas param "+this.condutas_param.length)
-
-    console.log("comparacao")
-    this.condutas_param.forEach(element => {
-      console.log("element "+element.nome+": "+ element.tipo.nome)
-      console.log(element.tipo.nome == this.conduta.nome)
-    });
-
-    /*console.log("resultado filtro")
-    this.condutas_param.filter(item => item.tipo === tipo_conduta_clinica).forEach(element => {
-      console.log(element.nome)
-    });*/
-    //this.conduta = this.selectService.getStates().filter((item) => item.countryid == countryid);
     this.data.condutas = this.condutas_param.filter(item => item.tipo.nome == tipo_conduta_clinica.nome);
   }
 
@@ -241,31 +231,96 @@ export class ListagemComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  /*marcarConsulta(paciente:Paciente){
+  faturar(paciente: Paciente){
+    //Abrir uma consulta CONDUTA CLINICA --------------------
     let dia = new Date().getDate();
     let mes = +(new Date().getMonth()) + +1;
     let ano = new Date().getFullYear();
-    //dia +"/"+mes+"/"+ano;
 
     this.consulta = new Consulta();
     this.consulta.data = dia +"/"+mes+"/"+ano;
     this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
     this.consulta.paciente = paciente;
-    this.consulta.diagnosticos_aux = this.diagnosticos;
-    this.consulta.status = "Diagnostico";
-    this.consulta.tipo = "DIAGNOSTICO AUX";
+    this.consulta.condutas_clinicas = this.condutas;
+    this.consulta.status = "Encerrada";
+    this.consulta.tipo = "CONDUTA CLINICA";
 
-    let data = Object.assign({}, this.consulta);
+    //Criar uma faturacao da consulta do tipo CONDUTA CLINICA --------------------
+    let faturacao = new Faturacao();
+    faturacao.categoria = "CONDUTA CLINICA";
+    faturacao.valor = this.preco_total;
+    faturacao.data = new Date();
+    faturacao.consulta = this.consulta;
+    faturacao.condutas_clinicas = this.consulta.condutas_clinicas;
+    
+    faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
+    faturacao.ano = new Date().getFullYear();
 
-    this.pacienteService.marcarConsulta(data)
+    //Persistir informacao na base de dados ----------------------------
+    let data = Object.assign({}, faturacao);
+    let d = Object.assign({}, this.consulta); 
+
+    this.pacienteService.faturar(data)
     .then( res => {
-      this.dialogRef.close();
-      this.openSnackBar("Consulta agendada com sucesso");
-    }, err => {
+      this.pacienteService.marcarConsulta(d)
+      .then(r => {
+        this.dialogRef.close();
+        this.openSnackBar("Faturado com sucesso");
+      }, er => {
+        console.log("ERRO: " + er.message)
+        this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
+      })      
+    }, err=>{
       console.log("ERRO: " + err.message)
-      this.openSnackBar("Ocorreu um erro ao marcar a consulta. Contacte o Admin do sistema.");
+      this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
     })
-  }*/
+  }
+
+  getMes(number): String{
+    console.log("Get mes "+number)
+    switch(number) { 
+      case 1: { 
+         return "Janeiro";
+      } 
+      case 2: { 
+         return "Fevereiro"; 
+      } 
+      case 3: { 
+         return "Marco"; 
+      }
+      case 4: { 
+        return "Abril"; 
+      }
+      case 5: { 
+        return "Maio"; 
+      }
+      case 6: { 
+        return "Junho"; 
+      }
+      case 7: { 
+        return "Julho"; 
+      }
+      case 8: { 
+        return "Agosto"; 
+      }  
+      case 9: { 
+        return "Setembro"; 
+      }
+      case 10: { 
+        return "Outubro"; 
+      }
+      case 11: { 
+        return "Novembro"; 
+      }
+      case 12: { 
+        return "Dezembro"; 
+      }
+      default: { 
+         //statements; 
+         break; 
+      } 
+   } 
+  }
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{
@@ -273,7 +328,7 @@ export class ListagemComponent implements OnInit {
     })
   }
 
-  }
+}
 
 
 

@@ -1,5 +1,6 @@
 import { Consulta } from "./consulta";
 import { DiagnosticoAuxiliar } from "./diagnostico_aux";
+import { CondutaClinica } from "./conduta_clinica";
 
 export class Faturacao { 
 
@@ -21,6 +22,7 @@ export class Faturacao {
 
     consulta?: Consulta;
     diagnostico_aux?: DiagnosticoAuxiliar[];
+    condutas_clinicas?: CondutaClinica[];
 
     faturador?:String; //User que faturou
 }

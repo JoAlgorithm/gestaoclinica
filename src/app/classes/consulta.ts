@@ -1,6 +1,7 @@
 import { Paciente } from "./paciente";
 import { DiagnosticoAuxiliar } from "./diagnostico_aux";
 import { CategoriaConsulta } from "./categoria_consulta";
+import { CondutaClinica } from "./conduta_clinica";
 
 export class Consulta { 
     id?:String;
@@ -48,6 +49,11 @@ export class Consulta {
     tratamento_efetuar?: String;
     observacoes?: String;
 
+    //Colocado na clinica porque podera haver a possibilidade de o medico ter de incluir isso
+    // na consulta do paciente
+    // Inicialmente a ideia e ficar apenas com a rececionista mas para nao ter de mexer na estrutura
+    // depois ficou dentro da consulta caso haja necessidade do medico incluir
+    condutas_clinicas?: CondutaClinica[]; 
     //internamento?:boolean;
 
 
@@ -60,10 +66,13 @@ export class Consulta {
 
     diagnosticos?: DiagnosticoAuxiliar[];
 
-    tipo?:String; //Uma consulta pode ser "CONSULTA MEDICA" OU "DIAGNOSTICO AUX"
+    tipo?:String; //Uma consulta pode ser "CONSULTA MEDICA" OU "DIAGNOSTICO AUX" OU "CONDUTA CLINICA"
 
+    //Dependendo do tipo de consulta e usada uma variavel para contabilizar o preco
+    // Uma consulta pode conter diagnosticcos e condutuas e cada item tera seu proprio preco
     preco_consulta_medica?:Number;
     preco_diagnosticos?:Number;
+    preco_condutas?:Number;
 
 
     lista_diagnosticos_aux?:String = "";

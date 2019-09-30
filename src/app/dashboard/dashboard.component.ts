@@ -23,6 +23,7 @@ export class DashboardComponent {
   consultas: Consulta[];
   consultas_encerradas_medicas: any; //Consultas medicas pendentes do tipo Consulta Medica
   consultas_encerradas_diagnosticos: any; //Consultas medicas pendentes do tipo Diagnostico Aux
+  consultas_encerradas_condutas: any; //Consultas medicas pendentes do tipo Conduta clinica
   pieChartLabels: String[] = [];
   pieChartDatas: any[] = [];
   faturacoes: Faturacao[];
@@ -105,6 +106,9 @@ export class DashboardComponent {
       this.consultas_encerradas_medicas = this.consultas.filter( c => c.status === "Encerrada" && c.tipo == "Consulta Medica").length;
       
       this.consultas_encerradas_diagnosticos = this.consultas.filter( c => c.status === "Encerrada" && c.tipo == "DIAGNOSTICO AUX").length;
+      
+      this.consultas_encerradas_condutas = this.consultas.filter( c => c.status === "Encerrada" && c.tipo == "CONDUTA CLINICA").length;
+      
       this.consultas.filter( c => c.tipo == "Consulta Medica").forEach(element => {
         //console.log(element.diagnosticos_aux)
         if(element.diagnosticos_aux){
@@ -320,6 +324,7 @@ export class DashboardComponent {
         type: 'bar',
       }];
 
+
       //Info do grafico de barras
       this.barChartData = [{
         data: [
@@ -355,6 +360,23 @@ export class DashboardComponent {
         ],
         label: 'Diagnostico Auxiliar',
         borderWidth: 0
+      }, {
+        data: [
+          this.jan_diagnostico, 
+          this.fev_diagnostico, 
+          this.marc_diagnostico, 
+          this.abril_diagnostico, 
+          this.maio_diagnostico, 
+          this.junho_diagnostico, 
+          this.julh_diagnostico, 
+          this.agos_diagnostico, 
+          this.set_diagnostico, 
+          this.out_diagnostico, 
+          this.nov_diagnostico, 
+          this.dez_diagnostico
+        ],
+        label: 'Conduta Clinica',
+        borderWidth: 0
       }];
       
       
@@ -383,7 +405,7 @@ export class DashboardComponent {
     globalChartOptions: any = {
       responsive: true,
       legend: {
-        display: false,
+        display: true,
         position: 'bottom'
       }
     };
@@ -510,6 +532,23 @@ export class DashboardComponent {
       this.dez_diagnostico
     ],
     label: 'Diagnostico Auxiliar',
+    borderWidth: 0
+  }, {
+    data: [
+      this.jan_diagnostico, 
+      this.fev_diagnostico, 
+      this.marc_diagnostico, 
+      this.abril_diagnostico, 
+      this.maio_diagnostico, 
+      this.junho_diagnostico, 
+      this.julh_diagnostico, 
+      this.agos_diagnostico, 
+      this.set_diagnostico, 
+      this.out_diagnostico, 
+      this.nov_diagnostico, 
+      this.dez_diagnostico
+    ],
+    label: 'Conduta Clinica',
     borderWidth: 0
   }];
   barChartOptions: any = Object.assign({
