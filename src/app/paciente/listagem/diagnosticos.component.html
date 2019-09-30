@@ -29,8 +29,8 @@
         </ng-container>
 
         <ng-container matColumnDef="preco">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Preco </mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.preco}}</mat-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Preco (MZN) </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.preco| currency:' ':'symbol':'1.2-2'}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="remover">

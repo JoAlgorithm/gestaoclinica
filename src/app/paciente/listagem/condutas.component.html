@@ -1,9 +1,17 @@
 <h1 mat-dialog-title>Agendar Condutas Clinicas para {{data.paciente.nome}} {{data.paciente.apelido}}</h1>
 <div mat-dialog-content>
   <p>Selecione as condutas clinicas solicitadas pelo cliente</p>
-
+<!--(change)="onSelect($event.target.value)"-->
   <form [formGroup]="condutaFormGroup">
-    <mat-form-field style="width: 45%">
+    <mat-form-field style="width: 31%">
+        <mat-select placeholder="Tipo conduta" formControlName="conduta_tipo" [(ngModel)]="conduta.tipo" (selectionChange)="onSelect(conduta.tipo)" required>
+            <mat-option *ngFor="let tipoconduta of data.tiposconduta" [value]="tipoconduta">
+                {{tipoconduta.nome}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field style="width: 31%">
         <mat-select placeholder="Conduta clinica" formControlName="conduta_nome" [(ngModel)]="conduta" required>
             <mat-option *ngFor="let conduta of data.condutas" [value]="conduta">
                 {{conduta.nome}}
@@ -11,7 +19,7 @@
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field style="width: 45%">
+    <mat-form-field style="width: 31%">
         <input matInput placeholder="Preco" formControlName="conduta_preco" [(ngModel)]="conduta.preco" required>
     </mat-form-field>
 

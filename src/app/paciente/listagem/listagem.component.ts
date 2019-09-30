@@ -13,6 +13,7 @@ import 'rxjs/add/operator/take';
 import { DiagnosticoAuxiliar } from '../../classes/diagnostico_aux';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CondutaClinica } from '../../classes/conduta_clinica';
+import { TipoCondutaClinica } from '../../classes/tipo_conduta_clinica';
 
 @Component({
   selector: 'app-listagem',
@@ -34,6 +35,8 @@ export class ListagemComponent implements OnInit {
   diagnosticos:DiagnosticoAuxiliar[];
 
   condutas:CondutaClinica[];
+
+  tiposconduta: TipoCondutaClinica[];
 
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
     private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router){ 
@@ -59,6 +62,16 @@ export class ListagemComponent implements OnInit {
       this.clinica = c;
     })
 
+
+    this.configServices.getTiposCondutaClinica().snapshotChanges().subscribe(data => {
+      this.tiposconduta = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as TipoCondutaClinica;
+      })
+    })
+    
     this.configServices.getDiagnosticos().snapshotChanges().subscribe(data => {
       this.diagnosticos = data.map(e => {
         return {
@@ -126,8 +139,8 @@ export class ListagemComponent implements OnInit {
 
   openConduta(row: Paciente): void {
     let dialogRef = this.dialog.open(CondutasDialog, {
-    width: '700px',
-    data: { paciente: row, condutas: this.condutas }
+    width: '800px',
+    data: { paciente: row, condutas: this.condutas, tiposconduta: this.tiposconduta }
     });
     dialogRef.afterClosed().subscribe(result => {
     console.log("result "+result);
@@ -161,6 +174,10 @@ export class ListagemComponent implements OnInit {
   consulta?: Consulta;
   preco_total:Number = 0;
 
+  tiposcondutas_param: TipoCondutaClinica[]; //Passadas no parametro data
+  condutas_param: CondutaClinica[]; //Passadas no parametro data
+  condutas_alternativas: CondutaClinica[];
+
   constructor(public dialogRef: MatDialogRef<CondutasDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
@@ -174,6 +191,10 @@ export class ListagemComponent implements OnInit {
     this.condutaFormGroup.controls['conduta_preco'].disable();
 
     this.dataSourse=new MatTableDataSource(this.condutas);
+
+    this.tiposcondutas_param = this.data.tiposconduta;
+    this.condutas_param = this.data.condutas;
+    //this.condutas_alternativas = this.condutas_param;
   }
   
   addConduta(conduta:CondutaClinica){
@@ -185,7 +206,7 @@ export class ListagemComponent implements OnInit {
       this.dataSourse=new MatTableDataSource(this.condutas);
       this.conduta = new CondutaClinica();
     }else{
-      this.openSnackBar("Selecione uma conduta auxiliar");
+      this.openSnackBar("Selecione uma conduta clinica");
     }
     
   }
@@ -193,6 +214,27 @@ export class ListagemComponent implements OnInit {
   removeConduta(conduta:CondutaClinica){
     this.condutas.splice(this.condutas.indexOf(conduta), 1);
     this.dataSourse=new MatTableDataSource(this.condutas);
+  }
+
+  onSelect(tipo_conduta_clinica: TipoCondutaClinica) {
+    this.conduta = new CondutaClinica();
+    this.data.condutas = null;
+
+    console.log(tipo_conduta_clinica.nome)
+    console.log("dados condutas param "+this.condutas_param.length)
+
+    console.log("comparacao")
+    this.condutas_param.forEach(element => {
+      console.log("element "+element.nome+": "+ element.tipo.nome)
+      console.log(element.tipo.nome == this.conduta.nome)
+    });
+
+    /*console.log("resultado filtro")
+    this.condutas_param.filter(item => item.tipo === tipo_conduta_clinica).forEach(element => {
+      console.log(element.nome)
+    });*/
+    //this.conduta = this.selectService.getStates().filter((item) => item.countryid == countryid);
+    this.data.condutas = this.condutas_param.filter(item => item.tipo.nome == tipo_conduta_clinica.nome);
   }
 
   onNoClick(): void {
@@ -272,12 +314,17 @@ export class ListagemComponent implements OnInit {
   }
   
   addDiognostico(diagnostico:DiagnosticoAuxiliar){
-    this.diagnosticos.push(diagnostico);
+    if(diagnostico.nome){
+      this.diagnosticos.push(diagnostico);
 
-    this.preco_total = +this.preco_total + +diagnostico.preco;
-
-    this.dataSourse=new MatTableDataSource(this.diagnosticos);
-    this.diagnostico = new DiagnosticoAuxiliar();
+      this.preco_total = +this.preco_total + +diagnostico.preco;
+  
+      this.dataSourse=new MatTableDataSource(this.diagnosticos);
+      this.diagnostico = new DiagnosticoAuxiliar();
+    }else{
+      this.openSnackBar("Selecione um diagnostico");
+    }
+    
   }
 
   removeDiagostico(diagnostico:DiagnosticoAuxiliar){
