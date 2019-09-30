@@ -12,6 +12,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { AgmCoreModule } from '@agm/core';
 import { ConfiguracoesService } from '../services/configuracoes.service';
+import { FusionChartsModule } from 'angular-fusioncharts';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { ConfiguracoesService } from '../services/configuracoes.service';
     MatMenuModule,
     FlexLayoutModule,
     ChartsModule,
-    AgmCoreModule
+    AgmCoreModule,
+    FusionChartsModule// Include in imports
   ],
   providers: [
     //{provide: OverlayContainer, useClass: FullscreenOverlayContainer},

@@ -10,6 +10,8 @@ import * as jsPDF from 'jspdf';
 import { format } from 'util';
 //import { format } from 'path';
 
+import * as FusionCharts from 'fusioncharts';
+
 @Component({
   //selector: 'app-dashboard',
   selector: 'dashboard',
@@ -360,23 +362,6 @@ export class DashboardComponent {
         ],
         label: 'Diagnostico Auxiliar',
         borderWidth: 0
-      }, {
-        data: [
-          this.jan_diagnostico, 
-          this.fev_diagnostico, 
-          this.marc_diagnostico, 
-          this.abril_diagnostico, 
-          this.maio_diagnostico, 
-          this.junho_diagnostico, 
-          this.julh_diagnostico, 
-          this.agos_diagnostico, 
-          this.set_diagnostico, 
-          this.out_diagnostico, 
-          this.nov_diagnostico, 
-          this.dez_diagnostico
-        ],
-        label: 'Conduta Clinica',
-        borderWidth: 0
       }];
       
       
@@ -533,23 +518,6 @@ export class DashboardComponent {
     ],
     label: 'Diagnostico Auxiliar',
     borderWidth: 0
-  }, {
-    data: [
-      this.jan_diagnostico, 
-      this.fev_diagnostico, 
-      this.marc_diagnostico, 
-      this.abril_diagnostico, 
-      this.maio_diagnostico, 
-      this.junho_diagnostico, 
-      this.julh_diagnostico, 
-      this.agos_diagnostico, 
-      this.set_diagnostico, 
-      this.out_diagnostico, 
-      this.nov_diagnostico, 
-      this.dez_diagnostico
-    ],
-    label: 'Conduta Clinica',
-    borderWidth: 0
   }];
   barChartOptions: any = Object.assign({
     scaleShowVerticalLines: false,
@@ -581,5 +549,169 @@ export class DashboardComponent {
     }
   }, this.globalChartOptions);
     
+
+
+ //Fusion plugin: em avaliacao
+ // https://www.fusioncharts.com/dev/getting-started/angular/angular/configure-your-chart-using-angular
+ // https://www.fusioncharts.com/download/fusioncharts-suite-xt?framework=js
+  stackedColumnData = {
+    chart: {
+      caption: "Yearly Energy Production Rate",
+      subCaption: " Top 5 Developed Countries",
+      numbersuffix: " TWh",
+      showSum: "1",
+      plotToolText:
+        "$label produces <b>$dataValue</b> of energy from $seriesName",
+      theme: "fusion"
+    },
+    categories: [
+      {
+        category: [
+          {
+            label: "Canada"
+          },
+          {
+            label: "China"
+          },
+          {
+            label: "Russia"
+          },
+          {
+            label: "Australia"
+          },
+          {
+            label: "United States"
+          },
+          {
+            label: "France"
+          }
+        ]
+      }
+    ],
+    dataSet: [
+      {
+        seriesName: "Coal",
+        data: [
+          {
+            value: "400"
+          },
+          {
+            value: "830"
+          },
+          {
+            value: "500"
+          },
+          {
+            value: "420"
+          },
+          {
+            value: "790"
+          },
+          {
+            value: "380"
+          }
+        ]
+      },
+      {
+        seriesName: "Hydro",
+        data: [
+          {
+            value: "350"
+          },
+          {
+            value: "620"
+          },
+          {
+            value: "410"
+          },
+          {
+            value: "370"
+          },
+          {
+            value: "720"
+          },
+          {
+            value: "310"
+          }
+        ]
+      },
+      {
+        seriesName: "Nuclear",
+        data: [
+          {
+            value: "210"
+          },
+          {
+            value: "400"
+          },
+          {
+            value: "450"
+          },
+          {
+            value: "180"
+          },
+          {
+            value: "570"
+          },
+          {
+            value: "270"
+          }
+        ]
+      },
+      {
+        seriesName: "Gas",
+        data: [
+          {
+            value: "180"
+          },
+          {
+            value: "330"
+          },
+          {
+            value: "230"
+          },
+          {
+            value: "160"
+          },
+          {
+            value: "440"
+          },
+          {
+            value: "350"
+          }
+        ]
+      },
+      {
+        seriesName: "Oil",
+        data: [
+          {
+            value: "60"
+          },
+          {
+            value: "200"
+          },
+          {
+            value: "200"
+          },
+          {
+            value: "50"
+          },
+          {
+            value: "230"
+          },
+          {
+            value: "150"
+          }
+        ]
+      }
+    ]
+  }
+
+  exportChart(e){
+    FusionCharts.batchExport({
+      exportFormat:'pdf'
+    })
+  }
+
 
 }

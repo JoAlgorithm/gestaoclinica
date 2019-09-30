@@ -61,7 +61,17 @@ import { AngularFireAuth } from '@angular/fire/auth';
 //import { ConfiguracoesComponent } from './configuracoes/configuracoes.component';
 //import { ConsultasComponent } from './consultas/consultas.component';
 
+// Import angular-fusioncharts
+import { FusionChartsModule } from 'angular-fusioncharts';
 
+// Import FusionCharts library
+import * as FusionCharts from 'fusioncharts';
+
+// Load FusionCharts Individual Charts
+import * as Charts from 'fusioncharts/fusioncharts.charts';
+
+// Use fcRoot function to inject FusionCharts library, and the modules you want to use
+FusionChartsModule.fcRoot(FusionCharts, Charts)
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -127,7 +137,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FlexLayoutModule,
     BidiModule,
     AgmCoreModule.forRoot({apiKey: 'AIzaSyB3HQ_Gk_XRt6KitPdiHQNGpVn0NDwQGMI'}),
-    PerfectScrollbarModule
+    PerfectScrollbarModule,
+    FusionChartsModule // Include in imports
   ],
   providers: [
     {
