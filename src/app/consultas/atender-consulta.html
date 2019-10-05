@@ -286,6 +286,24 @@
             <input matInput placeholder="Historia da doença atual" [(ngModel)]="data.consulta.historia_doenca_atual">
         </mat-form-field>
 
+         <!--TIPO DE DIAGNOSTICO AUX
+        <mat-form-field style="width: 32.6%">
+            <mat-select placeholder="Tipo" formControlName="diagnostico_tipo" [(ngModel)]="tipodiagnostico" (selectionChange)="filtrarTipo(tipodiagnostico)">
+                <mat-option *ngFor="let tipo of data.tipos_diagnosticos" [value]="tipo">
+                    {{tipo.nome}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>-->
+    
+            <!--SUBTIPO DE DIAGNOSTICO AUX
+        <mat-form-field style="width: 32.6%">
+            <mat-select placeholder="Sub-Tipo" formControlName="diagnostico_subtipo" [(ngModel)]="subtipodiagnostico" (selectionChange)="filtrarSubTipo(subtipodiagnostico)">
+                <mat-option *ngFor="let subtipo of data.subtipos_diagnosticos" [value]="subtipo">
+                    {{subtipo.nome}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>-->
+
         <mat-form-field style="width: 49%">
             <mat-select placeholder="Diagnosticos auxiliares" [(ngModel)]="diagnosticos_alternativo" multiple>
                 <mat-option *ngFor="let diagnostico of data.diagnosticos" [value]="diagnostico.nome" [disabled]="diagnostico.faturado">
@@ -293,6 +311,7 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
+        
 
         <!--<mat-form-field style="width: 49%">
             <mat-select placeholder="Diagnosticos auxiliares" [formControl]="toppings" [(ngModel)]="data.consulta.diagnosticos_aux" multiple>
@@ -319,7 +338,7 @@
         </mat-form-field>
 
         <div>
-            <button mat-button>INTERNAR</button>
+            <!--<button mat-button>INTERNAR</button>-->
             <button mat-button (click)="aguardarDiagnostico(data.consulta)">AGUARDAR DIAGNOSTICOS AUX</button>
             <button mat-button (click)="encerrarConsulta(data.consulta)">ENCERRAR CONSULTA</button>
         </div>

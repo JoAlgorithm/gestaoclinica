@@ -17,6 +17,7 @@ export class Faturacao {
     * DIAGNOSTICO_AUX
     * CONSULTA_MEDICA
     * MEDICAMENTO
+    * CONDUTA CLINICA
     */
     categoria?:String;
 

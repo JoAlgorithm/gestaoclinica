@@ -10,6 +10,9 @@ import { ConfiguracoesService } from '../services/configuracoes.service';
 import { DiagnosticoAuxiliar } from '../classes/diagnostico_aux';
 import { FormControl } from '@angular/forms';
 import { Faturacao } from '../classes/faturacao';
+import { TipoDiagnosticoAux } from '../classes/tipo_diagnostico';
+import { SubTipoDiagnosticoAux } from '../classes/subtipo_diagnostico';
+import * as deepEqual from "deep-equal";
 
 @Component({
   selector: 'app-consultas',
@@ -50,7 +53,9 @@ export class ConsultasComponent implements OnInit {
   justificativa:String = ""; //variavel usada para pegar justificativa caso a consulta seja cancelada
 
   diagnosticos:DiagnosticoAuxiliar[];
-
+  tipos_diagnosticos: TipoDiagnosticoAux[];
+  subtipos_diagnosticos: SubTipoDiagnosticoAux[];
+  subtipos_diagnosticos_aux: SubTipoDiagnosticoAux[];
   
 
   constructor(private pacienteService: PacienteService, public authService: AuthService,
@@ -102,6 +107,27 @@ export class ConsultasComponent implements OnInit {
           ...e.payload.val(),
         } as DiagnosticoAuxiliar;
       })
+    })
+
+    this.configServices.getTiposDiagnosticos().snapshotChanges().subscribe(data => {
+      this.tipos_diagnosticos = data.map(e => {
+        return {
+          id: e.payload.key,
+          //subtipos: e.payload.val()['subtipo'] as SubTipoDiagnosticoAux[],
+          ...e.payload.val(),
+        } as TipoDiagnosticoAux;
+      });
+    })
+
+    this.configServices.getSubTiposDiagnosticos().snapshotChanges().subscribe(data => {
+      this.subtipos_diagnosticos = data.map(e => {
+        return {
+          id: e.payload.key,
+          tipo: e.payload.val()['tipo'] as TipoDiagnosticoAux,
+          ...e.payload.val(),
+        } as SubTipoDiagnosticoAux;
+      });
+      this.subtipos_diagnosticos_aux = this.subtipos_diagnosticos;
     })
   }
 
@@ -155,8 +181,12 @@ export class ConsultasComponent implements OnInit {
     let dialogRef = this.dialog.open(AtenderConsultaDialog, {
       width: '1000px',
       height: '600px',
-      data: { consulta: consulta, consultas: dataSourseHistConsultas, 
-      diagnosticos: this.diagnosticos as DiagnosticoAuxiliar[] }
+      data: {
+        consulta: consulta, consultas: dataSourseHistConsultas, 
+        diagnosticos: this.diagnosticos as DiagnosticoAuxiliar[],
+        tipos_diagnosticos: this.tipos_diagnosticos,
+        subtipos_diagnosticos: this.subtipos_diagnosticos
+     }
     });
     dialogRef.afterClosed().subscribe(result => {
      // console.log("result "+result);
@@ -264,11 +294,38 @@ export class ConsultasComponent implements OnInit {
 
   toppings = new FormControl();
 
+  diagnosticos_param: DiagnosticoAuxiliar[] = [];
+  tipodiagnostico: TipoDiagnosticoAux;
+  subtipodiagnostico: SubTipoDiagnosticoAux;
+  subtipos_diagnosticos_param: SubTipoDiagnosticoAux[] = [];
+
   constructor(  public dialogRef: MatDialogRef<AtenderConsultaDialog>,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, public configServices:ConfiguracoesService) {
     
+    this.diagnosticos_param = this.data.diagnosticos;
+    this.subtipos_diagnosticos_param = this.data.subtipos_diagnosticos;
   }
+
+  /*filtrarTipo(tipo: TipoDiagnosticoAux) {
+    //this.diagnostico = new DiagnosticoAuxiliar();
+    //this.diagnostico.tipo = tipo;
+
+    this.data.diagnosticos = null;
+    this.data.diagnosticos = this.diagnosticos_param.filter(item => item.tipo.nome == tipo.nome);
+    
+    this.subtipodiagnostico = new SubTipoDiagnosticoAux();
+    this.data.subtipos_diagnosticos = null;
+    this.data.subtipos_diagnosticos = this.subtipos_diagnosticos_param.filter(item => item.tipo.nome == tipo.nome);
+  }
+
+  filtrarSubTipo(subtipo: SubTipoDiagnosticoAux){
+    //this.diagnostico = new DiagnosticoAuxiliar();
+    //this.diagnostico.subtipo = subtipo;
+
+    this.data.diagnosticos = null;
+    this.data.diagnosticos = this.diagnosticos_param.filter(item =>  deepEqual(item.subtipo,subtipo))
+  }*/
 
   atualizarDadosGerais(paciente:Paciente, consultaAtual:Consulta, consultas:Consulta[]){
     //Ao atualizar o objecto Paciente atualiza-se os dados na tabela de pacientes e em todas as consultas desse paciente

@@ -75,4 +75,40 @@ export class ConfiguracoesService {
     return this.db.list('users/');
   }
 
+  //Retorna a lista de TIPOS DIAGNOSTICOS AUX
+  getTiposDiagnosticos() {
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/tiposdiagnosticoaux');
+  }
+
+  //Retorna a lista de SUBTIPOS DIAGNOSTICOS AUX
+  getSubTiposDiagnosticos() {
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/subtiposdiagnosticoaux');
+  }
+
+  /*tipos_diagnosticos = [
+    {value: 'HEMATOLOGIA'},
+    {value: 'BIOQUIMICA'},
+    {value: 'IMUNOQUIMICA'},
+    {value: 'HORMONAS'},
+    {value: 'MARCADORES CARDIACOS'},
+    {value: 'MARCADORES TUMORAIS'},
+    {value: 'INFECCIOLOGIA'},
+    {value: 'IONOGRAMA'},
+    {value: 'URIANALISE'},
+    {value: 'EXAME DE FEZES'},
+    {value: 'TESTES RAPIDOS'},
+    {value: 'IMAGIOLOGIA'},
+    {value: 'EXAMES E ESTUDOS DIVERSOS'}
+  ]
+
+  subtipos_diagnosticos = [
+    {value: 'Perfil Hepatico'},
+    {value: 'Perfil Renal'},
+    {value: 'Perfil Lipidico'},
+    {value: 'Perfil Anemico'},
+    {value: 'Perfil Glicemico'},
+    {value: 'Perfil Pancreatico'},
+    {value: 'Perfil Pancreatico'}
+  ]*/
+
 }

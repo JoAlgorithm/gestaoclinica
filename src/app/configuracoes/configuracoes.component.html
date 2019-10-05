@@ -122,13 +122,31 @@
           <form [formGroup]="cadastro_diagnosticoFormGroup">
               <!--<ng-template matStepLabel>DADOS DO PACIENTE</ng-template>-->
         
+              <!--TIPO DE DIAGNOSTICO AUX-->
+              <mat-form-field style="width: 23%">
+                    <mat-select placeholder="Tipo" formControlName="diagnostico_tipo" [(ngModel)]="diagnostico.tipo" (selectionChange)="filtrarTipoDiagnostico(diagnostico.tipo)">
+                        <mat-option *ngFor="let tipo of tipos_diagnosticos" [value]="tipo">
+                            {{tipo.nome}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!--SUBTIPO DE DIAGNOSTICO AUX-->
+              <mat-form-field style="width: 23%">
+                    <mat-select placeholder="Sub-Tipo" formControlName="diagnostico_subtipo" [(ngModel)]="diagnostico.subtipo">
+                        <mat-option *ngFor="let subtipo of subtipos_diagnosticos" [value]="subtipo">
+                            {{subtipo.nome}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                
                 <!--NOME DO DIAGNOSITOC-->
-                <mat-form-field style="width: 45%">
+                <mat-form-field style="width: 23%">
                     <input matInput placeholder="Nome" formControlName="diagnostico_nome" [(ngModel)]="diagnostico.nome" required>
                 </mat-form-field>
 
                  <!--PRECO DO DIAGNOSITOC-->
-                 <mat-form-field style="width: 45%">
+                 <mat-form-field style="width: 23%">
                     <input matInput placeholder="Preco" formControlName="diagnostico_preco" [(ngModel)]="diagnostico.preco" required>
                 </mat-form-field>
                 
@@ -143,6 +161,16 @@
           <div class="example-container mat-elevation-z8">
               <mat-table [dataSource]="dataSourseDiagnostico">
                 
+                <ng-container matColumnDef="tipo">
+                    <mat-header-cell *matHeaderCellDef> Tipo </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.tipo.nome}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="subtipo">
+                    <mat-header-cell *matHeaderCellDef> Sub-Tipo </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.subtipo?.nome}}</mat-cell>
+                </ng-container>
+
                 <ng-container matColumnDef="nome">
                     <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
                     <mat-cell *matCellDef="let row"> {{row.nome}}</mat-cell>

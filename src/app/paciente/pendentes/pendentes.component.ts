@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, ElementRef } from '@angular/core';
 import { Paciente } from '../../classes/paciente';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { ConfiguracoesService } from '../../services/configuracoes.service';
@@ -8,6 +8,7 @@ import { Consulta } from '../../classes/consulta';
 import { Faturacao } from '../../classes/faturacao';
 import { DiagnosticoAuxiliar } from '../../classes/diagnostico_aux';
 import { SelectionModel } from '@angular/cdk/collections';
+import * as jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-pendentes',
@@ -249,6 +250,190 @@ export class PendentesComponent implements OnInit {
       duration: 2000
     })
   }
+
+
+
+  @ViewChild('content1') content1: ElementRef;
+  @ViewChild('content2') content2: ElementRef;
+  @ViewChild('content3') content3: ElementRef;
+  @ViewChild('content4') content4: ElementRef;
+  @ViewChild('content5') content5: ElementRef;
+  @ViewChild('content6') content6: ElementRef;
+  public downloadPDF(diagnosticos :DiagnosticoAuxiliar[]){// criacao do pdf
+    let doc = new jsPDF({
+      orientation: 'p',
+      unit: 'px',
+      format: 'a4',
+      putOnlyUsedFonts:true,
+    });
+  
+    let specialElementHandlers ={
+      '#editor': function(element,renderer){return true;} 
+    }
+    /*let content1 = this.content1.nativeElement; 
+    let content2 = this.content2.nativeElement;  
+    let content3 = this.content3.nativeElement; 
+    let content4 = this.content4.nativeElement; 
+    let content5 = this.content5.nativeElement; 
+    let content6 = this.content6.nativeElement; 
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontSize(12);
+
+    doc.fromHTML(content1.innerHTML, 125, 112,{
+    'width':100,
+      'elementHandlers': specialElementHandlers,
+    });
+    doc.fromHTML(content2.innerHTML, 340, 112,{
+      'width':100,
+      'elementHandlers': specialElementHandlers,
+    });
+    doc.fromHTML(content3.innerHTML, 85, 132,{
+      'width':100,
+      'elementHandlers': specialElementHandlers,
+    });*/
+
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontSize(12);
+    let item = 1;
+    let preco_total = 0;
+    let linha = 200;                      
+    diagnosticos.forEach(element => {
+      doc.text(item+"", 55, linha) //item
+      doc.text("1", 257, linha) //quantidade
+      doc.text(element.nome , 95, linha) //descricao
+      doc.text(element.preco , 294, linha)
+      doc.text(element.preco , 354, linha)
+
+      preco_total = +preco_total + +element.preco;
+      item = +item + +1;
+      linha = +linha + +20
+    });
+    doc.text(preco_total+" MZN"  , 355, 525) //descricao        
+
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontSize(10);
+    var img = new Image();
+      
+    // img.src ="../../../assets/images/medical-center-logo-design.jpg"; 
+    //  img.src =this.clinica.logo_pdf; 
+    //doc.convertBase64ToBinaryString(this.clinica.logo_pdf);
+    // img.src =this.clinica.logo_pdf; 
+    // doc.addImage(img,"PNG", 50, 10,90, 90);
+  
+
+    doc.text("Processado pelo computador", 170, 580);
+    // doc.text("CENTRO MEDICO VITALLE", 165, 75);
+    doc.text("AV.Principal N° 1- Cidade Baixa ", 50, 75);
+    doc.text("Nampula,Nacala-Porto ", 50,85);
+    doc.text("E-mail: manuelacacio40@gmail.com", 50, 95);
+    doc.text("Cell: 842008104", 50, 105);
+    
+    doc.text("Nome do Paciente:", 50, 125);
+
+    doc.text("NID:", 320, 125);
+    doc.text("Apelido:", 50, 145);
+    doc.text("Data de emissão: ", 280, 145);
+    doc.setFillColor(50,50,50);
+    doc.rect ( 50, 170 , 40 , 40 ); 
+    doc.rect (  50, 190 , 40 , 40 ); 
+    doc.rect ( 50, 210 , 40 , 40 ); 
+    doc.rect (  50, 230 , 40 , 40 ); 
+    doc.rect ( 50, 250 , 40 , 40 ); 
+    doc.rect (  50, 270 , 40 , 40 ); 
+    doc.rect ( 50, 290, 40 , 40 ); 
+    doc.rect (  50, 310 , 40 , 40 ); 
+    doc.rect ( 50, 330 , 40 , 40 ); 
+    doc.rect (  50, 350 , 40 , 40 ); 
+    doc.rect ( 50, 370 , 40 , 40 ); 
+    doc.rect (  50, 390 , 40 , 40 ); 
+    doc.rect ( 50, 410 , 40 , 40 ); 
+    doc.rect (  50, 430 , 40 , 40 ); 
+    doc.rect ( 50, 450, 40 , 40 ); 
+    doc.rect (  50, 470 , 40 , 40 ); 
+
+    doc.rect (  90, 170 , 150 , 40 ); 
+    doc.rect (  90, 190 , 150 , 40 );
+    doc.rect ( 90, 210 , 150 , 40 ); 
+    doc.rect (  90, 230 , 150, 40 ); 
+    doc.rect ( 90, 250 , 150, 40 ); 
+    doc.rect (  90, 270 , 150 , 40 ); 
+    doc.rect ( 90, 290, 150, 40 ); 
+    doc.rect (  90, 310 , 150 , 40 ); 
+    doc.rect ( 90, 330 , 150 , 40 ); 
+    doc.rect (  90, 350 , 150 , 40 ); 
+    doc.rect ( 90, 370 , 150, 40 ); 
+    doc.rect (  90, 390 , 150, 40 ); 
+    doc.rect ( 90, 410 , 150, 40 ); 
+    doc.rect (  90, 430 , 150 , 40 ); 
+    doc.rect ( 90, 450, 150 , 40 ); 
+    doc.rect (  90, 470 , 150 , 40 ); 
+
+    doc.rect (  240, 170 , 50 , 40 ); 
+    doc.rect (  240, 190 , 50 , 40 );
+    doc.rect ( 240, 210 , 50 , 40 ); 
+    doc.rect (  240, 230 , 50 , 40 ); 
+    doc.rect ( 240, 250 , 50 , 40 ); 
+    doc.rect (  240, 270 , 50 , 40 ); 
+    doc.rect ( 240, 290, 50 , 40 ); 
+    doc.rect (  240, 310 , 50 , 40 ); 
+    doc.rect ( 240, 330 , 50 , 40 ); 
+    doc.rect (  240, 350 , 50 , 40 ); 
+    doc.rect ( 240, 370 , 50 , 40 ); 
+    doc.rect (  240, 390 , 50 , 40 ); 
+    doc.rect ( 240, 410 , 50 , 40 ); 
+    doc.rect (  240, 430 , 50 , 40 ); 
+    doc.rect ( 240, 450, 50 , 40 ); 
+    doc.rect (  240, 470 , 50 , 40 ); 
+
+    doc.rect (  290, 170 , 60 , 40 ); 
+    doc.rect (  290, 190 , 60 , 40 );
+    doc.rect ( 290, 210 , 60 , 40 ); 
+    doc.rect (  290, 230 , 60 , 40 ); 
+    doc.rect ( 290, 250 , 60 , 40 ); 
+    doc.rect (  290, 270 , 60 , 40 ); 
+    doc.rect ( 290, 290, 60 , 40 ); 
+    doc.rect (  290, 310 , 60 , 40 ); 
+    doc.rect ( 290, 330 , 60 , 40 ); 
+    doc.rect (  290, 350 , 60 , 40 ); 
+    doc.rect ( 290, 370 , 60 , 40 ); 
+    doc.rect (  290, 390 , 60 , 40 ); 
+    doc.rect ( 290, 410 , 60 , 40 ); 
+    doc.rect (  290, 430 , 60 , 40 ); 
+    doc.rect ( 290, 450, 60 , 40 ); 
+    doc.rect (  290, 470 , 60 , 40 ); 
+    doc.rect (  290, 490 , 60 , 40 ); 
+
+    doc.rect (  350, 170 , 50 , 40 ); 
+    doc.rect (  350, 190 , 50 , 40 );
+    doc.rect ( 350, 210 , 50 , 40 ); 
+    doc.rect (  350, 230 , 50 , 40 ); 
+    doc.rect ( 350, 250 , 50 , 40 ); 
+    doc.rect (  350, 270 , 50 , 40 ); 
+    doc.rect ( 350, 290, 50 , 40 ); 
+    doc.rect (  350, 310 , 50 , 40 ); 
+    doc.rect ( 350, 330 , 50 , 40 ); 
+    doc.rect (  350, 350 , 50 , 40 ); 
+    doc.rect ( 350, 370 , 50 , 40 ); 
+    doc.rect ( 350, 390 , 50 , 40 ); 
+    doc.rect ( 350, 410 , 50 , 40 ); 
+    doc.rect (  350, 430 , 50 , 40 ); 
+    doc.rect ( 350, 450, 50 , 40 ); 
+    doc.rect ( 350, 470 , 50 , 40 ); 
+    doc.rect ( 350, 490 , 50 , 40 ); 
+
+    doc.setFontStyle("bold");
+    doc.text("Item", 60, 180);
+    doc.text("Descrição de Medicamento", 100, 180);
+    doc.text("Quantd", 245, 180);
+    doc.text("Preço Unit", 295, 180);
+    doc.text("Preç Tot", 355, 180);
+    doc.text("Total:", 295, 525);
+    //  doc.text("FICHA DE PAGAMENTO", 165, 90);
+    doc.save('Recebo.pdf');  
+}
 
 
 

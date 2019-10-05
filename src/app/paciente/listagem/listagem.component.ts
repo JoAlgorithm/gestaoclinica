@@ -15,6 +15,11 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CondutaClinica } from '../../classes/conduta_clinica';
 import { TipoCondutaClinica } from '../../classes/tipo_conduta_clinica';
 import { Faturacao } from '../../classes/faturacao';
+import { CategoriaConsulta } from '../../classes/categoria_consulta';
+import { TipoDiagnosticoAux } from '../../classes/tipo_diagnostico';
+import { SubTipoDiagnosticoAux } from '../../classes/subtipo_diagnostico';
+import * as deepEqual from "deep-equal";
+import * as jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-listagem',
@@ -38,6 +43,12 @@ export class ListagemComponent implements OnInit {
   condutas:CondutaClinica[];
 
   tiposconduta: TipoCondutaClinica[];
+
+  categorias_consulta: CategoriaConsulta[];
+
+  tipos_diagnosticos: TipoDiagnosticoAux[];
+  subtipos_diagnosticos: SubTipoDiagnosticoAux[];
+  subtipos_diagnosticos_aux: SubTipoDiagnosticoAux[];
 
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
     private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router){ 
@@ -90,10 +101,49 @@ export class ListagemComponent implements OnInit {
         } as CondutaClinica;
       })
     })
+
+    this.configServices.getCategoriasConsulta().snapshotChanges().subscribe(data => {
+      this.categorias_consulta = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as CategoriaConsulta;
+      })
+    })
+
+    this.configServices.getTiposDiagnosticos().snapshotChanges().subscribe(data => {
+      this.tipos_diagnosticos = data.map(e => {
+        return {
+          id: e.payload.key,
+          //subtipos: e.payload.val()['subtipo'] as SubTipoDiagnosticoAux[],
+          ...e.payload.val(),
+        } as TipoDiagnosticoAux;
+      });
+    })
+
+    this.configServices.getSubTiposDiagnosticos().snapshotChanges().subscribe(data => {
+      this.subtipos_diagnosticos = data.map(e => {
+        return {
+          id: e.payload.key,
+          tipo: e.payload.val()['tipo'] as TipoDiagnosticoAux,
+          ...e.payload.val(),
+        } as SubTipoDiagnosticoAux;
+      });
+      this.subtipos_diagnosticos_aux = this.subtipos_diagnosticos;
+    })
   }
 
-  
   marcarConsulta(paciente, tipo){
+    let dialogRef = this.dialog.open(ConsultasDialog, {
+      width: '700px',
+      data: { paciente: paciente, tipo: tipo, categorias_consulta: this.categorias_consulta  }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+    console.log("result "+result);
+    });
+  }
+  
+  /*marcarConsulta(paciente, tipo){
 
     let dia = new Date().getDate();
     let mes = +(new Date().getMonth()) + +1;
@@ -120,7 +170,7 @@ export class ListagemComponent implements OnInit {
       this.openSnackBar("Ocorreu um erro ao marcar a consulta. Contacte o Admin do sistema.");
 
     })
-  }
+  }*/
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{
@@ -130,8 +180,10 @@ export class ListagemComponent implements OnInit {
 
   openDiagnostico(row: Paciente): void {
     let dialogRef = this.dialog.open(DiagnosticosDialog, {
-    width: '700px',
-    data: { paciente: row, diagnosticos: this.diagnosticos }
+    width: '800px',
+    data: { paciente: row, diagnosticos: this.diagnosticos,
+      tipos_diagnosticos:this.tipos_diagnosticos, subtipos_diagnosticos:this.subtipos_diagnosticos
+    }
     });
     dialogRef.afterClosed().subscribe(result => {
     console.log("result "+result);
@@ -157,7 +209,7 @@ export class ListagemComponent implements OnInit {
 }
 
 
-
+//CondutasDialog --------------------------------------------------------
 
 @Component({
   selector: 'condutas-dialog',
@@ -334,9 +386,253 @@ export class ListagemComponent implements OnInit {
 
 
 
+//ConsultasDialog ---------------------------------------------------------
+
+@Component({
+  selector: 'consultas-dialog',
+  templateUrl: 'consultas.component.html',
+  })
+  export class ConsultasDialog {
+
+  consultasFormGroup: FormGroup;
+  //categorias: CategoriaConsulta[] = [];
+  categoria:CategoriaConsulta;
+
+  consulta?: Consulta;
+  preco_total:Number = 0;
+
+  constructor(  public dialogRef: MatDialogRef<ConsultasDialog>, private router: Router,
+  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
+  public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
+    this.categoria = new CategoriaConsulta();
+    this.consulta = new Consulta();
+
+    this.consultasFormGroup = this._formBuilder.group({
+      categoria_nome: ['', Validators.required],
+      categoria_preco: ['', Validators.required]
+    });
+    this.consultasFormGroup.controls['categoria_preco'].disable();
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  marcarConsulta(paciente, tipo){
+    if(this.categoria.nome){ //Garantir que categoria foi selecionada
+      this.DiarioPdf();
+
+      let dia = new Date().getDate();
+      let mes = +(new Date().getMonth()) + +1;
+      let ano = new Date().getFullYear();
+      this.consulta.data = dia +"/"+mes+"/"+ano;
+
+      this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+      this.consulta.paciente = paciente;
+      this.consulta.status = "Aberta";
+      this.consulta.tipo = tipo;
+      this.consulta.preco_consulta_medica = this.categoria.preco;
+      this.consulta.categoria = this.categoria;
+
+      let data = Object.assign({}, this.consulta);
+
+      this.pacienteService.marcarConsulta(data)
+      .then( res => {
+        this.dialogRef.close();
+        this.openSnackBar("Consulta agendada com sucesso");
+      }, err => {
+        console.log("ERRO: " + err.message)
+        this.openSnackBar("Ocorreu um erro ao marcar a consulta. Contacte o Admin do sistema.");
+      })
+
+    }else{
+      this.openSnackBar("Selecione uma categoria de consulta");
+    }
+  }
+
+  openSnackBar(mensagem) {
+    this.snackBar.open(mensagem, null,{
+      duration: 2000
+    })
+  }
+
+
+  public DiarioPdf(){// criacao do pdf
+    let docu = new jsPDF({
+      orientation: 'p',
+      unit: 'px',
+      format: 'a4',
+      putOnlyUsedFonts:true,
+     });
+     docu.setFont("Courier");
+     docu.setFontStyle("normal"); 
+     docu.setFontSize(12);
+     docu.setFontStyle("bold");
+     docu.text("Nome:", 52, 72);
+     docu.text("NID:", 232, 72);
+     docu.text("Cama:", 317, 72);
+
+     docu.text("Data", 55, 92);
+     docu.text("Observações Clínicas", 89, 92);
+     docu.text("Pres. terapêuticas", 222, 92);
+     docu.text("Dieta", 345, 92);
+
+
+     docu.rect ( 50, 40 , 350 , 20 ); 
+
+     docu.rect ( 50, 60 , 180 , 20 ); 
+     docu.rect (  230, 60 , 85 , 20 ); 
+     docu.rect (  315, 60 , 85 , 20 ); 
+
+     docu.rect ( 50, 80 , 30 , 20 ); 
+     docu.rect (  80, 80 , 140 , 20 ); 
+     docu.rect (  220, 80 , 120 , 20 );
+     docu.rect (  340, 80 , 60 , 20 );
+
+     docu.rect ( 50, 100 , 30 , 20 ); 
+     docu.rect (  80, 100 , 140 , 20 ); 
+     docu.rect (  220, 100 , 120 , 20 );
+     docu.rect (  340, 100 , 60 , 20 );
+
+     docu.rect ( 50, 120 , 30 , 20 ); 
+     docu.rect (  80, 120 , 140 , 20 ); 
+     docu.rect (  220, 120 , 120 , 20 );
+     docu.rect (  340, 120 , 60 , 20 );
+
+     docu.rect ( 50, 140 , 30 , 20 ); 
+     docu.rect (  80, 140 , 140 , 20 ); 
+     docu.rect (  220, 140 , 120 , 20 );
+     docu.rect (  340, 140 , 60 , 20 );
+
+     docu.rect ( 50, 160 , 30 , 20 ); 
+     docu.rect (  80, 160 , 140 , 20 ); 
+     docu.rect (  220, 160 , 120 , 20 );
+     docu.rect (  340, 160 , 60 , 20 );
+
+     docu.rect ( 50,  180 , 30 , 20 ); 
+     docu.rect (  80,  180 , 140 , 20 ); 
+     docu.rect (  220,  180 , 120 , 20 );
+     docu.rect (  340,  180 , 60 , 20 );
+
+    
+     docu.rect ( 50,  200 , 30 , 20 ); 
+     docu.rect (  80,  200 , 140 , 20 ); 
+     docu.rect (  220,  200 , 120 , 20 );
+     docu.rect (  340,  200 , 60 , 20 );
+
+
+     docu.rect ( 50,  220 , 30 , 20 ); 
+     docu.rect (  80,  220 , 140 , 20 ); 
+     docu.rect (  220,  220 , 120 , 20 );
+     docu.rect (  340,  220 , 60 , 20 );
+
+     docu.rect ( 50,  240 , 30 , 20 ); 
+     docu.rect (  80,  240 , 140 , 20 ); 
+     docu.rect (  220,  240 , 120 , 20 );
+     docu.rect (  340,  240 , 60 , 20 );
+
+     docu.rect ( 50,  260 , 30 , 20 ); 
+     docu.rect (  80,  260 , 140 , 20 ); 
+     docu.rect (  220,  260 , 120 , 20 );
+     docu.rect (  340,  260 , 60 , 20 );
+
+     docu.rect ( 50,  280 , 30 , 20 ); 
+     docu.rect (  80,  280 , 140 , 20 ); 
+     docu.rect (  220,  280 , 120 , 20 );
+     docu.rect (  340,  280 , 60 , 20 );
+
+     docu.rect ( 50,   300 , 30 , 20 ); 
+     docu.rect (  80,   300 , 140 , 20 ); 
+     docu.rect (  220,   300 , 120 , 20 );
+     docu.rect (  340,   300 , 60 , 20 );
+
+
+     docu.rect ( 50,   320 , 30 , 20 ); 
+     docu.rect (  80,   320 , 140 , 20 ); 
+     docu.rect (  220,   320 , 120 , 20 );
+     docu.rect (  340,   320 , 60 , 20 );
 
 
 
+     docu.rect ( 50,   340  , 30 , 20 ); 
+     docu.rect (  80,   340  , 140 , 20 ); 
+     docu.rect (  220,   340  , 120 , 20 );
+     docu.rect (  340,   340  , 60 , 20 );
+
+     docu.rect ( 50,   360  , 30 , 20 ); 
+     docu.rect (  80,   360  , 140 , 20 ); 
+     docu.rect (  220,   360  , 120 , 20 );
+     docu.rect (  340,   360  , 60 , 20 );
+
+
+
+
+     docu.rect ( 50,   380   , 30 , 20 ); 
+     docu.rect (  80,   380   , 140 , 20 ); 
+     docu.rect (  220,   380   , 120 , 20 );
+     docu.rect (  340,   380   , 60 , 20 );
+
+     docu.rect ( 50,   400   , 30 , 20 ); 
+     docu.rect (  80,   400   , 140 , 20 ); 
+     docu.rect (  220,   400   , 120 , 20 );
+     docu.rect (  340,   400   , 60 , 20 );
+
+     docu.rect ( 50,   420   , 30 , 20 ); 
+     docu.rect (  80,   420   , 140 , 20 ); 
+     docu.rect (  220,   420   , 120 , 20 );
+     docu.rect (  340,   420   , 60 , 20 );
+
+     docu.rect ( 50,   440   , 30 , 20 ); 
+     docu.rect (  80,   440   , 140 , 20 ); 
+     docu.rect (  220,   440   , 120 , 20 );
+     docu.rect (  340,   440   , 60 , 20 );
+
+     docu.rect ( 50,   460   , 30 , 20 ); 
+     docu.rect (  80,   460   , 140 , 20 ); 
+     docu.rect (  220,   460   , 120 , 20 );
+     docu.rect (  340,   460   , 60 , 20 );
+
+     docu.rect ( 50,   480   , 30 , 20 ); 
+     docu.rect (  80,   480   , 140 , 20 ); 
+     docu.rect (  220,   480   , 120 , 20 );
+     docu.rect (  340,   480   , 60 , 20 );
+
+     docu.rect ( 50,   500   , 30 , 20 ); 
+     docu.rect (  80,   500   , 140 , 20 ); 
+     docu.rect (  220,   500   , 120 , 20 );
+     docu.rect (  340,   500   , 60 , 20 );
+
+     docu.rect ( 50,   520   , 30 , 20 ); 
+     docu.rect (  80,   520   , 140 , 20 ); 
+     docu.rect (  220,   520   , 120 , 20 );
+     docu.rect (  340,   520   , 60 , 20 );
+
+     docu.rect ( 50,   540   , 30 , 20 ); 
+     docu.rect (  80,   540   , 140 , 20 ); 
+     docu.rect (  220,   540   , 120 , 20 );
+     docu.rect (  340,   540   , 60 , 20 );
+
+     docu.rect ( 50,   560   , 30 , 20 ); 
+     docu.rect (  80,   560   , 140 , 20 ); 
+     docu.rect (  220,   560   , 120 , 20 );
+     docu.rect (  340,   560   , 60 , 20 );
+
+     docu.setFont("Courier");
+     docu.setFontStyle("normal"); 
+     docu.setFontSize(15);
+     docu.setFontStyle("bold");
+     docu.text("DIÁRIO CLÍNICO", 175, 52);
+
+     docu.save('diario.pdf');  //nome do arquivo
+
+  }  
+
+}
+
+
+
+
+//DiagnosticosDialog ---------------------------------------------------------
 
 @Component({
   selector: 'diagnosticos-dialog',
@@ -347,25 +643,55 @@ export class ListagemComponent implements OnInit {
   diagnosticoFormGroup: FormGroup;
   diagnosticos: DiagnosticoAuxiliar[] = [];
   diagnostico:DiagnosticoAuxiliar;
+  diagnosticos_param: DiagnosticoAuxiliar[] = [];
 
   dataSourse: MatTableDataSource<DiagnosticoAuxiliar>;
-  displayedColumns = ['nome','preco', 'remover'];
+  displayedColumns = ['tipo','subtipo','nome','preco', 'remover'];
 
   consulta?: Consulta;
   preco_total:Number = 0;
 
+  tipodiagnostico: TipoDiagnosticoAux;
+  subtipodiagnostico: SubTipoDiagnosticoAux;
+  subtipos_diagnosticos_param: SubTipoDiagnosticoAux[] = [];
+
   constructor(  public dialogRef: MatDialogRef<DiagnosticosDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
-  public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
+  public pacienteService: PacienteService,  public snackBar: MatSnackBar, 
+  private _formBuilder: FormBuilder, public configServices: ConfiguracoesService) {
     this.diagnostico = new DiagnosticoAuxiliar();
 
     this.diagnosticoFormGroup = this._formBuilder.group({
+      diagnostico_tipo: [''],
+      diagnostico_subtipo: [''],
       diagnostico_nome: ['', Validators.required],
       diagnostico_preco: ['', Validators.required]
     });
     this.diagnosticoFormGroup.controls['diagnostico_preco'].disable();
 
     this.dataSourse=new MatTableDataSource(this.diagnosticos);
+    this.diagnosticos_param = this.data.diagnosticos;
+    this.subtipos_diagnosticos_param = this.data.subtipos_diagnosticos;
+  }
+
+  filtrarTipo(tipo: TipoDiagnosticoAux) {
+    this.diagnostico = new DiagnosticoAuxiliar();
+    this.diagnostico.tipo = tipo;
+
+    this.data.diagnosticos = null;
+    this.data.diagnosticos = this.diagnosticos_param.filter(item => item.tipo.nome == tipo.nome);
+    
+    this.subtipodiagnostico = new SubTipoDiagnosticoAux();
+    this.data.subtipos_diagnosticos = null;
+    this.data.subtipos_diagnosticos = this.subtipos_diagnosticos_param.filter(item => item.tipo.nome == tipo.nome);
+  }
+
+  filtrarSubTipo(subtipo: SubTipoDiagnosticoAux){
+    this.diagnostico = new DiagnosticoAuxiliar();
+    this.diagnostico.subtipo = subtipo;
+
+    this.data.diagnosticos = null;
+    this.data.diagnosticos = this.diagnosticos_param.filter(item =>  deepEqual(item.subtipo,subtipo))
   }
   
   addDiognostico(diagnostico:DiagnosticoAuxiliar){
@@ -376,6 +702,8 @@ export class ListagemComponent implements OnInit {
   
       this.dataSourse=new MatTableDataSource(this.diagnosticos);
       this.diagnostico = new DiagnosticoAuxiliar();
+      this.tipodiagnostico = new TipoDiagnosticoAux();
+      this.subtipodiagnostico = new SubTipoDiagnosticoAux();
     }else{
       this.openSnackBar("Selecione um diagnostico");
     }
@@ -391,11 +719,61 @@ export class ListagemComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  marcarConsulta(paciente:Paciente){
+
+  faturarDiagnostico(paciente:Paciente){
+    //Abrir uma consulta DIAGNOSTICO AUXILIAR --------------------
     let dia = new Date().getDate();
     let mes = +(new Date().getMonth()) + +1;
     let ano = new Date().getFullYear();
-    //dia +"/"+mes+"/"+ano;
+
+    this.consulta = new Consulta();
+    this.consulta.data = dia +"/"+mes+"/"+ano;
+    this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+    this.consulta.paciente = paciente;
+    this.consulta.diagnosticos_aux = this.diagnosticos;
+    this.consulta.status = "Encerrada";
+    this.consulta.tipo = "DIAGNOSTICO AUX";
+
+    //Criar uma faturacao da consulta do tipo CONDUTA CLINICA --------------------
+    let faturacao = new Faturacao();
+    faturacao.categoria = "DIAGNOSTICO_AUX";
+    faturacao.valor = this.preco_total;
+    faturacao.data = new Date();
+    faturacao.consulta = this.consulta;
+    faturacao.diagnostico_aux = this.consulta.diagnosticos_aux;
+    
+    faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
+    faturacao.ano = new Date().getFullYear();
+
+    //Persistir informacao na base de dados ----------------------------
+    let data = Object.assign({}, faturacao);
+    let d = Object.assign({}, this.consulta); 
+
+    this.pacienteService.faturar(data)
+    .then( res => {
+      this.pacienteService.marcarConsulta(d)
+      .then(r => {
+        this.dialogRef.close();
+        this.openSnackBar("Faturado com sucesso");
+      }, er => {
+        console.log("ERRO: " + er.message)
+        this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
+      })      
+    }, err=>{
+      console.log("ERRO: " + err.message)
+      this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
+    })
+
+  }
+
+
+
+  marcarConsulta(paciente:Paciente){
+
+
+    /*let dia = new Date().getDate();
+    let mes = +(new Date().getMonth()) + +1;
+    let ano = new Date().getFullYear();
 
     this.consulta = new Consulta();
     this.consulta.data = dia +"/"+mes+"/"+ano;
@@ -404,9 +782,6 @@ export class ListagemComponent implements OnInit {
     this.consulta.diagnosticos_aux = this.diagnosticos;
     this.consulta.status = "Diagnostico";
     this.consulta.tipo = "DIAGNOSTICO AUX";
-    //this.preco_total
-
-    ///this.consulta.preco_consulta_medica = this.clinica.preco_consulta;
 
     let data = Object.assign({}, this.consulta);
 
@@ -414,17 +789,62 @@ export class ListagemComponent implements OnInit {
     .then( res => {
       this.dialogRef.close();
       this.openSnackBar("Consulta agendada com sucesso");
-      //this.router.navigateByUrl("/consultas")
     }, err => {
       console.log("ERRO: " + err.message)
       this.openSnackBar("Ocorreu um erro ao marcar a consulta. Contacte o Admin do sistema.");
-    })
+    })*/
   }
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{
       duration: 2000
     })
+  }
+
+  getMes(number): String{
+    console.log("Get mes "+number)
+    switch(number) { 
+      case 1: { 
+         return "Janeiro";
+      } 
+      case 2: { 
+         return "Fevereiro"; 
+      } 
+      case 3: { 
+         return "Marco"; 
+      }
+      case 4: { 
+        return "Abril"; 
+      }
+      case 5: { 
+        return "Maio"; 
+      }
+      case 6: { 
+        return "Junho"; 
+      }
+      case 7: { 
+        return "Julho"; 
+      }
+      case 8: { 
+        return "Agosto"; 
+      }  
+      case 9: { 
+        return "Setembro"; 
+      }
+      case 10: { 
+        return "Outubro"; 
+      }
+      case 11: { 
+        return "Novembro"; 
+      }
+      case 12: { 
+        return "Dezembro"; 
+      }
+      default: { 
+         //statements; 
+         break; 
+      } 
+   } 
   }
 
   }

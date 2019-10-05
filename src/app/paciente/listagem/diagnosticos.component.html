@@ -3,7 +3,26 @@
   <p>Selecione os diagnosticos solicitados pelo cliente</p>
 
   <form [formGroup]="diagnosticoFormGroup">
-    <mat-form-field style="width: 45%">
+
+    <!--TIPO DE DIAGNOSTICO AUX-->
+    <mat-form-field style="width: 23%">
+        <mat-select placeholder="Tipo" formControlName="diagnostico_tipo" [(ngModel)]="tipodiagnostico" (selectionChange)="filtrarTipo(tipodiagnostico)">
+            <mat-option *ngFor="let tipo of data.tipos_diagnosticos" [value]="tipo">
+                {{tipo.nome}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+        <!--SUBTIPO DE DIAGNOSTICO AUX-->
+    <mat-form-field style="width: 23%">
+        <mat-select placeholder="Sub-Tipo" formControlName="diagnostico_subtipo" [(ngModel)]="subtipodiagnostico" (selectionChange)="filtrarSubTipo(subtipodiagnostico)">
+            <mat-option *ngFor="let subtipo of data.subtipos_diagnosticos" [value]="subtipo">
+                {{subtipo.nome}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field style="width: 23%">
         <mat-select placeholder="Diagnostico Auxiliar" formControlName="diagnostico_nome" [(ngModel)]="diagnostico" required>
             <mat-option *ngFor="let diagnostico of data.diagnosticos" [value]="diagnostico">
                 {{diagnostico.nome}}
@@ -11,7 +30,7 @@
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field style="width: 45%">
+    <mat-form-field style="width: 23%">
         <input matInput placeholder="Preco" formControlName="diagnostico_preco" [(ngModel)]="diagnostico.preco" required>
     </mat-form-field>
 
@@ -22,7 +41,16 @@
 
    <mat-table [dataSource]="dataSourse" matSort>
         
-        <!-- Progress Column -->
+        <ng-container matColumnDef="tipo">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.tipo.nome}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="subtipo">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Sub-Tipo </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.subtipo?.nome}}</mat-cell>
+        </ng-container>
+        
         <ng-container matColumnDef="nome">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
             <mat-cell *matCellDef="let row">{{row.nome}}</mat-cell>
@@ -49,6 +77,6 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancelar</button>
-  <button mat-button cdkFocusInitial (click)="marcarConsulta(data.paciente)">OK</button>
+  <button mat-button cdkFocusInitial (click)="faturarDiagnostico(data.paciente)">Faturar {{preco_total| currency:' ':'symbol':'1.2-2'}} MZN</button>
   <!--<button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial (click)="cancelarConsulta(data.consulta)">OK</button>-->
 </div> 

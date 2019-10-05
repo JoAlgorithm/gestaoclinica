@@ -126,7 +126,7 @@ import { ConfiguracoesService } from '../services/configuracoes.service';
   declarations: [
     ConsultasComponent,
     CancelarConsultaDialog,
-    AtenderConsultaDialog
+    AtenderConsultaDialog,
   ],
   entryComponents: [
     CancelarConsultaDialog,

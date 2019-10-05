@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>Marcar consulta para {{data.paciente.nome}} {{data.paciente.apelido}}</h1>
+<div mat-dialog-content>
+    <p>Selecione a categoria de consultas solicitada pelo cliente</p>
+    <form [formGroup]="consultasFormGroup">
+        <mat-form-field style="width: 49%">
+            <mat-select placeholder="Tipo conduta" formControlName="categoria_nome" [(ngModel)]="categoria" required>
+                <mat-option *ngFor="let categoria of data.categorias_consulta" [value]="categoria">
+                    {{categoria.nome}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field style="width: 49%">
+            <input matInput placeholder="Preco" formControlName="categoria_preco" [(ngModel)]="categoria.preco" required>
+        </mat-form-field>
+    </form>
+
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancelar</button>
+    <button mat-button cdkFocusInitial (click)="marcarConsulta(data.paciente, data.tipo)">Marcar consulta</button>
+</div> 

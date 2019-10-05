@@ -21,17 +21,18 @@
                 <!-- Progress Column -->
                 <ng-container matColumnDef="nid">
                   <mat-header-cell *matHeaderCellDef mat-sort-header> NID </mat-header-cell>
-                  <mat-cell *matCellDef="let row"> {{row.paciente.nid}}</mat-cell>
+                  <mat-cell *matCellDef="let row"><span id="content2" #content2>{{row.paciente.nid}}</span></mat-cell>
                 </ng-container>
             
                 <ng-container matColumnDef="apelido">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Apelido </mat-header-cell>
-                    <mat-cell *matCellDef="let row">{{row.paciente.apelido}}</mat-cell>
+                    <mat-cell *matCellDef="let row"><span id="content3" #content3>{{row.paciente.apelido}}</span></mat-cell>
                 </ng-container>
             
                 <ng-container matColumnDef="nome">
                   <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
-                  <mat-cell *matCellDef="let row"> {{row.paciente.nome}}</mat-cell>
+                  <mat-cell *matCellDef="let row"><span id="content1" #content1>{{row.paciente.nome}}</span></mat-cell>
+                  
                 </ng-container>
             
                 <ng-container matColumnDef="diagnosticos_aux">
@@ -51,7 +52,7 @@
                 
                 <ng-container matColumnDef="imprimir">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Imprimir </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="detalhes(row)">
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="downloadPDF(row.diagnosticos_aux)">
                         <mat-icon>print</mat-icon>
                       </button></mat-cell>
                 </ng-container>

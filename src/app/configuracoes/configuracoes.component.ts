@@ -11,6 +11,9 @@ import { AuthService } from '../services/auth.service';
 import { CategoriaConsulta } from '../classes/categoria_consulta';
 import { CondutaClinica } from '../classes/conduta_clinica';
 import { TipoCondutaClinica } from '../classes/tipo_conduta_clinica';
+import { TipoDiagnosticoAux } from '../classes/tipo_diagnostico';
+import { SubTipoDiagnosticoAux } from '../classes/subtipo_diagnostico';
+
 
 @Component({
   selector: 'app-configuracoes',
@@ -25,13 +28,18 @@ export class ConfiguracoesComponent implements OnInit {
   */
   diagnostico: DiagnosticoAuxiliar;
   diagnosticos: DiagnosticoAuxiliar[];
+  //tipos_diagnosticos = this.configServices.tipos_diagnosticos;
+  //tipos_diagnosticos = this.configServices.getTiposDiagnosticos();
+  tipos_diagnosticos: TipoDiagnosticoAux[];
+  subtipos_diagnosticos: SubTipoDiagnosticoAux[];
+  subtipos_diagnosticos_aux: SubTipoDiagnosticoAux[];
 
   //ATRIBUTOS DO FORLMULARIO
   cadastro_diagnosticoFormGroup: FormGroup;
   
   //ATRIBUTOS DA TABELA
   dataSourseDiagnostico: MatTableDataSource<DiagnosticoAuxiliar>;
-  displayedColumnsDiagnostico = ['nome','preco', 'editar', 'remover'];
+  displayedColumnsDiagnostico = ['tipo','subtipo','nome','preco', 'editar', 'remover'];
   @ViewChild(MatPaginator) paginatorDiagnostico: MatPaginator;
   @ViewChild(MatSort) sortDiagnostico: MatSort;
 
@@ -100,6 +108,8 @@ export class ConfiguracoesComponent implements OnInit {
   ngOnInit() {
     //TAB DIAGNOSTICO AUXILIAR
     this.cadastro_diagnosticoFormGroup = this._formBuilder.group({
+      diagnostico_tipo: ['', Validators.required],
+      diagnostico_subtipo: [''],
       diagnostico_nome: ['', Validators.required],
       diagnostico_preco: ['', Validators.required],
     });
@@ -113,9 +123,28 @@ export class ConfiguracoesComponent implements OnInit {
       });
       this.dataSourseDiagnostico=new MatTableDataSource(this.diagnosticos.sort((a, b) => a.nome > b.nome ? 1 : -1));
       this.dataSourseDiagnostico.paginator = this.paginatorDiagnostico;
-      //this.dataSourseDiagnostico.sort = this.sortDiagnostico;
     })
 
+    this.configServices.getTiposDiagnosticos().snapshotChanges().subscribe(data => {
+      this.tipos_diagnosticos = data.map(e => {
+        return {
+          id: e.payload.key,
+          //subtipos: e.payload.val()['subtipo'] as SubTipoDiagnosticoAux[],
+          ...e.payload.val(),
+        } as TipoDiagnosticoAux;
+      });
+    })
+
+    this.configServices.getSubTiposDiagnosticos().snapshotChanges().subscribe(data => {
+      this.subtipos_diagnosticos = data.map(e => {
+        return {
+          id: e.payload.key,
+          tipo: e.payload.val()['tipo'] as TipoDiagnosticoAux,
+          ...e.payload.val(),
+        } as SubTipoDiagnosticoAux;
+      });
+      this.subtipos_diagnosticos_aux = this.subtipos_diagnosticos;
+    })
 
     //TAB DADOS GERAIS
     this.configServices.getClinica().valueChanges()
@@ -219,6 +248,11 @@ export class ConfiguracoesComponent implements OnInit {
   }//FIM ngOnInit
 
   registarDiagnostico(){
+    if(!this.diagnostico.subtipo){
+      this.diagnostico.subtipo = null;
+    }
+    
+
     let data = Object.assign({}, this.diagnostico);
 
     this.configServices.createDiagnostico(data)
@@ -324,6 +358,12 @@ export class ConfiguracoesComponent implements OnInit {
       this.openSnackBar("Ocorreu um erro ao atualizar os dados. Contacte o admnistrador do sistema");
     });*/
 
+  }
+
+  filtrarTipoDiagnostico(tipo: TipoDiagnosticoAux){
+    console.log(tipo.nome);
+    this.subtipos_diagnosticos = null;
+    this.subtipos_diagnosticos = this.subtipos_diagnosticos_aux.filter(item => item.tipo.nome == tipo.nome);
   }
 
   openSnackBar(mensagem) {
