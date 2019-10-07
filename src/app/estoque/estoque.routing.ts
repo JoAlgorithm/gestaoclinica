@@ -1,0 +1,15 @@
+import { Routes } from '@angular/router';
+import { MovimentosComponent } from './movimentos/movimentos.component';
+import { CadastrosComponent } from './cadastros/cadastros.component';
+
+//import {TABLE_DEMO_ROUTES} from './table/routes';
+
+export const EstoqueRoutes: Routes = [
+  {
+    path: '',
+    children: [
+      {path: 'estoque_cadastros', component: CadastrosComponent},
+      {path: 'estoque_movimentos', component: MovimentosComponent}
+    ]
+  }
+];

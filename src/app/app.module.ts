@@ -69,6 +69,7 @@ import * as FusionCharts from 'fusioncharts';
 
 // Load FusionCharts Individual Charts
 import * as Charts from 'fusioncharts/fusioncharts.charts';
+//import { UnComponent } from './estoque/un/un.component';
 
 // Use fcRoot function to inject FusionCharts library, and the modules you want to use
 FusionChartsModule.fcRoot(FusionCharts, Charts)
@@ -98,9 +99,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AccordionAnchorDirective,
     AccordionLinkDirective,
     AccordionDirective,
-    //AtendimentoComponent,
-    //ConfiguracoesComponent,
-    //ConsultasComponent,
+   //UnComponent,
   ],
   imports: [
     BrowserModule,

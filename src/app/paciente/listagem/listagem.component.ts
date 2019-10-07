@@ -624,7 +624,6 @@ export class ListagemComponent implements OnInit {
      docu.text("DIÁRIO CLÍNICO", 175, 52);
 
      docu.save('diario.pdf');  //nome do arquivo
-
   }  
 
 }

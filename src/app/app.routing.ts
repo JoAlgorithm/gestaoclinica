@@ -36,6 +36,10 @@ export const AppRoutes: Routes = [{
   {
     path: 'atendimento',
     loadChildren: './atendimento/atendimento.module#AtendimentoModule'
+  },
+  {
+    path: 'estoque',
+    loadChildren: './estoque/estoque.module#EstoqueComponentsModule'
   }],
 
 }, {

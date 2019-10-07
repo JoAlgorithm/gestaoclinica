@@ -47,6 +47,16 @@ const MENUITEMS:Menu[] = [
     icon: 'assignment_ind',
   },
   {
+    state: 'estoque',
+    name: 'ESTOQUE',
+    type: 'sub',
+    icon: 'local_pharmacy',
+    children: [
+      {state: 'estoque_movimentos', name: 'Movimentos'},
+      {state: 'estoque_cadastros', name: 'Cadastros'}
+    ]
+  },
+  {
     state: 'configuracoes',
     name: 'CONFIGURACOES',
     type: 'link',
@@ -90,6 +100,8 @@ const MENUITEMS_MEDICO:Menu[] = [
     icon: 'assignment_ind',
   }
 ];
+
+
 
 @Injectable()
 export class MenuService {
