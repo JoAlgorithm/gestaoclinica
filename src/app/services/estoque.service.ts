@@ -43,7 +43,7 @@ export class EstoqueService {
 
   //Retorna de categorias de medicamentos
   getCategoriasMedicamento() {
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/categoria_medicamentos');
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/categoriasmedicamentos');
   }
 
 

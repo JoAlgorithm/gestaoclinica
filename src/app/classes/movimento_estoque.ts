@@ -15,9 +15,13 @@ export class MovimentoEstoque {
 
     quantidade?: number;
 
-    data?: string;
+    data_movimento?: string;
 
     justificativa?: string;
 
     movimentador?: string;
+
+    //Informacoes de fatura para o movimento de entrada por compra
+    nr_fatura?: string;
+    data_fatura?: string;
 }

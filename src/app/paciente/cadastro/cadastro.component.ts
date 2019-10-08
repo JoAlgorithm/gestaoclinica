@@ -129,10 +129,8 @@ export class CadastroComponent implements OnInit {
       if(typeof this.pacientes !== 'undefined' && this.pacientes.length > 0){
         this.paciente.nid = Math.max.apply(Math, this.pacientes.map(function(o) { return o.nid; }));
         this.paciente.nid = this.paciente.nid+1;
-        //this.paciente.id = this.paciente.nid+'';
       }else{
         this.paciente.nid =  +(new Date().getFullYear()+'001');
-        //this.paciente.id = this.paciente.nid+'';
       }
     })
 

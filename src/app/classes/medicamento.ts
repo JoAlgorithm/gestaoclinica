@@ -6,6 +6,11 @@ export class Medicamento {
     codigo?: number; //gerar codigo que nem NID
     nome?: string;
 
+    //Status
+    // Ativo
+    // Inativo
+    status?: string;
+
     //Exemplos Unidades de medida
     // Litro
     // Metro

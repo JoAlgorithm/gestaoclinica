@@ -5,6 +5,8 @@ import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar } from '@angular
 import { EstoqueService } from '../../services/estoque.service';
 import { AuthService } from '../../services/auth.service';
 import { UnidadeMedida } from '../../classes/un';
+import { Medicamento } from '../../classes/medicamento';
+import { CategoriaMedicamento } from '../../classes/categoria_medicamento';
 
 @Component({
   selector: 'app-cadastros',
@@ -16,6 +18,15 @@ export class CadastrosComponent implements OnInit {
   /*
   * VARIAVEIS DA TAB MEDICAMENTOS
   */
+  cats_medicamento: CategoriaMedicamento[];
+  medicamento: Medicamento;
+  medicamentos: Medicamento[];
+
+  medicamentoFormGroup: FormGroup; //Fomulario
+
+  dataSourseMedicamento: MatTableDataSource<Medicamento>;
+  displayedColumnsMedicamento = ['codigo', 'categoria', 'nome', 'un', 'preco_venda', 'min', 'max', 'editar'];
+  @ViewChild(MatPaginator) paginatorMedicamento: MatPaginator;
 
   /*
   * VARIAVEIS DA TAB DEPOSITOS
@@ -46,10 +57,49 @@ export class CadastrosComponent implements OnInit {
     public snackBar: MatSnackBar, private authService: AuthService) {
     this.deposito = new Deposito();
     this.un = new UnidadeMedida();
+    this.medicamento = new Medicamento();
+    this.medicamento.min = 0;
+    this.medicamento.max = 0;
    }
 
   ngOnInit() {
     //TAB MEDICAMENTOS
+    this.medicamentoFormGroup = this._formBuilder.group({
+      m_categoria: ['', Validators.required],
+      m_nome: ['', Validators.required],
+      m_un: ['', Validators.required],
+      m_preco_venda: ['', Validators.required],
+      m_min: [''],
+      m_max: [''],
+    });
+
+    this.estoqueService.getCategoriasMedicamento().snapshotChanges().subscribe(data => {
+      this.cats_medicamento = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as CategoriaMedicamento;
+      });
+    })
+
+    this.estoqueService.getMedicamentos().snapshotChanges().subscribe(data => {
+      this.medicamentos = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as Medicamento;
+      });
+      this.dataSourseMedicamento=new MatTableDataSource(this.medicamentos.sort((a, b) => a.codigo > b.codigo ? 1 : -1));
+      this.dataSourseMedicamento.paginator = this.paginatorMedicamento;
+
+      //Gerar codigo do proximo medicamento
+      if(typeof this.medicamentos !== 'undefined' && this.medicamentos.length > 0){
+        this.medicamento.codigo = Math.max.apply(Math, this.medicamentos.map(function(o) { return o.codigo; }));
+        this.medicamento.codigo = this.medicamento.codigo+1;
+      }else{
+        this.medicamento.codigo =  +(new Date().getFullYear()+'000001');
+      }
+    })
 
     //TAB DEPOSITOS
     this.depositoFormGroup = this._formBuilder.group({
@@ -85,34 +135,64 @@ export class CadastrosComponent implements OnInit {
     })
   }
 
-  registarDeposito(){
-    if(!this.deposito.descricao){
-      this.deposito.descricao = null;
+  registarMedicamento(){
+    if(this.medicamento.nome || this.medicamento.categoria || this.medicamento.un || this.medicamento.preco_venda){
+      let novocodigo = this.medicamento.codigo+1;//Gerar codigo do proximo medicamento
+      let data = Object.assign({}, this.medicamento);
+  
+      this.estoqueService.createMedicamento(data)
+      .then( res => {
+        
+        this.medicamento = new Medicamento();
+        this.medicamento.min = 0;
+        this.medicamento.max = 0;
+        this.medicamento.codigo = novocodigo;
+        this.medicamentoFormGroup.reset;
+
+        this.openSnackBar("Medicamento cadastrado com sucesso");
+      }, err=>{
+        this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+      })
+    }else{
+      this.openSnackBar("Preencha os campos obrigatorios");
     }
-    let data = Object.assign({}, this.deposito);
+  }
 
-    this.estoqueService.createDeposito(data)
-    .then( res => {
-      this.deposito = new Deposito();
-      this.depositoFormGroup.reset;
-      this.openSnackBar("Deposito cadastrado com sucesso");
-    }, err=>{
-      this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
-    })
-
+  registarDeposito(){
+    if(this.deposito.nome){
+      if(!this.deposito.descricao){
+        this.deposito.descricao = null;
+      }
+      let data = Object.assign({}, this.deposito);
+  
+      this.estoqueService.createDeposito(data)
+      .then( res => {
+        this.deposito = new Deposito();
+        this.depositoFormGroup.reset;
+        this.openSnackBar("Deposito cadastrado com sucesso");
+      }, err=>{
+        this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+      })
+    }else{
+      this.openSnackBar("Preencha os campos obrigatorios");
+    }
   }
 
   registarUN(){
-    let data = Object.assign({}, this.un);
+    if(this.un.nome){
+      let data = Object.assign({}, this.un);
 
-    this.estoqueService.createUN(data)
-    .then( res => {
-      this.un = new UnidadeMedida();
-      this.unFormGroup.reset;
-      this.openSnackBar("Unidade de medida cadastrada com sucesso");
-    }, err=>{
-      this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
-    })
+      this.estoqueService.createUN(data)
+      .then( res => {
+        this.un = new UnidadeMedida();
+        this.unFormGroup.reset;
+        this.openSnackBar("Unidade de medida cadastrada com sucesso");
+      }, err=>{
+        this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+      })
+    }else{
+      this.openSnackBar("Preencha os campos obrigatorios");
+    }
   }
 
   openSnackBar(mensagem) {
