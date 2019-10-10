@@ -25,7 +25,7 @@ export class CadastrosComponent implements OnInit {
   medicamentoFormGroup: FormGroup; //Fomulario
 
   dataSourseMedicamento: MatTableDataSource<Medicamento>;
-  displayedColumnsMedicamento = ['codigo', 'categoria', 'nome', 'un', 'preco_venda', 'min', 'max', 'editar'];
+  displayedColumnsMedicamento = ['codigo', 'categoria', 'nome_g', 'nome_c', 'un', 'preco_venda', 'min', 'composicao', 'editar'];
   @ViewChild(MatPaginator) paginatorMedicamento: MatPaginator;
 
   /*
@@ -59,18 +59,18 @@ export class CadastrosComponent implements OnInit {
     this.un = new UnidadeMedida();
     this.medicamento = new Medicamento();
     this.medicamento.min = 0;
-    this.medicamento.max = 0;
    }
 
   ngOnInit() {
     //TAB MEDICAMENTOS
     this.medicamentoFormGroup = this._formBuilder.group({
       m_categoria: ['', Validators.required],
-      m_nome: ['', Validators.required],
+      m_nome_generico: ['', Validators.required],
+      m_nome_comercial: ['', Validators.required],
+      m_nome_composicao: [''],
       m_un: ['', Validators.required],
       m_preco_venda: ['', Validators.required],
       m_min: [''],
-      m_max: [''],
     });
 
     this.estoqueService.getCategoriasMedicamento().snapshotChanges().subscribe(data => {
@@ -136,7 +136,7 @@ export class CadastrosComponent implements OnInit {
   }
 
   registarMedicamento(){
-    if(this.medicamento.nome || this.medicamento.categoria || this.medicamento.un || this.medicamento.preco_venda){
+    if(this.medicamento.nome_generico || this.medicamento.categoria || this.medicamento.un || this.medicamento.preco_venda){
       let novocodigo = this.medicamento.codigo+1;//Gerar codigo do proximo medicamento
       let data = Object.assign({}, this.medicamento);
   
@@ -145,7 +145,6 @@ export class CadastrosComponent implements OnInit {
         
         this.medicamento = new Medicamento();
         this.medicamento.min = 0;
-        this.medicamento.max = 0;
         this.medicamento.codigo = novocodigo;
         this.medicamentoFormGroup.reset;
 

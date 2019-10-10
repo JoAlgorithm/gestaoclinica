@@ -9,16 +9,21 @@
           <form [formGroup]="medicamentoFormGroup">
             <!--CATEGORIA-->
             <mat-form-field style="width: 31%">
-              <mat-select placeholder="Apresentacao" formControlName="m_categoria" [(ngModel)]="medicamento.categoria" required>
+              <mat-select placeholder="Forma farmaceutica" formControlName="m_categoria" [(ngModel)]="medicamento.categoria" required>
                   <mat-option *ngFor="let cat of cats_medicamento" [value]="cat">
                       {{cat.nome}}
                   </mat-option>
               </mat-select>
             </mat-form-field>
 
-            <!--NOME-->
+            <!--NOME GENERICO-->
             <mat-form-field style="width: 31%">
-                <input matInput placeholder="Nome" formControlName="m_nome" [(ngModel)]="medicamento.nome" required> 
+                <input matInput placeholder="Nome generico" formControlName="m_nome_generico" [(ngModel)]="medicamento.nome_generico" required> 
+            </mat-form-field>
+
+            <!--NOME COMERCIAL-->
+            <mat-form-field style="width: 31%">
+              <input matInput placeholder="Nome comercial" formControlName="m_nome_comercial" [(ngModel)]="medicamento.nome_comercial" required> 
             </mat-form-field>
 
             <!--UNIDADE DE MEDIDA-->
@@ -40,9 +45,9 @@
               <input matInput placeholder="Min" type="number" formControlName="m_min" [(ngModel)]="medicamento.min"> 
             </mat-form-field>
 
-            <!--MAX-->
-            <mat-form-field style="width: 31%">
-              <input matInput placeholder="Max" type="number" formControlName="m_max" [(ngModel)]="medicamento.max"> 
+            <!--COMPOSICAO-->
+            <mat-form-field style="width: 93%">
+              <input matInput placeholder="Composicao" formControlName="m_nome_composicao" [(ngModel)]="medicamento.composicao"> 
             </mat-form-field>
 
             <button mat-icon-button (click)="registarMedicamento()" matTooltip="REGISTAR NOVO MEDICAMENTO">
@@ -59,17 +64,22 @@
             </ng-container>
 
             <ng-container matColumnDef="categoria">
-              <mat-header-cell *matHeaderCellDef> Categoria </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef> F. farmaceutica </mat-header-cell>
               <mat-cell *matCellDef="let row"> {{row.categoria.nome}}</mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="nome">
-                <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.nome}}</mat-cell>
+            <ng-container matColumnDef="nome_g">
+                <mat-header-cell *matHeaderCellDef> N. generico </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.nome_generico}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="nome_c">
+              <mat-header-cell *matHeaderCellDef> N. comercial </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.nome_comercial}}</mat-cell>
             </ng-container>
     
             <ng-container matColumnDef="un">
-                <mat-header-cell *matHeaderCellDef> Unidade de medida </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> Un. medida </mat-header-cell>
                 <mat-cell *matCellDef="let row"> {{row.un.nome}}</mat-cell>
             </ng-container>
 
@@ -83,9 +93,9 @@
               <mat-cell *matCellDef="let row"> {{row.min}}</mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="max">
-              <mat-header-cell *matHeaderCellDef> Max </mat-header-cell>
-              <mat-cell *matCellDef="let row"> {{row.max}}</mat-cell>
+            <ng-container matColumnDef="composicao">
+              <mat-header-cell *matHeaderCellDef> Composicao </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.composicao}}</mat-cell>
             </ng-container>
         
             <ng-container matColumnDef="editar">

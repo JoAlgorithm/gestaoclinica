@@ -4,7 +4,9 @@ import { CategoriaMedicamento } from "./categoria_medicamento";
 export class Medicamento {
     id: string;
     codigo?: number; //gerar codigo que nem NID
-    nome?: string;
+    nome_generico?: string; //o mais usado
+    nome_comercial?: string;
+    composicao?: string; //1 grama
 
     //Status
     // Ativo
@@ -28,7 +30,7 @@ export class Medicamento {
     categoria?: CategoriaMedicamento;
 
     min?: number;
-    max?: number;
+    //max?: number;
 
     //Nivel de estoque pode ser:
     // Abaixo do minimo
