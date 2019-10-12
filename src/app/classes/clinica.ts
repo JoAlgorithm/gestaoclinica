@@ -12,4 +12,6 @@ export class Clinica {
     logo_pdf?:string;
 
     moeda?:string; //Nao esta em uso
+    telefone?: string;
+    email?: string;
 }

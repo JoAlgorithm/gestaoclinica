@@ -1,0 +1,41 @@
+<div class="modal-dialog modal-lg" style="padding:0px;margin:0px;" >
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" align="center">DADOS DO PACIENTE</h3>
+        </div>
+        <div class="modal-body">
+          <table table style="width:100%" border="1">
+            <tr>
+              <th>NID</th>
+              <td>{{data.nid}}</td>   
+</tr>
+            <tr>
+            <th>NOME</th>
+            <td>{{data.nome}}</td>  
+                  </tr>  
+            
+<tr>
+              
+
+    <th>APELIDO</th>
+    <td>{{data.apelido}}</td>   
+</tr>
+<tr>
+              <th>GENERO</th>
+              <td>{{data.genero}}</td>   
+</tr>
+            
+<!--<tr>
+  <th>DATA DE NASCIMENTO</th>
+  <td>{{data.datanascimento.toDate()}}</td>   
+</tr>-->
+
+          </table>
+          <br>
+        </div>
+        <div class="modal-footer">
+                   
+            <button mat-button class="waves-effect waves-light btn" data-dismiss="modal" (click)="closeModal()">SAIR<i class="large material-icons">close</i></button>
+        </div>
+    </div>
+</div>

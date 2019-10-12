@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
-
+import {  DialogDetalhes } from './listagem/listagem.component';
 import {CdkTableModule} from '@angular/cdk/table';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {A11yModule} from '@angular/cdk/a11y';
@@ -134,13 +134,15 @@ import { PendentesComponent, FaturarDialog } from './pendentes/pendentes.compone
     PendentesComponent,
     FaturarDialog,
     CondutasDialog,
-    ConsultasDialog
+    ConsultasDialog,
+    DialogDetalhes
   ],
   entryComponents: [
     DiagnosticosDialog,
     FaturarDialog,
     CondutasDialog,
-    ConsultasDialog
+    ConsultasDialog,
+    DialogDetalhes
   ],
 })
 

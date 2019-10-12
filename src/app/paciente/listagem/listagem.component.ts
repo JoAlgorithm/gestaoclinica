@@ -132,6 +132,21 @@ export class ListagemComponent implements OnInit {
       this.subtipos_diagnosticos_aux = this.subtipos_diagnosticos;
     })
   }
+  
+  detalhes(doente){
+  
+    const dialogRef = this.dialog.open(DialogDetalhes, {
+     
+      width: '1000px',
+     data: { nid: doente.nid,apelido: doente.apelido, nome: doente.nome, genero:doente.sexo,datanascimento:doente.datanascimento,
+       documento_identificacao: doente.documento_identificacao, nr_documento_identificacao: doente.nr_documento_identificacao,
+        
+      }
+    });
+  }
+
+
+
 
   marcarConsulta(paciente, tipo){
     let dialogRef = this.dialog.open(ConsultasDialog, {
@@ -233,7 +248,7 @@ export class ListagemComponent implements OnInit {
   condutas_alternativas: CondutaClinica[];
   
   
-  constructor(public dialogRef: MatDialogRef<CondutasDialog>, private router: Router,
+  constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<CondutasDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.conduta = new CondutaClinica();
@@ -282,6 +297,10 @@ export class ListagemComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
+
+  
+
+
 
   faturar(paciente: Paciente){
     //Abrir uma consulta CONDUTA CLINICA --------------------
@@ -420,7 +439,7 @@ export class ListagemComponent implements OnInit {
 
   marcarConsulta(paciente, tipo){
     if(this.categoria.nome){ //Garantir que categoria foi selecionada
-      this.DiarioPdf();
+      this.DiarioPdf(paciente);
 
       let dia = new Date().getDate();
       let mes = +(new Date().getMonth()) + +1;
@@ -457,171 +476,180 @@ export class ListagemComponent implements OnInit {
   }
 
 
-  public DiarioPdf(){// criacao do pdf
+  public DiarioPdf(paciente: Paciente){// criacao do pdf
     let docu = new jsPDF({
       orientation: 'p',
       unit: 'px',
       format: 'a4',
       putOnlyUsedFonts:true,
      });
+
+     var img = new Image();
+    
+     img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+     
+    
+     docu.addImage(img,"PNG", 50, 5,90, 90);
      docu.setFont("Courier");
      docu.setFontStyle("normal"); 
      docu.setFontSize(12);
+     docu.text(paciente.nome,77, 112);
+     docu.text(paciente.nid+"", 252, 112);
      docu.setFontStyle("bold");
-     docu.text("Nome:", 52, 72);
-     docu.text("NID:", 232, 72);
-     docu.text("Cama:", 317, 72);
+     docu.text("Nome:", 52, 112);
+     docu.text("NID:", 232, 112);
+     docu.text("Cama:", 317, 112);
+  
+     docu.text("Data", 55, 132);
+     docu.text("Observações Clínicas", 109, 132);
+     docu.text("Pr.terapêut", 262, 132);
+     docu.text("Dieta", 345, 132);
 
-     docu.text("Data", 55, 92);
-     docu.text("Observações Clínicas", 89, 92);
-     docu.text("Pres. terapêuticas", 222, 92);
-     docu.text("Dieta", 345, 92);
 
+     docu.rect ( 50, 80 , 350 , 20 ); 
 
-     docu.rect ( 50, 40 , 350 , 20 ); 
-
-     docu.rect ( 50, 60 , 180 , 20 ); 
-     docu.rect (  230, 60 , 85 , 20 ); 
-     docu.rect (  315, 60 , 85 , 20 ); 
-
-     docu.rect ( 50, 80 , 30 , 20 ); 
-     docu.rect (  80, 80 , 140 , 20 ); 
-     docu.rect (  220, 80 , 120 , 20 );
-     docu.rect (  340, 80 , 60 , 20 );
-
-     docu.rect ( 50, 100 , 30 , 20 ); 
-     docu.rect (  80, 100 , 140 , 20 ); 
-     docu.rect (  220, 100 , 120 , 20 );
-     docu.rect (  340, 100 , 60 , 20 );
+     docu.rect ( 50, 100 , 180 , 20 ); 
+     docu.rect (  230, 100 , 85 , 20 ); 
+     docu.rect (  315, 100 , 85 , 20 ); 
 
      docu.rect ( 50, 120 , 30 , 20 ); 
-     docu.rect (  80, 120 , 140 , 20 ); 
-     docu.rect (  220, 120 , 120 , 20 );
+     docu.rect (  80, 120 , 180 , 20 ); 
+     docu.rect (  260, 120 , 80 , 20 );
      docu.rect (  340, 120 , 60 , 20 );
 
      docu.rect ( 50, 140 , 30 , 20 ); 
-     docu.rect (  80, 140 , 140 , 20 ); 
-     docu.rect (  220, 140 , 120 , 20 );
+     docu.rect (  80, 140 , 180 , 20 ); 
+     docu.rect (  260, 140 , 80 , 20 );
      docu.rect (  340, 140 , 60 , 20 );
 
      docu.rect ( 50, 160 , 30 , 20 ); 
-     docu.rect (  80, 160 , 140 , 20 ); 
-     docu.rect (  220, 160 , 120 , 20 );
+     docu.rect (  80, 160 , 180 , 20 ); 
+     docu.rect (  260, 160 , 80 , 20 );
      docu.rect (  340, 160 , 60 , 20 );
 
-     docu.rect ( 50,  180 , 30 , 20 ); 
-     docu.rect (  80,  180 , 140 , 20 ); 
-     docu.rect (  220,  180 , 120 , 20 );
-     docu.rect (  340,  180 , 60 , 20 );
+     docu.rect ( 50, 180 , 30 , 20 ); 
+     docu.rect (  80, 180 , 180 , 20 ); 
+     docu.rect (  260, 180 , 80 , 20 );
+     docu.rect (  340, 180 , 60 , 20 );
 
-    
-     docu.rect ( 50,  200 , 30 , 20 ); 
-     docu.rect (  80,  200 , 140 , 20 ); 
-     docu.rect (  220,  200 , 120 , 20 );
-     docu.rect (  340,  200 , 60 , 20 );
-
+     docu.rect ( 50, 200 , 30 , 20 ); 
+     docu.rect (  80, 200 , 180 , 20 ); 
+     docu.rect (  260, 200 , 80 , 20 );
+     docu.rect (  340, 200 , 60 , 20 );
 
      docu.rect ( 50,  220 , 30 , 20 ); 
-     docu.rect (  80,  220 , 140 , 20 ); 
-     docu.rect (  220,  220 , 120 , 20 );
+     docu.rect (  80,  220 , 180 , 20 ); 
+     docu.rect (  260,  220 , 80 , 20 );
      docu.rect (  340,  220 , 60 , 20 );
 
+    
      docu.rect ( 50,  240 , 30 , 20 ); 
-     docu.rect (  80,  240 , 140 , 20 ); 
-     docu.rect (  220,  240 , 120 , 20 );
+     docu.rect (  80,  240 , 180 , 20 ); 
+     docu.rect (  260,  240 , 80 , 20 );
      docu.rect (  340,  240 , 60 , 20 );
 
+
      docu.rect ( 50,  260 , 30 , 20 ); 
-     docu.rect (  80,  260 , 140 , 20 ); 
-     docu.rect (  220,  260 , 120 , 20 );
+     docu.rect (  80,  260 , 180 , 20 ); 
+     docu.rect (  260,  260 , 80 , 20 );
      docu.rect (  340,  260 , 60 , 20 );
 
      docu.rect ( 50,  280 , 30 , 20 ); 
-     docu.rect (  80,  280 , 140 , 20 ); 
-     docu.rect (  220,  280 , 120 , 20 );
+     docu.rect (  80,  280 , 180 , 20 ); 
+     docu.rect (  260,  280 , 80 , 20 );
      docu.rect (  340,  280 , 60 , 20 );
 
-     docu.rect ( 50,   300 , 30 , 20 ); 
-     docu.rect (  80,   300 , 140 , 20 ); 
-     docu.rect (  220,   300 , 120 , 20 );
-     docu.rect (  340,   300 , 60 , 20 );
+     docu.rect ( 50,  300 , 30 , 20 ); 
+     docu.rect (  80,  300 , 180 , 20 ); 
+     docu.rect (  260,  300 , 80 , 20 );
+     docu.rect (  340,  300 , 60 , 20 );
+
+     docu.rect ( 50,  320 , 30 , 20 ); 
+     docu.rect (  80,  320 , 180 , 20 ); 
+     docu.rect (  260,  320 , 80 , 20 );
+     docu.rect (  340,  320 , 60 , 20 );
+
+     docu.rect ( 50,   340 , 30 , 20 ); 
+     docu.rect (  80,   340 , 180 , 20 ); 
+     docu.rect (  260,   340 , 80 , 20 );
+     docu.rect (  340,   340 , 60 , 20 );
 
 
-     docu.rect ( 50,   320 , 30 , 20 ); 
-     docu.rect (  80,   320 , 140 , 20 ); 
-     docu.rect (  220,   320 , 120 , 20 );
-     docu.rect (  340,   320 , 60 , 20 );
-
-
-
-     docu.rect ( 50,   340  , 30 , 20 ); 
-     docu.rect (  80,   340  , 140 , 20 ); 
-     docu.rect (  220,   340  , 120 , 20 );
-     docu.rect (  340,   340  , 60 , 20 );
-
-     docu.rect ( 50,   360  , 30 , 20 ); 
-     docu.rect (  80,   360  , 140 , 20 ); 
-     docu.rect (  220,   360  , 120 , 20 );
-     docu.rect (  340,   360  , 60 , 20 );
-
+     docu.rect ( 50,   360 , 30 , 20 ); 
+     docu.rect (  80,   360 , 180 , 20 ); 
+     docu.rect (  260,   360 , 80 , 20 );
+     docu.rect (  340,   360 , 60 , 20 );
 
 
 
-     docu.rect ( 50,   380   , 30 , 20 ); 
-     docu.rect (  80,   380   , 140 , 20 ); 
-     docu.rect (  220,   380   , 120 , 20 );
-     docu.rect (  340,   380   , 60 , 20 );
+     docu.rect ( 50,   380  , 30 , 20 ); 
+     docu.rect (  80,   380  , 180 , 20 ); 
+     docu.rect (  260,   380  , 80 , 20 );
+     docu.rect (  340,   380  , 60 , 20 );
 
-     docu.rect ( 50,   400   , 30 , 20 ); 
-     docu.rect (  80,   400   , 140 , 20 ); 
-     docu.rect (  220,   400   , 120 , 20 );
-     docu.rect (  340,   400   , 60 , 20 );
+     docu.rect ( 50,   400  , 30 , 20 ); 
+     docu.rect (  80,   400  , 180 , 20 ); 
+     docu.rect (  260,   400  , 80 , 20 );
+     docu.rect (  340,   400  , 60 , 20 );
+
+
+
 
      docu.rect ( 50,   420   , 30 , 20 ); 
-     docu.rect (  80,   420   , 140 , 20 ); 
-     docu.rect (  220,   420   , 120 , 20 );
+     docu.rect (  80,   420   , 180 , 20 ); 
+     docu.rect (  260,   420   , 80 , 20 );
      docu.rect (  340,   420   , 60 , 20 );
 
      docu.rect ( 50,   440   , 30 , 20 ); 
-     docu.rect (  80,   440   , 140 , 20 ); 
-     docu.rect (  220,   440   , 120 , 20 );
+     docu.rect (  80,   440   , 180 , 20 ); 
+     docu.rect (  260,   440   , 80 , 20 );
      docu.rect (  340,   440   , 60 , 20 );
 
      docu.rect ( 50,   460   , 30 , 20 ); 
-     docu.rect (  80,   460   , 140 , 20 ); 
-     docu.rect (  220,   460   , 120 , 20 );
+     docu.rect (  80,   460   , 180 , 20 ); 
+     docu.rect (  260,   460   , 80 , 20 );
      docu.rect (  340,   460   , 60 , 20 );
 
      docu.rect ( 50,   480   , 30 , 20 ); 
-     docu.rect (  80,   480   , 140 , 20 ); 
-     docu.rect (  220,   480   , 120 , 20 );
+     docu.rect (  80,   480   , 180 , 20 ); 
+     docu.rect (  260,   480   , 80 , 20 );
      docu.rect (  340,   480   , 60 , 20 );
 
      docu.rect ( 50,   500   , 30 , 20 ); 
-     docu.rect (  80,   500   , 140 , 20 ); 
-     docu.rect (  220,   500   , 120 , 20 );
+     docu.rect (  80,   500   , 180 , 20 ); 
+     docu.rect (  260,   500   , 80 , 20 );
      docu.rect (  340,   500   , 60 , 20 );
 
      docu.rect ( 50,   520   , 30 , 20 ); 
-     docu.rect (  80,   520   , 140 , 20 ); 
-     docu.rect (  220,   520   , 120 , 20 );
+     docu.rect (  80,   520   , 180 , 20 ); 
+     docu.rect (  260,   520   , 80 , 20 );
      docu.rect (  340,   520   , 60 , 20 );
 
      docu.rect ( 50,   540   , 30 , 20 ); 
-     docu.rect (  80,   540   , 140 , 20 ); 
-     docu.rect (  220,   540   , 120 , 20 );
+     docu.rect (  80,   540   , 180 , 20 ); 
+     docu.rect (  260,   540   , 80 , 20 );
      docu.rect (  340,   540   , 60 , 20 );
 
      docu.rect ( 50,   560   , 30 , 20 ); 
-     docu.rect (  80,   560   , 140 , 20 ); 
-     docu.rect (  220,   560   , 120 , 20 );
+     docu.rect (  80,   560   , 180 , 20 ); 
+     docu.rect (  260,   560   , 80 , 20 );
      docu.rect (  340,   560   , 60 , 20 );
+
+     docu.rect ( 50,   580   , 30 , 20 ); 
+     docu.rect (  80,   580   , 180 , 20 ); 
+     docu.rect (  260,   580   , 80 , 20 );
+     docu.rect (  340,   580   , 60 , 20 );
+
+     docu.rect ( 50,   600   , 30 , 20 ); 
+     docu.rect (  80,   600   , 180 , 20 ); 
+     docu.rect (  260,   600   , 80 , 20 );
+     docu.rect (  340,   600   , 60 , 20 );
 
      docu.setFont("Courier");
      docu.setFontStyle("normal"); 
      docu.setFontSize(15);
      docu.setFontStyle("bold");
-     docu.text("DIÁRIO CLÍNICO", 175, 52);
+     docu.text("DIÁRIO CLÍNICO", 175, 92);
 
      docu.save('diario.pdf');  //nome do arquivo
   }  
@@ -846,4 +874,37 @@ export class ListagemComponent implements OnInit {
    } 
   }
 
+  }
+  export interface DialogData {
+    animal: string;
+    name: string;
+  }
+  
+  /**
+   * @title Dialog Overview
+   */
+  @Component({
+    selector: 'dialog-detalhes',
+    templateUrl: './detalhes.component.html',
+    styleUrls: ['./detalhes.component.scss']
+  })
+  
+  
+  export class DialogDetalhes {
+    
+
+
+    constructor(
+      public dialogRef: MatDialogRef<DialogDetalhes>,
+      @Inject(MAT_DIALOG_DATA) public data: DialogData,private pacienteService: PacienteService) {
+       
+        
+        
+      }
+      closeModal(){
+   
+        this.dialogRef.close();
+      }
+      
+    
   }
