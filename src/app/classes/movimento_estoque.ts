@@ -1,4 +1,5 @@
 import { Medicamento } from "./medicamento";
+import { Deposito } from "./deposito";
 
 export class MovimentoEstoque {
     id?: string;
@@ -10,6 +11,8 @@ export class MovimentoEstoque {
     // Entrada por compra
     // Entrada por ajuste
     tipo_movimento?: string;
+
+    deposito?: Deposito;
 
     medicamento?: Medicamento;
 

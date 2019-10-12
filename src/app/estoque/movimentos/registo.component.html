@@ -1,0 +1,65 @@
+<h1 mat-dialog-title>{{data.tipoMovimento}}</h1>
+<div mat-dialog-content>
+    <p>Preencha os campos para registo de {{data.tipoMovimento}}</p>
+
+    <form [formGroup]="mvtFormGroup">
+        <mat-form-field style="width: 31%">
+            <mat-select placeholder="Deposito" formControlName="deposito" [(ngModel)]="mvt.deposito"  required>
+                <mat-option *ngFor="let deposito of data.depositos" [value]="deposito">
+                    {{deposito.nome}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field style="width: 31%">
+            <mat-select placeholder="Medicamento" formControlName="medicamento" [(ngModel)]="mvt.medicamento"  required>
+                <mat-option *ngFor="let medicamento of data.medicamentos" [value]="medicamento">
+                    {{medicamento.nome_generico}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field style="width: 31%">
+            <input matInput placeholder="Quantidade" formControlName="qtd" [(ngModel)]="mvt.quantidade" required>
+        </mat-form-field>
+
+        <button mat-icon-button (click)="addMvt()" matTooltip="Adicionar">
+            <mat-icon>add_circle</mat-icon>
+        </button>
+    </form>
+
+    <mat-table [dataSource]="dataSourse" matSort>
+        <ng-container matColumnDef="deposito">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Deposito </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.deposito.nome}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="medicamento">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Medicamento </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.medicamento.nome_generico}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="qtd">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.quantidade}}</mat-cell>
+        </ng-container>
+        
+
+        <ng-container matColumnDef="remover">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Remover </mat-header-cell>
+            <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="removeMvt(row)" matTooltip="Remover {{row.nome}}">  
+                    <mat-icon>delete</mat-icon>
+            </button></mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;">
+        </mat-row>
+    </mat-table>
+
+
+</div>
+<div mat-dialog-actions>
+    <button mat-button >Cancelar</button>
+    <button mat-button cdkFocusInitial (click)="saveMvt()">Confirmar</button>
+</div> 

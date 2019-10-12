@@ -137,6 +137,11 @@ export class CadastrosComponent implements OnInit {
 
   registarMedicamento(){
     if(this.medicamento.nome_generico || this.medicamento.categoria || this.medicamento.un || this.medicamento.preco_venda){
+      
+      if(!this.medicamento.composicao){
+        this.medicamento.composicao = "";
+      }
+      
       let novocodigo = this.medicamento.codigo+1;//Gerar codigo do proximo medicamento
       let data = Object.assign({}, this.medicamento);
   

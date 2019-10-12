@@ -64,7 +64,9 @@ import { PacienteService } from '../services/paciente.service';
 import { ListagemComponent, DiagnosticosDialog, CondutasDialog, ConsultasDialog } from './listagem/listagem.component';
 import { ConfiguracoesService } from '../services/configuracoes.service';
 import { PendentesComponent, FaturarDialog } from './pendentes/pendentes.component';
-
+import { MatProgressButtonsModule } from 'mat-progress-buttons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { LaddaModule } from 'angular2-ladda';
 
 @NgModule({
   imports: [
@@ -119,6 +121,15 @@ import { PendentesComponent, FaturarDialog } from './pendentes/pendentes.compone
     OverlayModule,
     PlatformModule,
     PortalModule,
+    //MatProgressButtonsModule,
+    //FontAwesomeModule
+    LaddaModule
+    /*LaddaModule.forRoot({
+      style: "zoom-out",
+      spinnerSize: 40,
+      spinnerColor: "red",
+      spinnerLines: 12
+  })*/
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},

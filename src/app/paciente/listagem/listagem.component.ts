@@ -20,6 +20,8 @@ import { TipoDiagnosticoAux } from '../../classes/tipo_diagnostico';
 import { SubTipoDiagnosticoAux } from '../../classes/subtipo_diagnostico';
 import * as deepEqual from "deep-equal";
 import * as jsPDF from 'jspdf';
+//import { MatProgressButtonOptions } from 'mat-progress-buttons';
+
 
 @Component({
   selector: 'app-listagem',
@@ -27,6 +29,13 @@ import * as jsPDF from 'jspdf';
   styleUrls: ['./listagem.component.scss']
 })
 export class ListagemComponent implements OnInit {
+
+  // trigger-variable for Ladda
+  isLoading: boolean = false;
+    
+  toggleLoading() {
+      this.isLoading = !this.isLoading;
+  }
 
   pacientes: Paciente[];
   dataSourse: MatTableDataSource<Paciente>;
@@ -625,6 +634,9 @@ export class ListagemComponent implements OnInit {
 
      docu.save('diario.pdf');  //nome do arquivo
   }  
+
+
+
 
 }
 
