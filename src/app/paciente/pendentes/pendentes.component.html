@@ -52,7 +52,7 @@
                 
                 <ng-container matColumnDef="imprimir">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Imprimir </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="downloadPDF(row.diagnosticos_aux)">
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="downloadPDF(row.diagnosticos_aux,row.paciente)">
                         <mat-icon>print</mat-icon>
                       </button></mat-cell>
                 </ng-container>

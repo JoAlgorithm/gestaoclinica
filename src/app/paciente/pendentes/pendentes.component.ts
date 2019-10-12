@@ -9,6 +9,7 @@ import { Faturacao } from '../../classes/faturacao';
 import { DiagnosticoAuxiliar } from '../../classes/diagnostico_aux';
 import { SelectionModel } from '@angular/cdk/collections';
 import * as jsPDF from 'jspdf';
+import { Clinica } from '../../classes/clinica';
 
 @Component({
   selector: 'app-pendentes',
@@ -16,19 +17,32 @@ import * as jsPDF from 'jspdf';
   styleUrls: ['./pendentes.component.scss']
 })
 export class PendentesComponent implements OnInit {
+ 
+
 
   consultas: Consulta[];
+ 
+
+
   dataSourse: MatTableDataSource<Consulta>;
   displayedColumns = ['nid','apelido', 'nome', 'diagnosticos_aux', 'valor_pagar' ,'status','imprimir', 'faturar'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
+  clinica: Clinica;
   faturacao: Faturacao;
 
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
     private pacienteService: PacienteService,public snackBar: MatSnackBar) { }
 
     ngOnInit() {
+
+      this.configServices.getClinica().valueChanges()
+      .take(1)
+      .subscribe(c => {
+        this.clinica = c;
+      })
+
+
       this.pacienteService.getConsultas().snapshotChanges().subscribe(data => {
         this.consultas = data.map(e => {
           return {
@@ -259,7 +273,7 @@ export class PendentesComponent implements OnInit {
   @ViewChild('content4') content4: ElementRef;
   @ViewChild('content5') content5: ElementRef;
   @ViewChild('content6') content6: ElementRef;
-  public downloadPDF(diagnosticos :DiagnosticoAuxiliar[]){// criacao do pdf
+  public downloadPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente){// criacao do pdf
     let doc = new jsPDF({
       orientation: 'p',
       unit: 'px',
@@ -270,6 +284,12 @@ export class PendentesComponent implements OnInit {
     let specialElementHandlers ={
       '#editor': function(element,renderer){return true;} 
     }
+    let dia = new Date().getDate();
+    let mes = +(new Date().getMonth()) + +1;
+    let ano = new Date().getFullYear();
+   let dataemisao = dia +"/"+mes+"/"+ano;  
+
+
     /*let content1 = this.content1.nativeElement; 
     let content2 = this.content2.nativeElement;  
     let content3 = this.content3.nativeElement; 
@@ -293,6 +313,19 @@ export class PendentesComponent implements OnInit {
       'elementHandlers': specialElementHandlers,
     });*/
 
+    var img = new Image();
+    
+    // img.src ="../../../assets/images/medical-center-logo-design.jpg"; 
+    // doc.convertBase64ToBinaryString(clinica.logo_pdf);
+   // img.src =clinica.logo_pdf; 
+    //img.src =this.clinica.logo_pdf; 
+    //doc.addImage(img,"PNG", 50, 10,90, 90);
+
+    img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+     
+    
+     doc.addImage(img,"PNG", 300, 40,90, 90);
+
     doc.setFont("Courier");
     doc.setFontStyle("normal"); 
     doc.setFontSize(12);
@@ -303,43 +336,43 @@ export class PendentesComponent implements OnInit {
       doc.text(item+"", 55, linha) //item
       doc.text("1", 257, linha) //quantidade
       doc.text(element.nome , 95, linha) //descricao
-      doc.text(element.preco , 294, linha)
-      doc.text(element.preco , 354, linha)
+      doc.text(element.preco, 294, linha)
+      doc.text(element.preco, 354, linha)
 
       preco_total = +preco_total + +element.preco;
       item = +item + +1;
-      linha = +linha + +20
+      linha = +linha + +20;
     });
-    doc.text(preco_total+" MZN"  , 355, 525) //descricao        
-
+       
     doc.setFont("Courier");
     doc.setFontStyle("normal"); 
     doc.setFontSize(10);
-    var img = new Image();
-      
-    // img.src ="../../../assets/images/medical-center-logo-design.jpg"; 
-    //  img.src =this.clinica.logo_pdf; 
-    //doc.convertBase64ToBinaryString(this.clinica.logo_pdf);
-    // img.src =this.clinica.logo_pdf; 
-    // doc.addImage(img,"PNG", 50, 10,90, 90);
+   
+
+
+
+  
   
 
     doc.text("Processado pelo computador", 170, 580);
     // doc.text("CENTRO MEDICO VITALLE", 165, 75);
-    doc.text("AV.Principal N° 1- Cidade Baixa ", 50, 75);
-    doc.text("Nampula,Nacala-Porto ", 50,85);
-    doc.text("E-mail: manuelacacio40@gmail.com", 50, 95);
-    doc.text("Cell: 842008104", 50, 105);
+    doc.text(this.clinica.endereco, 50, 75);
+    doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
+    doc.text("Email: "+this.clinica.email, 50, 95);
+    doc.text("Cell: "+this.clinica.telefone, 50, 105);
     
     doc.text("Nome do Paciente:", 50, 125);
-
-    doc.text("NID:", 320, 125);
+    doc.text(paciente.nome, 128, 125);
+    doc.text("NID:", 250, 125);
+    doc.text(paciente.nid+"", 268, 125);
     doc.text("Apelido:", 50, 145);
-    doc.text("Data de emissão: ", 280, 145);
+    doc.text(paciente.apelido, 89, 145);
+    doc.text("Data de emissão: ", 250, 145);
+    doc.text(dataemisao, 322, 145);
     doc.setFillColor(50,50,50);
-    doc.rect ( 50, 170 , 40 , 40 ); 
-    doc.rect (  50, 190 , 40 , 40 ); 
-    doc.rect ( 50, 210 , 40 , 40 ); 
+    doc.rect ( 50, 170 , 40 , 20 ); 
+  doc.rect (  50, 190 , 40 , 320 ); 
+    /* doc.rect ( 50, 210 , 40 , 40 ); 
     doc.rect (  50, 230 , 40 , 40 ); 
     doc.rect ( 50, 250 , 40 , 40 ); 
     doc.rect (  50, 270 , 40 , 40 ); 
@@ -352,11 +385,11 @@ export class PendentesComponent implements OnInit {
     doc.rect ( 50, 410 , 40 , 40 ); 
     doc.rect (  50, 430 , 40 , 40 ); 
     doc.rect ( 50, 450, 40 , 40 ); 
-    doc.rect (  50, 470 , 40 , 40 ); 
+    doc.rect (  50, 470 , 40 , 40 ); */
 
-    doc.rect (  90, 170 , 150 , 40 ); 
-    doc.rect (  90, 190 , 150 , 40 );
-    doc.rect ( 90, 210 , 150 , 40 ); 
+    doc.rect (  90, 170 , 150 , 20 ); 
+  doc.rect (  90, 190 , 150 , 320 );
+      /*doc.rect ( 90, 210 , 150 , 40 ); 
     doc.rect (  90, 230 , 150, 40 ); 
     doc.rect ( 90, 250 , 150, 40 ); 
     doc.rect (  90, 270 , 150 , 40 ); 
@@ -369,11 +402,11 @@ export class PendentesComponent implements OnInit {
     doc.rect ( 90, 410 , 150, 40 ); 
     doc.rect (  90, 430 , 150 , 40 ); 
     doc.rect ( 90, 450, 150 , 40 ); 
-    doc.rect (  90, 470 , 150 , 40 ); 
+    doc.rect (  90, 470 , 150 , 40 ); */
 
-    doc.rect (  240, 170 , 50 , 40 ); 
-    doc.rect (  240, 190 , 50 , 40 );
-    doc.rect ( 240, 210 , 50 , 40 ); 
+    doc.rect (  240, 170 , 50 , 20 ); 
+   doc.rect (  240, 190 , 50 , 320 );
+     /* doc.rect ( 240, 210 , 50 , 40 ); 
     doc.rect (  240, 230 , 50 , 40 ); 
     doc.rect ( 240, 250 , 50 , 40 ); 
     doc.rect (  240, 270 , 50 , 40 ); 
@@ -386,11 +419,11 @@ export class PendentesComponent implements OnInit {
     doc.rect ( 240, 410 , 50 , 40 ); 
     doc.rect (  240, 430 , 50 , 40 ); 
     doc.rect ( 240, 450, 50 , 40 ); 
-    doc.rect (  240, 470 , 50 , 40 ); 
+    doc.rect (  240, 470 , 50 , 40 ); */
 
-    doc.rect (  290, 170 , 60 , 40 ); 
-    doc.rect (  290, 190 , 60 , 40 );
-    doc.rect ( 290, 210 , 60 , 40 ); 
+    doc.rect (  290, 170 , 60 , 20 ); 
+    doc.rect (  290, 190 , 60 , 320 );
+     /* doc.rect ( 290, 210 , 60 , 40 ); 
     doc.rect (  290, 230 , 60 , 40 ); 
     doc.rect ( 290, 250 , 60 , 40 ); 
     doc.rect (  290, 270 , 60 , 40 ); 
@@ -403,12 +436,12 @@ export class PendentesComponent implements OnInit {
     doc.rect ( 290, 410 , 60 , 40 ); 
     doc.rect (  290, 430 , 60 , 40 ); 
     doc.rect ( 290, 450, 60 , 40 ); 
-    doc.rect (  290, 470 , 60 , 40 ); 
-    doc.rect (  290, 490 , 60 , 40 ); 
+    doc.rect (  290, 470 , 60 , 40 );
+    doc.rect (  290, 510 , 30 , 20 ); */ 
 
-    doc.rect (  350, 170 , 50 , 40 ); 
-    doc.rect (  350, 190 , 50 , 40 );
-    doc.rect ( 350, 210 , 50 , 40 ); 
+    doc.rect (  350, 170 , 50 , 20 ); 
+   doc.rect (  350, 190 , 50 , 320);
+     /* doc.rect ( 350, 210 , 50 , 40 ); 
     doc.rect (  350, 230 , 50 , 40 ); 
     doc.rect ( 350, 250 , 50 , 40 ); 
     doc.rect (  350, 270 , 50 , 40 ); 
@@ -421,16 +454,16 @@ export class PendentesComponent implements OnInit {
     doc.rect ( 350, 410 , 50 , 40 ); 
     doc.rect (  350, 430 , 50 , 40 ); 
     doc.rect ( 350, 450, 50 , 40 ); 
-    doc.rect ( 350, 470 , 50 , 40 ); 
-    doc.rect ( 350, 490 , 50 , 40 ); 
+    doc.rect ( 350, 470 , 50 , 40 );  */
+    doc.rect ( 290, 510 , 110 , 20 );
 
     doc.setFontStyle("bold");
     doc.text("Item", 60, 180);
-    doc.text("Descrição de Medicamento", 100, 180);
+    doc.text("Descrição", 120, 180);
     doc.text("Quantd", 245, 180);
     doc.text("Preço Unit", 295, 180);
     doc.text("Preç Tot", 355, 180);
-    doc.text("Total:", 295, 525);
+    doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
     //  doc.text("FICHA DE PAGAMENTO", 165, 90);
     doc.save('Recebo.pdf');  
 }
