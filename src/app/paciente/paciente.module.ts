@@ -4,7 +4,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
+<<<<<<< HEAD
 import {  DialogDetalhes, MedicamentosDialog } from './listagem/listagem.component';
+=======
+import {  DialogDetalhes,DialogEditar } from './listagem/listagem.component';
+>>>>>>> 223fa78fdf54eecb70181b2ff3c951ed704adfc0
 import {CdkTableModule} from '@angular/cdk/table';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {A11yModule} from '@angular/cdk/a11y';
@@ -148,7 +152,11 @@ import { EstoqueService } from '../services/estoque.service';
     CondutasDialog,
     ConsultasDialog,
     DialogDetalhes,
+<<<<<<< HEAD
     MedicamentosDialog
+=======
+    DialogEditar
+>>>>>>> 223fa78fdf54eecb70181b2ff3c951ed704adfc0
   ],
   entryComponents: [
     DiagnosticosDialog,
@@ -156,7 +164,11 @@ import { EstoqueService } from '../services/estoque.service';
     CondutasDialog,
     ConsultasDialog,
     DialogDetalhes,
+<<<<<<< HEAD
     MedicamentosDialog
+=======
+    DialogEditar
+>>>>>>> 223fa78fdf54eecb70181b2ff3c951ed704adfc0
   ],
 })
 

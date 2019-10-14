@@ -8,12 +8,12 @@ table {
         height:26px;
         padding-left:4px;
         padding-right:2px;
-        font-family:Verdana, Geneva, sans-serif;
         font-size:12px;
         white-space:nowrap;
         border-bottom:solid 1px #E1E1E1;
-        font: small-caps 100%/200% serif;
+        font-family: "Times New Roman", Times, serif;
         font-weight: bold;
+        text-align: left;
         }
     tr:nth-child(odd) {
             background-color:#F3F3F3;
@@ -28,11 +28,10 @@ tr, td {
     height:26px;
     padding-left:4px;
     padding-right:2px;
-    font-family:Verdana, Geneva, sans-serif;
-    font-size:12px;
+    font-size:15px;
     white-space:nowrap;
     border-bottom:solid 1px #E1E1E1;
- font: small-caps 100%/200% serif;
+    font-family: "Times New Roman", Times, serif;
 
     }
     tr:hover {
@@ -47,7 +46,7 @@ h3 {
    background-color: #3CB371; 
    color: black; 
    text-align: center;
-   font: small-caps 150% serif;
+   font-family: "Times New Roman", Times, serif;
    font-weight: bold;
 }
 
