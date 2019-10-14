@@ -290,14 +290,33 @@ export class ConfiguracoesComponent implements OnInit {
   registarCondutaClinica(){
     let data = Object.assign({}, this.conduta_clinica);
 
-    this.configServices.createCondutaClinica(data)
-    .then( res => {
-      this.conduta_clinica = new CondutaClinica();
-      this.condutas_clinicaFormGroup.reset;
-      this.openSnackBar("Conduta clinica cadastrada com sucesso");
-    }, err=>{
-      this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
-    })
+    if(data.id){ 
+      //Ja tem ID ja Conduta entao deve atualizar
+      this.configServices.updateCondutaClinica(data)
+      .then( res => {
+        this.conduta_clinica = new CondutaClinica();
+        this.condutas_clinicaFormGroup.reset;
+        this.openSnackBar("Conduta clinica cadastrada com sucesso");
+      }, err=>{
+        this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+      })
+    }else{
+      //Conduta nova deve salvar
+      this.configServices.createCondutaClinica(data)
+      .then( res => {
+        this.conduta_clinica = new CondutaClinica();
+        this.condutas_clinicaFormGroup.reset;
+        this.openSnackBar("Conduta clinica atualizada com sucesso");
+      }, err=>{
+        this.openSnackBar("Ocorreu um erro ao atualizar. Contacte o admnistrador do sistema");
+      })
+    }
+
+    
+  }
+
+  editarConduta(conduta: CondutaClinica){
+    this.conduta_clinica = conduta;
   }
 
   atualizarClinica(){

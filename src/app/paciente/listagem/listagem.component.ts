@@ -20,6 +20,10 @@ import { TipoDiagnosticoAux } from '../../classes/tipo_diagnostico';
 import { SubTipoDiagnosticoAux } from '../../classes/subtipo_diagnostico';
 import * as deepEqual from "deep-equal";
 import * as jsPDF from 'jspdf';
+import { Deposito } from '../../classes/deposito';
+import { EstoqueService } from '../../services/estoque.service';
+import { Medicamento } from '../../classes/medicamento';
+import { CustomValidators } from 'ng2-validation';
 //import { MatProgressButtonOptions } from 'mat-progress-buttons';
 
 
@@ -59,8 +63,10 @@ export class ListagemComponent implements OnInit {
   subtipos_diagnosticos: SubTipoDiagnosticoAux[];
   subtipos_diagnosticos_aux: SubTipoDiagnosticoAux[];
 
+  depositos: Deposito[];
+
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
-    private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router){ 
+    private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router, public estoqueService: EstoqueService){ 
     this.consulta = new Consulta();
  }
 
@@ -140,6 +146,17 @@ export class ListagemComponent implements OnInit {
       });
       this.subtipos_diagnosticos_aux = this.subtipos_diagnosticos;
     })
+
+    //DEPOSITOS
+    this.estoqueService.getDepositos().snapshotChanges().subscribe(data => {
+        this.depositos = data.map(e => {
+          return {
+            id: e.payload.key,
+            ...e.payload.val(),
+          } as Deposito;
+        })
+    })
+
   }
   
   detalhes(doente){
@@ -224,6 +241,16 @@ export class ListagemComponent implements OnInit {
     });
   }
 
+  openMedicamento(row: Paciente){
+    let dialogRef = this.dialog.open(MedicamentosDialog, {
+      width: '800px',
+      data: { paciente: row, depositos: this.depositos }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log("result "+result);
+    });
+  }
+
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
@@ -232,13 +259,231 @@ export class ListagemComponent implements OnInit {
 
 }
 
+//MedicamentosDialog --------------------------------------------------------
+@Component({
+  selector: 'medicamentos-dialog',
+  templateUrl: 'medicamentos.component.html',
+})
+export class MedicamentosDialog {
+
+  medicamentoFormGroup: FormGroup;
+  medicamentos: Medicamento[] = [];
+  medicamentos_adicionados: Medicamento[] = [];
+  medicamento: Medicamento;
+  deposito: Deposito;
+  preco_total:Number = 0;
+  max: Number = 1;
+  min: Number = 1;
+
+  dataSourse: MatTableDataSource<Medicamento>;
+  displayedColumns = ['medicamento','qtd_solicitada', 'preco_unit', 'preco_venda_total', 'remover'];
+
+  consulta?: Consulta;
+
+  constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<MedicamentosDialog>, private router: Router,
+  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
+  public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
+    
+    this.deposito = new Deposito();
+    this.medicamento = new Medicamento();
+
+    this.medicamentoFormGroup = this._formBuilder.group({
+      deposito: ['', Validators.required],
+      medicamento: ['', Validators.required],
+      qtd_solicitada: ['',  Validators.compose([Validators.required, CustomValidators.number({min: this.min, max: this.max})])],
+      qtd_disponivel: ['', Validators.required],
+      preco_venda_total: ['', Validators.required],
+      preco: ['', Validators.required],
+    });
+    this.medicamentoFormGroup.controls['qtd_disponivel'].disable();
+    this.medicamentoFormGroup.controls['preco'].disable();
+    this.medicamentoFormGroup.controls['preco_venda_total'].disable();
+  }
+
+  getMedicamentos(deposito: Deposito){
+    this.medicamentos = [];
+    this.medicamento = new Medicamento();
+    this.max = 1;
+    if(deposito.medicamentos){
+
+      Object.keys(deposito.medicamentos).forEach(key=>{
+        this.medicamentos.push(deposito.medicamentos[key]);
+      })
+
+    }else{
+      this.openSnackBar("Deposito sem medicamentos. Contacte o Admnistrativo");
+    }
+  }
+
+  limitarQuantidade(){
+    this.max = this.medicamento.qtd_disponivel;
+    this.medicamentoFormGroup.controls['qtd_solicitada']
+      .setValidators(CustomValidators.number({min: 1, max: this.medicamento.qtd_disponivel}));
+  }
+
+  validarQtd(qtd_solicitada){
+    if(qtd_solicitada){
+      this.medicamento.preco_venda_total = qtd_solicitada*this.medicamento.preco_venda;
+    }else{
+      this.medicamento.preco_venda_total = 0;
+    }
+  }
+
+  addMedicamento(){
+    if(this.medicamento.qtd_solicitada){
+
+      let check = true;
+      this.medicamentos_adicionados.forEach(md => {
+        if(md.id == this.medicamento.id){
+          check = false;
+          return;
+        }
+      });
+
+      if(check){
+        if( Number(this.medicamento.qtd_solicitada) <= Number(this.medicamento.qtd_disponivel)){
+          this.medicamento.preco_venda_total = this.medicamento.preco_venda*this.medicamento.qtd_solicitada;
+          this.medicamento.qtd_disponivel = +this.medicamento.qtd_disponivel - +this.medicamento.qtd_solicitada;
+  
+          this.medicamentos_adicionados.push(this.medicamento);
+    
+          this.preco_total = +this.preco_total + +(this.medicamento.preco_venda*this.medicamento.qtd_solicitada);
+      
+          this.dataSourse=new MatTableDataSource(this.medicamentos_adicionados);
+    
+          this.medicamento = new Medicamento();
+          this.max = 1;
+        }else{
+          this.openSnackBar("Qtd solicitada nao pode ser superior a quantidade disponivel");
+        }
+      }else{
+        this.openSnackBar("Medicamento ja adicionado a lista");
+      }
+      
+
+      
+    }else{
+      this.openSnackBar("Selecione um medicamento");
+    }
+  }
+
+  removeMedicamento(md: Medicamento){
+    md.qtd_disponivel = +md.qtd_disponivel + +md.qtd_solicitada;
+    this.preco_total = +this.preco_total - (md.qtd_solicitada*md.preco_venda)
+    this.medicamentos_adicionados.splice(this.medicamentos_adicionados.indexOf(md), 1);
+    this.dataSourse=new MatTableDataSource(this.medicamentos_adicionados);
+  }
+
+  //AO FATURAR PRECISA ATUALIZAR A QTD DISPONIVEL DO ITEM NO DEPOSITO
+  faturar(paciente: Paciente){
+    //Abrir uma consulta CONDUTA CLINICA --------------------
+    let dia = new Date().getDate();
+    let mes = +(new Date().getMonth()) + +1;
+    let ano = new Date().getFullYear();
+
+    this.consulta = new Consulta();
+    this.consulta.data = dia +"/"+mes+"/"+ano;
+    this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+    this.consulta.paciente = paciente;
+    this.consulta.medicamentos = this.medicamentos_adicionados;
+    this.consulta.status = "Encerrada";
+    this.consulta.tipo = "MEDICAMENTO";
+
+    //Criar uma faturacao da consulta do tipo CONDUTA CLINICA --------------------
+    let faturacao = new Faturacao();
+    faturacao.categoria = "MEDICAMENTO";
+    faturacao.valor = this.preco_total;
+    faturacao.data = new Date();
+    faturacao.consulta = this.consulta;
+    faturacao.medicamentos = this.consulta.medicamentos;
+    
+    faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
+    faturacao.ano = new Date().getFullYear();
+
+    //Persistir informacao na base de dados ----------------------------
+    let data = Object.assign({}, faturacao);
+    let d = Object.assign({}, this.consulta); 
+
+    this.pacienteService.faturar(data)
+    .then( res => {
+      this.pacienteService.marcarConsulta(d)
+      .then(r => {
+        this.dialogRef.close();
+        this.openSnackBar("Faturado com sucesso");
+      }, er => {
+        console.log("ERRO: " + er.message)
+        this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
+      })      
+    }, err=>{
+      console.log("ERRO: " + err.message)
+      this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
+    })
+  }
+
+  openSnackBar(mensagem) {
+    this.snackBar.open(mensagem, null,{
+      duration: 2000
+    })
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  getMes(number): String{
+    console.log("Get mes "+number)
+    switch(number) { 
+      case 1: { 
+         return "Janeiro";
+      } 
+      case 2: { 
+         return "Fevereiro"; 
+      } 
+      case 3: { 
+         return "Marco"; 
+      }
+      case 4: { 
+        return "Abril"; 
+      }
+      case 5: { 
+        return "Maio"; 
+      }
+      case 6: { 
+        return "Junho"; 
+      }
+      case 7: { 
+        return "Julho"; 
+      }
+      case 8: { 
+        return "Agosto"; 
+      }  
+      case 9: { 
+        return "Setembro"; 
+      }
+      case 10: { 
+        return "Outubro"; 
+      }
+      case 11: { 
+        return "Novembro"; 
+      }
+      case 12: { 
+        return "Dezembro"; 
+      }
+      default: { 
+         //statements; 
+         break; 
+      } 
+   } 
+  }
+
+}
 
 //CondutasDialog --------------------------------------------------------
 
 @Component({
   selector: 'condutas-dialog',
   templateUrl: 'condutas.component.html',
-  })
+})
   export class CondutasDialog {
 
   condutaFormGroup: FormGroup;
@@ -302,6 +547,7 @@ export class ListagemComponent implements OnInit {
     this.data.condutas = null;
     this.data.condutas = this.condutas_param.filter(item => item.tipo.nome == tipo_conduta_clinica.nome);
   }
+  
 
   onNoClick(): void {
     this.dialogRef.close();

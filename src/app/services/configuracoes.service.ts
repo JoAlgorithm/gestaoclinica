@@ -50,6 +50,10 @@ export class ConfiguracoesService {
     return this.db.list('clinicas/'+this.authService.get_clinica_id + '/condutasclinicas').push(condutaclinicas);
   }
 
+  updateCondutaClinica(condutaclinicas: CondutaClinica){
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/condutasclinicas').update(condutaclinicas.id, condutaclinicas);
+  }
+
   //Atualizar dados da CLINICA
   updateClinica(clinica: Clinica){
     //return this.firestore.doc('clinicas/'+this.authService.get_clinica_id).update(clinica);

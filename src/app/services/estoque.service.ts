@@ -52,13 +52,18 @@ export class EstoqueService {
     return this.db.list('clinicas/'+this.authService.get_clinica_id + '/depositos/'+mvt.deposito.id+'/medicamentos/').update(mvt.medicamento.id, mvt.medicamento);
   }
 
+  //Cadastra movimento no medicamento
   addMovimentoItem(mvt: MovimentoEstoque){
     return this.db.list('clinicas/'+this.authService.get_clinica_id + '/medicamentos/'+mvt.medicamento.id+'/movimentos/').push(mvt);
   }
 
+  //Cadastra movimentos na tbl de movimentos
   addMovimento(mvt: MovimentoEstoque){
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/estoques_movimentos/').push(mvt);
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/estoquesmovimentos/').push(mvt);
   }
 
+  getMovimentos() {
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/estoquesmovimentos');
+  }
 
 }

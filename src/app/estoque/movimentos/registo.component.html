@@ -29,6 +29,7 @@
     </form>
 
     <mat-table [dataSource]="dataSourse" matSort>
+  
         <ng-container matColumnDef="deposito">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Deposito </mat-header-cell>
             <mat-cell *matCellDef="let row">{{row.deposito.nome}}</mat-cell>

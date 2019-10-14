@@ -1,0 +1,86 @@
+<h1 mat-dialog-title>Medicamentos para {{data.paciente.nome}} {{data.paciente.apelido}}</h1>
+<div mat-dialog-content>
+    <p>Selecione os medicamentos solicitados pelo cliente</p>
+
+    <form [formGroup]="medicamentoFormGroup">
+        <!--DEPOSITOS-->
+        <mat-form-field style="width: 31%">
+            <mat-select placeholder="Deposito" formControlName="deposito" [(ngModel)]="deposito" (selectionChange)="getMedicamentos(deposito)" required>
+                <mat-option *ngFor="let deposito of data.depositos" [value]="deposito">
+                    {{deposito.nome}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!--MEDICAMENTOS-->
+        <mat-form-field style="width: 31%">
+            <mat-select placeholder="Medicamento" formControlName="medicamento" [(ngModel)]="medicamento" (selectionChange)="limitarQuantidade(medicamento.qtd_disponivel)"  required>
+                <mat-option *ngFor="let medicamento of medicamentos" [value]="medicamento">
+                    {{medicamento.nome_generico}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!--QTD SOLICITADA-->
+        <mat-form-field style="width: 31%">
+            <input matInput placeholder="Qtd Solicitada" formControlName="qtd_solicitada" [(ngModel)]="medicamento.qtd_solicitada" min="{{min}}" max="{{max}}" (keyup)="validarQtd($event.target.value)" required>
+        </mat-form-field>
+
+        <!--QTD DISPONIVEL-->
+        <mat-form-field style="width: 31%">
+            <input matInput placeholder="Qtd Disponivel" formControlName="qtd_disponivel" [(ngModel)]="medicamento.qtd_disponivel" required>
+        </mat-form-field>
+
+        <!--PRECO-->
+        <mat-form-field style="width: 31%">
+            <input matInput placeholder="Prec. Unit." formControlName="preco" [(ngModel)]="medicamento.preco_venda" required>
+        </mat-form-field>
+
+        <!--PRECO TOTAL-->
+        <mat-form-field style="width: 31%">
+            <input matInput placeholder="Prec Tot." formControlName="preco_venda_total" [(ngModel)]="medicamento.preco_venda_total" required>
+        </mat-form-field>
+
+        <button mat-icon-button (click)="addMedicamento(medicamento)" matTooltip="Adicionar {{medicamento.nome_generico}}">
+            <mat-icon>add_circle</mat-icon>
+        </button>
+
+    </form>
+
+    <mat-table [dataSource]="dataSourse" matSort>
+        <ng-container matColumnDef="medicamento">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Medicamento </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.nome_generico}}</mat-cell>
+        </ng-container> 
+
+        <ng-container matColumnDef="qtd_solicitada">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Qtd Solicitada </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.qtd_solicitada}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="preco_unit">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Prec Unit. (MZN)</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.preco_venda | currency:' ':'symbol':'1.2-2'}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="preco_venda_total">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Prec Tot. (MZN)</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.preco_venda_total | currency:' ':'symbol':'1.2-2'}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="remover">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Remover</mat-header-cell>
+            <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="removeMedicamento(row)" matTooltip="Remover {{row.nome_generico}}">  
+                    <mat-icon>delete</mat-icon>
+            </button></mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;">
+        </mat-row>
+    </mat-table>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancelar</button>
+    <button mat-button cdkFocusInitial (click)="faturar(data.paciente)">Faturar {{preco_total| currency:' ':'symbol':'1.2-2'}} MZN</button>
+</div>
