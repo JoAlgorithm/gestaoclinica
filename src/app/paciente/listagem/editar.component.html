@@ -1,0 +1,112 @@
+
+<!--<form class="example-form">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Nome" value="data.nome">
+    </mat-form-field>
+  
+    <mat-form-field class="example-full-width">
+      <textarea matInput placeholder="Leave a comment"></textarea>
+    </mat-form-field>
+  </form>-->
+ 
+  <mat-horizontal-stepper [linear]="true" #stepper>
+  
+    <mat-step [stepControl]="firstFormGroup">
+      
+        <ng-template matStepLabel>DADOS DO PACIENTE </ng-template>
+        <mat-form-field style="width: 33%">
+          <input matInput placeholder="Nome completo"  [(ngModel)]="data.doente.nome" required>
+      </mat-form-field>
+        
+      <mat-form-field style="width: 33%">
+        <input matInput placeholder="Apelido"  [(ngModel)]="data.doente.apelido" required>
+    </mat-form-field>
+
+     <!--DATA DE NASCIMENTO-->
+    <mat-form-field style="width: 33%">
+        <!--<input matInput placeholder="Data de nascimento" formControlName="estudante_data_nascimento" required>-->
+
+        <input matInput [matDatepicker]="picker1" placeholder="Data de nascimento"  [(ngModel)]="data.data_nascimento"  required>
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+    </mat-form-field>
+     <!--GENERO-->
+     <mat-form-field style="width: 33%">
+        <mat-select placeholder="Sexo" [(ngModel)]="data.doente.sexo" required >
+            <mat-option *ngFor="let sexo of data.sexos" [value]="sexo.value">
+                {{sexo.viewValue}}
+            </mat-option>
+        </mat-select>
+      </mat-form-field> 
+
+ <!--DOCUMNTO IDENTIFICACAO-->
+ <mat-form-field style="width: 33%">
+    <mat-select placeholder="Documento de identificacao" [(ngModel)]="data.doente.documento_identificacao" required >
+        <mat-option *ngFor="let documento_identificacao of data.documentos_identificacao" [value]="documento_identificacao.value">
+            {{documento_identificacao.viewValue}}
+        </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field style="width: 33%">
+    <input matInput placeholder="Numero de Documento"  [(ngModel)]="data.doente.nr_documento_identificacao" required>
+</mat-form-field>
+<mat-form-field style="width: 33%">
+    <input matInput placeholder="Localidade"  [(ngModel)]="data.doente.localidade" required>
+</mat-form-field>
+<mat-form-field style="width: 33%">
+    <input matInput placeholder="Bairro"  [(ngModel)]="data.doente.bairro" required>
+</mat-form-field>
+<mat-form-field style="width: 33%">
+    <input matInput placeholder="Avenida"  [(ngModel)]="data.doente.avenida" required>
+</mat-form-field>
+<mat-form-field style="width: 33%">
+    <input matInput placeholder="Rua"  [(ngModel)]="data.doente.rua" required>
+</mat-form-field>
+<mat-form-field style="width: 33%">
+    <input matInput placeholder="Casa"  [(ngModel)]="data.doente.casa" required>
+</mat-form-field>
+<mat-form-field style="width: 33%">
+    <input matInput placeholder="Celula"  [(ngModel)]="data.doente.celula" required>
+</mat-form-field>
+<mat-form-field style="width: 33%">
+    <input matInput placeholder="Quarteirao"  [(ngModel)]="data.doente.quarteirao" required>
+</mat-form-field>
+<mat-form-field style="width: 33%">
+    <input matInput placeholder="Posto Adminiatrativo"  [(ngModel)]="data.doente.posto_administrativo" required>
+</mat-form-field>
+<mat-form-field style="width: 33%">
+    <input matInput placeholder="Distrito"  [(ngModel)]="data.doente.distrito" required>
+</mat-form-field>
+  <!--PROVINCIA-->
+  <mat-form-field style="width: 33%">
+    <mat-select placeholder="Provincia"  [(ngModel)]="data.doente.provincia" required >
+        <mat-option *ngFor="let provincia of data.provincias" [value]="provincia.value">
+            {{provincia.viewValue}}
+        </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field style="width: 33%">
+    <input matInput placeholder="Nome Referencia"  [(ngModel)]="data.doente.referencia_nome" required>
+</mat-form-field>
+<mat-form-field style="width: 33%">
+    <input matInput placeholder="Apelido Referencia"  [(ngModel)]="data.doente.referencia_apelido" required>
+</mat-form-field>
+<mat-form-field style="width: 33%">
+    <input matInput placeholder="Telefone"  [(ngModel)]="data.doente.referencia_telefone" required>
+</mat-form-field>
+      <div>
+         
+          <button mat-button (click)="GuardarDados(data.doente)" mat-button (click)="closeModal()">GUARDAR<i class="large material-icons">save</i></button>
+         
+          <button mat-button (click)="closeModal()">FECHAR<i class="large material-icons">close</i></button>
+  
+        </div>
+  </mat-step>
+       
+     
+    
+      </mat-horizontal-stepper>
+       
+         
+    

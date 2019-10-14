@@ -27,7 +27,8 @@ import * as jsPDF from 'jspdf';
   styleUrls: ['./listagem.component.scss']
 })
 export class ListagemComponent implements OnInit {
-
+  datanascimento: Date;
+  data_nascimento: Date;
   pacientes: Paciente[];
   dataSourse: MatTableDataSource<Paciente>;
   displayedColumns = ['nid','apelido', 'nome', 'sexo', 'documento_identificacao', 'referencia_telefone', 'detalhe','editar', 'consulta'];
@@ -35,7 +36,7 @@ export class ListagemComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   consulta: Consulta;
-
+ 
   clinica: Clinica;
 
   diagnosticos:DiagnosticoAuxiliar[];
@@ -49,6 +50,32 @@ export class ListagemComponent implements OnInit {
   tipos_diagnosticos: TipoDiagnosticoAux[];
   subtipos_diagnosticos: SubTipoDiagnosticoAux[];
   subtipos_diagnosticos_aux: SubTipoDiagnosticoAux[];
+
+  sexos = [
+    {value: 'Feminino', viewValue: 'Feminino'},
+    {value: 'Masculino', viewValue: 'Masculino'}
+  ];
+
+  documentos_identificacao = [
+    {value: 'BI', viewValue: 'Bilhete de identidade'},
+    {value: 'Cedula', viewValue: 'Cedula'},
+    {value: 'Passaporte', viewValue: 'Passaporte'},
+    {value: 'Certidao de nascimento', viewValue: 'Certidao de nascimento'},
+    {value: 'DIRE', viewValue: 'DIRE'},
+    {value: 'Outros', viewValue: 'Outros'},
+  ]
+  provincias = [
+    {value: 'Maputo', viewValue: 'Maputo'},
+    {value: 'Gaza', viewValue: 'Gaza'},
+    {value: 'Inhambane', viewValue: 'Inhambane'},
+    {value: 'Sofala', viewValue: 'Sofala'},
+    {value: 'Tete', viewValue: 'Tete'},
+    {value: 'Quelimane', viewValue: 'Quelimane'},
+    {value: 'Nampula', viewValue: 'Nampula'},
+    {value: 'Cabo Delgado', viewValue: 'Cabo Delgado'},
+    {value: 'Niassa', viewValue: 'Niassa'},
+    {value: 'Zambezia', viewValue: 'Zambezia'}
+  ]
 
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
     private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router){ 
@@ -138,12 +165,53 @@ export class ListagemComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogDetalhes, {
      
       width: '1000px',
-     data: { nid: doente.nid,apelido: doente.apelido, nome: doente.nome, genero:doente.sexo,datanascimento:doente.datanascimento,
-       documento_identificacao: doente.documento_identificacao, nr_documento_identificacao: doente.nr_documento_identificacao,
+     data: { nid: doente.nid,data_nascimento: doente.datanascimento,apelido: doente.apelido, 
+      nome: doente.nome, genero:doente.sexo,
+       documento_identificacao: doente.documento_identificacao, 
+       nr_documento_identificacao: doente.nr_documento_identificacao,
+       localidade: doente.localidade,bairro:doente.bairro,
+       avenida: doente.avenida, rua:doente.rua,casa: doente.casa,
+       celula:doente.celula,quarteirao:doente.quarteirao,
+       posto_admnistrativo: doente.posto_admnistrativo,
+       distrito: doente.distrito,provincia:doente.provincia,
+       acompanhante_nome:doente.referencia_nome,
+       acompanhante_apelido:doente.referencia_apelido,
+      acompanhante_telefone: doente.referencia_telefone,
         
       }
     });
   }
+
+
+
+
+  editar(doente: Paciente){
+
+    const dialogRef = this.dialog.open(DialogEditar, {
+      width: '1000px',
+      data:{doente: doente,data_nascimento: this.data_nascimento=new Date(), 
+        sexos: this.sexos,documentos_identificacao: this.documentos_identificacao,
+        provincias: this.provincias,
+      
+      
+      }
+      
+    });
+   dialogRef.afterClosed().subscribe(result => {
+    
+    console.log('The dialog was closed');
+    
+    // this.animal = result;
+    
+   });
+   
+  
+    }
+
+
+
+
+
 
 
 
@@ -908,3 +976,59 @@ export class ListagemComponent implements OnInit {
       
     
   }
+  @Component({
+    selector: 'dialog-editar',
+    templateUrl: './editar.component.html',
+  
+  })
+  
+  
+  export class DialogEditar{
+  
+    constructor(private _formBuilder: FormBuilder, public dialog: MatDialog,
+      public dialogRef: MatDialogRef<DialogEditar>,
+      @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
+      public pacienteService: PacienteService,  public snackBar: MatSnackBar, public configServices:ConfiguracoesService) {}
+      pacientes: Paciente[];
+
+      
+      GuardarDados(paciente){
+        let data = Object.assign({}, paciente)
+        this.pacienteService.updatePaciente(data) 
+        .then( res => {
+    
+          
+          
+            this.openSnackBar("Dados Guardados com sucesso");
+        }).catch(erro => {
+          this.openSnackBar("Ocorreu um erro ao atualizar os dados. Consulte o Admin do sistema.");
+            console.log("Erro ao atualizar dados do paciente na consulta: "+erro.message)
+        });
+      }
+    onNoClick(): void {
+      this.dialogRef.close();
+    }
+    
+    closeModal(){
+   
+      this.dialogRef.close();
+
+    }
+   
+      
+  
+  openSnackBar(mensagem) {
+    /*this.snackBar.openFromComponent(null, {
+    duration: 2000,
+    announcementMessage: mensagem
+    });*/
+    this.snackBar.open(mensagem, null,{
+      duration: 4000
+     
+    })
+  }
+}
+    
+   
+   
+  
