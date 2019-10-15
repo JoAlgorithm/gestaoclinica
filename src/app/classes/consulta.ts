@@ -3,6 +3,7 @@ import { DiagnosticoAuxiliar } from "./diagnostico_aux";
 import { CategoriaConsulta } from "./categoria_consulta";
 import { CondutaClinica } from "./conduta_clinica";
 import { Medicamento } from "./medicamento";
+import { MovimentoEstoque } from "./movimento_estoque";
 
 export class Consulta { 
     id?:String;
@@ -57,7 +58,8 @@ export class Consulta {
     condutas_clinicas?: CondutaClinica[]; 
     //internamento?:boolean;
 
-    medicamentos?: Medicamento[];
+    //medicamentos?: Medicamento[];
+    movimentosestoque?: MovimentoEstoque[]; //Dentro de movimentos vai ter o medicamento e deposito
 
     //tratamento_clinico_efetuado?:String;
     //tratamento_clinico_prestar_servico?:String;

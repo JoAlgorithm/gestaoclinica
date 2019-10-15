@@ -97,11 +97,11 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
             this.router.navigate(['/dashboard']);
           });
           
-        }).catch((error) => {
+        })/*.catch((error) => {
           console.log("DEU ERRO: " + error.message )
           //this.openSnackBar("Ocorreu um erro ao fazer login. Verifique o email e senha e tente novamente.");
           //window.alert(error.message)
-        })
+        })*/
     }
 
     

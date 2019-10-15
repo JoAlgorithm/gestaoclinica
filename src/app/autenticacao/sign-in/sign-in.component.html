@@ -25,7 +25,7 @@
               <!--<div class="pb-1">
                 <mat-checkbox>Stay logged in</mat-checkbox>
               </div>-->
-              <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Iniciar Sessão</button>
+              <button [disabled]="desabilitar" mat-raised-button color="primary" type="submit" [disabled]="!form.valid">{{texto}}</button>
             </div>
             <div class="pt-1 pb-1 text-xs-center">
               <a [routerLink]="['/session/forgot']">Esqueceu a senha?</a>&nbsp;&nbsp;&nbsp;&nbsp;
