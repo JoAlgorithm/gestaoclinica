@@ -67,7 +67,7 @@ export class PendentesComponent implements OnInit {
           } as NrFatura;
         });
   
-        if(typeof this.nrscotacao !== 'undefined' && this.nrsfaturcao.length > 0){
+        if(typeof this.nrsfaturcao !== 'undefined' && this.nrsfaturcao.length > 0){
           this.nr_fatura = Math.max.apply(Math, this.nrsfaturcao.map(function(o) { return o.id; }));
           this.nr_fatura = this.nr_fatura+1;
         }else{
@@ -212,6 +212,17 @@ export class PendentesComponent implements OnInit {
    } 
   }
 
+  cotar(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, categoria){
+    let diagnosticos2: DiagnosticoAuxiliar[] = []; //Lista auxiliar para guardar diagnosticos nao faturados para serem apresentados no pdf
+
+    diagnosticos.forEach(element => {
+      if(element.faturado != true){
+        diagnosticos2.push(element);
+      }
+    })
+    this.downloadPDF(diagnosticos2, paciente, categoria);
+  }
+
   faturarDiagnostico(consulta: Consulta){
 
     if(this.clinica.endereco){
@@ -257,12 +268,14 @@ export class PendentesComponent implements OnInit {
             if(element.faturado != true){
               
               element.faturado = true;
+              let diagnostico_aux2: DiagnosticoAuxiliar[] = [];//Usado para pegar o Diagnostico nao faturado e apresentar no pdf
+              diagnostico_aux2.push(element);
               
               //faturacao
               let data = Object.assign({}, this.faturacao);
               let d = Object.assign({}, consulta); 
 
-              this.downloadPDF(consulta.diagnosticos_aux, consulta.paciente, 'Fatura');
+              this.downloadPDF(diagnostico_aux2, consulta.paciente, 'Fatura');
               this.pacienteService.faturar(data)
               .then( res => {
                 this.pacienteService.updateConsulta(d)
@@ -293,7 +306,7 @@ export class PendentesComponent implements OnInit {
   openDialog(consulta: Consulta): void {
     let dialogRef = this.dialog.open(FaturarDialog, {
       width: '700px',
-      data: { consulta: consulta }
+      data: { consulta: consulta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura }
     });
     dialogRef.afterClosed().subscribe(result => {
       //console.log("result "+result);
@@ -306,14 +319,372 @@ export class PendentesComponent implements OnInit {
     })
   }
 
+  public downloadPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, categoria){// criacao do pdf
+
+    let nome = "";
+    if(categoria == 'Cotacao'){
+      nome = "COT";
+    }else{
+      nome = "FAT";
+    }
+
+    if(this.clinica.endereco){
+      if(this.nr_cotacao > 0 && this.nr_fatura >0){
+        
+      
+        if(categoria == 'Cotacao'){
+          let nr_cotacao = new NrCotacao();
+          nr_cotacao.id = this.nr_cotacao+"";
+          let d = Object.assign({}, nr_cotacao); 
+
+          this.configServices.addNrCotacao(d)
+          .then(r =>{
+    
+            this.gerarPDF(diagnosticos , paciente, nome, d.id);
+            
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+          })
+        }else{
+          let nr_fatura = new NrFatura();
+          nr_fatura.id = this.nr_fatura+"";
+          let d = Object.assign({}, nr_fatura); 
+
+          this.configServices.addNrFatura(d)
+          .then(r =>{
+    
+            this.gerarPDF(diagnosticos , paciente, nome, d.id);
+            
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+          })
+        }
+        
+
+      }else{
+        this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+      }
+    
+    }else{
+      this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+    }
+     
+}//Fim download pdf
+
+openSnackBarr(mensagem) {
+  this.snackBar.open(mensagem, null,{
+    duration: 2000
+  })
+}
+
+gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
+  let doc = new jsPDF({
+    orientation: 'p',
+    unit: 'px',
+    format: 'a4',
+    putOnlyUsedFonts:true,
+  });
+
+  let specialElementHandlers ={
+    '#editor': function(element,renderer){return true;} 
+  }
+  let dia = new Date().getDate();
+  let mes = +(new Date().getMonth()) + +1;
+  let ano = new Date().getFullYear();
+ let dataemisao = dia +"/"+mes+"/"+ano;  
+
+  var img = new Image();
+  img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+  doc.addImage(img,"PNG", 300, 40,90, 90);
+
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(12);
+  let item = 1;
+  let preco_total = 0;
+  let linha = 200;                      
+  diagnosticos.forEach(element => {
+    doc.text(item+"", 55, linha) //item
+    doc.text("1", 257, linha) //quantidade
+    doc.text(element.nome , 95, linha) //descricao
+    doc.text(element.preco, 294, linha)
+    doc.text(element.preco, 354, linha)
+
+    preco_total = +preco_total + +element.preco;
+    item = +item + +1;
+    linha = +linha + +20;
+  });     
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(10);
+
+  doc.text("Processado pelo computador", 170, 580);
+  // doc.text("CENTRO MEDICO VITALLE", 165, 75);
+  doc.text(this.clinica.endereco, 50, 75);
+  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
+  doc.text("Email: "+this.clinica.email, 50, 95);
+  doc.text("Cell: "+this.clinica.telefone, 50, 105);
+  
+  doc.text("Nome do Paciente:", 50, 125);
+  doc.text(paciente.nome, 128, 125);
+  doc.text("NID:", 250, 125);
+  doc.text(paciente.nid+"", 268, 125);
+  doc.text("Apelido:", 50, 145);
+  doc.text(paciente.apelido, 89, 145);
+  doc.text("Data de emissão: ", 250, 145);
+  doc.text(dataemisao, 322, 145);
+  doc.setFillColor(50,50,50);
+  doc.rect ( 50, 170 , 40 , 20 ); 
+  doc.rect (  50, 190 , 40 , 320 ); 
+
+  doc.rect (  90, 170 , 150 , 20 ); 
+  doc.rect (  90, 190 , 150 , 320 );
+
+  doc.rect (  240, 170 , 50 , 20 ); 
+  doc.rect (  240, 190 , 50 , 320 );
+
+  doc.rect (  290, 170 , 60 , 20 ); 
+  doc.rect (  290, 190 , 60 , 320 );
+
+  doc.rect (  350, 170 , 50 , 20 ); 
+  doc.rect (  350, 190 , 50 , 320);
+
+  doc.rect ( 290, 510 , 110 , 20 );
+
+  doc.setFontStyle("bold");
+  doc.text("Item", 60, 180);
+  doc.text("Descrição", 120, 180);
+  doc.text("Quantd", 245, 180);
+  doc.text("Preço Unit", 295, 180);
+  doc.text("Preç Tot", 355, 180);
+  doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
+  //  doc.text("FICHA DE PAGAMENTO", 165, 90);
+
+  doc.save(nome+ id +'.pdf'); 
+}
 
 
-  /*@ViewChild('content1') content1: ElementRef;
-  @ViewChild('content2') content2: ElementRef;
-  @ViewChild('content3') content3: ElementRef;
-  @ViewChild('content4') content4: ElementRef;
-  @ViewChild('content5') content5: ElementRef;
-  @ViewChild('content6') content6: ElementRef;*/
+}
+
+//DIALOG FATURAR MAIS DE UM DIAGNOSTICO AUX -----------------------------------------------------
+@Component({
+  selector: 'faturar-consulta-dialog',
+  templateUrl: 'faturar-diagnostico.html',
+  })
+  export class FaturarDialog {
+
+    clinica: Clinica;
+    nr_cotacao = 0;
+    nr_fatura = 0;
+
+    consulta: Consulta;
+    diagnosticos_aux: DiagnosticoAuxiliar[] = [];
+    dataSource: MatTableDataSource<DiagnosticoAuxiliar>;
+    displayedColumns = ['select', 'nome', 'preco'];
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+  
+    selection = new SelectionModel<DiagnosticoAuxiliar>(true, []);
+    
+    constructor(  public dialogRef: MatDialogRef<FaturarDialog>, public configServices: ConfiguracoesService,
+    @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
+    public pacienteService: PacienteService,  public snackBar: MatSnackBar) {
+      
+      setTimeout(() => {
+        this.consulta = data.consulta;
+  
+        //Adicionar diagnosticos nao faturados ao array de diagnosticos
+        this.consulta.diagnosticos_aux.forEach(element => {
+          if(element.faturado != true){
+            console.log(element.nome);
+            this.diagnosticos_aux.push(element);  
+          }
+        });
+  
+        this.clinica = this.data.clinica;
+        this.nr_cotacao = this.data.nr_cotacao;
+        this.nr_fatura = this.data.nr_fatura;
+
+        this.dataSource = new MatTableDataSource(this.diagnosticos_aux);
+        setTimeout(() => this.dataSource.paginator = this.paginator);
+      })
+
+    }
+  
+    onNoClick(): void {
+      this.dialogRef.close();
+    }
+  
+    openSnackBar(mensagem) {
+      this.snackBar.open(mensagem, null,{
+        duration: 2000
+      })
+    }
+
+    getMes(number): String{
+      console.log("Get mes "+number)
+      switch(number) { 
+        case 1: { 
+           return "Janeiro";
+        } 
+        case 2: { 
+           return "Fevereiro"; 
+        } 
+        case 3: { 
+           return "Marco"; 
+        }
+        case 4: { 
+          return "Abril"; 
+        }
+        case 5: { 
+          return "Maio"; 
+        }
+        case 6: { 
+          return "Junho"; 
+        }
+        case 7: { 
+          return "Julho"; 
+        }
+        case 8: { 
+          return "Agosto"; 
+        }  
+        case 9: { 
+          return "Setembro"; 
+        }
+        case 10: { 
+          return "Outubro"; 
+        }
+        case 11: { 
+          return "Novembro"; 
+        }
+        case 12: { 
+          return "Dezembro"; 
+        }
+        default: { 
+           //statements; 
+           break; 
+        } 
+     } 
+    }
+
+    faturar(){ 
+      let diagnostico_aux2: DiagnosticoAuxiliar[] = [];//Usado para juntar a lista de diagnosticos a serem faturados para sairem no pdf
+
+      let faturacao = new Faturacao();
+      //faturacao.categoria = this.consulta.tipo;
+      
+      faturacao.categoria = "DIAGNOSTICO_AUX";
+      faturacao.valor = 0;
+      faturacao.data = new Date();
+      faturacao.consulta = this.consulta;
+      //faturacao.diagnostico_aux = consulta.diagnosticos_aux;
+      //this.faturacao.diagnostico_aux = this.consultas.
+      faturacao.faturador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+
+      faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
+      faturacao.ano = new Date().getFullYear();
+
+      /*if(this.consulta.tipo == "Consulta Medica"){
+        this.consulta.status = "Em andamento";
+      }else{
+        this.consulta.status = "Encerrada";
+      }*/
+
+      //Verificar diagnosticos selecionados na tabela
+      this.dataSource.data.forEach(row => {
+        //console.log(row.nome+" selecionado ? "+  this.selection.isSelected(row))
+
+        //Atualizar os diagnosticos selecionados para faturados
+        if(this.selection.isSelected(row)){
+
+          this.consulta.diagnosticos_aux.forEach(element => {
+            if(row == element){
+              element.faturado = true;
+              faturacao.valor = +faturacao.valor + +element.preco;
+              diagnostico_aux2.push(element);
+            }
+          });
+
+        } 
+      });
+
+      
+
+      
+      //Se todos os itens tiverem sido faturados a consulta:
+      // encerra se for do tipo Diagnostico
+      // ou fica em andamento se for do tipo medica
+      console.log("is all selected "+this.isAllSelected())
+      if(this.isAllSelected()){
+        if(this.consulta.tipo == "Consulta Medica"){
+          this.consulta.status = "Em andamento";
+        }else{
+          this.consulta.status = "Encerrada";
+        }
+      }else{
+        //se nao forem faturados todos os diagnosticos entao o status da consulta nao muda
+        console.log("NAO ALTEROU O STATUS DA CONSULTA")
+        this.consulta.status = "Diagnostico";
+      }
+
+      //Guardar as informacoes na base de dados
+      //faturacao
+      let data = Object.assign({},faturacao);
+      let d = Object.assign({}, this.consulta); 
+
+      this.pacienteService.faturar(data)
+      .then( res => {
+        this.downloadPDF(diagnostico_aux2, this.consulta.paciente, 'Fatura');
+        this.pacienteService.updateConsulta(d)
+        .then(r => {
+          this.dialogRef.close();
+          this.openSnackBar("Faturado com sucesso");
+        })
+        .catch(er => {
+          console.log("ERRO: " + er.message)
+        })
+        
+      }, err=>{
+        console.log("ERRO: " + err.message)
+      })
+      
+      
+    }//FIM DO METODO FATURAR
+
+
+
+    /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => {
+          this.selection.select(row)
+        });
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: DiagnosticoAuxiliar): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id}`;
+  }
+
+  openSnackBarr(mensagem) {
+    this.snackBar.open(mensagem, null,{
+      duration: 2000
+    })
+  }
+
+
+
+  //GERAR PDFS
   public downloadPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, categoria){// criacao do pdf
 
     let nome = "";
@@ -452,209 +823,5 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
 
   doc.save(nome+ id +'.pdf'); 
 }
-
-
-}
-
-
-
-//DIALOG FATURAR MAIS DE UM DIAGNOSTICO AUX -----------------------------------------------------
-@Component({
-  selector: 'faturar-consulta-dialog',
-  templateUrl: 'faturar-diagnostico.html',
-  })
-  export class FaturarDialog {
-
-    consulta: Consulta;
-    diagnosticos_aux: DiagnosticoAuxiliar[] = [];
-    dataSource: MatTableDataSource<DiagnosticoAuxiliar>;
-    displayedColumns = ['select', 'nome', 'preco'];
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-  
-    selection = new SelectionModel<DiagnosticoAuxiliar>(true, []);
-    
-    constructor(  public dialogRef: MatDialogRef<FaturarDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
-    public pacienteService: PacienteService,  public snackBar: MatSnackBar) {
-      
-      setTimeout(() => {
-        this.consulta = data.consulta;
-        console.log("consulta "+this.consulta.marcador);
-  
-        //Adicionar diagnosticos nao faturados ao array de diagnosticos
-        this.consulta.diagnosticos_aux.forEach(element => {
-          if(element.faturado != true){
-            console.log(element.nome);
-            this.diagnosticos_aux.push(element);  
-          }
-        });
-  
-        this.dataSource = new MatTableDataSource(this.diagnosticos_aux);
-        setTimeout(() => this.dataSource.paginator = this.paginator);
-      })
-
-    }
-  
-    onNoClick(): void {
-      this.dialogRef.close();
-    }
-  
-    openSnackBar(mensagem) {
-      this.snackBar.open(mensagem, null,{
-        duration: 2000
-      })
-    }
-
-    getMes(number): String{
-      console.log("Get mes "+number)
-      switch(number) { 
-        case 1: { 
-           return "Janeiro";
-        } 
-        case 2: { 
-           return "Fevereiro"; 
-        } 
-        case 3: { 
-           return "Marco"; 
-        }
-        case 4: { 
-          return "Abril"; 
-        }
-        case 5: { 
-          return "Maio"; 
-        }
-        case 6: { 
-          return "Junho"; 
-        }
-        case 7: { 
-          return "Julho"; 
-        }
-        case 8: { 
-          return "Agosto"; 
-        }  
-        case 9: { 
-          return "Setembro"; 
-        }
-        case 10: { 
-          return "Outubro"; 
-        }
-        case 11: { 
-          return "Novembro"; 
-        }
-        case 12: { 
-          return "Dezembro"; 
-        }
-        default: { 
-           //statements; 
-           break; 
-        } 
-     } 
-    }
-
-    faturar(){ 
-      let faturacao = new Faturacao();
-      //faturacao.categoria = this.consulta.tipo;
-      
-      faturacao.categoria = "DIAGNOSTICO_AUX";
-      faturacao.valor = 0;
-      faturacao.data = new Date();
-      faturacao.consulta = this.consulta;
-      //faturacao.diagnostico_aux = consulta.diagnosticos_aux;
-      //this.faturacao.diagnostico_aux = this.consultas.
-      faturacao.faturador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
-
-      faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
-      faturacao.ano = new Date().getFullYear();
-
-      /*if(this.consulta.tipo == "Consulta Medica"){
-        this.consulta.status = "Em andamento";
-      }else{
-        this.consulta.status = "Encerrada";
-      }*/
-
-      //Verificar diagnosticos selecionados na tabela
-      this.dataSource.data.forEach(row => {
-        //console.log(row.nome+" selecionado ? "+  this.selection.isSelected(row))
-
-        //Atualizar os diagnosticos selecionados para faturados
-        if(this.selection.isSelected(row)){
-
-          this.consulta.diagnosticos_aux.forEach(element => {
-            if(row == element){
-              element.faturado = true;
-              faturacao.valor = +faturacao.valor + +element.preco;
-            }
-          });
-
-        } 
-      });
-
-      
-
-      //Se todos os itens tiverem sido faturados a consulta:
-      // encerra se for do tipo Diagnostico
-      // ou fica em andamento se for do tipo medica
-      console.log("is all selected "+this.isAllSelected())
-      if(this.isAllSelected()){
-        if(this.consulta.tipo == "Consulta Medica"){
-          this.consulta.status = "Em andamento";
-        }else{
-          this.consulta.status = "Encerrada";
-        }
-      }else{
-        //se nao forem faturados todos os diagnosticos entao o status da consulta nao muda
-        console.log("NAO ALTEROU O STATUS DA CONSULTA")
-        this.consulta.status = "Diagnostico";
-      }
-
-      //Guardar as informacoes na base de dados
-      //faturacao
-      let data = Object.assign({},faturacao);
-      let d = Object.assign({}, this.consulta); 
-
-      this.pacienteService.faturar(data)
-      .then( res => {
-        //this.downloadPDF(this.consulta.diagnosticos_aux, this.consulta.paciente, 'Fatura');
-        this.pacienteService.updateConsulta(d)
-        .then(r => {
-          this.dialogRef.close();
-          this.openSnackBar("Faturado com sucesso");
-        })
-        .catch(er => {
-          console.log("ERRO: " + er.message)
-        })
-        
-      }, err=>{
-        console.log("ERRO: " + err.message)
-      })
-      
-      
-    }//FIM DO METODO FATURAR
-
-
-
-    /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => {
-          this.selection.select(row)
-        });
-  }
-
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: DiagnosticoAuxiliar): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id}`;
-  }
   
   }

@@ -25,6 +25,8 @@ import { EstoqueService } from '../../services/estoque.service';
 import { Medicamento } from '../../classes/medicamento';
 import { CustomValidators } from 'ng2-validation';
 import { MovimentoEstoque } from '../../classes/movimento_estoque';
+import { NrCotacao } from '../../classes/nr_cotacao';
+import { NrFatura } from '../../classes/nr_fatura';
 //import { MatProgressButtonOptions } from 'mat-progress-buttons';
 
 
@@ -34,6 +36,11 @@ import { MovimentoEstoque } from '../../classes/movimento_estoque';
   styleUrls: ['./listagem.component.scss']
 })
 export class ListagemComponent implements OnInit {
+
+  nrscotacao: NrCotacao[]; //PDF
+  nr_cotacao = 0; //PDF
+  nrsfaturcao: NrFatura[]; //PDF
+  nr_fatura = 0; //PDF
 
   // trigger-variable for Ladda
   isLoading: boolean = false;
@@ -99,6 +106,42 @@ export class ListagemComponent implements OnInit {
  }
 
   ngOnInit() {
+    //PDF
+    this.configServices.getNrsCotacao().snapshotChanges().subscribe(data => {
+      this.nrscotacao = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as NrCotacao;
+      });
+
+      if(typeof this.nrscotacao !== 'undefined' && this.nrscotacao.length > 0){
+        this.nr_cotacao = Math.max.apply(Math, this.nrscotacao.map(function(o) { return o.id; }));
+        this.nr_cotacao = this.nr_cotacao+1;
+      }else{
+        this.nr_cotacao =  +(new Date().getFullYear()+'000001');
+      }
+      return this.nr_cotacao;
+    })
+
+    //PDF
+    this.configServices.getNrsFatura().snapshotChanges().subscribe(data => {
+      this.nrsfaturcao = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as NrFatura;
+      });
+
+      if(typeof this.nrsfaturcao !== 'undefined' && this.nrsfaturcao.length > 0){
+        this.nr_fatura = Math.max.apply(Math, this.nrsfaturcao.map(function(o) { return o.id; }));
+        this.nr_fatura = this.nr_fatura+1;
+      }else{
+        this.nr_fatura =  +(new Date().getFullYear()+'000001');
+      }
+      return this.nr_fatura;
+    })
+
     this.pacienteService.getPacientes().snapshotChanges().subscribe(data => {
       this.pacientes = data.map(e => {
         return {
@@ -311,13 +354,19 @@ export class ListagemComponent implements OnInit {
   }
 
   openMedicamento(row: Paciente){
-    let dialogRef = this.dialog.open(MedicamentosDialog, {
-      width: '800px',
-      data: { paciente: row, depositos: this.depositos }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      //console.log("result "+result);
-    });
+    console.log("nr fatura: "+this.nr_fatura);
+    if(this.nr_cotacao > 0 && this.nr_fatura >0){
+      let dialogRef = this.dialog.open(MedicamentosDialog, {
+        width: '800px',
+        data: { paciente: row, depositos: this.depositos, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        //console.log("result "+result);
+      });
+    }else{
+      this.openSnackBar("Processando nr de cotacao/fatura. Tente novamente.");
+    }
+    
   }
 
   applyFilter(filterValue: string) {
@@ -334,6 +383,10 @@ export class ListagemComponent implements OnInit {
   templateUrl: 'medicamentos.component.html',
 })
 export class MedicamentosDialog {
+
+  clinica: Clinica; //PDF
+  nr_cotacao = 0; //PDF
+  nr_fatura = 0; //PDF
 
   desabilitar: boolean = false;
   texto: string = "Faturar"
@@ -358,8 +411,9 @@ export class MedicamentosDialog {
   consulta?: Consulta;
 
   constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<MedicamentosDialog>, private router: Router,
-  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public estoqueService: EstoqueService,
-  public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
+  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public estoqueService: EstoqueService, 
+  public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder,
+  public configServices: ConfiguracoesService) {
     
     this.deposito = new Deposito();
     this.medicamento = new Medicamento();
@@ -375,6 +429,11 @@ export class MedicamentosDialog {
     this.medicamentoFormGroup.controls['qtd_disponivel'].disable();
     this.medicamentoFormGroup.controls['preco'].disable();
     this.medicamentoFormGroup.controls['preco_venda_total'].disable();
+
+    this.clinica = this.data.clinica; //PDF
+    this.nr_cotacao = this.data.nr_cotacao; //PDF
+    this.nr_fatura = this.data.nr_fatura; //PDF
+    console.log("dialog nr fatura: "+this.nr_fatura);
   }
 
   getMedicamentos(deposito: Deposito){
@@ -536,6 +595,7 @@ export class MedicamentosDialog {
             mvt.tipo_movimento = "Saida por venda";
   
             let d = Object.assign({}, mvt); 
+            
   
             //2. Salvar esse movimento do item no deposito para vermos posicao de estoque por deposito
             this.estoqueService.addMedicamentoDeposito(d)
@@ -556,6 +616,7 @@ export class MedicamentosDialog {
             })
   
           });
+          this.gerarPDF(this.movimentos , paciente, 'Faturacao', d.id);
           this.dialogRef.close();
           this.openSnackBar("Faturado com sucesso");
           
@@ -628,6 +689,146 @@ export class MedicamentosDialog {
          break; 
       } 
    } 
+  }
+
+    //GERAR PDFS
+    public downloadPDF(movimentos :MovimentoEstoque[], paciente: Paciente, categoria){// criacao do pdf
+
+      let nome = "";
+      if(categoria == 'Cotacao'){
+        nome = "COT";
+      }else{
+        nome = "FAT";
+      }
+  
+      if(this.clinica.endereco){
+        if(this.nr_cotacao > 0 && this.nr_fatura >0){
+          
+        
+          if(categoria == 'Cotacao'){
+            let nr_cotacao = new NrCotacao();
+            nr_cotacao.id = this.nr_cotacao+"";
+            let d = Object.assign({}, nr_cotacao); 
+  
+            this.configServices.addNrCotacao(d)
+            .then(r =>{
+      
+              this.gerarPDF(movimentos , paciente, nome, d.id);
+              
+            }, err=>{
+              this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+            })
+          }else{
+            let nr_fatura = new NrFatura();
+            nr_fatura.id = this.nr_fatura+"";
+            let d = Object.assign({}, nr_fatura); 
+  
+            this.configServices.addNrFatura(d)
+            .then(r =>{
+      
+              this.gerarPDF(movimentos , paciente, nome, d.id);
+              
+            }, err=>{
+              this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+            })
+          }
+          
+  
+        }else{
+          this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+        }
+      
+      }else{
+        this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+      }
+       
+  }//Fim download pdf
+  
+  
+  gerarPDF(movimentos :MovimentoEstoque[], paciente: Paciente, nome, id){
+    let doc = new jsPDF({
+      orientation: 'p',
+      unit: 'px',
+      format: 'a4',
+      putOnlyUsedFonts:true,
+    });
+  
+    let specialElementHandlers ={
+      '#editor': function(element,renderer){return true;} 
+    }
+    let dia = new Date().getDate();
+    let mes = +(new Date().getMonth()) + +1;
+    let ano = new Date().getFullYear();
+   let dataemisao = dia +"/"+mes+"/"+ano;  
+  
+    var img = new Image();
+    img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+    doc.addImage(img,"PNG", 300, 40,90, 90);
+  
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontSize(12);
+    let item = 1;
+    let preco_total = 0;
+    let linha = 200;                      
+    movimentos.forEach(element => {
+      doc.text(item+"", 55, linha) //item
+      doc.text(element.quantidade+"", 257, linha) //quantidade
+      doc.text(element.medicamento.nome_comercial+"" , 95, linha) //descricao
+      doc.text(element.medicamento.preco_venda+"", 294, linha)
+      doc.text(element.medicamento.preco_venda*element.quantidade+"", 354, linha)
+  
+      preco_total = +preco_total + +(element.medicamento.preco_venda*element.quantidade);
+      item = +item + +1;
+      linha = +linha + +20;
+    });     
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontSize(10);
+  
+    doc.text("Processado pelo computador", 170, 580);
+    // doc.text("CENTRO MEDICO VITALLE", 165, 75);
+    doc.text(this.clinica.endereco, 50, 75);
+    doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
+    doc.text("Email: "+this.clinica.email, 50, 95);
+    doc.text("Cell: "+this.clinica.telefone, 50, 105);
+    
+    doc.text("Nome do Paciente:", 50, 125);
+    doc.text(paciente.nome, 128, 125);
+    doc.text("NID:", 250, 125);
+    doc.text(paciente.nid+"", 268, 125);
+    doc.text("Apelido:", 50, 145);
+    doc.text(paciente.apelido, 89, 145);
+    doc.text("Data de emissão: ", 250, 145);
+    doc.text(dataemisao, 322, 145);
+    doc.setFillColor(50,50,50);
+    doc.rect ( 50, 170 , 40 , 20 ); 
+    doc.rect (  50, 190 , 40 , 320 ); 
+  
+    doc.rect (  90, 170 , 150 , 20 ); 
+    doc.rect (  90, 190 , 150 , 320 );
+  
+    doc.rect (  240, 170 , 50 , 20 ); 
+    doc.rect (  240, 190 , 50 , 320 );
+  
+    doc.rect (  290, 170 , 60 , 20 ); 
+    doc.rect (  290, 190 , 60 , 320 );
+  
+    doc.rect (  350, 170 , 50 , 20 ); 
+    doc.rect (  350, 190 , 50 , 320);
+  
+    doc.rect ( 290, 510 , 110 , 20 );
+  
+    doc.setFontStyle("bold");
+    doc.text("Item", 60, 180);
+    doc.text("Descrição", 120, 180);
+    doc.text("Quantd", 245, 180);
+    doc.text("Preço Unit", 295, 180);
+    doc.text("Preç Tot", 355, 180);
+    doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
+    //  doc.text("FICHA DE PAGAMENTO", 165, 90);
+  
+    doc.save(nome+ id +'.pdf'); 
   }
 
 }
