@@ -33,7 +33,6 @@ import { CustomValidators } from 'ng2-validation';
   styleUrls: ['./listagem.component.scss']
 })
 export class ListagemComponent implements OnInit {
-<<<<<<< HEAD
 
   // trigger-variable for Ladda
   isLoading: boolean = false;
@@ -42,10 +41,6 @@ export class ListagemComponent implements OnInit {
       this.isLoading = !this.isLoading;
   }
 
-=======
-  datanascimento: Date;
-  data_nascimento: Date;
->>>>>>> 223fa78fdf54eecb70181b2ff3c951ed704adfc0
   pacientes: Paciente[];
   dataSourse: MatTableDataSource<Paciente>;
   displayedColumns = ['nid','apelido', 'nome', 'sexo', 'documento_identificacao', 'referencia_telefone', 'detalhe','editar', 'consulta'];
@@ -68,9 +63,7 @@ export class ListagemComponent implements OnInit {
   subtipos_diagnosticos: SubTipoDiagnosticoAux[];
   subtipos_diagnosticos_aux: SubTipoDiagnosticoAux[];
 
-<<<<<<< HEAD
   depositos: Deposito[];
-=======
   sexos = [
     {value: 'Feminino', viewValue: 'Feminino'},
     {value: 'Masculino', viewValue: 'Masculino'}
@@ -96,8 +89,7 @@ export class ListagemComponent implements OnInit {
     {value: 'Niassa', viewValue: 'Niassa'},
     {value: 'Zambezia', viewValue: 'Zambezia'}
   ]
->>>>>>> 223fa78fdf54eecb70181b2ff3c951ed704adfc0
-
+  data_nascimento:Date;
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
     private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router, public estoqueService: EstoqueService){ 
     this.consulta = new Consulta();
@@ -1255,7 +1247,7 @@ export class MedicamentosDialog {
       public pacienteService: PacienteService,  public snackBar: MatSnackBar, public configServices:ConfiguracoesService) {}
       pacientes: Paciente[];
 
-      
+
       GuardarDados(paciente){
         let data = Object.assign({}, paciente)
         this.pacienteService.updatePaciente(data) 

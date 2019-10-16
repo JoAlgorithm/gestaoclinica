@@ -20,7 +20,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../environments/environment';
 
-import { LaddaModule } from 'angular2-ladda';
+//import { LaddaModule } from 'angular2-ladda';
 
 //import { OverlayModule } from "@angular/cdk/overlay";
 
@@ -69,7 +69,7 @@ import * as FusionCharts from 'fusioncharts';
 
 // Load FusionCharts Individual Charts
 import * as Charts from 'fusioncharts/fusioncharts.charts';
-import { MatProgressButtonsModule } from 'mat-progress-buttons';
+//import { MatProgressButtonsModule } from 'mat-progress-buttons';
 //import { UnComponent } from './estoque/un/un.component';
 
 // Use fcRoot function to inject FusionCharts library, and the modules you want to use
@@ -139,12 +139,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AgmCoreModule.forRoot({apiKey: 'AIzaSyB3HQ_Gk_XRt6KitPdiHQNGpVn0NDwQGMI'}),
     PerfectScrollbarModule,
     FusionChartsModule, // Include in imports
-    LaddaModule.forRoot({
+   /* LaddaModule.forRoot({
       style: "zoom-out",
       spinnerSize: 40,
       spinnerColor: "red",
       spinnerLines: 4
-  })
+  })*/
   ],
   providers: [
     {

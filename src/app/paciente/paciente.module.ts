@@ -4,11 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
-<<<<<<< HEAD
 import {  DialogDetalhes, MedicamentosDialog } from './listagem/listagem.component';
-=======
-import {  DialogDetalhes,DialogEditar } from './listagem/listagem.component';
->>>>>>> 223fa78fdf54eecb70181b2ff3c951ed704adfc0
+import {  DialogEditar } from './listagem/listagem.component';
 import {CdkTableModule} from '@angular/cdk/table';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {A11yModule} from '@angular/cdk/a11y';
@@ -68,9 +65,9 @@ import { PacienteService } from '../services/paciente.service';
 import { ListagemComponent, DiagnosticosDialog, CondutasDialog, ConsultasDialog } from './listagem/listagem.component';
 import { ConfiguracoesService } from '../services/configuracoes.service';
 import { PendentesComponent, FaturarDialog } from './pendentes/pendentes.component';
-import { MatProgressButtonsModule } from 'mat-progress-buttons';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { LaddaModule } from 'angular2-ladda';
+//import { MatProgressButtonsModule } from 'mat-progress-buttons';
+//import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+//import { LaddaModule } from 'angular2-ladda';
 import { EstoqueService } from '../services/estoque.service';
 
 @NgModule({
@@ -128,7 +125,7 @@ import { EstoqueService } from '../services/estoque.service';
     PortalModule,
     //MatProgressButtonsModule,
     //FontAwesomeModule
-    LaddaModule
+    //LaddaModule
     /*LaddaModule.forRoot({
       style: "zoom-out",
       spinnerSize: 40,
@@ -152,11 +149,8 @@ import { EstoqueService } from '../services/estoque.service';
     CondutasDialog,
     ConsultasDialog,
     DialogDetalhes,
-<<<<<<< HEAD
-    MedicamentosDialog
-=======
+    MedicamentosDialog,
     DialogEditar
->>>>>>> 223fa78fdf54eecb70181b2ff3c951ed704adfc0
   ],
   entryComponents: [
     DiagnosticosDialog,
@@ -164,11 +158,8 @@ import { EstoqueService } from '../services/estoque.service';
     CondutasDialog,
     ConsultasDialog,
     DialogDetalhes,
-<<<<<<< HEAD
-    MedicamentosDialog
-=======
+    MedicamentosDialog,
     DialogEditar
->>>>>>> 223fa78fdf54eecb70181b2ff3c951ed704adfc0
   ],
 })
 
