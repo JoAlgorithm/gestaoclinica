@@ -7,6 +7,8 @@ import { User } from '../classes/user';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { CategoriaConsulta } from '../classes/categoria_consulta';
 import { CondutaClinica } from '../classes/conduta_clinica';
+import { NrCotacao } from '../classes/nr_cotacao';
+import { NrFatura } from '../classes/nr_fatura';
 
 @Injectable()
 export class ConfiguracoesService {
@@ -24,7 +26,9 @@ export class ConfiguracoesService {
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/diagnosticos').add(diagnostico);
     return this.db.list('clinicas/'+this.authService.get_clinica_id + '/diagnosticos').push(diagnostico);
   }
-
+  updateDiagnostico(diagnostico: DiagnosticoAuxiliar){
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/diagnosticos').update(diagnostico.id+"", diagnostico);
+  }
   //Retorna a lista de CATEGORIAS DE CONSULTAs
   getCategoriasConsulta() {
     return this.db.list('clinicas/'+this.authService.get_clinica_id + '/categoriasconsulta');
@@ -88,6 +92,61 @@ export class ConfiguracoesService {
   getSubTiposDiagnosticos() {
     return this.db.list('clinicas/'+this.authService.get_clinica_id + '/subtiposdiagnosticoaux');
   }
+
+  //Cadastra NRCOTACAO
+  addNrCotacao(nr: NrCotacao){
+    return this.db.list('clinicas/'+this.authService.get_clinica_id +'/nrscotacoes').update(nr.id, nr);
+  }
+
+  //Retorna NRCOTACAO
+  getNrsCotacao() {
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/nrscotacoes');
+  }
+
+  //Cadastra NRFATURA
+  addNrFatura(nr: NrFatura){
+    return this.db.list('clinicas/'+this.authService.get_clinica_id +'/nrsfaturas').update(nr.id, nr);
+  }
+
+  //Retorna NRCOTACAO
+  getNrsFatura() {
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/nrsfaturas');
+  }
+  
+
+  //Com base nos nrs de cotacao existentes na base de dados essa funcao gera o proximo nr de cotacao
+  /*nrscotacao: NrCotacao[];
+  id = 0;
+  gerarNrCotacao(){
+    this.getNrsCotacao().snapshotChanges().subscribe(data => {
+      this.nrscotacao = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as NrCotacao;
+      });
+
+      if(typeof this.nrscotacao !== 'undefined' && this.nrscotacao.length > 0){
+        this.id = Math.max.apply(Math, this.nrscotacao.map(function(o) { return o.id; }));
+        this.id = this.id+1;
+        console.log("id: "+this.id)
+      }else{
+        this.id =  +(new Date().getFullYear()+'000001');
+        console.log("id: "+this.id)
+      }
+      return this.id;
+    })
+  }*/
+
+  /*
+  if(typeof this.pacientes !== 'undefined' && this.pacientes.length > 0){
+        this.paciente.nid = Math.max.apply(Math, this.pacientes.map(function(o) { return o.nid; }));
+        this.paciente.nid = this.paciente.nid+1;
+      }else{
+        this.paciente.nid =  +(new Date().getFullYear()+'001');
+      }
+  */
+
 
   /*tipos_diagnosticos = [
     {value: 'HEMATOLOGIA'},

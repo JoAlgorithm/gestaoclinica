@@ -4,8 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
-import {  DialogDetalhes, MedicamentosDialog } from './listagem/listagem.component';
-import {  DialogEditar } from './listagem/listagem.component';
+import {  DialogDetalhes, MedicamentosDialog,DialogEditar } from './listagem/listagem.component';
+
 import {CdkTableModule} from '@angular/cdk/table';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {A11yModule} from '@angular/cdk/a11y';
@@ -151,6 +151,7 @@ import { EstoqueService } from '../services/estoque.service';
     DialogDetalhes,
     MedicamentosDialog,
     DialogEditar
+  
   ],
   entryComponents: [
     DiagnosticosDialog,

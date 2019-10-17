@@ -76,6 +76,8 @@ export class ConfiguracoesComponent implements OnInit {
   categoria_consulta: CategoriaConsulta;
   categorias_consulta: CategoriaConsulta[];
   categorias_consultaFormGroup: FormGroup;
+
+
   
   //ATRIBUTOS DA TABELA
   dataSourseCategoriaC: MatTableDataSource<CategoriaConsulta>;
@@ -122,8 +124,11 @@ export class ConfiguracoesComponent implements OnInit {
         } as DiagnosticoAuxiliar;
       });
       this.dataSourseDiagnostico=new MatTableDataSource(this.diagnosticos.sort((a, b) => a.nome > b.nome ? 1 : -1));
-      this.dataSourseDiagnostico.paginator = this.paginatorDiagnostico;
+      setTimeout(()=> this.dataSourseDiagnostico.paginator = this.paginatorDiagnostico);
+     
+     
     })
+ 
 
     this.configServices.getTiposDiagnosticos().snapshotChanges().subscribe(data => {
       this.tipos_diagnosticos = data.map(e => {
@@ -254,8 +259,19 @@ export class ConfiguracoesComponent implements OnInit {
     
 
     let data = Object.assign({}, this.diagnostico);
-
+    if(data.id){ 
+      //Ja tem ID ja Conduta entao deve atualizar
+      this.configServices.updateDiagnostico(data)
+      .then( res => {
+        this.diagnostico= new DiagnosticoAuxiliar();
+        this.cadastro_diagnosticoFormGroup.reset;
+        this.openSnackBar("Diagnostico atualizado com sucesso");
+      }, err=>{
+        this.openSnackBar("Ocorreu um erro ao atualizar. Contacte o admnistrador do sistema");
+      })
+    }else{
     this.configServices.createDiagnostico(data)
+    
     .then( res => {
       this.diagnostico = new DiagnosticoAuxiliar();
       this.cadastro_diagnosticoFormGroup.reset;
@@ -263,7 +279,7 @@ export class ConfiguracoesComponent implements OnInit {
     }, err=>{
       this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
     })
-  }
+  }}
 
   registarCategoriaConsulta(){
     let data = Object.assign({}, this.categoria_consulta);
@@ -274,7 +290,18 @@ export class ConfiguracoesComponent implements OnInit {
       console.log("key "+key)
       this.categorias_consultaFormGroup.get(key).setErrors(null) ;
     });*/
-    
+
+    if(data.id){ 
+      //Ja tem ID ja Conduta entao deve atualizar
+      this.configServices.updateClinica(data)
+      .then( res => {
+        this.categoria_consulta = new CategoriaConsulta();
+        this.categorias_consultaFormGroup.reset;
+        this.openSnackBar("Consulta medica Atualizada com sucesso");
+      }, err=>{
+        this.openSnackBar("Ocorreu um erro ao atualizar. Contacte o admnistrador do sistema");
+      })
+    }else{
 
     this.configServices.createCategoriaConsulta(data)
     .then( res => {
@@ -285,7 +312,7 @@ export class ConfiguracoesComponent implements OnInit {
     }, err=>{
       this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
     })
-  }
+  }}
 
   registarCondutaClinica(){
     let data = Object.assign({}, this.conduta_clinica);
@@ -296,9 +323,9 @@ export class ConfiguracoesComponent implements OnInit {
       .then( res => {
         this.conduta_clinica = new CondutaClinica();
         this.condutas_clinicaFormGroup.reset;
-        this.openSnackBar("Conduta clinica cadastrada com sucesso");
+        this.openSnackBar("Conduta clinica Atualizada com sucesso");
       }, err=>{
-        this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+        this.openSnackBar("Ocorreu um erro ao atualizar. Contacte o admnistrador do sistema");
       })
     }else{
       //Conduta nova deve salvar
@@ -306,9 +333,9 @@ export class ConfiguracoesComponent implements OnInit {
       .then( res => {
         this.conduta_clinica = new CondutaClinica();
         this.condutas_clinicaFormGroup.reset;
-        this.openSnackBar("Conduta clinica atualizada com sucesso");
+        this.openSnackBar("Conduta clinica cadastrada com sucesso");
       }, err=>{
-        this.openSnackBar("Ocorreu um erro ao atualizar. Contacte o admnistrador do sistema");
+        this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
       })
     }
 
@@ -317,6 +344,15 @@ export class ConfiguracoesComponent implements OnInit {
 
   editarConduta(conduta: CondutaClinica){
     this.conduta_clinica = conduta;
+  }
+
+  
+  editarConsulta(consulta: CategoriaConsulta){
+    this.categoria_consulta = consulta;
+  }
+
+  editarDiagnostico(diagnostico: DiagnosticoAuxiliar){
+    this.diagnostico = diagnostico;
   }
 
   atualizarClinica(){

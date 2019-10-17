@@ -2,6 +2,7 @@ import { Consulta } from "./consulta";
 import { DiagnosticoAuxiliar } from "./diagnostico_aux";
 import { CondutaClinica } from "./conduta_clinica";
 import { Medicamento } from "./medicamento";
+import { MovimentoEstoque } from "./movimento_estoque";
 
 export class Faturacao { 
 
@@ -25,7 +26,8 @@ export class Faturacao {
     consulta?: Consulta;
     diagnostico_aux?: DiagnosticoAuxiliar[];
     condutas_clinicas?: CondutaClinica[];
-    medicamentos?: Medicamento[];
+    //medicamentos?: Medicamento[];
+    movimentosestoque?: MovimentoEstoque[];//Dentro de movimento tem medicamentos, deposito e qtd
 
     faturador?:String; //User que faturou
 }

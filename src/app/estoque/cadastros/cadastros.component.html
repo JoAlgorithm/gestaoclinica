@@ -50,7 +50,7 @@
               <input matInput placeholder="Composicao" formControlName="m_nome_composicao" [(ngModel)]="medicamento.composicao"> 
             </mat-form-field>
 
-            <button mat-icon-button (click)="registarMedicamento()" matTooltip="REGISTAR NOVO MEDICAMENTO">
+            <button mat-icon-button (click)="registarMedicamento()" matTooltip="REGISTAR NOVO MEDICAMENTO {{medicamento.nome_generico}}">
                 <mat-icon>add_circle</mat-icon>
             </button>
           </form>
@@ -100,7 +100,7 @@
         
             <ng-container matColumnDef="editar">
                 <mat-header-cell *matHeaderCellDef> Editar </mat-header-cell>
-                <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Editar">  
+                <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Editar" (click)="editarMedicamento(row)">  
                     <mat-icon>create</mat-icon>
                 </button></mat-cell>
             </ng-container>
@@ -133,7 +133,7 @@
                 <input matInput placeholder="Descricao" formControlName="deposito_descricao" [(ngModel)]="deposito.descricao"> 
             </mat-form-field>
 
-            <button mat-icon-button (click)="registarDeposito()" matTooltip="REGISTAR NOVO DEPOSITO">
+            <button mat-icon-button (click)="registarDeposito()" matTooltip="REGISTAR NOVO DEPOSITO {{deposito.nome}}">
                 <mat-icon>add_circle</mat-icon>
             </button>
           </form>
@@ -153,7 +153,7 @@
           
               <ng-container matColumnDef="editar">
                   <mat-header-cell *matHeaderCellDef> Editar </mat-header-cell>
-                  <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Editar">  
+                  <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Editar" (click)="editarDeposito(row)">  
                       <mat-icon>create</mat-icon>
                   </button></mat-cell>
               </ng-container>
@@ -182,7 +182,7 @@
                 <input matInput placeholder="Nome" formControlName="un_nome" [(ngModel)]="un.nome" required> 
             </mat-form-field>
 
-            <button mat-icon-button (click)="registarUN()" matTooltip="REGISTAR NOVA UN">
+            <button mat-icon-button (click)="registarUN()" matTooltip="REGISTAR NOVA UN {{un.nome}}">
                 <mat-icon>add_circle</mat-icon>
             </button>
           </form>
@@ -197,7 +197,7 @@
     
             <ng-container matColumnDef="editar">
                 <mat-header-cell *matHeaderCellDef> Editar </mat-header-cell>
-                <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Editar">  
+                <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Editar" (click)="editarUnidade(row)">  
                     <mat-icon>create</mat-icon>
                 </button></mat-cell>
             </ng-container>
