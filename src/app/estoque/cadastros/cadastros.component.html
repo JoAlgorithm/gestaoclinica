@@ -7,12 +7,19 @@
           <h5>FORMULARIO DE CADASTRO DE MEDICAMENTOS</h5>
           
           <form [formGroup]="medicamentoFormGroup">
+
             <!--CATEGORIA-->
             <mat-form-field style="width: 31%">
-              <mat-select placeholder="Forma farmaceutica" formControlName="m_categoria" [(ngModel)]="medicamento.categoria" required>
-                  <mat-option *ngFor="let cat of cats_medicamento" [value]="cat">
-                      {{cat.nome}}
+                
+            <mat-select placeholder="Forma farmaceutica" formControlName="m_categoria" [(ngModel)]="medicamento.categoria" required>
+                <mat-option>
+                    <ngx-mat-select-search  matInput (keyup)="applyFilter($event.target.value)" placeholderLabel="Pesquisar" ></ngx-mat-select-search>
                   </mat-option>
+              
+              <mat-option *ngFor="let cat of cats_medicamento " [value]="cat">
+                      {{cat.nome }}
+                  </mat-option>
+                 
               </mat-select>
             </mat-form-field>
 

@@ -19,6 +19,7 @@ import { AgmCoreModule } from '@agm/core';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../environments/environment';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 //import { LaddaModule } from 'angular2-ladda';
 
@@ -100,6 +101,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AccordionAnchorDirective,
     AccordionLinkDirective,
     AccordionDirective,
+    
    //UnComponent,
   ],
   imports: [
@@ -107,6 +109,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AngularFireModule.initializeApp(environment.firebaseConfig),
     //AngularFirestoreModule.enablePersistence(),
     AngularFireDatabaseModule,
+    NgxMatSelectSearchModule,
     
     //AngularFirestore,
     //MatProgressButtonsModule.forRoot(),

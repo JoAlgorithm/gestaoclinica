@@ -125,7 +125,9 @@
               <!--TIPO DE DIAGNOSTICO AUX-->
               <mat-form-field style="width: 23%">
                     <mat-select placeholder="Tipo" formControlName="diagnostico_tipo" [(ngModel)]="diagnostico.tipo" (selectionChange)="filtrarTipoDiagnostico(diagnostico.tipo)">
+                            
                         <mat-option *ngFor="let tipo of tipos_diagnosticos" [value]="tipo">
+                               
                             {{tipo.nome}}
                         </mat-option>
                     </mat-select>

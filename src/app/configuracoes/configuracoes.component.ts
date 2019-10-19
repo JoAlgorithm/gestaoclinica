@@ -355,6 +355,16 @@ export class ConfiguracoesComponent implements OnInit {
     this.diagnostico = diagnostico;
   }
 
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    //this.dataSourseDiagnostico.filter = filterValue;
+   this.tipos_diagnosticos.filter((unit) => unit.nome.indexOf(filterValue) > -1);
+  }
+
+
+
   atualizarClinica(){
     let data = Object.assign({}, this.clinica);
 
@@ -420,6 +430,8 @@ export class ConfiguracoesComponent implements OnInit {
     this.subtipos_diagnosticos = null;
     this.subtipos_diagnosticos = this.subtipos_diagnosticos_aux.filter(item => item.tipo.nome == tipo.nome);
   }
+  
+
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{

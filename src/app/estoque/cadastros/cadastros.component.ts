@@ -7,13 +7,16 @@ import { AuthService } from '../../services/auth.service';
 import { UnidadeMedida } from '../../classes/un';
 import { Medicamento } from '../../classes/medicamento';
 import { CategoriaMedicamento } from '../../classes/categoria_medicamento';
-
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-cadastros',
   templateUrl: './cadastros.component.html',
   styleUrls: ['./cadastros.component.scss']
 })
 export class CadastrosComponent implements OnInit {
+
+  
 
   /*
   * VARIAVEIS DA TAB MEDICAMENTOS
@@ -62,6 +65,7 @@ export class CadastrosComponent implements OnInit {
    }
 
   ngOnInit() {
+     
     //TAB MEDICAMENTOS
     this.medicamentoFormGroup = this._formBuilder.group({
       m_categoria: ['', Validators.required],
@@ -144,9 +148,14 @@ export class CadastrosComponent implements OnInit {
   editarUnidade(Unidade: UnidadeMedida){
     this.un= Unidade;
   }
-
-
-
+  
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSourseMedicamento.filter = filterValue;
+   this.cats_medicamento.filter((unit) => unit.nome.indexOf(filterValue) > -1)
+  }
+ 
   registarMedicamento(){
     if(this.medicamento.nome_generico || this.medicamento.categoria || this.medicamento.un || this.medicamento.preco_venda){
       
