@@ -152,8 +152,9 @@ export class CadastrosComponent implements OnInit {
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-    this.dataSourseMedicamento.filter = filterValue;
-   //this.cats_medicamento.filter((unit) => unit.nome.indexOf(filterValue) > -1)
+    //this.dataSourseMedicamento.filter = filterValue;
+   this.cats_medicamento.filter((unit) => unit.nome.indexOf(filterValue) > -1)
+   this.cats_medicamento.filter(v => v.nome == filterValue)
   }
  
   registarMedicamento(){
