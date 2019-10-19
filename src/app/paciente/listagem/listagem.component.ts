@@ -762,7 +762,7 @@ export class MedicamentosDialog {
   }//Fim download pdf
   
   
-  gerarPDF(movimentos :MovimentoEstoque[], paciente: Paciente, nome, id){
+  gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
     let doc = new jsPDF({
       orientation: 'p',
       unit: 'px',
@@ -785,20 +785,32 @@ export class MedicamentosDialog {
     doc.setFont("Courier");
     doc.setFontStyle("normal"); 
     doc.setFontSize(12);
+    doc.text(id+"", 225, 40);
     let item = 1;
     let preco_total = 0;
     let linha = 200;                      
-    movimentos.forEach(element => {
+    diagnosticos.forEach(element => {
       doc.text(item+"", 55, linha) //item
-      doc.text(element.quantidade+"", 257, linha) //quantidade
-      doc.text(element.medicamento.nome_comercial+"" , 95, linha) //descricao
-      doc.text(element.medicamento.preco_venda.toFixed(2).replace(".",",")+"", 294, linha)
-      doc.text((element.medicamento.preco_venda*element.quantidade).toFixed(2).replace(".",",")+"", 354, linha)
+      doc.text("1", 257, linha) //quantidade
+      doc.text(element.nome , 95, linha) //descricao
+      doc.text(element.preco, 294, linha)
+      doc.text(element.preco, 354, linha)
   
-      preco_total = +preco_total + +(element.medicamento.preco_venda*element.quantidade);
+      preco_total = +preco_total + +element.preco;
       item = +item + +1;
       linha = +linha + +20;
-    });     
+    });   
+    
+    
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontStyle("bold");
+    doc.setFontSize(15);
+  
+    doc.text(nome+":", 170, 40);  
+  
+  
+  
     doc.setFont("Courier");
     doc.setFontStyle("normal"); 
     doc.setFontSize(10);
@@ -843,6 +855,10 @@ export class MedicamentosDialog {
     doc.text("Preço Unit", 295, 180);
     doc.text("Preç Tot", 355, 180);
     doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
+  
+    doc.rect (  290, 170 , 60 , 20 ); 
+    doc.rect (  290, 190 , 60 , 320 );
+  
     //  doc.text("FICHA DE PAGAMENTO", 165, 90);
   
     doc.save(nome+ id +'.pdf'); 
