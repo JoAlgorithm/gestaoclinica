@@ -27,7 +27,9 @@ export class Faturacao {
     diagnostico_aux?: DiagnosticoAuxiliar[];
     condutas_clinicas?: CondutaClinica[];
     medicamentos?: Medicamento[];
-    movimentosestoque?: MovimentoEstoque[];
+    //movimentosestoque?: MovimentoEstoque[];
+    //medicamentos?: Medicamento[];
+    movimentosestoque?: MovimentoEstoque[];//Dentro de movimento tem medicamentos, deposito e qtd
 
     faturador?:String; //User que faturou
 }

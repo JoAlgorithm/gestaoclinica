@@ -64,9 +64,9 @@ import { PacienteService } from '../services/paciente.service';
 import { ListagemComponent, DiagnosticosDialog, CondutasDialog, ConsultasDialog } from './listagem/listagem.component';
 import { ConfiguracoesService } from '../services/configuracoes.service';
 import { PendentesComponent, FaturarDialog } from './pendentes/pendentes.component';
-import { MatProgressButtonsModule } from 'mat-progress-buttons';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { LaddaModule } from 'angular2-ladda';
+//import { MatProgressButtonsModule } from 'mat-progress-buttons';
+//import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+//import { LaddaModule } from 'angular2-ladda';
 import { EstoqueService } from '../services/estoque.service';
 
 @NgModule({
@@ -124,7 +124,7 @@ import { EstoqueService } from '../services/estoque.service';
     PortalModule,
     //MatProgressButtonsModule,
     //FontAwesomeModule
-    LaddaModule
+    //LaddaModule
     /*LaddaModule.forRoot({
       style: "zoom-out",
       spinnerSize: 40,

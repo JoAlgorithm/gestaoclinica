@@ -14,7 +14,7 @@ import {PlatformModule} from '@angular/cdk/platform';
 import {ObserversModule} from '@angular/cdk/observers';
 import {PortalModule} from '@angular/cdk/portal';
 import { NgxPaginationModule } from 'ngx-pagination';
-
+//import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import {
   MatAutocompleteModule,
   MatButtonModule,
@@ -46,7 +46,8 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
-  MatStepperModule
+  MatStepperModule,
+
 } from '@angular/material';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -118,6 +119,7 @@ import { AuthService } from '../services/auth.service';
     OverlayModule,
     PlatformModule,
     PortalModule,
+    //NgxMatSelectSearchModule
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},

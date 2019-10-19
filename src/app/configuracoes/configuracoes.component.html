@@ -72,7 +72,7 @@
                                 <input matInput placeholder="Preco" formControlName="cs_preco" [(ngModel)]="categoria_consulta.preco" required>
                             </mat-form-field>
                             
-                            <button mat-icon-button (click)="registarCategoriaConsulta()" matTooltip="REGISTAR CONSULTA MEDICA">
+                            <button mat-icon-button (click)="registarCategoriaConsulta()" matTooltip="REGISTAR CONSULTA MEDICA {{categoria_consulta.nome}}">
                                 <mat-icon>add_circle</mat-icon>
                             </button>
                     </form>
@@ -93,7 +93,7 @@
                     
                         <ng-container matColumnDef="editar">
                             <mat-header-cell *matHeaderCellDef> Editar </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Editar">  
+                            <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Editar" (click)="editarConsulta(row)">  
                                 <mat-icon>create</mat-icon>
                             </button></mat-cell>
                         </ng-container>
@@ -125,7 +125,9 @@
               <!--TIPO DE DIAGNOSTICO AUX-->
               <mat-form-field style="width: 23%">
                     <mat-select placeholder="Tipo" formControlName="diagnostico_tipo" [(ngModel)]="diagnostico.tipo" (selectionChange)="filtrarTipoDiagnostico(diagnostico.tipo)">
+                            
                         <mat-option *ngFor="let tipo of tipos_diagnosticos" [value]="tipo">
+                               
                             {{tipo.nome}}
                         </mat-option>
                     </mat-select>
@@ -150,7 +152,7 @@
                     <input matInput placeholder="Preco" formControlName="diagnostico_preco" [(ngModel)]="diagnostico.preco" required>
                 </mat-form-field>
                 
-                <button mat-icon-button (click)="registarDiagnostico()" matTooltip="REGISTAR NOVO DIAGNOSTICO">
+                <button mat-icon-button (click)="registarDiagnostico()" matTooltip="REGISTAR NOVO DIAGNOSTICO {{diagnostico.nome}}">
                     <mat-icon>add_circle</mat-icon>
                 </button>
           </form>
@@ -183,7 +185,7 @@
           
                 <ng-container matColumnDef="editar">
                     <mat-header-cell *matHeaderCellDef> Editar </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Editar">  
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Editar"  (click)="editarDiagnostico(row)">  
                         <mat-icon>create</mat-icon>
                     </button></mat-cell>
                 </ng-container>

@@ -323,9 +323,9 @@ export class PendentesComponent implements OnInit {
 
     let nome = "";
     if(categoria == 'Cotacao'){
-      nome = "COT";
+      nome = "COTAÇÃO";
     }else{
-      nome = "FAT";
+      nome = "FATURA";
     }
 
     if(this.clinica.endereco){
@@ -357,6 +357,7 @@ export class PendentesComponent implements OnInit {
             
           }, err=>{
             this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+            
           })
         }
         
@@ -400,6 +401,7 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   doc.setFont("Courier");
   doc.setFontStyle("normal"); 
   doc.setFontSize(12);
+  doc.text(id+"", 225, 40);
   let item = 1;
   let preco_total = 0;
   let linha = 200;                      
@@ -413,7 +415,18 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
     preco_total = +preco_total + +element.preco;
     item = +item + +1;
     linha = +linha + +20;
-  });     
+  });   
+  
+  
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontStyle("bold");
+  doc.setFontSize(15);
+
+  doc.text(nome+":", 170, 40);  
+
+
+
   doc.setFont("Courier");
   doc.setFontStyle("normal"); 
   doc.setFontSize(10);
@@ -458,6 +471,10 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   doc.text("Preço Unit", 295, 180);
   doc.text("Preç Tot", 355, 180);
   doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
+
+  doc.rect (  290, 170 , 60 , 20 ); 
+  doc.rect (  290, 190 , 60 , 320 );
+
   //  doc.text("FICHA DE PAGAMENTO", 165, 90);
 
   doc.save(nome+ id +'.pdf'); 

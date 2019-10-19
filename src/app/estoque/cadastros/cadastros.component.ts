@@ -7,13 +7,16 @@ import { AuthService } from '../../services/auth.service';
 import { UnidadeMedida } from '../../classes/un';
 import { Medicamento } from '../../classes/medicamento';
 import { CategoriaMedicamento } from '../../classes/categoria_medicamento';
-
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-cadastros',
   templateUrl: './cadastros.component.html',
   styleUrls: ['./cadastros.component.scss']
 })
 export class CadastrosComponent implements OnInit {
+
+  
 
   /*
   * VARIAVEIS DA TAB MEDICAMENTOS
@@ -62,6 +65,7 @@ export class CadastrosComponent implements OnInit {
    }
 
   ngOnInit() {
+     
     //TAB MEDICAMENTOS
     this.medicamentoFormGroup = this._formBuilder.group({
       m_categoria: ['', Validators.required],
@@ -115,7 +119,7 @@ export class CadastrosComponent implements OnInit {
         } as Deposito;
       });
       this.dataSourseDeposito=new MatTableDataSource(this.depositos.sort((a, b) => a.nome > b.nome ? 1 : -1));
-      this.dataSourseDeposito.paginator = this.paginatorDeposito;
+       this.dataSourseDeposito.paginator = this.paginatorDeposito;
     })
 
     //TAB UNIDADES DE MEDIDA
@@ -134,7 +138,24 @@ export class CadastrosComponent implements OnInit {
       this.dataSourseUN.paginator = this.paginatorUN;
     })
   }
+  editarMedicamento(medicamento: Medicamento){
+    this.medicamento = medicamento;
+  }
 
+  editarDeposito(deposito: Deposito){
+    this.deposito= deposito;
+  }
+  editarUnidade(Unidade: UnidadeMedida){
+    this.un= Unidade;
+  }
+  
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSourseMedicamento.filter = filterValue;
+   this.cats_medicamento.filter((unit) => unit.nome.indexOf(filterValue) > -1)
+  }
+ 
   registarMedicamento(){
     if(this.medicamento.nome_generico || this.medicamento.categoria || this.medicamento.un || this.medicamento.preco_venda){
       
@@ -144,7 +165,17 @@ export class CadastrosComponent implements OnInit {
       
       let novocodigo = this.medicamento.codigo+1;//Gerar codigo do proximo medicamento
       let data = Object.assign({}, this.medicamento);
-  
+      if(data.id){ 
+     
+        this.estoqueService.updateMedicamentos(data)
+        .then( res => {
+          this.medicamento= new Medicamento();
+          this.medicamentoFormGroup.reset;
+          this.openSnackBar("Medicamento Atualizado com sucesso");
+        }, err=>{
+          this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+        })
+      }else{
       this.estoqueService.createMedicamento(data)
       .then( res => {
         
@@ -157,10 +188,8 @@ export class CadastrosComponent implements OnInit {
       }, err=>{
         this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
       })
-    }else{
-      this.openSnackBar("Preencha os campos obrigatorios");
     }
-  }
+  }}
 
   registarDeposito(){
     if(this.deposito.nome){
@@ -168,7 +197,17 @@ export class CadastrosComponent implements OnInit {
         this.deposito.descricao = null;
       }
       let data = Object.assign({}, this.deposito);
-  
+      if(data.id){ 
+      
+        this.estoqueService.updateDeposito(data)
+        .then( res => {
+          this.deposito= new Deposito();
+          this.depositoFormGroup.reset;
+          this.openSnackBar("Deposito Atualizado com sucesso");
+        }, err=>{
+          this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+        })
+      }else{
       this.estoqueService.createDeposito(data)
       .then( res => {
         this.deposito = new Deposito();
@@ -177,15 +216,23 @@ export class CadastrosComponent implements OnInit {
       }, err=>{
         this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
       })
-    }else{
-      this.openSnackBar("Preencha os campos obrigatorios");
     }
-  }
+  }}
 
   registarUN(){
     if(this.un.nome){
       let data = Object.assign({}, this.un);
-
+      if(data.id){ 
+      
+        this.estoqueService.updateUN(data)
+        .then( res => {
+          this.un= new UnidadeMedida();
+          this.unFormGroup.reset;
+          this.openSnackBar("Unidade de medida atualizada com sucesso");
+        }, err=>{
+          this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+        })
+      }else{
       this.estoqueService.createUN(data)
       .then( res => {
         this.un = new UnidadeMedida();
@@ -194,10 +241,8 @@ export class CadastrosComponent implements OnInit {
       }, err=>{
         this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
       })
-    }else{
-      this.openSnackBar("Preencha os campos obrigatorios");
     }
-  }
+  }}
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{

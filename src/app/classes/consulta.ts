@@ -58,7 +58,8 @@ export class Consulta {
     condutas_clinicas?: CondutaClinica[]; 
     //internamento?:boolean;
 
-    medicamentos?: Medicamento[];
+    //medicamentos?: Medicamento[];
+    movimentosestoque?: MovimentoEstoque[]; //Dentro de movimentos vai ter o medicamento e deposito
 
     //tratamento_clinico_efetuado?:String;
     //tratamento_clinico_prestar_servico?:String;
@@ -68,7 +69,7 @@ export class Consulta {
     cancelador?: String; //Quem cancelou a consulta
 
     diagnosticos?: DiagnosticoAuxiliar[];
-    movimentosestoque?: MovimentoEstoque[];
+    //movimentosestoque?: MovimentoEstoque[];
 
     tipo?:String; //Uma consulta pode ser "CONSULTA MEDICA" OU "DIAGNOSTICO AUX" OU "CONDUTA CLINICA" OU "MEDICAMENTO"
 

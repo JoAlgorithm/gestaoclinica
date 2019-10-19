@@ -29,7 +29,9 @@ export class ConfiguracoesService {
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/diagnosticos').push(diagnostico);
     return this.db.list('diagnosticos/'+this.authService.get_clinica_id + '/').push(diagnostico);
   }
-
+  updateDiagnostico(diagnostico: DiagnosticoAuxiliar){
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/diagnosticos').update(diagnostico.id+"", diagnostico);
+  }
   //Retorna a lista de CATEGORIAS DE CONSULTAs
   getCategoriasConsulta() {
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/categoriasconsulta');
@@ -62,6 +64,10 @@ export class ConfiguracoesService {
   updateCondutaClinica(condutaclinicas: CondutaClinica){
     return this.db.list('condutasclinicas/'+this.authService.get_clinica_id + '/').update(condutaclinicas.id, condutaclinicas);
   }
+
+  /*updateCondutaClinica(condutaclinicas: CondutaClinica){
+    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/condutasclinicas').update(condutaclinicas.id, condutaclinicas);
+  }*/
 
   //Atualizar dados da CLINICA
   updateClinica(clinica: Clinica){

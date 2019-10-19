@@ -99,6 +99,7 @@ export class ListagemComponent implements OnInit {
     {value: 'Niassa', viewValue: 'Niassa'},
     {value: 'Zambezia', viewValue: 'Zambezia'}
   ]
+ 
 
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
     private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router, public estoqueService: EstoqueService){ 
@@ -1553,6 +1554,7 @@ export class MedicamentosDialog {
       pacientes: Paciente[];
 
       
+
       GuardarDados(paciente){
         let data = Object.assign({}, paciente)
         this.pacienteService.updatePaciente(data) 
