@@ -10,6 +10,8 @@ import { DiagnosticoAuxiliar } from '../../classes/diagnostico_aux';
 import { SelectionModel } from '@angular/cdk/collections';
 import * as jsPDF from 'jspdf';
 import { Clinica } from '../../classes/clinica';
+import { NrCotacao } from '../../classes/nr_cotacao';
+import { NrFatura } from '../../classes/nr_fatura';
 
 @Component({
   selector: 'app-pendentes',
@@ -28,13 +30,53 @@ export class PendentesComponent implements OnInit {
   displayedColumns = ['nid','apelido', 'nome', 'diagnosticos_aux', 'valor_pagar' ,'status','imprimir', 'faturar'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  clinica: Clinica;
+  clinica: Clinica = new Clinica();
   faturacao: Faturacao;
+
+  nrscotacao: NrCotacao[];
+  nr_cotacao = 0;
+  nrsfaturcao: NrFatura[];
+  nr_fatura = 0;
 
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
     private pacienteService: PacienteService,public snackBar: MatSnackBar) { }
 
     ngOnInit() {
+      this.configServices.getNrsCotacao().snapshotChanges().subscribe(data => {
+        this.nrscotacao = data.map(e => {
+          return {
+            id: e.payload.key,
+            ...e.payload.val(),
+          } as NrCotacao;
+        });
+  
+        if(typeof this.nrscotacao !== 'undefined' && this.nrscotacao.length > 0){
+          this.nr_cotacao = Math.max.apply(Math, this.nrscotacao.map(function(o) { return o.id; }));
+          this.nr_cotacao = this.nr_cotacao+1;
+        }else{
+          this.nr_cotacao =  +(new Date().getFullYear()+'000001');
+        }
+        return this.nr_cotacao;
+      })
+
+      this.configServices.getNrsFatura().snapshotChanges().subscribe(data => {
+        this.nrsfaturcao = data.map(e => {
+          return {
+            id: e.payload.key,
+            ...e.payload.val(),
+          } as NrFatura;
+        });
+  
+        if(typeof this.nrsfaturcao !== 'undefined' && this.nrsfaturcao.length > 0){
+          this.nr_fatura = Math.max.apply(Math, this.nrsfaturcao.map(function(o) { return o.id; }));
+          this.nr_fatura = this.nr_fatura+1;
+        }else{
+          this.nr_fatura =  +(new Date().getFullYear()+'000001');
+        }
+        return this.nr_fatura;
+      })
+
+      
 
       this.configServices.getClinica().valueChanges()
       .take(1)
@@ -170,81 +212,93 @@ export class PendentesComponent implements OnInit {
    } 
   }
 
+  cotar(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, categoria){
+    let diagnosticos2: DiagnosticoAuxiliar[] = []; //Lista auxiliar para guardar diagnosticos nao faturados para serem apresentados no pdf
+
+    diagnosticos.forEach(element => {
+      if(element.faturado != true){
+        diagnosticos2.push(element);
+      }
+    })
+    this.downloadPDF(diagnosticos2, paciente, categoria);
+  }
+
   faturarDiagnostico(consulta: Consulta){
 
-    this.faturacao = new Faturacao();
-    this.faturacao.categoria = "DIAGNOSTICO_AUX";
-    this.faturacao.valor = consulta.preco_diagnosticos;
-    this.faturacao.data = new Date();
-    this.faturacao.consulta = consulta;
-    this.faturacao.diagnostico_aux = consulta.diagnosticos_aux;
-    
-    this.faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
-    this.faturacao.ano = new Date().getFullYear();
+    if(this.clinica.endereco){
+      if(this.nr_cotacao > 0){
 
-    console.log("Faturacao mes "+this.faturacao.mes+" ano "+this.faturacao.ano)
-    //console.log("NEW DATE Month: "+(+data.getFullYear()))
-    //this.faturacao.diagnostico_aux = this.consultas.
-    this.faturacao.faturador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+        this.faturacao = new Faturacao();
+        this.faturacao.categoria = "DIAGNOSTICO_AUX";
+        this.faturacao.valor = consulta.preco_diagnosticos;
+        this.faturacao.data = new Date();
+        this.faturacao.consulta = consulta;
+        this.faturacao.diagnostico_aux = consulta.diagnosticos_aux;
+        
+        this.faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
+        this.faturacao.ano = new Date().getFullYear();
 
-    if(consulta.tipo == "Consulta Medica"){
-      consulta.status = "Em andamento";
-    }else{
-      consulta.status = "Encerrada";
-    }
-    
+        this.faturacao.faturador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
 
-    let total = 0;
-    consulta.diagnosticos_aux.forEach(element => {
-      if(element.faturado != true){
-        total = total+1;
-      }
-    });
-
-    if(total>1){
-      //Mais de um diagnostico para rececionista poder selecionar apenas que os clientes querem
-      console.log("mais de 1")
-      this.openDialog(consulta);
-      
-
-    }else{
-      //Um diagnostico apenas
-      //console.log("apenas de 1")
-
-      //O array de diagnosticos pode ter mais de um diagnosticos apesar de ter apenas 1 a ser faturado
-      // por isso temos que fazer loop para achar o nao faturado
-      consulta.diagnosticos_aux.forEach(element => {
-        if(element.faturado != true){
-          
-          element.faturado = true;
-          console.log("consulta id: "+consulta.id)
-          console.log("diagnostico faturado id: " + element.nome + " - "+element.faturado)
-          
-          //faturacao
-          let data = Object.assign({}, this.faturacao);
-          let d = Object.assign({}, consulta); 
-
-          this.pacienteService.faturar(data)
-          .then( res => {
-            this.pacienteService.updateConsulta(d)
-            .then(r => {
-              this.openSnackBar("Faturado com sucesso");
-            })
-            .catch(er => {
-              console.log("ERRO: " + er.message)
-            })
-            
-          }, err=>{
-            console.log("ERRO: " + err.message)
-          })
-          /*.catch( err => {
-            console.log("ERRO: " + err.message)
-          });*/
-
+        if(consulta.tipo == "Consulta Medica"){
+          consulta.status = "Em andamento";
+        }else{
+          consulta.status = "Encerrada";
         }
-      });
-      
-      
+        
+        let total = 0;
+        consulta.diagnosticos_aux.forEach(element => {
+          if(element.faturado != true){
+            total = total+1;
+          }
+        });
+
+        if(total>1){
+          //Mais de um diagnostico para rececionista poder selecionar apenas que os clientes querem
+          this.openDialog(consulta);
+          
+
+        }else{
+          //Um diagnostico apenas
+          //console.log("apenas de 1")
+
+          //O array de diagnosticos pode ter mais de um diagnosticos apesar de ter apenas 1 a ser faturado
+          // por isso temos que fazer loop para achar o nao faturado
+          consulta.diagnosticos_aux.forEach(element => {
+            if(element.faturado != true){
+              
+              element.faturado = true;
+              let diagnostico_aux2: DiagnosticoAuxiliar[] = [];//Usado para pegar o Diagnostico nao faturado e apresentar no pdf
+              diagnostico_aux2.push(element);
+              
+              //faturacao
+              let data = Object.assign({}, this.faturacao);
+              let d = Object.assign({}, consulta); 
+
+              this.downloadPDF(diagnostico_aux2, consulta.paciente, 'Fatura');
+              this.pacienteService.faturar(data)
+              .then( res => {
+                this.pacienteService.updateConsulta(d)
+                .then(r => {
+                  this.openSnackBar("Faturado com sucesso");
+                })
+                .catch(er => {
+                  console.log("ERRO: " + er.message)
+                })
+                
+              }, err=>{
+                console.log("ERRO: " + err.message)
+              })
+            }
+          });
+          
+        }
+
+      }else{
+        this.openSnackBar("Ocorreu um erro ao gerar a cotacao. Tente novamente.");
+      }
+    }else{
+      this.openSnackBar("Ocorreu um erro ao gerar a cotacao. Tente novamente.");
     }
 
   }
@@ -252,7 +306,7 @@ export class PendentesComponent implements OnInit {
   openDialog(consulta: Consulta): void {
     let dialogRef = this.dialog.open(FaturarDialog, {
       width: '700px',
-      data: { consulta: consulta }
+      data: { consulta: consulta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura }
     });
     dialogRef.afterClosed().subscribe(result => {
       //console.log("result "+result);
@@ -265,214 +319,152 @@ export class PendentesComponent implements OnInit {
     })
   }
 
+  public downloadPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, categoria){// criacao do pdf
 
-
-  @ViewChild('content1') content1: ElementRef;
-  @ViewChild('content2') content2: ElementRef;
-  @ViewChild('content3') content3: ElementRef;
-  @ViewChild('content4') content4: ElementRef;
-  @ViewChild('content5') content5: ElementRef;
-  @ViewChild('content6') content6: ElementRef;
-  public downloadPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente){// criacao do pdf
-    let doc = new jsPDF({
-      orientation: 'p',
-      unit: 'px',
-      format: 'a4',
-      putOnlyUsedFonts:true,
-    });
-  
-    let specialElementHandlers ={
-      '#editor': function(element,renderer){return true;} 
+    let nome = "";
+    if(categoria == 'Cotacao'){
+      nome = "COT";
+    }else{
+      nome = "FAT";
     }
-    let dia = new Date().getDate();
-    let mes = +(new Date().getMonth()) + +1;
-    let ano = new Date().getFullYear();
-   let dataemisao = dia +"/"+mes+"/"+ano;  
 
+    if(this.clinica.endereco){
+      if(this.nr_cotacao > 0 && this.nr_fatura >0){
+        
+      
+        if(categoria == 'Cotacao'){
+          let nr_cotacao = new NrCotacao();
+          nr_cotacao.id = this.nr_cotacao+"";
+          let d = Object.assign({}, nr_cotacao); 
 
-    /*let content1 = this.content1.nativeElement; 
-    let content2 = this.content2.nativeElement;  
-    let content3 = this.content3.nativeElement; 
-    let content4 = this.content4.nativeElement; 
-    let content5 = this.content5.nativeElement; 
-    let content6 = this.content6.nativeElement; 
-    doc.setFont("Courier");
-    doc.setFontStyle("normal"); 
-    doc.setFontSize(12);
-
-    doc.fromHTML(content1.innerHTML, 125, 112,{
-    'width':100,
-      'elementHandlers': specialElementHandlers,
-    });
-    doc.fromHTML(content2.innerHTML, 340, 112,{
-      'width':100,
-      'elementHandlers': specialElementHandlers,
-    });
-    doc.fromHTML(content3.innerHTML, 85, 132,{
-      'width':100,
-      'elementHandlers': specialElementHandlers,
-    });*/
-
-    var img = new Image();
+          this.configServices.addNrCotacao(d)
+          .then(r =>{
     
-    // img.src ="../../../assets/images/medical-center-logo-design.jpg"; 
-    // doc.convertBase64ToBinaryString(clinica.logo_pdf);
-   // img.src =clinica.logo_pdf; 
-    //img.src =this.clinica.logo_pdf; 
-    //doc.addImage(img,"PNG", 50, 10,90, 90);
+            this.gerarPDF(diagnosticos , paciente, nome, d.id);
+            
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+          })
+        }else{
+          let nr_fatura = new NrFatura();
+          nr_fatura.id = this.nr_fatura+"";
+          let d = Object.assign({}, nr_fatura); 
 
-    img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+          this.configServices.addNrFatura(d)
+          .then(r =>{
+    
+            this.gerarPDF(diagnosticos , paciente, nome, d.id);
+            
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+          })
+        }
+        
+
+      }else{
+        this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+      }
+    
+    }else{
+      this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+    }
      
-    
-     doc.addImage(img,"PNG", 300, 40,90, 90);
+}//Fim download pdf
 
-    doc.setFont("Courier");
-    doc.setFontStyle("normal"); 
-    doc.setFontSize(12);
-    let item = 1;
-    let preco_total = 0;
-    let linha = 200;                      
-    diagnosticos.forEach(element => {
-      doc.text(item+"", 55, linha) //item
-      doc.text("1", 257, linha) //quantidade
-      doc.text(element.nome , 95, linha) //descricao
-      doc.text(element.preco, 294, linha)
-      doc.text(element.preco, 354, linha)
+openSnackBarr(mensagem) {
+  this.snackBar.open(mensagem, null,{
+    duration: 2000
+  })
+}
 
-      preco_total = +preco_total + +element.preco;
-      item = +item + +1;
-      linha = +linha + +20;
-    });
-       
-    doc.setFont("Courier");
-    doc.setFontStyle("normal"); 
-    doc.setFontSize(10);
-   
+gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
+  let doc = new jsPDF({
+    orientation: 'p',
+    unit: 'px',
+    format: 'a4',
+    putOnlyUsedFonts:true,
+  });
 
+  let specialElementHandlers ={
+    '#editor': function(element,renderer){return true;} 
+  }
+  let dia = new Date().getDate();
+  let mes = +(new Date().getMonth()) + +1;
+  let ano = new Date().getFullYear();
+ let dataemisao = dia +"/"+mes+"/"+ano;  
 
+  var img = new Image();
+  img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+  doc.addImage(img,"PNG", 300, 40,90, 90);
 
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(12);
+  let item = 1;
+  let preco_total = 0;
+  let linha = 200;                      
+  diagnosticos.forEach(element => {
+    doc.text(item+"", 55, linha) //item
+    doc.text("1", 257, linha) //quantidade
+    doc.text(element.nome , 95, linha) //descricao
+    doc.text(element.preco, 294, linha)
+    doc.text(element.preco, 354, linha)
+
+    preco_total = +preco_total + +element.preco;
+    item = +item + +1;
+    linha = +linha + +20;
+  });     
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(10);
+
+  doc.text("Processado pelo computador", 170, 580);
+  // doc.text("CENTRO MEDICO VITALLE", 165, 75);
+  doc.text(this.clinica.endereco, 50, 75);
+  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
+  doc.text("Email: "+this.clinica.email, 50, 95);
+  doc.text("Cell: "+this.clinica.telefone, 50, 105);
   
-  
-
-    doc.text("Processado pelo computador", 170, 580);
-    // doc.text("CENTRO MEDICO VITALLE", 165, 75);
-    doc.text(this.clinica.endereco, 50, 75);
-    doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
-    doc.text("Email: "+this.clinica.email, 50, 95);
-    doc.text("Cell: "+this.clinica.telefone, 50, 105);
-    
-    doc.text("Nome do Paciente:", 50, 125);
-    doc.text(paciente.nome, 128, 125);
-    doc.text("NID:", 250, 125);
-    doc.text(paciente.nid+"", 268, 125);
-    doc.text("Apelido:", 50, 145);
-    doc.text(paciente.apelido, 89, 145);
-    doc.text("Data de emissão: ", 250, 145);
-    doc.text(dataemisao, 322, 145);
-    doc.setFillColor(50,50,50);
-    doc.rect ( 50, 170 , 40 , 20 ); 
+  doc.text("Nome do Paciente:", 50, 125);
+  doc.text(paciente.nome, 128, 125);
+  doc.text("NID:", 250, 125);
+  doc.text(paciente.nid+"", 268, 125);
+  doc.text("Apelido:", 50, 145);
+  doc.text(paciente.apelido, 89, 145);
+  doc.text("Data de emissão: ", 250, 145);
+  doc.text(dataemisao, 322, 145);
+  doc.setFillColor(50,50,50);
+  doc.rect ( 50, 170 , 40 , 20 ); 
   doc.rect (  50, 190 , 40 , 320 ); 
-    /* doc.rect ( 50, 210 , 40 , 40 ); 
-    doc.rect (  50, 230 , 40 , 40 ); 
-    doc.rect ( 50, 250 , 40 , 40 ); 
-    doc.rect (  50, 270 , 40 , 40 ); 
-    doc.rect ( 50, 290, 40 , 40 ); 
-    doc.rect (  50, 310 , 40 , 40 ); 
-    doc.rect ( 50, 330 , 40 , 40 ); 
-    doc.rect (  50, 350 , 40 , 40 ); 
-    doc.rect ( 50, 370 , 40 , 40 ); 
-    doc.rect (  50, 390 , 40 , 40 ); 
-    doc.rect ( 50, 410 , 40 , 40 ); 
-    doc.rect (  50, 430 , 40 , 40 ); 
-    doc.rect ( 50, 450, 40 , 40 ); 
-    doc.rect (  50, 470 , 40 , 40 ); */
 
-    doc.rect (  90, 170 , 150 , 20 ); 
+  doc.rect (  90, 170 , 150 , 20 ); 
   doc.rect (  90, 190 , 150 , 320 );
-      /*doc.rect ( 90, 210 , 150 , 40 ); 
-    doc.rect (  90, 230 , 150, 40 ); 
-    doc.rect ( 90, 250 , 150, 40 ); 
-    doc.rect (  90, 270 , 150 , 40 ); 
-    doc.rect ( 90, 290, 150, 40 ); 
-    doc.rect (  90, 310 , 150 , 40 ); 
-    doc.rect ( 90, 330 , 150 , 40 ); 
-    doc.rect (  90, 350 , 150 , 40 ); 
-    doc.rect ( 90, 370 , 150, 40 ); 
-    doc.rect (  90, 390 , 150, 40 ); 
-    doc.rect ( 90, 410 , 150, 40 ); 
-    doc.rect (  90, 430 , 150 , 40 ); 
-    doc.rect ( 90, 450, 150 , 40 ); 
-    doc.rect (  90, 470 , 150 , 40 ); */
 
-    doc.rect (  240, 170 , 50 , 20 ); 
-   doc.rect (  240, 190 , 50 , 320 );
-     /* doc.rect ( 240, 210 , 50 , 40 ); 
-    doc.rect (  240, 230 , 50 , 40 ); 
-    doc.rect ( 240, 250 , 50 , 40 ); 
-    doc.rect (  240, 270 , 50 , 40 ); 
-    doc.rect ( 240, 290, 50 , 40 ); 
-    doc.rect (  240, 310 , 50 , 40 ); 
-    doc.rect ( 240, 330 , 50 , 40 ); 
-    doc.rect (  240, 350 , 50 , 40 ); 
-    doc.rect ( 240, 370 , 50 , 40 ); 
-    doc.rect (  240, 390 , 50 , 40 ); 
-    doc.rect ( 240, 410 , 50 , 40 ); 
-    doc.rect (  240, 430 , 50 , 40 ); 
-    doc.rect ( 240, 450, 50 , 40 ); 
-    doc.rect (  240, 470 , 50 , 40 ); */
+  doc.rect (  240, 170 , 50 , 20 ); 
+  doc.rect (  240, 190 , 50 , 320 );
 
-    doc.rect (  290, 170 , 60 , 20 ); 
-    doc.rect (  290, 190 , 60 , 320 );
-     /* doc.rect ( 290, 210 , 60 , 40 ); 
-    doc.rect (  290, 230 , 60 , 40 ); 
-    doc.rect ( 290, 250 , 60 , 40 ); 
-    doc.rect (  290, 270 , 60 , 40 ); 
-    doc.rect ( 290, 290, 60 , 40 ); 
-    doc.rect (  290, 310 , 60 , 40 ); 
-    doc.rect ( 290, 330 , 60 , 40 ); 
-    doc.rect (  290, 350 , 60 , 40 ); 
-    doc.rect ( 290, 370 , 60 , 40 ); 
-    doc.rect (  290, 390 , 60 , 40 ); 
-    doc.rect ( 290, 410 , 60 , 40 ); 
-    doc.rect (  290, 430 , 60 , 40 ); 
-    doc.rect ( 290, 450, 60 , 40 ); 
-    doc.rect (  290, 470 , 60 , 40 );
-    doc.rect (  290, 510 , 30 , 20 ); */ 
+  doc.rect (  290, 170 , 60 , 20 ); 
+  doc.rect (  290, 190 , 60 , 320 );
 
-    doc.rect (  350, 170 , 50 , 20 ); 
-   doc.rect (  350, 190 , 50 , 320);
-     /* doc.rect ( 350, 210 , 50 , 40 ); 
-    doc.rect (  350, 230 , 50 , 40 ); 
-    doc.rect ( 350, 250 , 50 , 40 ); 
-    doc.rect (  350, 270 , 50 , 40 ); 
-    doc.rect ( 350, 290, 50 , 40 ); 
-    doc.rect (  350, 310 , 50 , 40 ); 
-    doc.rect ( 350, 330 , 50 , 40 ); 
-    doc.rect (  350, 350 , 50 , 40 ); 
-    doc.rect ( 350, 370 , 50 , 40 ); 
-    doc.rect ( 350, 390 , 50 , 40 ); 
-    doc.rect ( 350, 410 , 50 , 40 ); 
-    doc.rect (  350, 430 , 50 , 40 ); 
-    doc.rect ( 350, 450, 50 , 40 ); 
-    doc.rect ( 350, 470 , 50 , 40 );  */
-    doc.rect ( 290, 510 , 110 , 20 );
+  doc.rect (  350, 170 , 50 , 20 ); 
+  doc.rect (  350, 190 , 50 , 320);
 
-    doc.setFontStyle("bold");
-    doc.text("Item", 60, 180);
-    doc.text("Descrição", 120, 180);
-    doc.text("Quantd", 245, 180);
-    doc.text("Preço Unit", 295, 180);
-    doc.text("Preç Tot", 355, 180);
-    doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
-    //  doc.text("FICHA DE PAGAMENTO", 165, 90);
-    doc.save('Recebo.pdf');  
+  doc.rect ( 290, 510 , 110 , 20 );
+
+  doc.setFontStyle("bold");
+  doc.text("Item", 60, 180);
+  doc.text("Descrição", 120, 180);
+  doc.text("Quantd", 245, 180);
+  doc.text("Preço Unit", 295, 180);
+  doc.text("Preç Tot", 355, 180);
+  doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
+  //  doc.text("FICHA DE PAGAMENTO", 165, 90);
+
+  doc.save(nome+ id +'.pdf'); 
 }
 
 
-
 }
-
-
 
 //DIALOG FATURAR MAIS DE UM DIAGNOSTICO AUX -----------------------------------------------------
 @Component({
@@ -480,6 +472,10 @@ export class PendentesComponent implements OnInit {
   templateUrl: 'faturar-diagnostico.html',
   })
   export class FaturarDialog {
+
+    clinica: Clinica;
+    nr_cotacao = 0;
+    nr_fatura = 0;
 
     consulta: Consulta;
     diagnosticos_aux: DiagnosticoAuxiliar[] = [];
@@ -489,13 +485,12 @@ export class PendentesComponent implements OnInit {
   
     selection = new SelectionModel<DiagnosticoAuxiliar>(true, []);
     
-    constructor(  public dialogRef: MatDialogRef<FaturarDialog>,
+    constructor(  public dialogRef: MatDialogRef<FaturarDialog>, public configServices: ConfiguracoesService,
     @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
     public pacienteService: PacienteService,  public snackBar: MatSnackBar) {
       
       setTimeout(() => {
         this.consulta = data.consulta;
-        console.log("consulta "+this.consulta.marcador);
   
         //Adicionar diagnosticos nao faturados ao array de diagnosticos
         this.consulta.diagnosticos_aux.forEach(element => {
@@ -505,6 +500,10 @@ export class PendentesComponent implements OnInit {
           }
         });
   
+        this.clinica = this.data.clinica;
+        this.nr_cotacao = this.data.nr_cotacao;
+        this.nr_fatura = this.data.nr_fatura;
+
         this.dataSource = new MatTableDataSource(this.diagnosticos_aux);
         setTimeout(() => this.dataSource.paginator = this.paginator);
       })
@@ -568,6 +567,8 @@ export class PendentesComponent implements OnInit {
     }
 
     faturar(){ 
+      let diagnostico_aux2: DiagnosticoAuxiliar[] = [];//Usado para juntar a lista de diagnosticos a serem faturados para sairem no pdf
+
       let faturacao = new Faturacao();
       //faturacao.categoria = this.consulta.tipo;
       
@@ -599,6 +600,7 @@ export class PendentesComponent implements OnInit {
             if(row == element){
               element.faturado = true;
               faturacao.valor = +faturacao.valor + +element.preco;
+              diagnostico_aux2.push(element);
             }
           });
 
@@ -607,16 +609,15 @@ export class PendentesComponent implements OnInit {
 
       
 
+      
       //Se todos os itens tiverem sido faturados a consulta:
       // encerra se for do tipo Diagnostico
       // ou fica em andamento se for do tipo medica
       console.log("is all selected "+this.isAllSelected())
       if(this.isAllSelected()){
         if(this.consulta.tipo == "Consulta Medica"){
-          console.log("Alterou status da consulta para Em andamento")
           this.consulta.status = "Em andamento";
         }else{
-          console.log("Alterou status da consulta para Encerrada")
           this.consulta.status = "Encerrada";
         }
       }else{
@@ -632,6 +633,7 @@ export class PendentesComponent implements OnInit {
 
       this.pacienteService.faturar(data)
       .then( res => {
+        this.downloadPDF(diagnostico_aux2, this.consulta.paciente, 'Fatura');
         this.pacienteService.updateConsulta(d)
         .then(r => {
           this.dialogRef.close();
@@ -673,5 +675,153 @@ export class PendentesComponent implements OnInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id}`;
   }
+
+  openSnackBarr(mensagem) {
+    this.snackBar.open(mensagem, null,{
+      duration: 2000
+    })
+  }
+
+
+
+  //GERAR PDFS
+  public downloadPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, categoria){// criacao do pdf
+
+    let nome = "";
+    if(categoria == 'Cotacao'){
+      nome = "COT";
+    }else{
+      nome = "FAT";
+    }
+
+    if(this.clinica.endereco){
+      if(this.nr_cotacao > 0 && this.nr_fatura >0){
+        
+      
+        if(categoria == 'Cotacao'){
+          let nr_cotacao = new NrCotacao();
+          nr_cotacao.id = this.nr_cotacao+"";
+          let d = Object.assign({}, nr_cotacao); 
+
+          this.configServices.addNrCotacao(d)
+          .then(r =>{
+    
+            this.gerarPDF(diagnosticos , paciente, nome, d.id);
+            
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+          })
+        }else{
+          let nr_fatura = new NrFatura();
+          nr_fatura.id = this.nr_fatura+"";
+          let d = Object.assign({}, nr_fatura); 
+
+          this.configServices.addNrFatura(d)
+          .then(r =>{
+    
+            this.gerarPDF(diagnosticos , paciente, nome, d.id);
+            
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+          })
+        }
+        
+
+      }else{
+        this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+      }
+    
+    }else{
+      this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+    }
+     
+}//Fim download pdf
+
+
+gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
+  let doc = new jsPDF({
+    orientation: 'p',
+    unit: 'px',
+    format: 'a4',
+    putOnlyUsedFonts:true,
+  });
+
+  let specialElementHandlers ={
+    '#editor': function(element,renderer){return true;} 
+  }
+  let dia = new Date().getDate();
+  let mes = +(new Date().getMonth()) + +1;
+  let ano = new Date().getFullYear();
+ let dataemisao = dia +"/"+mes+"/"+ano;  
+
+  var img = new Image();
+  img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+  doc.addImage(img,"PNG", 300, 40,90, 90);
+
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(12);
+  let item = 1;
+  let preco_total = 0;
+  let linha = 200;                      
+  diagnosticos.forEach(element => {
+    doc.text(item+"", 55, linha) //item
+    doc.text("1", 257, linha) //quantidade
+    doc.text(element.nome , 95, linha) //descricao
+    doc.text(element.preco, 294, linha)
+    doc.text(element.preco, 354, linha)
+
+    preco_total = +preco_total + +element.preco;
+    item = +item + +1;
+    linha = +linha + +20;
+  });     
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(10);
+
+  doc.text("Processado pelo computador", 170, 580);
+  // doc.text("CENTRO MEDICO VITALLE", 165, 75);
+  doc.text(this.clinica.endereco, 50, 75);
+  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
+  doc.text("Email: "+this.clinica.email, 50, 95);
+  doc.text("Cell: "+this.clinica.telefone, 50, 105);
+  
+  doc.text("Nome do Paciente:", 50, 125);
+  doc.text(paciente.nome, 128, 125);
+  doc.text("NID:", 250, 125);
+  doc.text(paciente.nid+"", 268, 125);
+  doc.text("Apelido:", 50, 145);
+  doc.text(paciente.apelido, 89, 145);
+  doc.text("Data de emissão: ", 250, 145);
+  doc.text(dataemisao, 322, 145);
+  doc.setFillColor(50,50,50);
+  doc.rect ( 50, 170 , 40 , 20 ); 
+  doc.rect (  50, 190 , 40 , 320 ); 
+
+  doc.rect (  90, 170 , 150 , 20 ); 
+  doc.rect (  90, 190 , 150 , 320 );
+
+  doc.rect (  240, 170 , 50 , 20 ); 
+  doc.rect (  240, 190 , 50 , 320 );
+
+  doc.rect (  290, 170 , 60 , 20 ); 
+  doc.rect (  290, 190 , 60 , 320 );
+
+  doc.rect (  350, 170 , 50 , 20 ); 
+  doc.rect (  350, 190 , 50 , 320);
+
+  doc.rect ( 290, 510 , 110 , 20 );
+
+  doc.setFontStyle("bold");
+  doc.text("Item", 60, 180);
+  doc.text("Descrição", 120, 180);
+  doc.text("Quantd", 245, 180);
+  doc.text("Preço Unit", 295, 180);
+  doc.text("Preç Tot", 355, 180);
+  doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
+  //  doc.text("FICHA DE PAGAMENTO", 165, 90);
+
+  doc.save(nome+ id +'.pdf'); 
+}
   
   }

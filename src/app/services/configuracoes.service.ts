@@ -7,47 +7,60 @@ import { User } from '../classes/user';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { CategoriaConsulta } from '../classes/categoria_consulta';
 import { CondutaClinica } from '../classes/conduta_clinica';
+import { NrCotacao } from '../classes/nr_cotacao';
+import { NrFatura } from '../classes/nr_fatura';
 
 @Injectable()
 export class ConfiguracoesService {
 
   constructor(private db: AngularFireDatabase, private firestore: AngularFirestore, private authService: AuthService) { }
 
+
   //Retorna a lista de DIAGNOSTICOS AUXILIARES
   getDiagnosticos() {
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/diagnosticos').snapshotChanges();
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/diagnosticos');
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/diagnosticos');
+    return this.db.list('diagnosticos/'+this.authService.get_clinica_id + '/');
   }
 
   //Cadastra o DIAGNOSTICO AUXILIAR
   createDiagnostico(diagnostico: DiagnosticoAuxiliar){
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/diagnosticos').add(diagnostico);
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/diagnosticos').push(diagnostico);
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/diagnosticos').push(diagnostico);
+    return this.db.list('diagnosticos/'+this.authService.get_clinica_id + '/').push(diagnostico);
   }
 
   //Retorna a lista de CATEGORIAS DE CONSULTAs
   getCategoriasConsulta() {
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/categoriasconsulta');
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/categoriasconsulta');
+    return this.db.list('categoriasconsulta/'+this.authService.get_clinica_id + '/');
   }
 
   //Cadastra o CATEGORIAS DE CONSULTAS
   createCategoriaConsulta(categoriaConsulta: CategoriaConsulta){
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/categoriasconsulta').push(categoriaConsulta);
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/categoriasconsulta').push(categoriaConsulta);
+    return this.db.list('categoriasconsulta/'+this.authService.get_clinica_id + '/').push(categoriaConsulta);
   }
 
   //Retorna a lista de CONDUTAS CLLINICAS
   getCondutasClinica() {
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/condutasclinicas');
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/condutasclinicas');
+    return this.db.list('condutasclinicas/'+this.authService.get_clinica_id + '/');
   }
 
   //Retorna a lista de TIPOS CONDUTAS CLLINICAS
   getTiposCondutaClinica() {
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/tiposcondutaclinica');
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/tiposcondutaclinica');
+    return this.db.list('tiposcondutaclinica/'+this.authService.get_clinica_id + '/');
   }
 
   //Cadastra o CATEGORIAS DE CONSULTAS
   createCondutaClinica(condutaclinicas: CondutaClinica){
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/condutasclinicas').push(condutaclinicas);
+    return this.db.list('condutasclinicas/'+this.authService.get_clinica_id + '/').push(condutaclinicas);
+  }
+
+  updateCondutaClinica(condutaclinicas: CondutaClinica){
+    return this.db.list('condutasclinicas/'+this.authService.get_clinica_id + '/').update(condutaclinicas.id, condutaclinicas);
   }
 
   //Atualizar dados da CLINICA
@@ -77,38 +90,39 @@ export class ConfiguracoesService {
 
   //Retorna a lista de TIPOS DIAGNOSTICOS AUX
   getTiposDiagnosticos() {
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/tiposdiagnosticoaux');
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/tiposdiagnosticoaux');
+    return this.db.list('tiposdiagnosticoaux/'+this.authService.get_clinica_id + '/');
   }
 
   //Retorna a lista de SUBTIPOS DIAGNOSTICOS AUX
   getSubTiposDiagnosticos() {
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/subtiposdiagnosticoaux');
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/subtiposdiagnosticoaux');
+    return this.db.list('subtiposdiagnosticoaux/'+this.authService.get_clinica_id + '/');
   }
 
-  /*tipos_diagnosticos = [
-    {value: 'HEMATOLOGIA'},
-    {value: 'BIOQUIMICA'},
-    {value: 'IMUNOQUIMICA'},
-    {value: 'HORMONAS'},
-    {value: 'MARCADORES CARDIACOS'},
-    {value: 'MARCADORES TUMORAIS'},
-    {value: 'INFECCIOLOGIA'},
-    {value: 'IONOGRAMA'},
-    {value: 'URIANALISE'},
-    {value: 'EXAME DE FEZES'},
-    {value: 'TESTES RAPIDOS'},
-    {value: 'IMAGIOLOGIA'},
-    {value: 'EXAMES E ESTUDOS DIVERSOS'}
-  ]
+  //Cadastra NRCOTACAO
+  addNrCotacao(nr: NrCotacao){
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id +'/nrscotacoes').update(nr.id, nr);
+    return this.db.list('nrscotacoes/'+this.authService.get_clinica_id +'/').update(nr.id, nr);
+  }
 
-  subtipos_diagnosticos = [
-    {value: 'Perfil Hepatico'},
-    {value: 'Perfil Renal'},
-    {value: 'Perfil Lipidico'},
-    {value: 'Perfil Anemico'},
-    {value: 'Perfil Glicemico'},
-    {value: 'Perfil Pancreatico'},
-    {value: 'Perfil Pancreatico'}
-  ]*/
+  //Retorna NRCOTACAO
+  getNrsCotacao() {
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/nrscotacoes');
+    return this.db.list('nrscotacoes/'+this.authService.get_clinica_id + '/');
+  }
+
+  //Cadastra NRFATURA
+  addNrFatura(nr: NrFatura){
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id +'/nrsfaturas').update(nr.id, nr);
+    return this.db.list('nrsfaturas/'+this.authService.get_clinica_id +'/').update(nr.id, nr);
+  }
+
+  //Retorna NRCOTACAO
+  getNrsFatura() {
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/nrsfaturas');
+    return this.db.list('nrsfaturas/'+this.authService.get_clinica_id + '/');
+  }
+
 
 }

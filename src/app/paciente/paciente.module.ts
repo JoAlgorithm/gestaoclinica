@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
-import {  DialogDetalhes } from './listagem/listagem.component';
+import {  DialogDetalhes, MedicamentosDialog, DialogEditar } from './listagem/listagem.component';
 import {CdkTableModule} from '@angular/cdk/table';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {A11yModule} from '@angular/cdk/a11y';
@@ -67,6 +67,7 @@ import { PendentesComponent, FaturarDialog } from './pendentes/pendentes.compone
 import { MatProgressButtonsModule } from 'mat-progress-buttons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LaddaModule } from 'angular2-ladda';
+import { EstoqueService } from '../services/estoque.service';
 
 @NgModule({
   imports: [
@@ -135,8 +136,8 @@ import { LaddaModule } from 'angular2-ladda';
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
     PacienteService,
     AngularFirestore,
-    ConfiguracoesService
-    
+    ConfiguracoesService,
+    EstoqueService
   ],
   declarations: [
     CadastroComponent,
@@ -146,14 +147,18 @@ import { LaddaModule } from 'angular2-ladda';
     FaturarDialog,
     CondutasDialog,
     ConsultasDialog,
-    DialogDetalhes
+    DialogDetalhes,
+    DialogEditar,
+    MedicamentosDialog
   ],
   entryComponents: [
     DiagnosticosDialog,
     FaturarDialog,
     CondutasDialog,
     ConsultasDialog,
-    DialogDetalhes
+    DialogDetalhes,
+    MedicamentosDialog,
+    DialogEditar
   ],
 })
 

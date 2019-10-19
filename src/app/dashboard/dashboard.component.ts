@@ -78,6 +78,7 @@ export class DashboardComponent {
   ngOnInit() {
     //let doc = new jsPDF();
     //doc.save("PDF")
+    //this.pacienteService.limparConsultas();
 
     this.pacienteService.getPacientes().snapshotChanges().subscribe(data => {
       this.pacientes = data.map(e => {

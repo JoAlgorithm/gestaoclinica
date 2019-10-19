@@ -20,6 +20,13 @@ import { TipoDiagnosticoAux } from '../../classes/tipo_diagnostico';
 import { SubTipoDiagnosticoAux } from '../../classes/subtipo_diagnostico';
 import * as deepEqual from "deep-equal";
 import * as jsPDF from 'jspdf';
+import { Deposito } from '../../classes/deposito';
+import { EstoqueService } from '../../services/estoque.service';
+import { Medicamento } from '../../classes/medicamento';
+import { CustomValidators } from 'ng2-validation';
+import { MovimentoEstoque } from '../../classes/movimento_estoque';
+import { NrCotacao } from '../../classes/nr_cotacao';
+import { NrFatura } from '../../classes/nr_fatura';
 //import { MatProgressButtonOptions } from 'mat-progress-buttons';
 
 
@@ -30,6 +37,11 @@ import * as jsPDF from 'jspdf';
 })
 export class ListagemComponent implements OnInit {
 
+  nrscotacao: NrCotacao[]; //PDF
+  nr_cotacao = 0; //PDF
+  nrsfaturcao: NrFatura[]; //PDF
+  nr_fatura = 0; //PDF
+
   // trigger-variable for Ladda
   isLoading: boolean = false;
     
@@ -37,6 +49,8 @@ export class ListagemComponent implements OnInit {
       this.isLoading = !this.isLoading;
   }
 
+  datanascimento: Date;
+  data_nascimento: Date;
   pacientes: Paciente[];
   dataSourse: MatTableDataSource<Paciente>;
   displayedColumns = ['nid','apelido', 'nome', 'sexo', 'documento_identificacao', 'referencia_telefone', 'detalhe','editar', 'consulta'];
@@ -44,7 +58,7 @@ export class ListagemComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   consulta: Consulta;
-
+ 
   clinica: Clinica;
 
   diagnosticos:DiagnosticoAuxiliar[];
@@ -59,12 +73,75 @@ export class ListagemComponent implements OnInit {
   subtipos_diagnosticos: SubTipoDiagnosticoAux[];
   subtipos_diagnosticos_aux: SubTipoDiagnosticoAux[];
 
+  depositos: Deposito[];
+  sexos = [
+    {value: 'Feminino', viewValue: 'Feminino'},
+    {value: 'Masculino', viewValue: 'Masculino'}
+  ];
+
+  documentos_identificacao = [
+    {value: 'BI', viewValue: 'Bilhete de identidade'},
+    {value: 'Cedula', viewValue: 'Cedula'},
+    {value: 'Passaporte', viewValue: 'Passaporte'},
+    {value: 'Certidao de nascimento', viewValue: 'Certidao de nascimento'},
+    {value: 'DIRE', viewValue: 'DIRE'},
+    {value: 'Outros', viewValue: 'Outros'},
+  ]
+  provincias = [
+    {value: 'Maputo', viewValue: 'Maputo'},
+    {value: 'Gaza', viewValue: 'Gaza'},
+    {value: 'Inhambane', viewValue: 'Inhambane'},
+    {value: 'Sofala', viewValue: 'Sofala'},
+    {value: 'Tete', viewValue: 'Tete'},
+    {value: 'Quelimane', viewValue: 'Quelimane'},
+    {value: 'Nampula', viewValue: 'Nampula'},
+    {value: 'Cabo Delgado', viewValue: 'Cabo Delgado'},
+    {value: 'Niassa', viewValue: 'Niassa'},
+    {value: 'Zambezia', viewValue: 'Zambezia'}
+  ]
+
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
-    private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router){ 
+    private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router, public estoqueService: EstoqueService){ 
     this.consulta = new Consulta();
  }
 
   ngOnInit() {
+    //PDF
+    this.configServices.getNrsCotacao().snapshotChanges().subscribe(data => {
+      this.nrscotacao = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as NrCotacao;
+      });
+
+      if(typeof this.nrscotacao !== 'undefined' && this.nrscotacao.length > 0){
+        this.nr_cotacao = Math.max.apply(Math, this.nrscotacao.map(function(o) { return o.id; }));
+        this.nr_cotacao = this.nr_cotacao+1;
+      }else{
+        this.nr_cotacao =  +(new Date().getFullYear()+'000001');
+      }
+      return this.nr_cotacao;
+    })
+
+    //PDF
+    this.configServices.getNrsFatura().snapshotChanges().subscribe(data => {
+      this.nrsfaturcao = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as NrFatura;
+      });
+
+      if(typeof this.nrsfaturcao !== 'undefined' && this.nrsfaturcao.length > 0){
+        this.nr_fatura = Math.max.apply(Math, this.nrsfaturcao.map(function(o) { return o.id; }));
+        this.nr_fatura = this.nr_fatura+1;
+      }else{
+        this.nr_fatura =  +(new Date().getFullYear()+'000001');
+      }
+      return this.nr_fatura;
+    })
+
     this.pacienteService.getPacientes().snapshotChanges().subscribe(data => {
       this.pacientes = data.map(e => {
         return {
@@ -140,6 +217,17 @@ export class ListagemComponent implements OnInit {
       });
       this.subtipos_diagnosticos_aux = this.subtipos_diagnosticos;
     })
+
+    //DEPOSITOS
+    this.estoqueService.getDepositos().snapshotChanges().subscribe(data => {
+        this.depositos = data.map(e => {
+          return {
+            id: e.payload.key,
+            ...e.payload.val(),
+          } as Deposito;
+        })
+    })
+
   }
   
   detalhes(doente){
@@ -147,12 +235,53 @@ export class ListagemComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogDetalhes, {
      
       width: '1000px',
-     data: { nid: doente.nid,apelido: doente.apelido, nome: doente.nome, genero:doente.sexo,datanascimento:doente.datanascimento,
-       documento_identificacao: doente.documento_identificacao, nr_documento_identificacao: doente.nr_documento_identificacao,
+     data: { nid: doente.nid,data_nascimento: doente.datanascimento,apelido: doente.apelido, 
+      nome: doente.nome, genero:doente.sexo,
+       documento_identificacao: doente.documento_identificacao, 
+       nr_documento_identificacao: doente.nr_documento_identificacao,
+       localidade: doente.localidade,bairro:doente.bairro,
+       avenida: doente.avenida, rua:doente.rua,casa: doente.casa,
+       celula:doente.celula,quarteirao:doente.quarteirao,
+       posto_admnistrativo: doente.posto_admnistrativo,
+       distrito: doente.distrito,provincia:doente.provincia,
+       acompanhante_nome:doente.referencia_nome,
+       acompanhante_apelido:doente.referencia_apelido,
+      acompanhante_telefone: doente.referencia_telefone,
         
       }
     });
   }
+
+
+
+
+  editar(doente: Paciente){
+
+    const dialogRef = this.dialog.open(DialogEditar, {
+      width: '1000px',
+      data:{doente: doente,data_nascimento: this.data_nascimento=new Date(), 
+        sexos: this.sexos,documentos_identificacao: this.documentos_identificacao,
+        provincias: this.provincias,
+      
+      
+      }
+      
+    });
+   dialogRef.afterClosed().subscribe(result => {
+    
+    console.log('The dialog was closed');
+    
+    // this.animal = result;
+    
+   });
+   
+  
+    }
+
+
+
+
+
 
 
 
@@ -224,6 +353,22 @@ export class ListagemComponent implements OnInit {
     });
   }
 
+  openMedicamento(row: Paciente){
+    console.log("nr fatura: "+this.nr_fatura);
+    if(this.nr_cotacao > 0 && this.nr_fatura >0){
+      let dialogRef = this.dialog.open(MedicamentosDialog, {
+        width: '800px',
+        data: { paciente: row, depositos: this.depositos, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        //console.log("result "+result);
+      });
+    }else{
+      this.openSnackBar("Processando nr de cotacao/fatura. Tente novamente.");
+    }
+    
+  }
+
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
@@ -232,13 +377,484 @@ export class ListagemComponent implements OnInit {
 
 }
 
+//MedicamentosDialog --------------------------------------------------------
+@Component({
+  selector: 'medicamentos-dialog',
+  templateUrl: 'medicamentos.component.html',
+})
+export class MedicamentosDialog {
+
+  clinica: Clinica; //PDF
+  nr_cotacao = 0; //PDF
+  nr_fatura = 0; //PDF
+
+  desabilitar: boolean = false; //Fatura
+  desabilitar2: boolean = false; //Cotacao
+  texto: string = "Faturar"; //Fatura
+  texto2: string = "Cotar"; //Cotacao
+
+  medicamentoFormGroup: FormGroup;
+  medicamentos: Medicamento[] = [];
+  //medicamentos_adicionados: Medicamento[] = [];
+
+  movimentos: MovimentoEstoque[] = [];
+  movimento: MovimentoEstoque = new MovimentoEstoque();
+
+  medicamento: Medicamento;
+  deposito: Deposito;
+  preco_total:Number = 0;
+  max: Number = 1;
+  min: Number = 1;
+
+  //dataSourse: MatTableDataSource<Medicamento>;
+  dataSourse: MatTableDataSource<MovimentoEstoque>;
+  displayedColumns = ['medicamento','qtd_solicitada', 'preco_unit', 'preco_venda_total', 'remover'];
+
+  consulta?: Consulta;
+
+  constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<MedicamentosDialog>, private router: Router,
+  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public estoqueService: EstoqueService, 
+  public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder,
+  public configServices: ConfiguracoesService) {
+    
+    this.deposito = new Deposito();
+    this.medicamento = new Medicamento();
+
+    this.medicamentoFormGroup = this._formBuilder.group({
+      deposito: ['', Validators.required],
+      medicamento: ['', Validators.required],
+      qtd_solicitada: ['',  Validators.compose([Validators.required, CustomValidators.number({min: this.min, max: this.max})])],
+      qtd_disponivel: ['', Validators.required],
+      preco_venda_total: ['', Validators.required],
+      preco: ['', Validators.required],
+    });
+    this.medicamentoFormGroup.controls['qtd_disponivel'].disable();
+    this.medicamentoFormGroup.controls['preco'].disable();
+    this.medicamentoFormGroup.controls['preco_venda_total'].disable();
+
+    this.clinica = this.data.clinica; //PDF
+    this.nr_cotacao = this.data.nr_cotacao; //PDF
+    this.nr_fatura = this.data.nr_fatura; //PDF
+    console.log("dialog nr fatura: "+this.nr_fatura);
+  }
+
+  getMedicamentos(deposito: Deposito){
+    this.medicamentos = [];
+    this.medicamento = new Medicamento();
+    this.max = 1;
+    if(deposito.medicamentos){
+
+      Object.keys(deposito.medicamentos).forEach(key=>{
+        this.medicamentos.push(deposito.medicamentos[key]);
+      })
+
+    }else{
+      this.openSnackBar("Deposito sem medicamentos. Contacte o Admnistrativo");
+    }
+  }
+
+  limitarQuantidade(){
+    this.max = this.medicamento.qtd_disponivel;
+    this.medicamentoFormGroup.controls['qtd_solicitada']
+      .setValidators(CustomValidators.number({min: 1, max: this.medicamento.qtd_disponivel}));
+  }
+
+  validarQtd(qtd_solicitada){
+    if(qtd_solicitada){
+      this.medicamento.preco_venda_total = qtd_solicitada*this.medicamento.preco_venda;
+    }else{
+      this.medicamento.preco_venda_total = 0;
+    }
+  }
+
+  addMedicamento(){
+    if(this.medicamento.qtd_solicitada){
+
+      let check = true;
+      this.movimentos.forEach(md => {
+        if(md.id == this.medicamento.id && md.deposito.id == this.deposito.id){
+          check = false;
+          return;
+        }
+      });
+
+      if(check){
+        if( Number(this.medicamento.qtd_solicitada) <= Number(this.medicamento.qtd_disponivel)){
+          this.movimento.medicamento = this.medicamento;
+          this.movimento.deposito = this.deposito;  
+          this.movimento.quantidade = this.medicamento.qtd_solicitada;  
+    
+          this.movimento.medicamento.preco_venda_total = this.medicamento.preco_venda*this.medicamento.qtd_solicitada;
+          this.preco_total = +this.preco_total + +(this.medicamento.preco_venda*this.medicamento.qtd_solicitada); 
+          this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
+          this.medicamento.qtd_disponivel = +this.medicamento.qtd_disponivel - +this.medicamento.qtd_solicitada;
+
+          this.movimentos.push(this.movimento);
+          this.dataSourse=new MatTableDataSource(this.movimentos);
+    
+          this.medicamento = new Medicamento();
+          this.movimento = new MovimentoEstoque();
+          this.max = 1;
+        }else{
+          this.openSnackBar("Qtd solicitada nao pode ser superior a quantidade disponivel");
+        }
+      }else{
+        this.openSnackBar("Medicamento ja adicionado a lista");
+      }
+      
+      
+
+      /*
+      //Verificar se medicamento ja foi adicionado na lista
+      let check = true;
+      this.medicamentos_adicionados.forEach(md => {
+        if(md.id == this.medicamento.id){
+          check = false;
+          return;
+        }
+      });
+
+      if(check){
+        if( Number(this.medicamento.qtd_solicitada) <= Number(this.medicamento.qtd_disponivel)){
+          this.medicamento.preco_venda_total = this.medicamento.preco_venda*this.medicamento.qtd_solicitada;
+          this.medicamento.qtd_disponivel = +this.medicamento.qtd_disponivel - +this.medicamento.qtd_solicitada;
+  
+          this.medicamentos_adicionados.push(this.medicamento);
+    
+          this.preco_total = +this.preco_total + +(this.medicamento.preco_venda*this.medicamento.qtd_solicitada);
+      
+          this.dataSourse=new MatTableDataSource(this.medicamentos_adicionados);
+    
+          this.medicamento = new Medicamento();
+          this.max = 1;
+        }else{
+          this.openSnackBar("Qtd solicitada nao pode ser superior a quantidade disponivel");
+        }
+      }else{
+        this.openSnackBar("Medicamento ja adicionado a lista");
+      }*/
+      
+
+      
+    }else{
+      this.openSnackBar("Selecione um medicamento");
+    }
+  }
+
+  removeMedicamento(mv: MovimentoEstoque){
+    mv.medicamento.qtd_disponivel = +mv.medicamento.qtd_disponivel + +mv.medicamento.qtd_solicitada;
+    this.preco_total = +this.preco_total - (mv.medicamento.qtd_solicitada*mv.medicamento.preco_venda);
+    this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
+    this.movimentos.splice(this.movimentos.indexOf(mv), 1);
+    this.dataSourse=new MatTableDataSource(this.movimentos);
+  }
+
+  cotar(paciente: Paciente){
+    if(this.movimentos.length>0){
+      this.desabilitar2 = true;
+      this.texto2 = "AGUARDE UM INSTANTE...";
+
+      this.downloadPDF(this.movimentos, paciente, "Cotacao");
+      this.texto2 = "Cotar";
+      //this.desabilitar = false;
+    }else{
+      this.openSnackBar("Adicione pelo menos um medicamento.");
+    }
+  }
+
+  //AO FATURAR PRECISA ATUALIZAR A QTD DISPONIVEL DO ITEM NO DEPOSITO
+  faturar(paciente: Paciente){
+    if(this.movimentos.length>0){
+      this.desabilitar = true;
+      this.texto = "AGUARDE UM INSTANTE..."
+  
+      //Abrir uma CONSULTA CLINICA --------------------
+      let dia = new Date().getDate();
+      let mes = +(new Date().getMonth()) + +1;
+      let ano = new Date().getFullYear();
+  
+      this.consulta = new Consulta();
+      this.consulta.data = dia +"/"+mes+"/"+ano;
+      this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+      this.consulta.paciente = paciente;
+      this.consulta.movimentosestoque = this.movimentos;
+      this.consulta.status = "Encerrada";
+      this.consulta.tipo = "MEDICAMENTO";
+  
+      //Criar uma faturacao da consulta do tipo MEDICAMENTO --------------------
+      let faturacao = new Faturacao();
+      faturacao.categoria = "MEDICAMENTO";
+      faturacao.valor = this.preco_total;
+      faturacao.data = new Date();
+      faturacao.consulta = this.consulta;
+      faturacao.movimentosestoque = this.consulta.movimentosestoque;
+      
+      faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
+      faturacao.ano = new Date().getFullYear();
+  
+  
+      //Persistir informacao na base de dados ----------------------------
+      let data = Object.assign({}, faturacao);
+      let d = Object.assign({}, this.consulta); 
+  
+      this.pacienteService.faturar(data)
+      .then( res => {
+        this.pacienteService.marcarConsulta(d)
+        .then(r => {
+  
+          //Para cada medicamento precisamos criar e salvar o movimento de Saida por venda
+          this.movimentos.forEach(mvt => {
+            mvt.medicamento.qtd_solicitada = null;
+            mvt.data_movimento = dia +"/"+mes+"/"+ano;
+            mvt.movimentador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+            mvt.tipo_movimento = "Saida por venda";
+  
+            let d = Object.assign({}, mvt); 
+            
+  
+            //2. Salvar esse movimento do item no deposito para vermos posicao de estoque por deposito
+            this.estoqueService.addMedicamentoDeposito(d)
+            .then(r =>{}, err =>{
+              this.openSnackBar("Ocorreu um erro ao cadastrar");
+            })
+              
+            //1. Salvar esse movimento no item para poder ver movimentos por item
+            this.estoqueService.addMovimentoItem(d)
+            .then(r =>{}, err =>{
+              this.openSnackBar("Ocorreu um erro ao cadastrar");
+            })
+  
+            //3. Salvar esse movimento na tabela de movimentos para listarmos todos movimentos que ocorreram
+            this.estoqueService.addMovimento(d)
+            .then(r =>{}, err =>{
+              this.openSnackBar("Ocorreu um erro ao cadastrar");
+            })
+  
+          });
+          //this.gerarPDF(this.movimentos , paciente, 'Faturacao', d.id);
+          this.downloadPDF(this.movimentos, paciente, "Faturacao");          
+          this.dialogRef.close();
+          this.openSnackBar("Faturado com sucesso");
+          
+  
+  
+        }, er => {
+          console.log("ERRO: " + er.message)
+          this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
+        })      
+      }, err=>{
+        console.log("ERRO: " + err.message)
+        this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
+      })
+    }else{
+      this.openSnackBar("Adicione pelo menos um medicamento.");
+    }
+  }
+
+  openSnackBar(mensagem) {
+    this.snackBar.open(mensagem, null,{
+      duration: 2000
+    })
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  getMes(number): String{
+    console.log("Get mes "+number)
+    switch(number) { 
+      case 1: { 
+         return "Janeiro";
+      } 
+      case 2: { 
+         return "Fevereiro"; 
+      } 
+      case 3: { 
+         return "Marco"; 
+      }
+      case 4: { 
+        return "Abril"; 
+      }
+      case 5: { 
+        return "Maio"; 
+      }
+      case 6: { 
+        return "Junho"; 
+      }
+      case 7: { 
+        return "Julho"; 
+      }
+      case 8: { 
+        return "Agosto"; 
+      }  
+      case 9: { 
+        return "Setembro"; 
+      }
+      case 10: { 
+        return "Outubro"; 
+      }
+      case 11: { 
+        return "Novembro"; 
+      }
+      case 12: { 
+        return "Dezembro"; 
+      }
+      default: { 
+         //statements; 
+         break; 
+      } 
+   } 
+  }
+
+    //GERAR PDFS
+    public downloadPDF(movimentos :MovimentoEstoque[], paciente: Paciente, categoria){// criacao do pdf
+
+      let nome = "";
+      if(categoria == 'Cotacao'){
+        nome = "COT";
+      }else{
+        nome = "FAT";
+      }
+  
+      if(this.clinica.endereco){
+        if(this.nr_cotacao > 0 && this.nr_fatura >0){
+          
+        
+          if(categoria == 'Cotacao'){
+            let nr_cotacao = new NrCotacao();
+            nr_cotacao.id = this.nr_cotacao+"";
+            let d = Object.assign({}, nr_cotacao); 
+  
+            this.configServices.addNrCotacao(d)
+            .then(r =>{
+      
+              this.gerarPDF(movimentos , paciente, nome, d.id);
+              
+            }, err=>{
+              this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+            })
+          }else{
+            let nr_fatura = new NrFatura();
+            nr_fatura.id = this.nr_fatura+"";
+            let d = Object.assign({}, nr_fatura); 
+  
+            this.configServices.addNrFatura(d)
+            .then(r =>{
+      
+              this.gerarPDF(movimentos , paciente, nome, d.id);
+              
+            }, err=>{
+              this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+            })
+          }
+          
+  
+        }else{
+          this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+        }
+      
+      }else{
+        this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+      }
+       
+  }//Fim download pdf
+  
+  
+  gerarPDF(movimentos :MovimentoEstoque[], paciente: Paciente, nome, id){
+    let doc = new jsPDF({
+      orientation: 'p',
+      unit: 'px',
+      format: 'a4',
+      putOnlyUsedFonts:true,
+    });
+  
+    let specialElementHandlers ={
+      '#editor': function(element,renderer){return true;} 
+    }
+    let dia = new Date().getDate();
+    let mes = +(new Date().getMonth()) + +1;
+    let ano = new Date().getFullYear();
+   let dataemisao = dia +"/"+mes+"/"+ano;  
+  
+    var img = new Image();
+    img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+    doc.addImage(img,"PNG", 300, 40,90, 90);
+  
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontSize(12);
+    let item = 1;
+    let preco_total = 0;
+    let linha = 200;                      
+    movimentos.forEach(element => {
+      doc.text(item+"", 55, linha) //item
+      doc.text(element.quantidade+"", 257, linha) //quantidade
+      doc.text(element.medicamento.nome_comercial+"" , 95, linha) //descricao
+      doc.text(element.medicamento.preco_venda.toFixed(2).replace(".",",")+"", 294, linha)
+      doc.text((element.medicamento.preco_venda*element.quantidade).toFixed(2).replace(".",",")+"", 354, linha)
+  
+      preco_total = +preco_total + +(element.medicamento.preco_venda*element.quantidade);
+      item = +item + +1;
+      linha = +linha + +20;
+    });     
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontSize(10);
+  
+    doc.text("Processado pelo computador", 170, 580);
+    // doc.text("CENTRO MEDICO VITALLE", 165, 75);
+    doc.text(this.clinica.endereco, 50, 75);
+    doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
+    doc.text("Email: "+this.clinica.email, 50, 95);
+    doc.text("Cell: "+this.clinica.telefone, 50, 105);
+    
+    doc.text("Nome do Paciente:", 50, 125);
+    doc.text(paciente.nome, 128, 125);
+    doc.text("NID:", 250, 125);
+    doc.text(paciente.nid+"", 268, 125);
+    doc.text("Apelido:", 50, 145);
+    doc.text(paciente.apelido, 89, 145);
+    doc.text("Data de emissão: ", 250, 145);
+    doc.text(dataemisao, 322, 145);
+    doc.setFillColor(50,50,50);
+    doc.rect ( 50, 170 , 40 , 20 ); 
+    doc.rect (  50, 190 , 40 , 320 ); 
+  
+    doc.rect (  90, 170 , 150 , 20 ); 
+    doc.rect (  90, 190 , 150 , 320 );
+  
+    doc.rect (  240, 170 , 50 , 20 ); 
+    doc.rect (  240, 190 , 50 , 320 );
+  
+    doc.rect (  290, 170 , 60 , 20 ); 
+    doc.rect (  290, 190 , 60 , 320 );
+  
+    doc.rect (  350, 170 , 50 , 20 ); 
+    doc.rect (  350, 190 , 50 , 320);
+  
+    doc.rect ( 290, 510 , 110 , 20 );
+  
+    doc.setFontStyle("bold");
+    doc.text("Item", 60, 180);
+    doc.text("Descrição", 120, 180);
+    doc.text("Quantd", 245, 180);
+    doc.text("Preço Unit", 295, 180);
+    doc.text("Preç Tot", 355, 180);
+    doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
+    //  doc.text("FICHA DE PAGAMENTO", 165, 90);
+  
+    doc.save(nome+ id +'.pdf'); 
+  }
+
+}
 
 //CondutasDialog --------------------------------------------------------
 
 @Component({
   selector: 'condutas-dialog',
   templateUrl: 'condutas.component.html',
-  })
+})
   export class CondutasDialog {
 
   condutaFormGroup: FormGroup;
@@ -302,6 +918,7 @@ export class ListagemComponent implements OnInit {
     this.data.condutas = null;
     this.data.condutas = this.condutas_param.filter(item => item.tipo.nome == tipo_conduta_clinica.nome);
   }
+  
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -920,3 +1537,59 @@ export class ListagemComponent implements OnInit {
       
     
   }
+  @Component({
+    selector: 'dialog-editar',
+    templateUrl: './editar.component.html',
+  
+  })
+  
+  
+  export class DialogEditar{
+  
+    constructor(private _formBuilder: FormBuilder, public dialog: MatDialog,
+      public dialogRef: MatDialogRef<DialogEditar>,
+      @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
+      public pacienteService: PacienteService,  public snackBar: MatSnackBar, public configServices:ConfiguracoesService) {}
+      pacientes: Paciente[];
+
+      
+      GuardarDados(paciente){
+        let data = Object.assign({}, paciente)
+        this.pacienteService.updatePaciente(data) 
+        .then( res => {
+    
+          
+          
+            this.openSnackBar("Dados Guardados com sucesso");
+        }).catch(erro => {
+          this.openSnackBar("Ocorreu um erro ao atualizar os dados. Consulte o Admin do sistema.");
+            console.log("Erro ao atualizar dados do paciente na consulta: "+erro.message)
+        });
+      }
+    onNoClick(): void {
+      this.dialogRef.close();
+    }
+    
+    closeModal(){
+   
+      this.dialogRef.close();
+
+    }
+   
+      
+  
+  openSnackBar(mensagem) {
+    /*this.snackBar.openFromComponent(null, {
+    duration: 2000,
+    announcementMessage: mensagem
+    });*/
+    this.snackBar.open(mensagem, null,{
+      duration: 4000
+     
+    })
+  }
+}
+    
+   
+   
+  

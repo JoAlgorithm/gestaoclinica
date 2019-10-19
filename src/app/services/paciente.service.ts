@@ -25,57 +25,74 @@ export class PacienteService {
     })
     .subscribe()*/
   }
+/*
+  pacientes: Paciente[];
+  limparConsultas(){
 
+    this.db.list('clinicas/1/tiposcondutaclinica').remove();
+    this.db.list('clinicas/1/tiposdiagnosticoaux').remove();
+    console.log('removido com sucesso');
+
+  }*/
 
   //METODOS RELACIONADOS A ENTIDADE ESTUDANTE
 
   //Retorna a lista de estudantes
   getPacientes() {
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/pacientes').snapshotChanges();
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/pacientes');
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/pacientes');
+    return this.db.list('pacientes/'+this.authService.get_clinica_id + '/');
   }
 
   //Cadastra o estudante
   createPaciente(paciente: Paciente){
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/pacientes').add(paciente);
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/pacientes').push(paciente);
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/pacientes').push(paciente);
+    return this.db.list('pacientes/'+this.authService.get_clinica_id + '/').push(paciente);
   }
 
   updatePaciente(paciente: Paciente){
     //return this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).update(paciente);
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/pacientes/').update(paciente.id, paciente)
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/pacientes/').update(paciente.id, paciente)
+    return this.db.list('pacientes/'+this.authService.get_clinica_id + '/').update(paciente.id, paciente)
   }
 
   deletePaciente(paciente: Paciente){
     //this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).delete();
-    return this.db.object('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).remove();
+    //return this.db.object('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).remove();
+    return this.db.object('pacientes/'+this.authService.get_clinica_id + '/' + paciente.id).remove();
   }
 
   //CONSULTAS
   marcarConsulta(consulta:Consulta){
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/consultas').add(consulta);
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/consultas').push(consulta);
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/consultas').push(consulta);
+    return this.db.list('consultas/'+this.authService.get_clinica_id + '/').push(consulta);
   }
 
   getConsultas(){
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/consultas').snapshotChanges();
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/consultas');
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/consultas');
+    return this.db.list('consultas/'+this.authService.get_clinica_id + '/');
   }
 
   updateConsulta(consulta:Consulta){
     //return this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/consultas/' + consulta.id).update(consulta);
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/consultas/').update(consulta.id+"", consulta);
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/consultas/').update(consulta.id+"", consulta);
+    return this.db.list('consultas/'+this.authService.get_clinica_id + '/').update(consulta.id+"", consulta);
   }
 
   //FATURACOES
   faturar(faturacao:Faturacao){
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/faturacao').add(faturacao);
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/faturacao').push(faturacao);
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/faturacao').push(faturacao);
+    return this.db.list('faturacao/'+this.authService.get_clinica_id + '/').push(faturacao);
   }
 
   getFaturacoes(){
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/faturacao').snapshotChanges();
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/faturacao');
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/faturacao');
+    return this.db.list('faturacao/'+this.authService.get_clinica_id + '/');
   }
 
 

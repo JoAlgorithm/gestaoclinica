@@ -94,14 +94,14 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
             //console.log("fazendo signin")
             this.SetUserData(result.user);
             //this.SetUserDataLocal(result.user.uid);
-            this.router.navigate(['/dashboard']);
+            //this.router.navigate(['/dashboard']);
           });
           
-        }).catch((error) => {
+        })/*.catch((error) => {
           console.log("DEU ERRO: " + error.message )
           //this.openSnackBar("Ocorreu um erro ao fazer login. Verifique o email e senha e tente novamente.");
           //window.alert(error.message)
-        })
+        })*/
     }
 
     
@@ -197,7 +197,7 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
     return this.afAuth.auth.signInWithPopup(provider)
     .then((result) => {
        this.ngZone.run(() => {
-          this.router.navigate(['dashboard']);
+          //this.router.navigate(['dashboard']);
         })
       this.SetUserData(result.user);
     }).catch((error) => {
@@ -218,6 +218,25 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
         ...data.payload.val()
       } as User;
       localStorage.setItem('myclinica_user', JSON.stringify(userData));
+      
+
+      switch(userData.perfil) { 
+        case "Admin": { 
+           this.router.navigate(['/dashboard']);
+           break; 
+        } 
+        case "Rececionista": { 
+           this.router.navigate(['/paciente']);
+           break; 
+        } 
+        default: { 
+           this.router.navigate(['/dashboard']);
+           break; 
+        } 
+     } 
+
+      
+    
     })  
     /*
     this.SetUserDataLocal(userData.uid);

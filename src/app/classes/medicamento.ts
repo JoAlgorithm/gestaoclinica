@@ -46,6 +46,9 @@ export class Medicamento {
 
     //movimentos:Movimentos[];
 
+    //Variaveis usadas para manipular a venda nas farmacias
+    qtd_solicitada?: number;
+    preco_venda_total?: number;
 
  }
  

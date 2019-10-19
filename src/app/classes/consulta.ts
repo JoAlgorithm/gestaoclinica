@@ -2,6 +2,8 @@ import { Paciente } from "./paciente";
 import { DiagnosticoAuxiliar } from "./diagnostico_aux";
 import { CategoriaConsulta } from "./categoria_consulta";
 import { CondutaClinica } from "./conduta_clinica";
+import { Medicamento } from "./medicamento";
+import { MovimentoEstoque } from "./movimento_estoque";
 
 export class Consulta { 
     id?:String;
@@ -56,6 +58,7 @@ export class Consulta {
     condutas_clinicas?: CondutaClinica[]; 
     //internamento?:boolean;
 
+    medicamentos?: Medicamento[];
 
     //tratamento_clinico_efetuado?:String;
     //tratamento_clinico_prestar_servico?:String;
@@ -65,8 +68,9 @@ export class Consulta {
     cancelador?: String; //Quem cancelou a consulta
 
     diagnosticos?: DiagnosticoAuxiliar[];
+    movimentosestoque?: MovimentoEstoque[];
 
-    tipo?:String; //Uma consulta pode ser "CONSULTA MEDICA" OU "DIAGNOSTICO AUX" OU "CONDUTA CLINICA"
+    tipo?:String; //Uma consulta pode ser "CONSULTA MEDICA" OU "DIAGNOSTICO AUX" OU "CONDUTA CLINICA" OU "MEDICAMENTO"
 
     //Dependendo do tipo de consulta e usada uma variavel para contabilizar o preco
     // Uma consulta pode conter diagnosticcos e condutuas e cada item tera seu proprio preco

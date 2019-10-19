@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, MatDialog, MatTableDataSource } from '@angular/material';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { EstoqueService } from '../../services/estoque.service';
@@ -18,6 +18,14 @@ export class MovimentosComponent implements OnInit {
   depositos: Deposito[];
   medicamentos: Medicamento[];
 
+  movimentos: MovimentoEstoque[];
+
+  dataSourse: MatTableDataSource<MovimentoEstoque>;
+  displayedColumns = ['data_movimento', 'tipo_movimento', 'deposito', 'medicamento', 'quantidade', 'editar', 'estornar'];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+
   constructor(public dialog: MatDialog, public estoqueService: EstoqueService) { }
 
   ngOnInit() {
@@ -30,15 +38,6 @@ export class MovimentosComponent implements OnInit {
           ...e.payload.val(),
         } as Deposito;
       })
-      /*this.depositos.forEach(element => {
-        if (element.medicamentos) {
-          Object.keys(element.medicamentos).forEach(key=>{
-            console.log("key ", key , " value : ", element.medicamentos[key].nome_generico)
-          })
-        }else{
-          console.log("Sem medicamentos")
-        }
-      });*/
     })
 
     //MEDICAMENTOS
@@ -49,6 +48,19 @@ export class MovimentosComponent implements OnInit {
           ...e.payload.val(),
         } as Medicamento;
       })
+    })
+
+    //MOVIMENTOS
+    this.estoqueService.getMovimentos().snapshotChanges().subscribe(data => {
+      this.movimentos = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as MovimentoEstoque;
+      })
+      this.dataSourse=new MatTableDataSource(this.movimentos);
+      this.dataSourse.paginator = this.paginator;
+      this.dataSourse.sort = this.sort;
     })
   }
 
@@ -97,14 +109,26 @@ export class RegistoDialog {
 
   }//Fim do Constructor
 
+  
   addMvt(){
     if(this.mvt.deposito != undefined && this.mvt.medicamento != undefined && this.mvt.quantidade != undefined ){
       
+      let dia = new Date().getDate();
+      let mes = +(new Date().getMonth()) + +1;
+      let ano = new Date().getFullYear();
+      this.mvt.data_movimento = dia +"/"+mes+"/"+ano;
+      this.mvt.movimentador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+      this.mvt.tipo_movimento = this.data.tipoMovimento;
+
       //Antes de adicionar calcular a quantidade disponivel se essa adicao for efetuada
       if(this.mvt.deposito.medicamentos){
         Object.keys(this.mvt.deposito.medicamentos).forEach(key=>{
           if(this.mvt.medicamento.id == key){
-            this.mvt.medicamento.qtd_disponivel = +this.mvt.deposito.medicamentos[key].qtd_disponivel + +this.mvt.quantidade;
+            if(this.mvt.deposito.medicamentos[key].qtd_disponivel){
+              this.mvt.medicamento.qtd_disponivel = +this.mvt.deposito.medicamentos[key].qtd_disponivel + +this.mvt.quantidade;
+            }else{
+              this.mvt.medicamento.qtd_disponivel = this.mvt.quantidade;
+            }
           }
         })
       }else{
@@ -135,9 +159,6 @@ export class RegistoDialog {
   */
   saveMvt(){
     if (typeof this.mvts !== 'undefined' && this.mvts.length > 0) {
-      //data_movimento?: string;
-      //movimentador?: string;
-      //let d = Object.assign({}, this.consulta); 
 
       //Percorrer cada linha do array de movimentos
       this.mvts.forEach(mvt => {
@@ -194,8 +215,6 @@ export class RegistoDialog {
     }
 
   }
-
-  
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{
