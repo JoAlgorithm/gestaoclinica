@@ -290,7 +290,7 @@ export class ListagemComponent implements OnInit {
   marcarConsulta(paciente, tipo){
     let dialogRef = this.dialog.open(ConsultasDialog, {
       width: '700px',
-      data: { paciente: paciente, tipo: tipo, categorias_consulta: this.categorias_consulta  }
+      data: { paciente: paciente, tipo: tipo, categorias_consulta: this.categorias_consulta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura  }
     });
     dialogRef.afterClosed().subscribe(result => {
     console.log("result "+result);
@@ -333,25 +333,34 @@ export class ListagemComponent implements OnInit {
   }
 
   openDiagnostico(row: Paciente): void {
-    let dialogRef = this.dialog.open(DiagnosticosDialog, {
-    width: '800px',
-    data: { paciente: row, diagnosticos: this.diagnosticos,
-      tipos_diagnosticos:this.tipos_diagnosticos, subtipos_diagnosticos:this.subtipos_diagnosticos
-    }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-    console.log("result "+result);
-    });
+    if(this.nr_cotacao > 0 && this.nr_fatura >0){
+      let dialogRef = this.dialog.open(DiagnosticosDialog, {
+      width: '800px',
+      data: { paciente: row, diagnosticos: this.diagnosticos,
+        tipos_diagnosticos:this.tipos_diagnosticos, subtipos_diagnosticos:this.subtipos_diagnosticos
+        , clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura
+      }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+      console.log("result "+result);
+      });
+    }else{
+      this.openSnackBar("Processando nr de cotacao/fatura. Tente novamente.");
+    } 
   }
 
   openConduta(row: Paciente): void {
-    let dialogRef = this.dialog.open(CondutasDialog, {
-    width: '800px',
-    data: { paciente: row, condutas: this.condutas, tiposconduta: this.tiposconduta }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-    console.log("result "+result);
-    });
+    if(this.nr_cotacao > 0 && this.nr_fatura >0){
+      let dialogRef = this.dialog.open(CondutasDialog, {
+      width: '800px',
+      data: { paciente: row, condutas: this.condutas, tiposconduta: this.tiposconduta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+      console.log("result "+result);
+      });
+    }else{
+      this.openSnackBar("Processando nr de cotacao/fatura. Tente novamente.");
+    } 
   }
 
   openMedicamento(row: Paciente){
@@ -502,41 +511,7 @@ export class MedicamentosDialog {
       }else{
         this.openSnackBar("Medicamento ja adicionado a lista");
       }
-      
-      
 
-      /*
-      //Verificar se medicamento ja foi adicionado na lista
-      let check = true;
-      this.medicamentos_adicionados.forEach(md => {
-        if(md.id == this.medicamento.id){
-          check = false;
-          return;
-        }
-      });
-
-      if(check){
-        if( Number(this.medicamento.qtd_solicitada) <= Number(this.medicamento.qtd_disponivel)){
-          this.medicamento.preco_venda_total = this.medicamento.preco_venda*this.medicamento.qtd_solicitada;
-          this.medicamento.qtd_disponivel = +this.medicamento.qtd_disponivel - +this.medicamento.qtd_solicitada;
-  
-          this.medicamentos_adicionados.push(this.medicamento);
-    
-          this.preco_total = +this.preco_total + +(this.medicamento.preco_venda*this.medicamento.qtd_solicitada);
-      
-          this.dataSourse=new MatTableDataSource(this.medicamentos_adicionados);
-    
-          this.medicamento = new Medicamento();
-          this.max = 1;
-        }else{
-          this.openSnackBar("Qtd solicitada nao pode ser superior a quantidade disponivel");
-        }
-      }else{
-        this.openSnackBar("Medicamento ja adicionado a lista");
-      }*/
-      
-
-      
     }else{
       this.openSnackBar("Selecione um medicamento");
     }
@@ -713,11 +688,11 @@ export class MedicamentosDialog {
 
       let nome = "";
       if(categoria == 'Cotacao'){
-        nome = "COT";
+        nome = "COTAÇÃO";
       }else{
-        nome = "FAT";
+        nome = "FATURA";
       }
-  
+    
       if(this.clinica.endereco){
         if(this.nr_cotacao > 0 && this.nr_fatura >0){
           
@@ -762,7 +737,7 @@ export class MedicamentosDialog {
   }//Fim download pdf
   
   
-  gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
+  gerarPDF(movimentos :MovimentoEstoque[], paciente: Paciente, nome, id){
     let doc = new jsPDF({
       orientation: 'p',
       unit: 'px',
@@ -776,7 +751,7 @@ export class MedicamentosDialog {
     let dia = new Date().getDate();
     let mes = +(new Date().getMonth()) + +1;
     let ano = new Date().getFullYear();
-   let dataemisao = dia +"/"+mes+"/"+ano;  
+    let dataemisao = dia +"/"+mes+"/"+ano;  
   
     var img = new Image();
     img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
@@ -789,19 +764,18 @@ export class MedicamentosDialog {
     let item = 1;
     let preco_total = 0;
     let linha = 200;                      
-    diagnosticos.forEach(element => {
+    movimentos.forEach(element => {
       doc.text(item+"", 55, linha) //item
-      doc.text("1", 257, linha) //quantidade
-      doc.text(element.nome , 95, linha) //descricao
-      doc.text(element.preco, 294, linha)
-      doc.text(element.preco, 354, linha)
+      doc.text(element.quantidade+"", 257, linha) //quantidade
+      doc.text(element.medicamento.nome_comercial , 95, linha) //descricao
+      doc.text(element.medicamento.preco_venda.toFixed(2).replace(".",",")+"", 294, linha)
+      doc.text((element.medicamento.preco_venda*element.quantidade).toFixed(2).replace(".",",")+"", 354, linha)
   
-      preco_total = +preco_total + +element.preco;
+      preco_total = +preco_total + +element.medicamento.preco_venda;
       item = +item + +1;
       linha = +linha + +20;
     });   
-    
-    
+     
     doc.setFont("Courier");
     doc.setFontStyle("normal"); 
     doc.setFontStyle("bold");
@@ -809,14 +783,11 @@ export class MedicamentosDialog {
   
     doc.text(nome+":", 170, 40);  
   
-  
-  
     doc.setFont("Courier");
     doc.setFontStyle("normal"); 
     doc.setFontSize(10);
   
     doc.text("Processado pelo computador", 170, 580);
-    // doc.text("CENTRO MEDICO VITALLE", 165, 75);
     doc.text(this.clinica.endereco, 50, 75);
     doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
     doc.text("Email: "+this.clinica.email, 50, 95);
@@ -859,20 +830,29 @@ export class MedicamentosDialog {
     doc.rect (  290, 170 , 60 , 20 ); 
     doc.rect (  290, 190 , 60 , 320 );
   
-    //  doc.text("FICHA DE PAGAMENTO", 165, 90);
-  
     doc.save(nome+ id +'.pdf'); 
   }
 
 }
 
+//========================================================================================================================
 //CondutasDialog --------------------------------------------------------
+//========================================================================================================================
 
 @Component({
   selector: 'condutas-dialog',
   templateUrl: 'condutas.component.html',
 })
   export class CondutasDialog {
+
+  clinica: Clinica; //PDF
+  nr_cotacao = 0; //PDF
+  nr_fatura = 0; //PDF
+
+  desabilitar: boolean = false; //Fatura
+  desabilitar2: boolean = false; //Cotacao
+  texto: string = "Faturar"; //Fatura
+  texto2: string = "Cotar"; //Cotacao
 
   condutaFormGroup: FormGroup;
   condutas: CondutaClinica[] = [];
@@ -891,7 +871,7 @@ export class MedicamentosDialog {
   
   
   constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<CondutasDialog>, private router: Router,
-  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
+  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public configServices: ConfiguracoesService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.conduta = new CondutaClinica();
     this.tipoconduta = new TipoCondutaClinica();
@@ -908,6 +888,11 @@ export class MedicamentosDialog {
     this.tiposcondutas_param = this.data.tiposconduta;
     this.condutas_param = this.data.condutas;
     //this.condutas_alternativas = this.condutas_param;
+
+    this.clinica = this.data.clinica; //PDF
+    this.nr_cotacao = this.data.nr_cotacao; //PDF
+    this.nr_fatura = this.data.nr_fatura; //PDF
+    console.log("dialog nr fatura: "+this.nr_fatura);
   }
   
   addConduta(conduta:CondutaClinica){
@@ -915,6 +900,7 @@ export class MedicamentosDialog {
       this.condutas.push(conduta);
 
       this.preco_total = +this.preco_total + +conduta.preco;
+      this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
   
       this.dataSourse=new MatTableDataSource(this.condutas);
       this.conduta = new CondutaClinica();
@@ -926,6 +912,7 @@ export class MedicamentosDialog {
 
   removeConduta(conduta:CondutaClinica){
     this.preco_total = +this.preco_total - +conduta.preco;
+    this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
     this.condutas.splice(this.condutas.indexOf(conduta), 1);
     this.dataSourse=new MatTableDataSource(this.condutas);
   }
@@ -941,53 +928,57 @@ export class MedicamentosDialog {
     this.dialogRef.close();
   }
 
-  
-
-
 
   faturar(paciente: Paciente){
-    //Abrir uma consulta CONDUTA CLINICA --------------------
-    let dia = new Date().getDate();
-    let mes = +(new Date().getMonth()) + +1;
-    let ano = new Date().getFullYear();
+    if(this.condutas.length>0){
+      this.desabilitar = true;
+      this.texto = "AGUARDE UM INSTANTE..."
+      //Abrir uma consulta CONDUTA CLINICA --------------------
+      let dia = new Date().getDate();
+      let mes = +(new Date().getMonth()) + +1;
+      let ano = new Date().getFullYear();
 
-    this.consulta = new Consulta();
-    this.consulta.data = dia +"/"+mes+"/"+ano;
-    this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
-    this.consulta.paciente = paciente;
-    this.consulta.condutas_clinicas = this.condutas;
-    this.consulta.status = "Encerrada";
-    this.consulta.tipo = "CONDUTA CLINICA";
+      this.consulta = new Consulta();
+      this.consulta.data = dia +"/"+mes+"/"+ano;
+      this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+      this.consulta.paciente = paciente;
+      this.consulta.condutas_clinicas = this.condutas;
+      this.consulta.status = "Encerrada";
+      this.consulta.tipo = "CONDUTA CLINICA";
 
-    //Criar uma faturacao da consulta do tipo CONDUTA CLINICA --------------------
-    let faturacao = new Faturacao();
-    faturacao.categoria = "CONDUTA CLINICA";
-    faturacao.valor = this.preco_total;
-    faturacao.data = new Date();
-    faturacao.consulta = this.consulta;
-    faturacao.condutas_clinicas = this.consulta.condutas_clinicas;
-    
-    faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
-    faturacao.ano = new Date().getFullYear();
+      //Criar uma faturacao da consulta do tipo CONDUTA CLINICA --------------------
+      let faturacao = new Faturacao();
+      faturacao.categoria = "CONDUTA CLINICA";
+      faturacao.valor = this.preco_total;
+      faturacao.data = new Date();
+      faturacao.consulta = this.consulta;
+      faturacao.condutas_clinicas = this.consulta.condutas_clinicas;
+      
+      faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
+      faturacao.ano = new Date().getFullYear();
 
-    //Persistir informacao na base de dados ----------------------------
-    let data = Object.assign({}, faturacao);
-    let d = Object.assign({}, this.consulta); 
+      //Persistir informacao na base de dados ----------------------------
+      let data = Object.assign({}, faturacao);
+      let d = Object.assign({}, this.consulta); 
 
-    this.pacienteService.faturar(data)
-    .then( res => {
-      this.pacienteService.marcarConsulta(d)
-      .then(r => {
-        this.dialogRef.close();
-        this.openSnackBar("Faturado com sucesso");
-      }, er => {
-        console.log("ERRO: " + er.message)
+      this.pacienteService.faturar(data)
+      .then( res => {
+        this.pacienteService.marcarConsulta(d)
+        .then(r => {
+          this.downloadPDF(this.condutas, paciente, "Faturacao");        
+          this.dialogRef.close();
+          this.openSnackBar("Faturado com sucesso");
+        }, er => {
+          console.log("ERRO: " + er.message)
+          this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
+        })      
+      }, err=>{
+        console.log("ERRO: " + err.message)
         this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
-      })      
-    }, err=>{
-      console.log("ERRO: " + err.message)
-      this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
-    })
+      })
+    }else{
+      this.openSnackBar("Adicione pelo menos uma conduta");
+    }
   }
 
   getMes(number): String{
@@ -1042,19 +1033,197 @@ export class MedicamentosDialog {
     })
   }
 
+
+
+  cotar(paciente: Paciente){
+    if(this.condutas.length>0){
+      this.desabilitar2 = true;
+      this.texto2 = "AGUARDE UM INSTANTE...";
+
+      this.downloadPDF(this.condutas, paciente, "Cotacao");
+      this.texto2 = "Cotar";
+      //this.desabilitar = false;
+    }else{
+      this.openSnackBar("Adicione pelo menos uma conduta.");
+    }
+  }
+
+
+
+
+  //GERAR PDFS
+  public downloadPDF(condutas :CondutaClinica[], paciente: Paciente, categoria){// criacao do pdf
+
+    let nome = "";
+    if(categoria == 'Cotacao'){
+      nome = "COTAÇÃO";
+    }else{
+      nome = "FATURA";
+    }
+  
+    if(this.clinica.endereco){
+      if(this.nr_cotacao > 0 && this.nr_fatura >0){
+        
+      
+        if(categoria == 'Cotacao'){
+          let nr_cotacao = new NrCotacao();
+          nr_cotacao.id = this.nr_cotacao+"";
+          let d = Object.assign({}, nr_cotacao); 
+
+          this.configServices.addNrCotacao(d)
+          .then(r =>{
+    
+            this.gerarPDF(condutas , paciente, nome, d.id);
+            
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+          })
+        }else{
+          let nr_fatura = new NrFatura();
+          nr_fatura.id = this.nr_fatura+"";
+          let d = Object.assign({}, nr_fatura); 
+
+          this.configServices.addNrFatura(d)
+          .then(r =>{
+    
+            this.gerarPDF(condutas , paciente, nome, d.id);
+            
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+          })
+        }
+        
+
+      }else{
+        this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+      }
+    
+    }else{
+      this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+    }
+     
+}//Fim download pdf
+
+
+gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
+  let doc = new jsPDF({
+    orientation: 'p',
+    unit: 'px',
+    format: 'a4',
+    putOnlyUsedFonts:true,
+  });
+
+  let specialElementHandlers ={
+    '#editor': function(element,renderer){return true;} 
+  }
+  let dia = new Date().getDate();
+  let mes = +(new Date().getMonth()) + +1;
+  let ano = new Date().getFullYear();
+  let dataemisao = dia +"/"+mes+"/"+ano;  
+
+  var img = new Image();
+  img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+  doc.addImage(img,"PNG", 300, 40,90, 90);
+
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(12);
+  doc.text(id+"", 225, 40);
+  let item = 1;
+  let preco_total = 0;
+  let linha = 200;                      
+  condutas.forEach(element => {
+    doc.text(item+"", 55, linha) //item
+    doc.text("1", 257, linha) //quantidade
+    doc.text(element.nome , 95, linha) //descricao
+    doc.text(element.preco+"", 294, linha)
+    doc.text(element.preco+"", 354, linha)
+
+    preco_total = +preco_total + +element.preco;
+    item = +item + +1;
+    linha = +linha + +20;
+  });   
+   
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontStyle("bold");
+  doc.setFontSize(15);
+
+  doc.text(nome+":", 170, 40);  
+
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(10);
+
+  doc.text("Processado pelo computador", 170, 580);
+  doc.text(this.clinica.endereco, 50, 75);
+  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
+  doc.text("Email: "+this.clinica.email, 50, 95);
+  doc.text("Cell: "+this.clinica.telefone, 50, 105);
+  
+  doc.text("Nome do Paciente:", 50, 125);
+  doc.text(paciente.nome, 128, 125);
+  doc.text("NID:", 250, 125);
+  doc.text(paciente.nid+"", 268, 125);
+  doc.text("Apelido:", 50, 145);
+  doc.text(paciente.apelido, 89, 145);
+  doc.text("Data de emissão: ", 250, 145);
+  doc.text(dataemisao, 322, 145);
+  doc.setFillColor(50,50,50);
+  doc.rect ( 50, 170 , 40 , 20 ); 
+  doc.rect (  50, 190 , 40 , 320 ); 
+
+  doc.rect (  90, 170 , 150 , 20 ); 
+  doc.rect (  90, 190 , 150 , 320 );
+
+  doc.rect (  240, 170 , 50 , 20 ); 
+  doc.rect (  240, 190 , 50 , 320 );
+
+  doc.rect (  290, 170 , 60 , 20 ); 
+  doc.rect (  290, 190 , 60 , 320 );
+
+  doc.rect (  350, 170 , 50 , 20 ); 
+  doc.rect (  350, 190 , 50 , 320);
+
+  doc.rect ( 290, 510 , 110 , 20 );
+
+  doc.setFontStyle("bold");
+  doc.text("Item", 60, 180);
+  doc.text("Descrição", 120, 180);
+  doc.text("Quantd", 245, 180);
+  doc.text("Preço Unit", 295, 180);
+  doc.text("Preç Tot", 355, 180);
+  doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
+
+  doc.rect (  290, 170 , 60 , 20 ); 
+  doc.rect (  290, 190 , 60 , 320 );
+
+  doc.save(nome+ id +'.pdf'); 
+}
+
 }
 
 
 
 
-
+//=========================================================================================================================
 //ConsultasDialog ---------------------------------------------------------
+//=========================================================================================================================
 
 @Component({
   selector: 'consultas-dialog',
   templateUrl: 'consultas.component.html',
   })
   export class ConsultasDialog {
+
+    clinica: Clinica; //PDF
+    nr_cotacao = 0; //PDF
+    nr_fatura = 0; //PDF
+  
+    desabilitar: boolean = false; //Fatura
+    desabilitar2: boolean = false; //Cotacao
+    texto: string = "Marcar consulta"; //Fatura
+    texto2: string = "Cotar"; //Cotacao
 
   consultasFormGroup: FormGroup;
   //categorias: CategoriaConsulta[] = [];
@@ -1064,7 +1233,7 @@ export class MedicamentosDialog {
   preco_total:Number = 0;
 
   constructor(  public dialogRef: MatDialogRef<ConsultasDialog>, private router: Router,
-  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
+  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public configServices: ConfiguracoesService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.categoria = new CategoriaConsulta();
     this.consulta = new Consulta();
@@ -1074,6 +1243,11 @@ export class MedicamentosDialog {
       categoria_preco: ['', Validators.required]
     });
     this.consultasFormGroup.controls['categoria_preco'].disable();
+
+    this.clinica = this.data.clinica; //PDF
+    this.nr_cotacao = this.data.nr_cotacao; //PDF
+    this.nr_fatura = this.data.nr_fatura; //PDF
+    console.log("dialog nr fatura: "+this.nr_fatura);
   }
 
   onNoClick(): void {
@@ -1082,12 +1256,13 @@ export class MedicamentosDialog {
 
   marcarConsulta(paciente, tipo){
     if(this.categoria.nome){ //Garantir que categoria foi selecionada
-      this.DiarioPdf(paciente);
+      
 
       let dia = new Date().getDate();
       let mes = +(new Date().getMonth()) + +1;
       let ano = new Date().getFullYear();
       this.consulta.data = dia +"/"+mes+"/"+ano;
+      this.DiarioPdf(paciente);
 
       this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
       this.consulta.paciente = paciente;
@@ -1100,6 +1275,7 @@ export class MedicamentosDialog {
 
       this.pacienteService.marcarConsulta(data)
       .then( res => {
+        this.downloadPDF(this.categoria, paciente, "Faturacao");
         this.dialogRef.close();
         this.openSnackBar("Consulta agendada com sucesso");
       }, err => {
@@ -1117,6 +1293,175 @@ export class MedicamentosDialog {
       duration: 2000
     })
   }
+
+
+
+  cotar(paciente: Paciente){
+    if(this.categoria.nome){
+      this.desabilitar2 = true;
+      this.texto2 = "AGUARDE UM INSTANTE...";
+
+      this.downloadPDF(this.categoria, paciente, "Cotacao");
+      this.texto2 = "Cotar";
+      //this.desabilitar = false;
+    }else{
+      this.openSnackBar("Selecione uma categoria de consulta");
+    }
+  }
+
+
+
+
+  //GERAR PDFS
+  public downloadPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, categoria){// criacao do pdf
+
+    let nome = "";
+    if(categoria == 'Cotacao'){
+      nome = "COTAÇÃO";
+    }else{
+      nome = "FATURA";
+    }
+  
+    if(this.clinica.endereco){
+      if(this.nr_cotacao > 0 && this.nr_fatura >0){
+        
+      
+        if(categoria == 'Cotacao'){
+          let nr_cotacao = new NrCotacao();
+          nr_cotacao.id = this.nr_cotacao+"";
+          let d = Object.assign({}, nr_cotacao); 
+
+          this.configServices.addNrCotacao(d)
+          .then(r =>{
+    
+            this.gerarPDF(categoriaConsulta , paciente, nome, d.id);
+            
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+          })
+        }else{
+          let nr_fatura = new NrFatura();
+          nr_fatura.id = this.nr_fatura+"";
+          let d = Object.assign({}, nr_fatura); 
+
+          this.configServices.addNrFatura(d)
+          .then(r =>{
+    
+            this.gerarPDF(categoriaConsulta , paciente, nome, d.id);
+            
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+          })
+        }
+        
+
+      }else{
+        this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+      }
+    
+    }else{
+      this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+    }
+     
+}//Fim download pdf
+
+
+gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
+  let doc = new jsPDF({
+    orientation: 'p',
+    unit: 'px',
+    format: 'a4',
+    putOnlyUsedFonts:true,
+  });
+
+  let specialElementHandlers ={
+    '#editor': function(element,renderer){return true;} 
+  }
+  let dia = new Date().getDate();
+  let mes = +(new Date().getMonth()) + +1;
+  let ano = new Date().getFullYear();
+  let dataemisao = dia +"/"+mes+"/"+ano;  
+
+  var img = new Image();
+  img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+  doc.addImage(img,"PNG", 300, 40,90, 90);
+
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(12);
+  doc.text(id+"", 225, 40);
+  let item = 1;
+  let preco_total = 0;
+  let linha = 200;                      
+
+  doc.text(item+"", 55, linha) //item
+  doc.text("1", 257, linha) //quantidade
+  doc.text(categoriaConsulta.nome , 95, linha) //descricao
+  
+  doc.text(categoriaConsulta.preco+"", 294, linha)
+  doc.text(categoriaConsulta.preco+"", 354, linha)
+
+  preco_total = +categoriaConsulta.preco;
+  item = +item + +1;
+  linha = +linha + +20;
+   
+   
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontStyle("bold");
+  doc.setFontSize(15);
+
+  doc.text(nome+":", 170, 40);  
+
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(10);
+
+  doc.text("Processado pelo computador", 170, 580);
+  doc.text(this.clinica.endereco, 50, 75);
+  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
+  doc.text("Email: "+this.clinica.email, 50, 95);
+  doc.text("Cell: "+this.clinica.telefone, 50, 105);
+  
+  doc.text("Nome do Paciente:", 50, 125);
+  doc.text(paciente.nome, 128, 125);
+  doc.text("NID:", 250, 125);
+  doc.text(paciente.nid+"", 268, 125);
+  doc.text("Apelido:", 50, 145);
+  doc.text(paciente.apelido, 89, 145);
+  doc.text("Data de emissão: ", 250, 145);
+  doc.text(dataemisao, 322, 145);
+  doc.setFillColor(50,50,50);
+  doc.rect ( 50, 170 , 40 , 20 ); 
+  doc.rect (  50, 190 , 40 , 320 ); 
+
+  doc.rect (  90, 170 , 150 , 20 ); 
+  doc.rect (  90, 190 , 150 , 320 );
+
+  doc.rect (  240, 170 , 50 , 20 ); 
+  doc.rect (  240, 190 , 50 , 320 );
+
+  doc.rect (  290, 170 , 60 , 20 ); 
+  doc.rect (  290, 190 , 60 , 320 );
+
+  doc.rect (  350, 170 , 50 , 20 ); 
+  doc.rect (  350, 190 , 50 , 320);
+
+  doc.rect ( 290, 510 , 110 , 20 );
+
+  doc.setFontStyle("bold");
+  doc.text("Item", 60, 180);
+  doc.text("Descrição", 120, 180);
+  doc.text("Quantd", 245, 180);
+  doc.text("Preço Unit", 295, 180);
+  doc.text("Preç Tot", 355, 180);
+  doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
+
+  doc.rect (  290, 170 , 60 , 20 ); 
+  doc.rect (  290, 190 , 60 , 320 );
+
+  doc.save(nome+ id +'.pdf'); 
+}
 
 
   public DiarioPdf(paciente: Paciente){// criacao do pdf
@@ -1294,24 +1639,31 @@ export class MedicamentosDialog {
      docu.setFontStyle("bold");
      docu.text("DIÁRIO CLÍNICO", 175, 92);
 
-     docu.save('diario.pdf');  //nome do arquivo
+     docu.save('Diario clinico -' + paciente.nid + ' - ' + this.consulta.data + '.pdf');  //nome do arquivo
   }  
-
-
-
 
 }
 
 
 
-
+//==========================================================================================================
 //DiagnosticosDialog ---------------------------------------------------------
+//=========================================================================================================
 
 @Component({
   selector: 'diagnosticos-dialog',
   templateUrl: 'diagnosticos.component.html',
   })
   export class DiagnosticosDialog {
+
+  clinica: Clinica; //PDF
+  nr_cotacao = 0; //PDF
+  nr_fatura = 0; //PDF
+
+  desabilitar: boolean = false; //Fatura
+  desabilitar2: boolean = false; //Cotacao
+  texto: string = "Faturar"; //Fatura
+  texto2: string = "Cotar"; //Cotacao
 
   diagnosticoFormGroup: FormGroup;
   diagnosticos: DiagnosticoAuxiliar[] = [];
@@ -1345,6 +1697,11 @@ export class MedicamentosDialog {
     this.dataSourse=new MatTableDataSource(this.diagnosticos);
     this.diagnosticos_param = this.data.diagnosticos;
     this.subtipos_diagnosticos_param = this.data.subtipos_diagnosticos;
+
+    this.clinica = this.data.clinica; //PDF
+    this.nr_cotacao = this.data.nr_cotacao; //PDF
+    this.nr_fatura = this.data.nr_fatura; //PDF
+    console.log("dialog nr fatura: "+this.nr_fatura);
   }
 
   filtrarTipo(tipo: TipoDiagnosticoAux) {
@@ -1372,6 +1729,7 @@ export class MedicamentosDialog {
       this.diagnosticos.push(diagnostico);
 
       this.preco_total = +this.preco_total + +diagnostico.preco;
+      this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
   
       this.dataSourse=new MatTableDataSource(this.diagnosticos);
       this.diagnostico = new DiagnosticoAuxiliar();
@@ -1384,6 +1742,8 @@ export class MedicamentosDialog {
   }
 
   removeDiagostico(diagnostico:DiagnosticoAuxiliar){
+    this.preco_total = +this.preco_total - +diagnostico.preco;
+    this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
     this.diagnosticos.splice(this.diagnosticos.indexOf(diagnostico), 1);
     this.dataSourse=new MatTableDataSource(this.diagnosticos);
   }
@@ -1426,6 +1786,7 @@ export class MedicamentosDialog {
     .then( res => {
       this.pacienteService.marcarConsulta(d)
       .then(r => {
+        this.downloadPDF(this.diagnosticos, paciente, "Faturacao");
         this.dialogRef.close();
         this.openSnackBar("Faturado com sucesso");
       }, er => {
@@ -1474,6 +1835,174 @@ export class MedicamentosDialog {
     })
   }
 
+
+
+
+  cotar(paciente: Paciente){
+    if(this.diagnosticos){
+      this.desabilitar2 = true;
+      this.texto2 = "AGUARDE UM INSTANTE...";
+
+      this.downloadPDF(this.diagnosticos, paciente, "Cotacao");
+      this.texto2 = "Cotar";
+      //this.desabilitar = false;
+    }else{
+      this.openSnackBar("Adicione pelo menos um diagnostico");
+    }
+  }
+
+
+
+
+  //GERAR PDFS
+  public downloadPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, categoria){// criacao do pdf
+
+    let nome = "";
+    if(categoria == 'Cotacao'){
+      nome = "COTAÇÃO";
+    }else{
+      nome = "FATURA";
+    }
+  
+    if(this.clinica.endereco){
+      if(this.nr_cotacao > 0 && this.nr_fatura >0){
+        
+      
+        if(categoria == 'Cotacao'){
+          let nr_cotacao = new NrCotacao();
+          nr_cotacao.id = this.nr_cotacao+"";
+          let d = Object.assign({}, nr_cotacao); 
+
+          this.configServices.addNrCotacao(d)
+          .then(r =>{
+    
+            this.gerarPDF(diagnosticos , paciente, nome, d.id);
+            
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+          })
+        }else{
+          let nr_fatura = new NrFatura();
+          nr_fatura.id = this.nr_fatura+"";
+          let d = Object.assign({}, nr_fatura); 
+
+          this.configServices.addNrFatura(d)
+          .then(r =>{
+    
+            this.gerarPDF(diagnosticos , paciente, nome, d.id);
+            
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+          })
+        }
+        
+
+      }else{
+        this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+      }
+    
+    }else{
+      this.openSnackBar("Ocorreu um erro ao gerar a "+ categoria +". Tente novamente.");
+    }
+     
+}//Fim download pdf
+
+gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
+  let doc = new jsPDF({
+    orientation: 'p',
+    unit: 'px',
+    format: 'a4',
+    putOnlyUsedFonts:true,
+  });
+
+  let specialElementHandlers ={
+    '#editor': function(element,renderer){return true;} 
+  }
+  let dia = new Date().getDate();
+  let mes = +(new Date().getMonth()) + +1;
+  let ano = new Date().getFullYear();
+  let dataemisao = dia +"/"+mes+"/"+ano;  
+
+  var img = new Image();
+  img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+  doc.addImage(img,"PNG", 300, 40,90, 90);
+
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(12);
+  doc.text(id+"", 225, 40);
+  let item = 1;
+  let preco_total = 0;
+  let linha = 200;                      
+  diagnosticos.forEach(element => {
+    doc.text(item+"", 55, linha) //item
+    doc.text("1", 257, linha) //quantidade
+    doc.text(element.nome , 95, linha) //descricao
+    doc.text(element.preco+"", 294, linha)
+    doc.text(element.preco+"", 354, linha)
+
+    preco_total = +preco_total + +element.preco;
+    item = +item + +1;
+    linha = +linha + +20;
+  });   
+   
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontStyle("bold");
+  doc.setFontSize(15);
+
+  doc.text(nome+":", 170, 40);  
+
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(10);
+
+  doc.text("Processado pelo computador", 170, 580);
+  doc.text(this.clinica.endereco, 50, 75);
+  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
+  doc.text("Email: "+this.clinica.email, 50, 95);
+  doc.text("Cell: "+this.clinica.telefone, 50, 105);
+  
+  doc.text("Nome do Paciente:", 50, 125);
+  doc.text(paciente.nome, 128, 125);
+  doc.text("NID:", 250, 125);
+  doc.text(paciente.nid+"", 268, 125);
+  doc.text("Apelido:", 50, 145);
+  doc.text(paciente.apelido, 89, 145);
+  doc.text("Data de emissão: ", 250, 145);
+  doc.text(dataemisao, 322, 145);
+  doc.setFillColor(50,50,50);
+  doc.rect ( 50, 170 , 40 , 20 ); 
+  doc.rect (  50, 190 , 40 , 320 ); 
+
+  doc.rect (  90, 170 , 150 , 20 ); 
+  doc.rect (  90, 190 , 150 , 320 );
+
+  doc.rect (  240, 170 , 50 , 20 ); 
+  doc.rect (  240, 190 , 50 , 320 );
+
+  doc.rect (  290, 170 , 60 , 20 ); 
+  doc.rect (  290, 190 , 60 , 320 );
+
+  doc.rect (  350, 170 , 50 , 20 ); 
+  doc.rect (  350, 190 , 50 , 320);
+
+  doc.rect ( 290, 510 , 110 , 20 );
+
+  doc.setFontStyle("bold");
+  doc.text("Item", 60, 180);
+  doc.text("Descrição", 120, 180);
+  doc.text("Quantd", 245, 180);
+  doc.text("Preço Unit", 295, 180);
+  doc.text("Preç Tot", 355, 180);
+  doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
+
+  doc.rect (  290, 170 , 60 , 20 ); 
+  doc.rect (  290, 190 , 60 , 320 );
+
+  doc.save(nome+ id +'.pdf'); 
+}
+
   getMes(number): String{
     console.log("Get mes "+number)
     switch(number) { 
@@ -1520,7 +2049,22 @@ export class MedicamentosDialog {
    } 
   }
 
+  
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   export interface DialogData {
     animal: string;
     name: string;

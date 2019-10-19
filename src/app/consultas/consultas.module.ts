@@ -61,6 +61,7 @@ import { PacienteService } from '../services/paciente.service';
 import { ConsultasComponent, CancelarConsultaDialog, AtenderConsultaDialog } from './consultas.component';
 import { ConsultasRoutes } from './consultas.routing';
 import { ConfiguracoesService } from '../services/configuracoes.service';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 
 @NgModule({
@@ -116,6 +117,7 @@ import { ConfiguracoesService } from '../services/configuracoes.service';
     OverlayModule,
     PlatformModule,
     PortalModule,
+    NgxMatSelectSearchModule
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},

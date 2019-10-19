@@ -306,6 +306,9 @@
 
         <mat-form-field style="width: 49%">
             <mat-select placeholder="Diagnosticos auxiliares" [(ngModel)]="diagnosticos_alternativo" multiple>
+                <mat-option >
+                    <ngx-mat-select-search placeholderLabel="Pesquisar" matInput (keyup)="filtrarDiagnosticos($event.target.value)"></ngx-mat-select-search>
+                  </mat-option>
                 <mat-option *ngFor="let diagnostico of data.diagnosticos" [value]="diagnostico.nome" [disabled]="diagnostico.faturado">
                     {{diagnostico.nome}}
                 </mat-option>

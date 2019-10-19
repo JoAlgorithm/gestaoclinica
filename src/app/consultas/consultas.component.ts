@@ -548,6 +548,16 @@ export class ConsultasComponent implements OnInit {
 
   }
 
+  diagnosticos_aux: DiagnosticoAuxiliar[] =[];
+  filtrarDiagnosticos(filterValue){
+    if(filterValue){
+      //this.data.diagnosticos = null;
+      this.data.diagnosticos = this.diagnosticos_aux.filter(item => item.nome.indexOf(filterValue) > -1);     
+    }else{
+      this.data.diagnosticos = this.diagnosticos_aux;
+    }
+  }
+
   ngOnInit() {
     this.dialogRef.updateSize('80%', '90%');
 
@@ -567,6 +577,7 @@ export class ConsultasComponent implements OnInit {
         this.diagnosticos_alternativo.push(element.nome);
       });
     }
+    this.diagnosticos_aux = this.data.diagnosticos;
     
 
 

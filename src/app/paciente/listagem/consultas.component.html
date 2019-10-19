@@ -18,5 +18,6 @@
 </div>
 <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">Cancelar</button>
-    <button mat-button cdkFocusInitial (click)="marcarConsulta(data.paciente, data.tipo)">Marcar consulta</button>
+    <button mat-button [disabled]="desabilitar2" (click)="cotar(data.paciente)">{{texto2}}</button>
+    <button mat-button cdkFocusInitial [disabled]="desabilitar" (click)="marcarConsulta(data.paciente, data.tipo)">{{texto}}</button>
 </div> 

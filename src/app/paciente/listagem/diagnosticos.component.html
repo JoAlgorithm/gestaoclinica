@@ -77,6 +77,7 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancelar</button>
-  <button mat-button cdkFocusInitial (click)="faturarDiagnostico(data.paciente)">Faturar {{preco_total| currency:' ':'symbol':'1.2-2'}} MZN</button>
+  <button mat-button [disabled]="desabilitar2" (click)="cotar(data.paciente)">{{texto2}}</button>
+  <button mat-button cdkFocusInitial [disabled]="desabilitar" (click)="faturarDiagnostico(data.paciente)">{{texto}}</button>
   <!--<button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial (click)="cancelarConsulta(data.consulta)">OK</button>-->
 </div> 
