@@ -22,6 +22,7 @@ export class CadastrosComponent implements OnInit {
   * VARIAVEIS DA TAB MEDICAMENTOS
   */
   cats_medicamento: CategoriaMedicamento[];
+  cats_medicamento_aux: CategoriaMedicamento[];
   medicamento: Medicamento;
   medicamentos: Medicamento[];
 
@@ -84,6 +85,7 @@ export class CadastrosComponent implements OnInit {
           ...e.payload.val(),
         } as CategoriaMedicamento;
       });
+      this.cats_medicamento_aux = this.cats_medicamento;
     })
 
     this.estoqueService.getMedicamentos().snapshotChanges().subscribe(data => {
@@ -155,6 +157,15 @@ export class CadastrosComponent implements OnInit {
     //this.dataSourseMedicamento.filter = filterValue;
    this.cats_medicamento.filter((unit) => unit.nome.indexOf(filterValue) > -1)
    this.cats_medicamento.filter(v => v.nome == filterValue)
+  }
+
+  filtrarTipoMedicamento(filterValue) {
+    if(filterValue){
+      this.cats_medicamento = null;
+      this.cats_medicamento = this.cats_medicamento_aux.filter(item => item.nome.indexOf(filterValue) > -1);     
+    }else{
+      this.cats_medicamento = this.cats_medicamento_aux;
+    }
   }
  
   registarMedicamento(){
