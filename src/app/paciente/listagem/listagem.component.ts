@@ -1754,42 +1754,45 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     this.nr_fatura = this.data.nr_fatura; //PDF
     console.log("dialog nr fatura: "+this.nr_fatura);
   }
-  filtrarDiagnosticos(filterValue) {
-    if(filterValue){
-      filterValue = filterValue.trim(); // Remove whitespace
-      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+
+  filtrodiagnostico="";
+  filtrarDiagnosticos(filtrodiagnostico) {
+    if(filtrodiagnostico){
+      filtrodiagnostico = filtrodiagnostico.trim(); // Remove whitespace
+      filtrodiagnostico = filtrodiagnostico.toLowerCase(); // Datasource defaults to lowercase matches
      
     this.diagnosticos= null;
 
-  this.data.diagnosticos = this.diagnosticos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+  this.data.diagnosticos = this.diagnosticos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtrodiagnostico) > -1);     
     }else{
       this.data.diagnosticos = this.diagnosticos_aux;
     }
   }
 
+  filtrotipodiagnostico="";
 
-  filtrarTipoDiagnosticos(filterValue) {
-    if(filterValue){
-      filterValue = filterValue.trim(); // Remove whitespace
-      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+  filtrarTipoDiagnosticos(filtrotipodiagnostico) {
+    if(filtrotipodiagnostico){
+      filtrotipodiagnostico = filtrotipodiagnostico.trim(); // Remove whitespace
+      filtrotipodiagnostico = filtrotipodiagnostico.toLowerCase(); // Datasource defaults to lowercase matches
      
     this.tipos_diagnosticos= null;
 
-  this.data.tipos_diagnosticos = this.tipos_diagnosticos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+  this.data.tipos_diagnosticos = this.tipos_diagnosticos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtrotipodiagnostico) > -1);     
     }else{
       this.data.tipos_diagnosticos = this.tipos_diagnosticos_aux;
     }
   }
 
-  
-  filtrarSubtipoDiagnostico(filterValue){
-    if(filterValue){
-      filterValue = filterValue.trim(); // Remove whitespace
-      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+  filtrosubtipodiagnostico="";
+  filtrarSubtipoDiagnostico(filtrosubtipodiagnostico){
+    if(filtrosubtipodiagnostico){
+      filtrosubtipodiagnostico = filtrosubtipodiagnostico.trim(); // Remove whitespace
+      filtrosubtipodiagnostico = filtrosubtipodiagnostico.toLowerCase(); // Datasource defaults to lowercase matches
      
     this.data.subtipos_diagnosticos= null;
   
-  this.data.subtipos_diagnosticos = this.subtipos_diagnosticos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+  this.data.subtipos_diagnosticos = this.subtipos_diagnosticos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtrosubtipodiagnostico) > -1);     
     }else{
       this.data.subtipos_diagnosticos = this.subtipos_diagnosticos_aux;
     }

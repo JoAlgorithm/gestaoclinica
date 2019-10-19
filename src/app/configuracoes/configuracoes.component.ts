@@ -97,6 +97,7 @@ export class ConfiguracoesComponent implements OnInit {
   * VARIAVEIS DA TAB CONDUTAS CLINICAS
   */
   tipos_conduta_clinica: TipoCondutaClinica[];
+  tipos_conduta_clinica_aux: TipoCondutaClinica[];
   conduta_clinica: CondutaClinica;
   condutas_clinica: CondutaClinica[];
   condutas_clinicaFormGroup: FormGroup;
@@ -231,6 +232,7 @@ export class ConfiguracoesComponent implements OnInit {
         } as CondutaClinica;
       });
       this.tipos_conduta_clinica.sort((a, b) => a.id > b.id ? 1 : -1)
+      this.tipos_conduta_clinica_aux=this.tipos_conduta_clinica;
     })
 
     this.condutas_clinicaFormGroup = this._formBuilder.group({
@@ -364,15 +366,15 @@ export class ConfiguracoesComponent implements OnInit {
     //this.dataSourseDiagnostico.filter = filterValue;
    this.tipos_diagnosticos.filter((unit) => unit.nome.indexOf(filterValue) > -1);
   }
-
-  filtrarTipoDiagnosticos(filterValue) {
-    if(filterValue){
-      filterValue = filterValue.trim(); // Remove whitespace
-      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+filtratipodiagnostico="";
+  filtrarTipoDiagnosticos(filtratipodiagnostico) {
+    if(filtratipodiagnostico){
+      filtratipodiagnostico = filtratipodiagnostico.trim(); // Remove whitespace
+      filtratipodiagnostico = filtratipodiagnostico.toLowerCase(); // Datasource defaults to lowercase matches
      
     this.tipos_diagnosticos= null;
 
-  this.tipos_diagnosticos = this.tipos_diagnosticos_ax.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+  this.tipos_diagnosticos = this.tipos_diagnosticos_ax.filter(item => item.nome.toLocaleLowerCase().indexOf(filtratipodiagnostico) > -1);     
     }else{
       this.tipos_diagnosticos = this.tipos_diagnosticos_ax;
     }
@@ -445,18 +447,34 @@ export class ConfiguracoesComponent implements OnInit {
     this.subtipos_diagnosticos = null;
     this.subtipos_diagnosticos = this.subtipos_diagnosticos_aux.filter(item => item.tipo.nome == tipo.nome);
   }
-  filtrarSubtipoDiagnostico(filterValue){
-    if(filterValue){
-      filterValue = filterValue.trim(); // Remove whitespace
-      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+
+  filtrarsubtipoDiagnosticos="";
+  filtrarSubtipoDiagnosticos(filtrarsubtipoDiagnosticos){
+    if(filtrarsubtipoDiagnosticos){
+      filtrarsubtipoDiagnosticos = filtrarsubtipoDiagnosticos.trim(); // Remove whitespace
+      filtrarsubtipoDiagnosticos = filtrarsubtipoDiagnosticos.toLowerCase(); // Datasource defaults to lowercase matches
      
     this.subtipos_diagnosticos= null;
 
-  this.subtipos_diagnosticos = this.subtipos_diagnosticos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+  this.subtipos_diagnosticos = this.subtipos_diagnosticos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtrarsubtipoDiagnosticos) > -1);     
     }else{
       this.subtipos_diagnosticos = this.subtipos_diagnosticos_aux;
     }
   }
+  filtrartipocondut="";
+  filtrarTiposCondutas(filtrartipocondut){
+    if(filtrartipocondut){
+      filtrartipocondut = filtrartipocondut.trim(); // Remove whitespace
+      filtrartipocondut = filtrartipocondut.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.tipos_conduta_clinica= null;
+
+  this.tipos_conduta_clinica = this.tipos_conduta_clinica_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtrartipocondut) > -1);     
+    }else{
+      this.tipos_conduta_clinica = this.tipos_conduta_clinica_aux;
+    }
+  }
+
   filtrarTipoconduta(filterValue){
     if(filterValue){
       filterValue = filterValue.trim(); // Remove whitespace

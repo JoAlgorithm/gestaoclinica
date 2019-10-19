@@ -139,6 +139,7 @@ export class CadastrosComponent implements OnInit {
       });
       this.dataSourseUN=new MatTableDataSource(this.uns.sort((a, b) => a.nome > b.nome ? 1 : -1));
       this.dataSourseUN.paginator = this.paginatorUN;
+      this.uns_aux=this.uns;
     })
   }
   editarMedicamento(medicamento: Medicamento){
@@ -159,26 +160,26 @@ export class CadastrosComponent implements OnInit {
    this.cats_medicamento.filter((unit) => unit.nome.indexOf(filterValue) > -1)
    this.cats_medicamento.filter(v => v.nome == filterValue)
   }
-
-  filtrarTipoMedicamento(filterValue) {
-    if(filterValue){
-      filterValue = filterValue.trim(); // Remove whitespace
-      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+filtrartipomedic="";
+  filtrarTipoMedicamento(filtrartipomedic) {
+    if(filtrartipomedic){
+      filtrartipomedic = filtrartipomedic.trim(); // Remove whitespace
+      filtrartipomedic = filtrartipomedic.toLowerCase(); // Datasource defaults to lowercase matches
      
     this.cats_medicamento = null;
-      this.cats_medicamento = this.cats_medicamento_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+      this.cats_medicamento = this.cats_medicamento_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtrartipomedic) > -1);     
     }else{
       this.cats_medicamento = this.cats_medicamento_aux;
     }
   }
-
-  filtrarUnidade(filterValue) {
-    if(filterValue){
-      filterValue = filterValue.trim(); // Remove whitespace
-      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+filterunidad="";
+  filtrarUnidade(filterunidad) {
+    if(filterunidad){
+      filterunidad = filterunidad.trim(); // Remove whitespace
+      filterunidad = filterunidad.toLowerCase(); // Datasource defaults to lowercase matches
      
     this.uns = null;
-      this.uns = this.uns_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+      this.uns = this.uns_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterunidad) > -1);     
     }else{
       this.uns = this.uns_aux;
     }

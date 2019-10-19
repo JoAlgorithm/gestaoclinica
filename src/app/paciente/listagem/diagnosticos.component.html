@@ -2,13 +2,13 @@
 <div mat-dialog-content>
   <p>Selecione os diagnosticos solicitados pelo cliente</p>
 
-  <form [formGroup]="diagnosticoFormGroup">
+ <!--<form [formGroup]="diagnosticoFormGroup">-->
 
     <!--TIPO DE DIAGNOSTICO AUX-->
     <mat-form-field style="width: 23%">
-        <mat-select placeholder="Tipo" formControlName="diagnostico_tipo" [(ngModel)]="tipodiagnostico" (selectionChange)="filtrarTipo(tipodiagnostico)">
+        <mat-select placeholder="Tipo"  [(ngModel)]="tipodiagnostico" (selectionChange)="filtrarTipo(tipodiagnostico)">
                 <mat-option >
-                        <ngx-mat-select-search placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTipoDiagnosticos($event.target.value)"></ngx-mat-select-search>
+                        <ngx-mat-select-search [(ngModel)]="filtrotipodiagnostico"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTipoDiagnosticos($event.target.value)"></ngx-mat-select-search>
                       </mat-option>
             <mat-option *ngFor="let tipo of data.tipos_diagnosticos" [value]="tipo">
                 {{tipo.nome}}
@@ -18,9 +18,9 @@
 
         <!--SUBTIPO DE DIAGNOSTICO AUX-->
     <mat-form-field style="width: 23%">
-        <mat-select placeholder="Sub-Tipo" formControlName="diagnostico_subtipo" [(ngModel)]="subtipodiagnostico" (selectionChange)="filtrarSubTipo(subtipodiagnostico)">
+        <mat-select placeholder="Sub-Tipo"  [(ngModel)]="subtipodiagnostico" (selectionChange)="filtrarSubTipo(subtipodiagnostico)">
                 <mat-option >
-                        <ngx-mat-select-search placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarSubtipoDiagnostico($event.target.value)"></ngx-mat-select-search>
+                        <ngx-mat-select-search [(ngModel)]="filtrosubtipodiagnostico" placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarSubtipoDiagnostico($event.target.value)"></ngx-mat-select-search>
                       </mat-option>
             <mat-option *ngFor="let subtipo of data.subtipos_diagnosticos" [value]="subtipo">
                 {{subtipo.nome}}
@@ -29,9 +29,9 @@
     </mat-form-field>
 
     <mat-form-field style="width: 23%">
-        <mat-select placeholder="Diagnostico Auxiliar" formControlName="diagnostico_nome" [(ngModel)]="diagnostico" required>
+        <mat-select placeholder="Diagnostico Auxiliar" [(ngModel)]="diagnostico" required>
                 <mat-option >
-                        <ngx-mat-select-search placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarDiagnosticos($event.target.value)"></ngx-mat-select-search>
+                        <ngx-mat-select-search   [(ngModel)]="filtrodiagnostico"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarDiagnosticos($event.target.value)"></ngx-mat-select-search>
                       </mat-option>
             <mat-option *ngFor="let diagnostico of data.diagnosticos" [value]="diagnostico">
                 {{diagnostico.nome}}
@@ -40,13 +40,13 @@
     </mat-form-field>
 
     <mat-form-field style="width: 23%">
-        <input matInput placeholder="Preco" formControlName="diagnostico_preco" [(ngModel)]="diagnostico.preco" required>
+        <input matInput placeholder="Preco"  [(ngModel)]="diagnostico.preco" required>
     </mat-form-field>
 
     <button mat-icon-button (click)="addDiognostico(diagnostico)" matTooltip="Agendar {{diagnostico.nome}}">
             <mat-icon>add_circle</mat-icon>
     </button>
-   </form>
+  <!-- </form>-->
 
    <mat-table [dataSource]="dataSourse" matSort>
         

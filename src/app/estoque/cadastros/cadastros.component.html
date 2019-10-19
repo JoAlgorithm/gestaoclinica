@@ -6,13 +6,13 @@
         <mat-card-content>
           <h5>FORMULARIO DE CADASTRO DE MEDICAMENTOS</h5>
           
-          <form [formGroup]="medicamentoFormGroup">
+         <!-- <form [formGroup]="medicamentoFormGroup">-->
 
             <!--CATEGORIA-->
             <mat-form-field style="width: 31%">
-              <mat-select placeholder="Forma farmaceutica" formControlName="m_categoria" [(ngModel)]="medicamento.categoria" required>
+              <mat-select placeholder="Forma farmaceutica"  [(ngModel)]="medicamento.categoria" required>
                 <mat-option >
-                  <ngx-mat-select-search placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTipoMedicamento($event.target.value)"></ngx-mat-select-search>
+                  <ngx-mat-select-search   [(ngModel)]="filtrartipomedic"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTipoMedicamento($event.target.value)"></ngx-mat-select-search>
                 </mat-option>
                 <mat-option *ngFor="let cat of cats_medicamento " [value]="cat">
                         {{cat.nome }}
@@ -22,18 +22,20 @@
 
             <!--NOME GENERICO-->
             <mat-form-field style="width: 31%">
-                <input matInput placeholder="Nome generico" formControlName="m_nome_generico" [(ngModel)]="medicamento.nome_generico" required> 
+                <input matInput placeholder="Nome generico"  [(ngModel)]="medicamento.nome_generico" required> 
             </mat-form-field>
 
             <!--NOME COMERCIAL-->
             <mat-form-field style="width: 31%">
-              <input matInput placeholder="Nome comercial" formControlName="m_nome_comercial" [(ngModel)]="medicamento.nome_comercial" required> 
+              <input matInput placeholder="Nome comercial" [(ngModel)]="medicamento.nome_comercial" required> 
             </mat-form-field>
 
             <!--UNIDADE DE MEDIDA-->
             <mat-form-field style="width: 31%">
-              <mat-select placeholder="Unidade de medida" formControlName="m_un" [(ngModel)]="medicamento.un" required>
-                
+              <mat-select placeholder="Unidade de medida"  [(ngModel)]="medicamento.un" required>
+                  <mat-option >
+                      <ngx-mat-select-search   [(ngModel)]="filterunidad"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarUnidade($event.target.value)"></ngx-mat-select-search>
+                    </mat-option>
                   <mat-option *ngFor="let un of uns" [value]="un">
                       {{un.nome}}
                   </mat-option>
@@ -42,23 +44,23 @@
 
             <!--MIN-->
             <mat-form-field style="width: 31%">
-              <input matInput placeholder="Preco de venda" type="number" formControlName="m_preco_venda" [(ngModel)]="medicamento.preco_venda" required> 
+              <input matInput placeholder="Preco de venda" type="number"  [(ngModel)]="medicamento.preco_venda" required> 
             </mat-form-field>
 
             <!--MIN-->
             <mat-form-field style="width: 31%">
-              <input matInput placeholder="Min" type="number" formControlName="m_min" [(ngModel)]="medicamento.min"> 
+              <input matInput placeholder="Min" type="number" [(ngModel)]="medicamento.min"> 
             </mat-form-field>
 
             <!--COMPOSICAO-->
             <mat-form-field style="width: 93%">
-              <input matInput placeholder="Composicao" formControlName="m_nome_composicao" [(ngModel)]="medicamento.composicao"> 
+              <input matInput placeholder="Composicao"  [(ngModel)]="medicamento.composicao"> 
             </mat-form-field>
 
             <button mat-icon-button (click)="registarMedicamento()" matTooltip="REGISTAR NOVO MEDICAMENTO {{medicamento.nome_generico}}">
                 <mat-icon>add_circle</mat-icon>
             </button>
-          </form>
+         <!-- </form>-->
 
           <div class="example-container mat-elevation-z8">
             <mat-table [dataSource]="dataSourseMedicamento">

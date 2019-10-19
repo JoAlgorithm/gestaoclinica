@@ -23,7 +23,6 @@ export class PendentesComponent implements OnInit {
 
 
   consultas: Consulta[];
- 
 
 
   dataSourse: MatTableDataSource<Consulta>;
@@ -153,11 +152,16 @@ export class PendentesComponent implements OnInit {
       this.dataSourse=new MatTableDataSource(
         this.consultas.filter(c =>c.status === "Diagnostico" || c.status === "Internamento").sort((a, b) => a.data > b.data ? 1 : -1)
       );
-      this.dataSourse.paginator = this.paginator;
+      setTimeout(()=>this.dataSourse.paginator = this.paginator);
       this.dataSourse.sort = this.sort;
+      
     })
   }
   
+
+  
+
+
 
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
