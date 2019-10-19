@@ -577,11 +577,12 @@ export class MedicamentosDialog {
       faturacao.categoria = "MEDICAMENTO";
       faturacao.valor = this.preco_total;
       faturacao.data = new Date();
-      faturacao.consulta = this.consulta;
-      faturacao.movimentosestoque = this.consulta.movimentosestoque;
+      //faturacao.consulta = this.consulta;
+      //faturacao.movimentosestoque = this.consulta.movimentosestoque;
       
       faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
       faturacao.ano = new Date().getFullYear();
+      faturacao.id = this.nr_fatura+"";
   
   
       //Persistir informacao na base de dados ----------------------------
@@ -966,8 +967,9 @@ export class MedicamentosDialog {
       faturacao.categoria = "CONDUTA CLINICA";
       faturacao.valor = this.preco_total;
       faturacao.data = new Date();
-      faturacao.consulta = this.consulta;
-      faturacao.condutas_clinicas = this.consulta.condutas_clinicas;
+      //faturacao.consulta = this.consulta;
+      //faturacao.condutas_clinicas = this.consulta.condutas_clinicas;
+      faturacao.id = this.nr_fatura+"";
       
       faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
       faturacao.ano = new Date().getFullYear();
@@ -1706,7 +1708,13 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, 
   private _formBuilder: FormBuilder, public configServices: ConfiguracoesService) {
     this.diagnostico = new DiagnosticoAuxiliar();
-    this.configServices.getDiagnosticos().snapshotChanges().subscribe(data => {
+    
+    this.diagnosticos_aux = this.data.diagnosticos;
+    this.tipos_diagnosticos_aux = this.data.tipos_diagnosticos;
+    this.subtipos_diagnosticos_aux = this.data.subtipos_diagnosticos;
+
+    
+    /*this.configServices.getDiagnosticos().snapshotChanges().subscribe(data => {
       this.diagnosticos = data.map(e => {
         return {
           id: e.payload.key,
@@ -1736,7 +1744,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
         } as SubTipoDiagnosticoAux;
       });
       this.subtipos_diagnosticos_aux = this.subtipos_diagnosticos;
-    })
+    })*/
     this.diagnosticoFormGroup = this._formBuilder.group({
       diagnostico_tipo: [''],
       diagnostico_subtipo: [''],
@@ -1873,11 +1881,12 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     faturacao.categoria = "DIAGNOSTICO_AUX";
     faturacao.valor = this.preco_total;
     faturacao.data = new Date();
-    faturacao.consulta = this.consulta;
-    faturacao.diagnostico_aux = this.consulta.diagnosticos_aux;
+    //faturacao.consulta = this.consulta;
+    //faturacao.diagnostico_aux = this.consulta.diagnosticos_aux;
     
     faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
     faturacao.ano = new Date().getFullYear();
+    faturacao.id = this.nr_fatura+"";
 
     //Persistir informacao na base de dados ----------------------------
     let data = Object.assign({}, faturacao);

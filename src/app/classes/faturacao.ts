@@ -23,13 +23,12 @@ export class Faturacao {
     */
     categoria?:String;
 
-    consulta?: Consulta;
-    diagnostico_aux?: DiagnosticoAuxiliar[];
-    condutas_clinicas?: CondutaClinica[];
-    medicamentos?: Medicamento[];
-    //movimentosestoque?: MovimentoEstoque[];
+    //consulta?: Consulta;
+    //diagnostico_aux?: DiagnosticoAuxiliar[];
+    //condutas_clinicas?: CondutaClinica[];
     //medicamentos?: Medicamento[];
-    movimentosestoque?: MovimentoEstoque[];//Dentro de movimento tem medicamentos, deposito e qtd
+
+    //movimentosestoque?: MovimentoEstoque[];//Dentro de movimento tem medicamentos, deposito e qtd
 
     faturador?:String; //User que faturou
 }

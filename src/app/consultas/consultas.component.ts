@@ -444,7 +444,7 @@ export class ConsultasComponent implements OnInit {
     faturacao.categoria = "CONSULTA_MEDICA";
     faturacao.valor = consulta.preco_consulta_medica;
     faturacao.data = new Date();
-    faturacao.consulta = consulta;
+    //faturacao.consulta = consulta;
     faturacao.faturador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
     faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
     faturacao.ano = new Date().getFullYear();
@@ -549,6 +549,7 @@ export class ConsultasComponent implements OnInit {
   }
 
   diagnosticos_aux: DiagnosticoAuxiliar[] =[];
+  filterValue = "";
   filtrarDiagnosticos(filterValue){
     if(filterValue){
       //this.data.diagnosticos = null;

@@ -236,13 +236,15 @@ export class PendentesComponent implements OnInit {
         this.faturacao.categoria = "DIAGNOSTICO_AUX";
         this.faturacao.valor = consulta.preco_diagnosticos;
         this.faturacao.data = new Date();
-        this.faturacao.consulta = consulta;
-        this.faturacao.diagnostico_aux = consulta.diagnosticos_aux;
+        //this.faturacao.consulta = consulta;
+        //this.faturacao.diagnostico_aux = consulta.diagnosticos_aux;
         
         this.faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
         this.faturacao.ano = new Date().getFullYear();
 
         this.faturacao.faturador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+        this.faturacao.id = this.nr_fatura+"";
+        
 
         if(consulta.tipo == "Consulta Medica"){
           consulta.status = "Em andamento";
@@ -596,13 +598,14 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
       faturacao.categoria = "DIAGNOSTICO_AUX";
       faturacao.valor = 0;
       faturacao.data = new Date();
-      faturacao.consulta = this.consulta;
+      //faturacao.consulta = this.consulta;
       //faturacao.diagnostico_aux = consulta.diagnosticos_aux;
       //this.faturacao.diagnostico_aux = this.consultas.
       faturacao.faturador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
 
       faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
       faturacao.ano = new Date().getFullYear();
+      faturacao.id = this.nr_fatura+"";
 
       /*if(this.consulta.tipo == "Consulta Medica"){
         this.consulta.status = "Em andamento";

@@ -86,7 +86,8 @@ export class PacienteService {
   faturar(faturacao:Faturacao){
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/faturacao').add(faturacao);
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/faturacao').push(faturacao);
-    return this.db.list('faturacao/'+this.authService.get_clinica_id + '/').push(faturacao);
+    //return this.db.list('faturacao/'+this.authService.get_clinica_id + '/').push(faturacao);
+    return this.db.list('faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano).update(faturacao.id ,faturacao);
   }
 
   getFaturacoes(){
