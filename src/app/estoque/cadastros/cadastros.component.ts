@@ -160,13 +160,14 @@ export class CadastrosComponent implements OnInit {
    this.cats_medicamento.filter(v => v.nome == filterValue)
   }
 
-  filtrarTipoMedicamento(filterValue) {
-    if(filterValue){
-      filterValue = filterValue.trim(); // Remove whitespace
-      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+  tMedicamentoFiltro = "";
+  filtrarTipoMedicamento(tMedicamentoFiltro) {
+    if(tMedicamentoFiltro){
+      tMedicamentoFiltro = tMedicamentoFiltro.trim(); // Remove whitespace
+      tMedicamentoFiltro = tMedicamentoFiltro.toLowerCase(); // Datasource defaults to lowercase matches
      
     this.cats_medicamento = null;
-      this.cats_medicamento = this.cats_medicamento_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+      this.cats_medicamento = this.cats_medicamento_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(tMedicamentoFiltro) > -1);     
     }else{
       this.cats_medicamento = this.cats_medicamento_aux;
     }
