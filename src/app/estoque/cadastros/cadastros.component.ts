@@ -50,6 +50,7 @@ export class CadastrosComponent implements OnInit {
   */
   un: UnidadeMedida;
   uns: UnidadeMedida[];
+  uns_aux: UnidadeMedida[];
 
   unFormGroup: FormGroup; //Fomulario
 
@@ -161,13 +162,29 @@ export class CadastrosComponent implements OnInit {
 
   filtrarTipoMedicamento(filterValue) {
     if(filterValue){
-      this.cats_medicamento = null;
-      this.cats_medicamento = this.cats_medicamento_aux.filter(item => item.nome.indexOf(filterValue) > -1);     
+      filterValue = filterValue.trim(); // Remove whitespace
+      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.cats_medicamento = null;
+      this.cats_medicamento = this.cats_medicamento_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
     }else{
       this.cats_medicamento = this.cats_medicamento_aux;
     }
   }
- 
+
+  filtrarUnidade(filterValue) {
+    if(filterValue){
+      filterValue = filterValue.trim(); // Remove whitespace
+      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.uns = null;
+      this.uns = this.uns_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+    }else{
+      this.uns = this.uns_aux;
+    }
+  }
+
+
   registarMedicamento(){
     if(this.medicamento.nome_generico || this.medicamento.categoria || this.medicamento.un || this.medicamento.preco_venda){
       

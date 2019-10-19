@@ -12,7 +12,7 @@
             <mat-form-field style="width: 31%">
               <mat-select placeholder="Forma farmaceutica" formControlName="m_categoria" [(ngModel)]="medicamento.categoria" required>
                 <mat-option >
-                  <ngx-mat-select-search placeholderLabel="Pesquisar" matInput (keyup)="filtrarTipoMedicamento($event.target.value)"></ngx-mat-select-search>
+                  <ngx-mat-select-search placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTipoMedicamento($event.target.value)"></ngx-mat-select-search>
                 </mat-option>
                 <mat-option *ngFor="let cat of cats_medicamento " [value]="cat">
                         {{cat.nome }}
@@ -33,6 +33,7 @@
             <!--UNIDADE DE MEDIDA-->
             <mat-form-field style="width: 31%">
               <mat-select placeholder="Unidade de medida" formControlName="m_un" [(ngModel)]="medicamento.un" required>
+                
                   <mat-option *ngFor="let un of uns" [value]="un">
                       {{un.nome}}
                   </mat-option>

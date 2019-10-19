@@ -122,10 +122,12 @@
           <form [formGroup]="cadastro_diagnosticoFormGroup">
               <!--<ng-template matStepLabel>DADOS DO PACIENTE</ng-template>-->
         
-              <!--TIPO DE DIAGNOSTICO AUX-->
+              <!--TIPO DE DIAGNOSTICO AUX--> 
               <mat-form-field style="width: 23%">
                     <mat-select placeholder="Tipo" formControlName="diagnostico_tipo" [(ngModel)]="diagnostico.tipo" (selectionChange)="filtrarTipoDiagnostico(diagnostico.tipo)">
-                            
+                            <mat-option >
+                                    <ngx-mat-select-search placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTipoDiagnosticos($event.target.value)"></ngx-mat-select-search>
+                                  </mat-option>
                         <mat-option *ngFor="let tipo of tipos_diagnosticos" [value]="tipo">
                                
                             {{tipo.nome}}
@@ -136,6 +138,9 @@
                 <!--SUBTIPO DE DIAGNOSTICO AUX-->
               <mat-form-field style="width: 23%">
                     <mat-select placeholder="Sub-Tipo" formControlName="diagnostico_subtipo" [(ngModel)]="diagnostico.subtipo">
+                            <mat-option >
+                                    <ngx-mat-select-search placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarSubtipoDiagnostico($event.target.value)"></ngx-mat-select-search>
+                                  </mat-option>
                         <mat-option *ngFor="let subtipo of subtipos_diagnosticos" [value]="subtipo">
                             {{subtipo.nome}}
                         </mat-option>

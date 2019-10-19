@@ -31,6 +31,7 @@ export class ConfiguracoesComponent implements OnInit {
   //tipos_diagnosticos = this.configServices.tipos_diagnosticos;
   //tipos_diagnosticos = this.configServices.getTiposDiagnosticos();
   tipos_diagnosticos: TipoDiagnosticoAux[];
+  tipos_diagnosticos_ax: TipoDiagnosticoAux[];
   subtipos_diagnosticos: SubTipoDiagnosticoAux[];
   subtipos_diagnosticos_aux: SubTipoDiagnosticoAux[];
 
@@ -138,6 +139,7 @@ export class ConfiguracoesComponent implements OnInit {
           ...e.payload.val(),
         } as TipoDiagnosticoAux;
       });
+      this.tipos_diagnosticos_ax = this.tipos_diagnosticos;
     })
 
     this.configServices.getSubTiposDiagnosticos().snapshotChanges().subscribe(data => {
@@ -363,6 +365,19 @@ export class ConfiguracoesComponent implements OnInit {
    this.tipos_diagnosticos.filter((unit) => unit.nome.indexOf(filterValue) > -1);
   }
 
+  filtrarTipoDiagnosticos(filterValue) {
+    if(filterValue){
+      filterValue = filterValue.trim(); // Remove whitespace
+      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.tipos_diagnosticos= null;
+
+  this.tipos_diagnosticos = this.tipos_diagnosticos_ax.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+    }else{
+      this.tipos_diagnosticos = this.tipos_diagnosticos_ax;
+    }
+  }
+
 
 
   atualizarClinica(){
@@ -430,7 +445,32 @@ export class ConfiguracoesComponent implements OnInit {
     this.subtipos_diagnosticos = null;
     this.subtipos_diagnosticos = this.subtipos_diagnosticos_aux.filter(item => item.tipo.nome == tipo.nome);
   }
+  filtrarSubtipoDiagnostico(filterValue){
+    if(filterValue){
+      filterValue = filterValue.trim(); // Remove whitespace
+      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.subtipos_diagnosticos= null;
+
+  this.subtipos_diagnosticos = this.subtipos_diagnosticos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+    }else{
+      this.subtipos_diagnosticos = this.subtipos_diagnosticos_aux;
+    }
+  }
+  filtrarTipoconduta(filterValue){
+    if(filterValue){
+      filterValue = filterValue.trim(); // Remove whitespace
+      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.subtipos_diagnosticos= null;
+
+  this.subtipos_diagnosticos = this.subtipos_diagnosticos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+    }else{
+      this.subtipos_diagnosticos = this.subtipos_diagnosticos_aux;
+    }
+  }
   
+
 
 
   openSnackBar(mensagem) {

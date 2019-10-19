@@ -68,7 +68,7 @@ import { PendentesComponent, FaturarDialog } from './pendentes/pendentes.compone
 //import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 //import { LaddaModule } from 'angular2-ladda';
 import { EstoqueService } from '../services/estoque.service';
-
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 @NgModule({
   imports: [
     CommonModule,
@@ -122,6 +122,7 @@ import { EstoqueService } from '../services/estoque.service';
     OverlayModule,
     PlatformModule,
     PortalModule,
+    NgxMatSelectSearchModule,
     //MatProgressButtonsModule,
     //FontAwesomeModule
     //LaddaModule

@@ -7,6 +7,9 @@
     <!--TIPO DE DIAGNOSTICO AUX-->
     <mat-form-field style="width: 23%">
         <mat-select placeholder="Tipo" formControlName="diagnostico_tipo" [(ngModel)]="tipodiagnostico" (selectionChange)="filtrarTipo(tipodiagnostico)">
+                <mat-option >
+                        <ngx-mat-select-search placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTipoDiagnosticos($event.target.value)"></ngx-mat-select-search>
+                      </mat-option>
             <mat-option *ngFor="let tipo of data.tipos_diagnosticos" [value]="tipo">
                 {{tipo.nome}}
             </mat-option>
@@ -16,6 +19,9 @@
         <!--SUBTIPO DE DIAGNOSTICO AUX-->
     <mat-form-field style="width: 23%">
         <mat-select placeholder="Sub-Tipo" formControlName="diagnostico_subtipo" [(ngModel)]="subtipodiagnostico" (selectionChange)="filtrarSubTipo(subtipodiagnostico)">
+                <mat-option >
+                        <ngx-mat-select-search placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarSubtipoDiagnostico($event.target.value)"></ngx-mat-select-search>
+                      </mat-option>
             <mat-option *ngFor="let subtipo of data.subtipos_diagnosticos" [value]="subtipo">
                 {{subtipo.nome}}
             </mat-option>
@@ -24,6 +30,9 @@
 
     <mat-form-field style="width: 23%">
         <mat-select placeholder="Diagnostico Auxiliar" formControlName="diagnostico_nome" [(ngModel)]="diagnostico" required>
+                <mat-option >
+                        <ngx-mat-select-search placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarDiagnosticos($event.target.value)"></ngx-mat-select-search>
+                      </mat-option>
             <mat-option *ngFor="let diagnostico of data.diagnosticos" [value]="diagnostico">
                 {{diagnostico.nome}}
             </mat-option>

@@ -70,6 +70,7 @@ export class ListagemComponent implements OnInit {
   categorias_consulta: CategoriaConsulta[];
 
   tipos_diagnosticos: TipoDiagnosticoAux[];
+  tipos_diagnosticos_aux: TipoDiagnosticoAux[];
   subtipos_diagnosticos: SubTipoDiagnosticoAux[];
   subtipos_diagnosticos_aux: SubTipoDiagnosticoAux[];
 
@@ -206,6 +207,7 @@ export class ListagemComponent implements OnInit {
           ...e.payload.val(),
         } as TipoDiagnosticoAux;
       });
+      this.tipos_diagnosticos_aux=this.tipos_diagnosticos;
     })
 
     this.configServices.getSubTiposDiagnosticos().snapshotChanges().subscribe(data => {
@@ -230,6 +232,9 @@ export class ListagemComponent implements OnInit {
     })
 
   }
+ 
+
+
   
   detalhes(doente){
   
@@ -376,7 +381,11 @@ export class ListagemComponent implements OnInit {
     this.dataSourse.filter = filterValue;
   }
 
+
+  
+
 }
+
 
 //MedicamentosDialog --------------------------------------------------------
 @Component({
@@ -562,6 +571,12 @@ export class MedicamentosDialog {
       this.openSnackBar("Adicione pelo menos um medicamento.");
     }
   }
+
+ 
+
+
+
+
 
   //AO FATURAR PRECISA ATUALIZAR A QTD DISPONIVEL DO ITEM NO DEPOSITO
   faturar(paciente: Paciente){
@@ -1316,6 +1331,7 @@ export class MedicamentosDialog {
   diagnosticoFormGroup: FormGroup;
   diagnosticos: DiagnosticoAuxiliar[] = [];
   diagnostico:DiagnosticoAuxiliar;
+  diagnosticos_aux:DiagnosticoAuxiliar[];
   diagnosticos_param: DiagnosticoAuxiliar[] = [];
 
   dataSourse: MatTableDataSource<DiagnosticoAuxiliar>;
@@ -1323,17 +1339,52 @@ export class MedicamentosDialog {
 
   consulta?: Consulta;
   preco_total:Number = 0;
-
+ 
   tipodiagnostico: TipoDiagnosticoAux;
   subtipodiagnostico: SubTipoDiagnosticoAux;
   subtipos_diagnosticos_param: SubTipoDiagnosticoAux[] = [];
+  
+  tipos_diagnosticos: TipoDiagnosticoAux[];
+  tipos_diagnosticos_aux: TipoDiagnosticoAux[];
+  subtipos_diagnosticos: SubTipoDiagnosticoAux[];
+  subtipos_diagnosticos_aux: SubTipoDiagnosticoAux[];
 
   constructor(  public dialogRef: MatDialogRef<DiagnosticosDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, 
   private _formBuilder: FormBuilder, public configServices: ConfiguracoesService) {
     this.diagnostico = new DiagnosticoAuxiliar();
+    this.configServices.getDiagnosticos().snapshotChanges().subscribe(data => {
+      this.diagnosticos = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as DiagnosticoAuxiliar;
+      });
+      this.diagnosticos_aux=this.diagnosticos;
+    })
 
+    this.configServices.getTiposDiagnosticos().snapshotChanges().subscribe(data => {
+      this.tipos_diagnosticos = data.map(e => {
+        return {
+          id: e.payload.key,
+          //subtipos: e.payload.val()['subtipo'] as SubTipoDiagnosticoAux[],
+          ...e.payload.val(),
+        } as TipoDiagnosticoAux;
+      });
+      this.tipos_diagnosticos_aux=this.tipos_diagnosticos;
+    })
+
+    this.configServices.getSubTiposDiagnosticos().snapshotChanges().subscribe(data => {
+      this.subtipos_diagnosticos = data.map(e => {
+        return {
+          id: e.payload.key,
+          tipo: e.payload.val()['tipo'] as TipoDiagnosticoAux,
+          ...e.payload.val(),
+        } as SubTipoDiagnosticoAux;
+      });
+      this.subtipos_diagnosticos_aux = this.subtipos_diagnosticos;
+    })
     this.diagnosticoFormGroup = this._formBuilder.group({
       diagnostico_tipo: [''],
       diagnostico_subtipo: [''],
@@ -1346,6 +1397,47 @@ export class MedicamentosDialog {
     this.diagnosticos_param = this.data.diagnosticos;
     this.subtipos_diagnosticos_param = this.data.subtipos_diagnosticos;
   }
+  filtrarDiagnosticos(filterValue) {
+    if(filterValue){
+      filterValue = filterValue.trim(); // Remove whitespace
+      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.diagnosticos= null;
+
+  this.data.diagnosticos = this.diagnosticos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+    }else{
+      this.data.diagnosticos = this.diagnosticos_aux;
+    }
+  }
+
+
+  filtrarTipoDiagnosticos(filterValue) {
+    if(filterValue){
+      filterValue = filterValue.trim(); // Remove whitespace
+      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.tipos_diagnosticos= null;
+
+  this.data.tipos_diagnosticos = this.tipos_diagnosticos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+    }else{
+      this.data.tipos_diagnosticos = this.tipos_diagnosticos_aux;
+    }
+  }
+
+  
+  filtrarSubtipoDiagnostico(filterValue){
+    if(filterValue){
+      filterValue = filterValue.trim(); // Remove whitespace
+      filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.data.subtipos_diagnosticos= null;
+  
+  this.data.subtipos_diagnosticos = this.subtipos_diagnosticos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filterValue) > -1);     
+    }else{
+      this.data.subtipos_diagnosticos = this.subtipos_diagnosticos_aux;
+    }
+  }
+  
 
   filtrarTipo(tipo: TipoDiagnosticoAux) {
     this.diagnostico = new DiagnosticoAuxiliar();
@@ -1391,6 +1483,12 @@ export class MedicamentosDialog {
   onNoClick(): void {
     this.dialogRef.close();
   }
+
+  
+
+
+
+
 
 
   faturarDiagnostico(paciente:Paciente){
