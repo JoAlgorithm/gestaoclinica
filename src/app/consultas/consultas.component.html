@@ -33,17 +33,17 @@
         
                   <ng-container matColumnDef="nid">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> NID </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.paciente.nid}}</mat-cell>
+                    <mat-cell *matCellDef="let row"> {{row.paciente_nid}}</mat-cell>
                   </ng-container>
             
                   <ng-container matColumnDef="apelido">
                       <mat-header-cell *matHeaderCellDef mat-sort-header> Apelido </mat-header-cell>
-                      <mat-cell *matCellDef="let row">{{row.paciente.apelido}}</mat-cell>
+                      <mat-cell *matCellDef="let row">{{row.paciente_apelido}}</mat-cell>
                   </ng-container>
             
                   <ng-container matColumnDef="nome">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.paciente.nome}}</mat-cell>
+                    <mat-cell *matCellDef="let row"> {{row.paciente_nome}}</mat-cell>
                   </ng-container>
 
                   <ng-container matColumnDef="preco">
@@ -61,7 +61,7 @@
                   <ng-container matColumnDef="atender">
                       <mat-header-cell *matHeaderCellDef mat-sort-header> Atender </mat-header-cell>
                       <!--<mat-cell *matCellDef="let row"> <button mat-icon-button [routerLink]="['/atendimento', {consulta: row}]" matTooltip="Atender paciente {{row.paciente.apelido}}">-->
-                      <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="atenderPaciente(row)"  matTooltip="Atender paciente {{row.paciente.apelido}}">   
+                      <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="atenderPaciente(row)"  matTooltip="Atender paciente {{row.paciente_apelido}}">   
                             <mat-icon>check</mat-icon>
                         </button></mat-cell>
                   </ng-container>
@@ -110,17 +110,17 @@
         
                 <ng-container matColumnDef="nid">
                     <mat-header-cell *matHeaderCellDef > NID </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.paciente.nid}}</mat-cell>
+                    <mat-cell *matCellDef="let row"> {{row.paciente_nid}}</mat-cell>
                 </ng-container>
             
                 <ng-container matColumnDef="apelido">
                     <mat-header-cell *matHeaderCellDef > Apelido </mat-header-cell>
-                    <mat-cell *matCellDef="let row">{{row.paciente.apelido}}</mat-cell>
+                    <mat-cell *matCellDef="let row">{{row.paciente_apelido}}</mat-cell>
                 </ng-container>
             
                 <ng-container matColumnDef="nome">
                     <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.paciente.nome}}</mat-cell>
+                    <mat-cell *matCellDef="let row"> {{row.paciente_nome}}</mat-cell>
                 </ng-container>
             
                 <ng-container matColumnDef="diagnostico">
@@ -135,7 +135,7 @@
 
                 <ng-container matColumnDef="atender">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Atender </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="atenderPaciente(row)"  matTooltip="Atender paciente {{row.paciente.apelido}}">   
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="atenderPaciente(row)"  matTooltip="Atender paciente {{row.paciente_apelido}}">   
                           <mat-icon>check</mat-icon>
                       </button></mat-cell>
                 </ng-container>
@@ -182,17 +182,17 @@
         
                 <ng-container matColumnDef="nid">
                     <mat-header-cell *matHeaderCellDef > NID </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.paciente.nid}}</mat-cell>
+                    <mat-cell *matCellDef="let row"> {{row.paciente_nid}}</mat-cell>
                 </ng-container>
             
                 <ng-container matColumnDef="apelido">
                     <mat-header-cell *matHeaderCellDef > Apelido </mat-header-cell>
-                    <mat-cell *matCellDef="let row">{{row.paciente.apelido}}</mat-cell>
+                    <mat-cell *matCellDef="let row">{{row.paciente_apelido}}</mat-cell>
                 </ng-container>
             
                 <ng-container matColumnDef="nome">
                     <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.paciente.nome}}</mat-cell>
+                    <mat-cell *matCellDef="let row"> {{row.paciente_nome}}</mat-cell>
                 </ng-container>
             
                 <ng-container matColumnDef="diagnostico">
@@ -255,17 +255,17 @@
             
                     <ng-container matColumnDef="nid">
                         <mat-header-cell *matHeaderCellDef > NID </mat-header-cell>
-                        <mat-cell *matCellDef="let row"> {{row.paciente.nid}}</mat-cell>
+                        <mat-cell *matCellDef="let row"> {{row.paciente_nid}}</mat-cell>
                     </ng-container>
                 
                     <ng-container matColumnDef="apelido">
                         <mat-header-cell *matHeaderCellDef > Apelido </mat-header-cell>
-                        <mat-cell *matCellDef="let row">{{row.paciente.apelido}}</mat-cell>
+                        <mat-cell *matCellDef="let row">{{row.paciente_apelido}}</mat-cell>
                     </ng-container>
                 
                     <ng-container matColumnDef="nome">
                         <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
-                        <mat-cell *matCellDef="let row"> {{row.paciente.nome}}</mat-cell>
+                        <mat-cell *matCellDef="let row"> {{row.paciente_nome}}</mat-cell>
                     </ng-container>
                 
                     <ng-container matColumnDef="justificativa">

@@ -17,6 +17,9 @@ export class Consulta {
     data_encerramento?:string; //data em que a consulta foi cancelada
 
     data_diagnostico?:string; //data em que a consulta mudou de Aberta para Diagnostico
+
+    ano?:number;
+    mes?:string;
     
     /*
     *Quem marcou a consulta
@@ -29,7 +32,10 @@ export class Consulta {
 
     marcador_diagnostico?: String; //Quem mandou paciente para o diagnostico
 
-    paciente?: Paciente;
+    paciente?: Paciente; //Este objecto nao vai a base de dados quando a consulta encerra ou cancelada, apenas fica aqui para facilitar manipulacao
+    paciente_nome?:string; //Por denormalizacao nao vamos guardar todo paciente
+    paciente_apelido?: string; //Por denormalizacao nao vamos guardar todo paciente
+    paciente_nid?: number; //Por denormalizacao nao vamos guardar todo paciente
 
     /*
     * O status indica o estado da:

@@ -23,6 +23,12 @@ export class Faturacao {
     */
     categoria?:String;
 
+    /*
+    *  Se a Categoria for Diagnostico Aux: preencher o nome do Diagnostico
+    * Se a Categoria for Consulta medica: preencher o nome da Consulta medica
+    */
+    subcategoria?: String;
+
     //consulta?: Consulta;
     //diagnostico_aux?: DiagnosticoAuxiliar[];
     //condutas_clinicas?: CondutaClinica[];

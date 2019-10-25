@@ -48,7 +48,7 @@ export class PacienteService {
   createPaciente(paciente: Paciente){
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/pacientes').add(paciente);
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/pacientes').push(paciente);
-    return this.db.list('pacientes/'+this.authService.get_clinica_id + '/').push(paciente);
+    return this.db.list('pacientes/'+this.authService.get_clinica_id + '/').update(paciente.nid+"", paciente);
   }
 
   updatePaciente(paciente: Paciente){
@@ -67,19 +67,51 @@ export class PacienteService {
   marcarConsulta(consulta:Consulta){
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/consultas').add(consulta);
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/consultas').push(consulta);
-    return this.db.list('consultas/'+this.authService.get_clinica_id + '/').push(consulta);
+
+    let key = this.db.list('consultas/'+this.authService.get_clinica_id + '/lista_completa/').push('').key;
+    consulta.id = key;
+
+    var updatedUserData = {};
+    updatedUserData['/lista_completa/'+consulta.id] = consulta;
+  
+    if(consulta.status == 'Encerrada' || consulta.status == 'Cancelada'){
+      consulta.paciente = null;
+      updatedUserData['/lista_relatorio/'+ consulta.ano + '/'+consulta.id] = consulta;
+    }
+    
+    return this.db.object('consultas/'+this.authService.get_clinica_id).update(updatedUserData);
+    //return this.db.list('consultas/'+this.authService.get_clinica_id + '/lista_completa/').push(consulta);
   }
 
+  //Get consultas Lista Completa
   getConsultas(){
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/consultas').snapshotChanges();
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/consultas');
-    return this.db.list('consultas/'+this.authService.get_clinica_id + '/');
+    return this.db.list('consultas/'+this.authService.get_clinica_id + '/lista_completa');
+  }
+
+  //Get consultas Lista Completa
+  getConsultasRelatorio(ano){
+    //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/consultas').snapshotChanges();
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/consultas');
+    return this.db.list('consultas/'+this.authService.get_clinica_id + '/lista_relatorio/'+ano);
   }
 
   updateConsulta(consulta:Consulta){
     //return this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/consultas/' + consulta.id).update(consulta);
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/consultas/').update(consulta.id+"", consulta);
-    return this.db.list('consultas/'+this.authService.get_clinica_id + '/').update(consulta.id+"", consulta);
+    var updatedUserData = {};
+    updatedUserData['/lista_completa/' +consulta.id] = consulta;
+  
+
+    if(consulta.status == 'Encerrada' || consulta.status == 'Cancelada'){
+      consulta.paciente = null;
+      updatedUserData['/lista_relatorio/'+ consulta.ano + '/' +consulta.id] = consulta;
+    }
+
+    return this.db.object('consultas/'+this.authService.get_clinica_id).update(updatedUserData);
+
+    //return this.db.list('consultas/'+this.authService.get_clinica_id + '/').update(consulta.id+"", consulta);
   }
 
   //FATURACOES
