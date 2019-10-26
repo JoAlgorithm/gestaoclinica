@@ -1,4 +1,4 @@
-<div fxLayout="row wrap" >
+<div fxLayout="row wrap" *ngIf='acesso_indicadores'>
 
     <!-- CARTAO COM TOTAL DE PACIENTES CADASTRADOS NA CLINICA -->
     <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">
@@ -61,7 +61,7 @@
       </div>
 </div>
 
-<div fxLayout="row wrap" >
+<div fxLayout="row wrap" *ngIf='acesso_indicadores'>
         <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" fxFlex="100">
           <mat-card>
             <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
@@ -141,6 +141,18 @@
         </div>
 
 </div>
+
+<mat-card class="card-widget" *ngIf='!acesso_indicadores'>
+  <div mat-card-widget>
+    <!--<div mat-card-float-icon>
+      <mat-icon>local_hospital</mat-icon>
+    </div>-->
+    <div class="pl-0">
+      <h2 mat-card-widget-title>BEM VINDO AO SISTEMA DE GESTAO CLINICA</h2>
+      <p>Tenha um bom dia de trabalho {{username}}</p>
+    </div>
+  </div>
+</mat-card>
 
 <!--<div fxLayout="row wrap" >
   <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" fxFlex="100">

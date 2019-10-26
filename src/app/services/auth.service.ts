@@ -158,10 +158,11 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
 
     //Returns user info
     get get_clinica_nome(): string {
+      let user = JSON.parse(localStorage.getItem('myclinica_user'));
       setTimeout(() => {
-
+        user = JSON.parse(localStorage.getItem('myclinica_user'));
       })
-      const user = JSON.parse(localStorage.getItem('myclinica_user'));
+      
       //console.log("Clinica nome "+user.clinica);
       return user.clinica;
     }

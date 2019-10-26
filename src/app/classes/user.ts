@@ -8,7 +8,16 @@ export class User {
    emailVerified: boolean;
 
    clinica: string;
-   perfil: string; //Perfil de acesso ex: Admin, Admnistrativo, Medico & Rececionista
+
+   /**
+    * Perfil de acesso ex: Admin, Admnistrativo, Medico & Rececionista
+    * ALTERACOES:
+    * Clinica_Admin, Clinica_Admnistrativo, Clinica_Medico, Clinica_Rececionista
+    * Farmacia_Admin, Farmacia_Admnistrativo
+   */
+
+   perfil: string; 
+
    clinica_id: string;
    endereco: string;
    provincia: string;

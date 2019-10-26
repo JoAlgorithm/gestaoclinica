@@ -53,7 +53,7 @@
             
                   <ng-container matColumnDef="cancelar">
                       <mat-header-cell *matHeaderCellDef mat-sort-header> Cancelar </mat-header-cell>
-                      <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="openDialog(row)" matTooltip="Cancelar consulta">  
+                      <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="openDialog(row)" matTooltip="Cancelar consulta"  [disabled]="!acesso_cancelar">  
                           <mat-icon>cancel</mat-icon>
                         </button></mat-cell>
                   </ng-container>
@@ -61,7 +61,7 @@
                   <ng-container matColumnDef="atender">
                       <mat-header-cell *matHeaderCellDef mat-sort-header> Atender </mat-header-cell>
                       <!--<mat-cell *matCellDef="let row"> <button mat-icon-button [routerLink]="['/atendimento', {consulta: row}]" matTooltip="Atender paciente {{row.paciente.apelido}}">-->
-                      <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="atenderPaciente(row)"  matTooltip="Atender paciente {{row.paciente_apelido}}">   
+                      <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="atenderPaciente(row)"  matTooltip="Atender paciente {{row.paciente_apelido}}" [disabled]="!acesso_atender">   
                             <mat-icon>check</mat-icon>
                         </button></mat-cell>
                   </ng-container>
@@ -84,7 +84,7 @@
 
 
 
-  <mat-tab label = "CONSULTAS EM ANDAMENTO">
+  <mat-tab label = "CONSULTAS EM ANDAMENTO" *ngIf='acesso_atender'>
     <mat-card class="example-card">
         
         <mat-card-header>
@@ -156,7 +156,7 @@
 
 
 
-  <mat-tab label = "CONSULTAS ENCERRADAS"> 
+  <mat-tab label = "CONSULTAS ENCERRADAS" *ngIf='acesso_atender'> 
     <mat-card class="example-card">
     
         <mat-card-header>
@@ -229,7 +229,7 @@
 
 
   
-  <mat-tab label = "CONSULTAS CANCELADAS"> 
+  <mat-tab label = "CONSULTAS CANCELADAS" *ngIf='acesso_cancelar'> 
 
     <mat-card class="example-card">
           

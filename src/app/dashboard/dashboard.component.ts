@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { PacienteService } from '../services/paciente.service';
 import { Paciente } from '../classes/paciente';
 import { ConfiguracoesService } from '../services/configuracoes.service';
@@ -11,6 +11,7 @@ import { format } from 'util';
 //import { format } from 'path';
 
 import * as FusionCharts from 'fusioncharts';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   //selector: 'app-dashboard',
@@ -19,6 +20,10 @@ import * as FusionCharts from 'fusioncharts';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
+
+  perfil = "";
+  acesso_indicadores = false;
+  username = "";
 
   pacientes: Paciente[];
   diagnosticos: DiagnosticoAuxiliar[];
@@ -72,10 +77,18 @@ export class DashboardComponent {
   nov_diagnostico = 0;
   dez_diagnostico = 0;
 
-  constructor(private pacienteService: PacienteService, private configService: ConfiguracoesService){
+  constructor(private pacienteService: PacienteService, private configService: ConfiguracoesService,
+    public authService: AuthService){
   }
 
+
   ngOnInit() {
+    this.perfil = this.authService.get_perfil;
+    this.username = this.authService.get_user_displayName;
+    if(this.perfil == 'Clinica_Admin'){
+      this.acesso_indicadores = true;
+    }
+
     //let doc = new jsPDF();
     //doc.save("PDF")
     //this.pacienteService.limparConsultas();

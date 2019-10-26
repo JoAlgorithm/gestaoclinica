@@ -22,6 +22,8 @@ import { SubTipoDiagnosticoAux } from '../classes/subtipo_diagnostico';
 })
 export class ConfiguracoesComponent implements OnInit {
 
+  perfil = "";
+  acesso_users = false;
 
   /*
   * VARIAVEIS DA TAB DIAGNOSTICO AUXILIAR
@@ -110,6 +112,13 @@ export class ConfiguracoesComponent implements OnInit {
 
 
   ngOnInit() {
+    this.perfil = this.authService.get_perfil;
+    if(this.perfil == 'Clinica_Admin'){
+      this.acesso_users = true;
+    }else{
+      this.acesso_users = false;
+    }
+
     //TAB DIAGNOSTICO AUXILIAR
     this.cadastro_diagnosticoFormGroup = this._formBuilder.group({
       diagnostico_tipo: ['', Validators.required],

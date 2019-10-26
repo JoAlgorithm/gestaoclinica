@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/core';
 import { Consulta } from './../classes/consulta';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 import { PacienteService } from './../services/paciente.service';
@@ -19,7 +19,11 @@ import * as deepEqual from "deep-equal";
   templateUrl: './consultas.component.html',
   styleUrls: ['./consultas.component.scss']
 })
-export class ConsultasComponent implements OnInit {
+export class ConsultasComponent implements OnInit, AfterViewInit {
+
+  perfil = "";
+  acesso_cancelar = false;
+  acesso_atender = false;
 
   consultas: Consulta[]; //Lista de todas as consultas da base de dados
 
@@ -62,7 +66,38 @@ export class ConsultasComponent implements OnInit {
     public dialog: MatDialog, public snackBar: MatSnackBar, private router: Router, public configServices:ConfiguracoesService) {
    }
 
+   ngAfterViewInit() {
+    
+  }
+
   ngOnInit() {
+    this.perfil = this.authService.get_perfil;
+
+    switch(this.perfil) { 
+      case "Clinica_Admin": { 
+        this.acesso_atender = true;
+        this.acesso_cancelar = true;
+        break;
+      }
+
+      case "Clinica_Medico": { 
+        this.acesso_atender = true;
+        this.acesso_cancelar = false;
+        break;
+      }
+
+      case "Clinica_Admnistrativo": { 
+        this.acesso_atender = false;
+        this.acesso_cancelar = true;
+        break;
+      }
+      
+      default:{
+        break;
+      }
+    }
+    console.log("Perfil "+ this.perfil);
+
     this.pacienteService.getConsultas().snapshotChanges().subscribe(data => {
       this.consultas = data.map(e => {
         return {
