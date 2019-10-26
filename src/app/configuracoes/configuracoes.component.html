@@ -72,8 +72,12 @@
                                 <input matInput placeholder="Preco" formControlName="cs_preco" [(ngModel)]="categoria_consulta.preco" required>
                             </mat-form-field>
                             
-                            <button mat-icon-button (click)="registarCategoriaConsulta()" matTooltip="REGISTAR CONSULTA MEDICA {{categoria_consulta.nome}}">
+                            <button mat-icon-button (click)="registarCategoriaConsulta()" matTooltip="REGISTAR CONSULTA MEDICA {{categoria_consulta.nome}}" *ngIf='!editar_consultas'>
                                 <mat-icon>add_circle</mat-icon>
+                            </button>
+
+                            <button mat-icon-button (click)="registarCategoriaConsulta()" matTooltip="EDITAR CONSULTA MEDICA {{categoria_consulta.nome}}" *ngIf='editar_consultas'>
+                                <mat-icon>create</mat-icon>
                             </button>
                     </form>
 
@@ -121,15 +125,13 @@
           <h5>FORMULARIO DE CADASTRO DE DIAGNOSTICO AUXILIAR</h5>
           <!--<form [formGroup]="cadastro_diagnosticoFormGroup">-->
               <!--<ng-template matStepLabel>DADOS DO PACIENTE</ng-template>-->
-        
               <!--TIPO DE DIAGNOSTICO AUX--> 
               <mat-form-field style="width: 23%">
-                    <mat-select placeholder="Tipo"  [(ngModel)]="diagnostico.tipo" (selectionChange)="filtrarTipoDiagnostico(diagnostico.tipo)">
-                            <mat-option >
-                                    <ngx-mat-select-search  [(ngModel)]="filtratipodiagnostico" placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTipoDiagnosticos($event.target.value)"></ngx-mat-select-search>
-                                  </mat-option>
-                        <mat-option *ngFor="let tipo of tipos_diagnosticos" [value]="tipo">
-                               
+                    <mat-select placeholder="Tipo" [(ngModel)]="diagnostico.tipo" (selectionChange)="filtrarTipoDiagnostico(diagnostico.tipo)" [(value)]="diagnostico.tipo">
+                        <mat-option >
+                            <ngx-mat-select-search  [(ngModel)]="filtratipodiagnostico" placeholderLabel="Pesquisar"  noEntriesFoundLabel="Nenhuma informacao encontrada" matInput (keyup)="filtrarTipoDiagnosticos($event.target.value)"></ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let tipo of tipos_diagnosticos" [value]="tipo">     
                             {{tipo.nome}}
                         </mat-option>
                     </mat-select>
@@ -137,9 +139,9 @@
 
                 <!--SUBTIPO DE DIAGNOSTICO AUX-->
               <mat-form-field style="width: 23%">
-                    <mat-select placeholder="Sub-Tipo"  [(ngModel)]="diagnostico.subtipo">
+                    <mat-select placeholder="Sub-Tipo"  [(ngModel)]="diagnostico.subtipo" [(value)]="diagnostico.subtipo">
                             <mat-option >
-                                    <ngx-mat-select-search  [(ngModel)]="filtrarsubtipoDiagnosticos" placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarSubtipoDiagnosticos($event.target.value)"></ngx-mat-select-search>
+                                    <ngx-mat-select-search  [(ngModel)]="filtrarsubtipoDiagnosticos" placeholderLabel="Pesquisar" noEntriesFoundLabel="Nenhuma informacao encontrada" matInput (keyup)="filtrarSubtipoDiagnosticos($event.target.value)"></ngx-mat-select-search>
                                   </mat-option>
                         <mat-option *ngFor="let subtipo of subtipos_diagnosticos" [value]="subtipo">
                             {{subtipo.nome}}
@@ -157,8 +159,11 @@
                     <input matInput placeholder="Preco"  [(ngModel)]="diagnostico.preco" required>
                 </mat-form-field>
                 
-                <button mat-icon-button (click)="registarDiagnostico()" matTooltip="REGISTAR NOVO DIAGNOSTICO {{diagnostico.nome}}">
+                <button mat-icon-button (click)="registarDiagnostico()" matTooltip="REGISTAR NOVO DIAGNOSTICO {{diagnostico.nome}}" *ngIf='!editar_diagnostico'>
                     <mat-icon>add_circle</mat-icon>
+                </button>
+                <button mat-icon-button (click)="registarDiagnostico()" matTooltip="EDITAR {{diagnostico.nome}}" *ngIf='editar_diagnostico'>
+                    <mat-icon>create</mat-icon>
                 </button>
          <!--</form>-->
 
@@ -230,10 +235,10 @@
                 
                         <!--TIPO DE CONDUTA CLINICA-->
                         <mat-form-field style="width: 31%">
-                            <mat-select placeholder="Tipo"  [(ngModel)]="conduta_clinica.tipo" required>
-                                    <mat-option >
-                                            <ngx-mat-select-search  [(ngModel)]="filtrartipocondut" placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTiposCondutas($event.target.value)"></ngx-mat-select-search>
-                                          </mat-option>
+                            <mat-select placeholder="Tipo" [(ngModel)]="conduta_clinica.tipo" required [(value)]="conduta_clinica.tipo">
+                                <mat-option>
+                                    <ngx-mat-select-search [(ngModel)]="filtrartipocondut" placeholderLabel="Pesquisar" noEntriesFoundLabel="Nenhuma informacao encontrada" matInput (keyup)="filtrarTiposCondutas($event.target.value)"></ngx-mat-select-search>
+                                </mat-option>
                                 <mat-option *ngFor="let tipo of tipos_conduta_clinica" [value]="tipo">
                                     {{tipo.nome}}
                                 </mat-option>
@@ -250,9 +255,13 @@
                             <input matInput placeholder="Preco"  [(ngModel)]="conduta_clinica.preco" required>
                         </mat-form-field>
                         
-                        <button mat-icon-button (click)="registarCondutaClinica()" matTooltip="REGISTAR {{conduta_clinica.nome}}">
+                        <button mat-icon-button (click)="registarCondutaClinica()" matTooltip="REGISTAR {{conduta_clinica.nome}}" *ngIf='!editar_conduta'>
                             <mat-icon>add_circle</mat-icon>
                         </button>
+                        <button mat-icon-button (click)="registarCondutaClinica()" matTooltip="EDITAR {{conduta_clinica.nome}}" *ngIf='editar_conduta'>
+                            <mat-icon>create</mat-icon>
+                        </button>
+                        
            <!-- </form>-->
 
                 <h5>LISTA DE CONDUTAS CLINICAS</h5>

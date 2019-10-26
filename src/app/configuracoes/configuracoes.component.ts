@@ -24,6 +24,10 @@ export class ConfiguracoesComponent implements OnInit {
 
   perfil = "";
   acesso_users = false;
+  
+  editar_conduta = false;
+  editar_diagnostico = false;
+  editar_consultas = false;
 
   /*
   * VARIAVEIS DA TAB DIAGNOSTICO AUXILIAR
@@ -136,8 +140,6 @@ export class ConfiguracoesComponent implements OnInit {
       });
       this.dataSourseDiagnostico=new MatTableDataSource(this.diagnosticos.sort((a, b) => a.nome > b.nome ? 1 : -1));
       setTimeout(()=> this.dataSourseDiagnostico.paginator = this.paginatorDiagnostico);
-     
-     
     })
  
 
@@ -266,6 +268,7 @@ export class ConfiguracoesComponent implements OnInit {
   }//FIM ngOnInit
 
   registarDiagnostico(){
+    this.editar_diagnostico = false;
     if(!this.diagnostico.subtipo){
       this.diagnostico.subtipo = null;
     }
@@ -295,39 +298,48 @@ export class ConfiguracoesComponent implements OnInit {
   }}
 
   registarCategoriaConsulta(){
-    let data = Object.assign({}, this.categoria_consulta);
+    this.editar_consultas = false;
+    if(this.categoria_consulta.nome && this.categoria_consulta.preco){
 
-    /*this.categoria_consulta = new CategoriaConsulta();
-    this.categorias_consultaFormGroup.reset;
-    Object.keys(this.categorias_consultaFormGroup.controls).forEach(key => {
-      console.log("key "+key)
-      this.categorias_consultaFormGroup.get(key).setErrors(null) ;
-    });*/
+      
+        let data = Object.assign({}, this.categoria_consulta);
 
-    if(data.id){ 
-      //Ja tem ID ja Conduta entao deve atualizar
-      this.configServices.updateClinica(data)
-      .then( res => {
-        this.categoria_consulta = new CategoriaConsulta();
+        /*this.categoria_consulta = new CategoriaConsulta();
         this.categorias_consultaFormGroup.reset;
-        this.openSnackBar("Consulta medica Atualizada com sucesso");
-      }, err=>{
-        this.openSnackBar("Ocorreu um erro ao atualizar. Contacte o admnistrador do sistema");
-      })
-    }else{
+        Object.keys(this.categorias_consultaFormGroup.controls).forEach(key => {
+          console.log("key "+key)
+          this.categorias_consultaFormGroup.get(key).setErrors(null) ;
+        });*/
 
-    this.configServices.createCategoriaConsulta(data)
-    .then( res => {
-      this.categoria_consulta = new CategoriaConsulta();
-      this.categorias_consultaFormGroup.reset;
-      this.categorias_consultaFormGroup.valid === true;
-      this.openSnackBar("Consulta medica cadastrada com sucesso");
-    }, err=>{
-      this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
-    })
-  }}
+        if(data.id){ 
+          //Ja tem ID ja Conduta entao deve atualizar
+          this.configServices.updateClinica(data)
+          .then( res => {
+            this.categoria_consulta = new CategoriaConsulta();
+            this.categorias_consultaFormGroup.reset;
+            this.openSnackBar("Consulta medica Atualizada com sucesso");
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao atualizar. Contacte o admnistrador do sistema");
+          })
+        }else{
+
+          this.configServices.createCategoriaConsulta(data)
+          .then( res => {
+            this.categoria_consulta = new CategoriaConsulta();
+            this.categorias_consultaFormGroup.reset;
+            this.categorias_consultaFormGroup.valid === true;
+            this.openSnackBar("Consulta medica cadastrada com sucesso");
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+          })
+        }
+      }else{
+        this.openSnackBar("Preencha os campos obrigatorios");
+      }
+    }
 
   registarCondutaClinica(){
+    this.editar_conduta = false;
     let data = Object.assign({}, this.conduta_clinica);
 
     if(data.id){ 
@@ -356,16 +368,38 @@ export class ConfiguracoesComponent implements OnInit {
   }
 
   editarConduta(conduta: CondutaClinica){
+    this.editar_conduta = true;
     this.conduta_clinica = conduta;
+    this.tipos_conduta_clinica.forEach(element => {
+      if(element.nome == this.conduta_clinica.tipo.nome){
+        this.conduta_clinica.tipo = element;
+      }
+    });
   }
 
   
   editarConsulta(consulta: CategoriaConsulta){
+    this.editar_consultas = true;
     this.categoria_consulta = consulta;
   }
 
   editarDiagnostico(diagnostico: DiagnosticoAuxiliar){
+    this.editar_diagnostico = true;
     this.diagnostico = diagnostico;
+    this.tipos_diagnosticos.forEach(element => {
+      if(element.nome == diagnostico.tipo.nome){
+        this.diagnostico.tipo = element;
+      }
+    });
+
+    if(this.diagnostico.subtipo){
+      this.subtipos_diagnosticos.forEach(element => {
+        if(element.nome == diagnostico.subtipo.nome){
+          this.diagnostico.subtipo = element;
+        }
+      });
+    }
+    
   }
 
 
@@ -375,15 +409,16 @@ export class ConfiguracoesComponent implements OnInit {
     //this.dataSourseDiagnostico.filter = filterValue;
    this.tipos_diagnosticos.filter((unit) => unit.nome.indexOf(filterValue) > -1);
   }
-filtratipodiagnostico="";
+
+  filtratipodiagnostico="";
   filtrarTipoDiagnosticos(filtratipodiagnostico) {
     if(filtratipodiagnostico){
       filtratipodiagnostico = filtratipodiagnostico.trim(); // Remove whitespace
       filtratipodiagnostico = filtratipodiagnostico.toLowerCase(); // Datasource defaults to lowercase matches
      
-    this.tipos_diagnosticos= null;
+      this.tipos_diagnosticos= null;
 
-  this.tipos_diagnosticos = this.tipos_diagnosticos_ax.filter(item => item.nome.toLocaleLowerCase().indexOf(filtratipodiagnostico) > -1);     
+      this.tipos_diagnosticos = this.tipos_diagnosticos_ax.filter(item => item.nome.toLocaleLowerCase().indexOf(filtratipodiagnostico) > -1);     
     }else{
       this.tipos_diagnosticos = this.tipos_diagnosticos_ax;
     }

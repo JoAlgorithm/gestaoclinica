@@ -136,5 +136,8 @@ export class ConfiguracoesService {
     return this.db.list('nrsfaturas/'+this.authService.get_clinica_id + '/');
   }
 
+  getAnos() {
+    return this.db.list('anos/'+this.authService.get_clinica_id + '/');
+  }
 
 }

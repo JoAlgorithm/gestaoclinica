@@ -23,7 +23,7 @@ export class HeaderComponent {
     /*const user = JSON.parse(localStorage.getItem("myclinica_user"));
     console.log(user);
     this.nomeClina = user.clinica;*/
-    this.nomeClina  =  this.authService.get_clinica_nome;
+    this.nomeClina = this.authService.get_clinica_nome;
   }
 
   ngOnInit() {

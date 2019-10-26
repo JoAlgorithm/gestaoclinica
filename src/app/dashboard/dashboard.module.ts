@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MatIconModule, MatCardModule, MatButtonModule, MatListModule, MatProgressBarModule, MatMenuModule } from '@angular/material';
+import { MatIconModule, MatCardModule, MatButtonModule, MatListModule, MatProgressBarModule, MatMenuModule, MatSelectModule, MatInputModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { DashboardComponent } from './dashboard.component';
@@ -13,6 +13,7 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { AgmCoreModule } from '@agm/core';
 import { ConfiguracoesService } from '../services/configuracoes.service';
 import { FusionChartsModule } from 'angular-fusioncharts';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -27,7 +28,10 @@ import { FusionChartsModule } from 'angular-fusioncharts';
     FlexLayoutModule,
     ChartsModule,
     AgmCoreModule,
-    FusionChartsModule// Include in imports
+    MatSelectModule,
+    FusionChartsModule,// Include in imports
+    FormsModule,
+    MatInputModule
   ],
   providers: [
     //{provide: OverlayContainer, useClass: FullscreenOverlayContainer},

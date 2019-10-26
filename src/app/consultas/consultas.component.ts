@@ -109,7 +109,7 @@ export class ConsultasComponent implements OnInit, AfterViewInit {
 
       //Consultas PENDENTES
       this.dataSoursePendentes=new MatTableDataSource(
-        this.consultas.filter(c =>c.status === "Aberta" && c.tipo === "Consulta Medica").sort((a, b) => a.data > b.data ? 1 : -1)
+        this.consultas.filter(c =>c.status === "Aberta" && c.tipo === "Consulta Medica").sort((a, b) => a.timestamp > b.timestamp ? 1 : -1)
       );
       setTimeout(() => this.dataSoursePendentes.paginator = this.paginatorPendentes);
       this.dataSoursePendentes.sort = this.sortPendentes;

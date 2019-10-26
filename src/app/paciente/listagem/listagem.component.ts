@@ -1306,6 +1306,8 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
       this.consulta.paciente_apelido = this.consulta.paciente.apelido;
       this.consulta.paciente_nid= this.consulta.paciente.nid;
 
+      this.consulta.timestamp = new Date().valueOf();
+
       let data = Object.assign({}, this.consulta);
 
       this.pacienteService.marcarConsulta(data)

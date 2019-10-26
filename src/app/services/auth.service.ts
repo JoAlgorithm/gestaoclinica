@@ -219,9 +219,9 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
         ...data.payload.val()
       } as User;
       localStorage.setItem('myclinica_user', JSON.stringify(userData));
-      
+      this.router.navigate(['/dashboard']);
 
-      switch(userData.perfil) { 
+      /*switch(userData.perfil) { 
         case "Admin": { 
            this.router.navigate(['/dashboard']);
            break; 
@@ -234,7 +234,7 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
            this.router.navigate(['/dashboard']);
            break; 
         } 
-     } 
+     } */
 
       
     

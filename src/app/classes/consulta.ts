@@ -8,6 +8,8 @@ import { MovimentoEstoque } from "./movimento_estoque";
 export class Consulta { 
     id?:String;
 
+    timestamp?: number;
+
     data?:string; //data em que a consulta foi marcada
 
     data_atendimento?:string; //data em que a consulta iniciou a ser atendida

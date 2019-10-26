@@ -77,6 +77,9 @@ export class DashboardComponent {
   nov_diagnostico = 0;
   dez_diagnostico = 0;
 
+  anos = [];
+  ano:string = (new Date()).getFullYear()+"";
+
   constructor(private pacienteService: PacienteService, private configService: ConfiguracoesService,
     public authService: AuthService){
   }
@@ -88,6 +91,19 @@ export class DashboardComponent {
     if(this.perfil == 'Clinica_Admin'){
       this.acesso_indicadores = true;
     }
+
+    this.configService.getAnos().snapshotChanges().subscribe(data => {
+      this.anos = data.map(e => {
+        return {
+          id: e.payload.key
+        }
+      })
+      this.anos.forEach(element => {
+        if(element.id == this.ano){
+          console.log("Selecionar ano "+element.id)
+        }
+      });
+    })
 
     //let doc = new jsPDF();
     //doc.save("PDF")
