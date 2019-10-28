@@ -66,7 +66,7 @@ export class CadastroComponent implements OnInit {
     public snackBar: MatSnackBar, private router: Router) {
 
     this.paciente = new Paciente();
-    this.paciente.nome = "Luis"
+    /*this.paciente.nome = "Luis"
     this.paciente.apelido = "Jo"
     this.paciente.sexo = "Masculino"
     this.paciente.datanascimento = new Date();
@@ -86,7 +86,7 @@ export class CadastroComponent implements OnInit {
     //Dados da pessoa de referencia
     this.paciente.referencia_nome = "Siza";
     this.paciente.referencia_apelido = "Jo";
-    this.paciente.referencia_telefone = "828498183";
+    this.paciente.referencia_telefone = "828498183";*/
 
    }
    

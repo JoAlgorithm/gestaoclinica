@@ -122,10 +122,10 @@ export class PacienteService {
     return this.db.list('faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano).update(faturacao.id ,faturacao);
   }
 
-  getFaturacoes(){
+  getFaturacoes(ano){
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/faturacao').snapshotChanges();
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/faturacao');
-    return this.db.list('faturacao/'+this.authService.get_clinica_id + '/');
+    return this.db.list('faturacao/'+this.authService.get_clinica_id + '/'+ ano);
   }
 
 

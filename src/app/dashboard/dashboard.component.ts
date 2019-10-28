@@ -98,11 +98,11 @@ export class DashboardComponent {
           id: e.payload.key
         }
       })
-      this.anos.forEach(element => {
+      /*this.anos.forEach(element => {
         if(element.id == this.ano){
           console.log("Selecionar ano "+element.id)
         }
-      });
+      });*/
     })
 
     //let doc = new jsPDF();
@@ -127,11 +127,10 @@ export class DashboardComponent {
       })
     })
 
-    this.pacienteService.getConsultas().snapshotChanges().subscribe(data => {
+    /*this.pacienteService.getConsultas().snapshotChanges().subscribe(data => {
       this.consultas = data.map(e => {
         return {
           id: e.payload.key,
-          //diagnosticos_aux: e.payload.doc.data()['diagnosticos_aux'] as DiagnosticoAuxiliar[],
           ...e.payload.val(),
         } as Consulta;
       })
@@ -142,30 +141,32 @@ export class DashboardComponent {
       this.consultas_encerradas_condutas = this.consultas.filter( c => c.status === "Encerrada" && c.tipo == "CONDUTA CLINICA").length;
       
       this.consultas.filter( c => c.tipo == "Consulta Medica").forEach(element => {
-        //console.log(element.diagnosticos_aux)
         if(element.diagnosticos_aux){
           if(element.diagnosticos_aux.length>0){
             this.consultas_encerradas_diagnosticos = +this.consultas_encerradas_diagnosticos + +1;
           }
         }
-        
       });
 
+    })*/
+    this.pacienteService.getConsultasRelatorio(this.ano).snapshotChanges().subscribe(data => {
+      this.consultas = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as Consulta;
+      })
+      this.consultas_encerradas_medicas = this.consultas.filter( c => c.tipo == "Consulta Medica").length;
+      this.consultas_encerradas_diagnosticos = this.consultas.filter( c => c.tipo == "DIAGNOSTICO AUX").length;
+      this.consultas_encerradas_condutas = this.consultas.filter( c => c.tipo == "CONDUTA CLINICA").length;
 
-      /*this.consultas.filter( c => c.status === "Encerrada" && c.tipo == "DIAGNOSTICO AUX").forEach(element => {
-        element.diagnosticos_aux.forEach(d => {
-          if (this.pieChartLabels.includes(d.nome)){
-            this.pieChartLabels.push(d.nome);
-          }
-        })
-      });*/
     })
 
-    this.pacienteService.getFaturacoes().snapshotChanges().subscribe(data => {
+    this.pacienteService.getFaturacoes(this.ano).snapshotChanges().subscribe(data => {
       this.faturacoes = data.map(e => {
         return {
           id: e.payload.key,
-          data: e.payload.val()['data'] as Date,
+          //data: e.payload.val()['data'] as Date,
           ...e.payload.val(),
         } as Faturacao;
       }) 
@@ -588,11 +589,11 @@ export class DashboardComponent {
     chart: {
       caption: "Yearly Energy Production Rate",
       subCaption: " Top 5 Developed Countries",
-      numbersuffix: " TWh",
+      numbersuffix: " MZN",
       showSum: "1",
       plotToolText:
         "$label produces <b>$dataValue</b> of energy from $seriesName",
-      theme: "fusion"
+      //theme: "Fusion"
     },
     categories: [
       {

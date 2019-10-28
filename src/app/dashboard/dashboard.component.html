@@ -77,7 +77,7 @@
         <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" fxFlex="100">
           <mat-card>
             <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
-              RECEITA ANUAL &nbsp; <span class="font-weight-bold mat-text-sucess">{{total_valor | currency:' ':'symbol':'1.2-2'}} MZN</span>
+              RECEITA ACUMULADA DE {{ano}}: &nbsp; <span class="font-weight-bold mat-text-sucess">{{total_valor | currency:' ':'symbol':'1.2-2'}} MZN</span>
               <span fxFlex></span>
               <!--<button mat-icon-button mat-button-sm [matMenuTriggerFor]="card2" aria-label="Open card menu">
                 <mat-icon>more_vert</mat-icon>
@@ -113,14 +113,11 @@
           </mat-card>
         </div>
 
-        <div fxFlex.gt-sm="50%" fxFlex="100">
+
+        <!--<div fxFlex.gt-sm="50%" fxFlex="100">
           <mat-card>
             <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
-              ATENDIMENTOS MENSALISADOS <!--&nbsp; <span class="font-weight-bold mat-text-primary">+458,90</span>
-              <span fxFlex></span>-->
-              <!--<button mat-icon-button mat-button-sm [matMenuTriggerFor]="card1" aria-label="Open card menu">
-                <mat-icon>more_vert</mat-icon>
-              </button>-->
+              ATENDIMENTOS MENSALISADOS 
             </mat-card-subtitle>
             <mat-menu #card1="matMenu" x-position="before">
               <button mat-menu-item>
@@ -150,7 +147,7 @@
                 [chartType]="barChartType"></canvas>
             </mat-card-content>
           </mat-card>
-        </div>
+        </div>-->
 
 </div>
 
@@ -166,7 +163,7 @@
   </div>
 </mat-card>
 
-<!--<div fxLayout="row wrap" >
+<!--div fxLayout="row wrap">
   <div fxFlex.gt-sm="50" fxFlex.gt-xs="50" fxFlex="100">
       <mat-card>
           <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
