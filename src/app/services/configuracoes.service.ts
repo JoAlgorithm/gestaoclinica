@@ -30,8 +30,13 @@ export class ConfiguracoesService {
     return this.db.list('diagnosticos/'+this.authService.get_clinica_id + '/').push(diagnostico);
   }
   updateDiagnostico(diagnostico: DiagnosticoAuxiliar){
-    return this.db.list('clinicas/'+this.authService.get_clinica_id + '/diagnosticos').update(diagnostico.id+"", diagnostico);
+    return this.db.list('diagnosticos/'+this.authService.get_clinica_id + '/').update(diagnostico.id+"", diagnostico);
   }
+
+  removeDiagnostico(id){
+    return this.db.list('diagnosticos/'+this.authService.get_clinica_id + '/').remove(id+"");
+  }
+
   //Retorna a lista de CATEGORIAS DE CONSULTAs
   getCategoriasConsulta() {
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/categoriasconsulta');
@@ -42,6 +47,10 @@ export class ConfiguracoesService {
   createCategoriaConsulta(categoriaConsulta: CategoriaConsulta){
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/categoriasconsulta').push(categoriaConsulta);
     return this.db.list('categoriasconsulta/'+this.authService.get_clinica_id + '/').push(categoriaConsulta);
+  }
+
+  removeCategoriaConsulta(id){
+    return this.db.list('categoriasconsulta/'+this.authService.get_clinica_id + '/').remove(id+"");
   }
 
   //Retorna a lista de CONDUTAS CLLINICAS
@@ -64,6 +73,12 @@ export class ConfiguracoesService {
   updateCondutaClinica(condutaclinicas: CondutaClinica){
     return this.db.list('condutasclinicas/'+this.authService.get_clinica_id + '/').update(condutaclinicas.id, condutaclinicas);
   }
+
+  removeConduta(id){
+    return this.db.list('condutasclinicas/'+this.authService.get_clinica_id + '/').remove(id+"");
+  }
+
+  
 
   /*updateCondutaClinica(condutaclinicas: CondutaClinica){
     return this.db.list('clinicas/'+this.authService.get_clinica_id + '/condutasclinicas').update(condutaclinicas.id, condutaclinicas);
@@ -139,5 +154,7 @@ export class ConfiguracoesService {
   getAnos() {
     return this.db.list('anos/'+this.authService.get_clinica_id + '/');
   }
+
+  
 
 }

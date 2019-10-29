@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DiagnosticoAuxiliar } from '../classes/diagnostico_aux';
 import { ConfiguracoesService } from '../services/configuracoes.service';
-import { MatSnackBar, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatSnackBar, MatTableDataSource, MatPaginator, MatSort, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Clinica } from '../classes/clinica';
 
 import 'rxjs/add/operator/take';
@@ -13,6 +13,7 @@ import { CondutaClinica } from '../classes/conduta_clinica';
 import { TipoCondutaClinica } from '../classes/tipo_conduta_clinica';
 import { TipoDiagnosticoAux } from '../classes/tipo_diagnostico';
 import { SubTipoDiagnosticoAux } from '../classes/subtipo_diagnostico';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -88,12 +89,12 @@ export class ConfiguracoesComponent implements OnInit {
   
   //ATRIBUTOS DA TABELA
   dataSourseCategoriaC: MatTableDataSource<CategoriaConsulta>;
-  displayedColumnsCategoriaC = ['nome','preco', 'editar'];
+  displayedColumnsCategoriaC = ['nome','preco', 'editar', 'remover'];
   @ViewChild(MatPaginator) paginatorCategoriaC: MatPaginator;
   @ViewChild(MatSort) sortCategoriaC: MatSort;
 
   constructor(private _formBuilder: FormBuilder, public configServices: ConfiguracoesService, public snackBar: MatSnackBar,
-    private authService: AuthService) {
+    private authService: AuthService, public dialog: MatDialog) {
     this.diagnostico = new DiagnosticoAuxiliar();
     this.categoria_consulta = new CategoriaConsulta();
     this.conduta_clinica = new CondutaClinica();
@@ -110,7 +111,7 @@ export class ConfiguracoesComponent implements OnInit {
 
   //ATRIBUTOS DA TABELA
   dataSourseCondutaC: MatTableDataSource<CondutaClinica>;
-  displayedColumnsCondutaC = ['tipo','nome','preco', 'editar'];
+  displayedColumnsCondutaC = ['tipo','nome','preco', 'editar', 'remover'];
   @ViewChild(MatPaginator) paginatorCondutaC: MatPaginator;
   @ViewChild(MatSort) sortCondutaC: MatSort;
 
@@ -296,6 +297,17 @@ export class ConfiguracoesComponent implements OnInit {
       this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
     })
   }}
+
+  removeItem(item, nome ,id){
+    const dialogRef = this.dialog.open(ConfirmacaoDialog, {
+      width: '500px',
+      data:{item: item, nome: nome , id: id}
+      
+    });
+    dialogRef.afterClosed().subscribe(result => {  
+      //console.log('The dialog was closed');
+    });
+  }
 
   registarCategoriaConsulta(){
     this.editar_consultas = false;
@@ -534,6 +546,68 @@ export class ConfiguracoesComponent implements OnInit {
   
 
 
+
+  openSnackBar(mensagem) {
+    this.snackBar.open(mensagem, null,{
+      duration: 2000
+    })
+  }
+
+}
+
+
+
+
+
+//ConfirmacaoDialog --------------------------------------------------------
+@Component({
+  selector: 'confirmacao-dialog',
+  templateUrl: 'confirmar.component.html',
+})
+export class ConfirmacaoDialog {
+
+  constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<ConfirmacaoDialog>, private router: Router,
+  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, 
+   public snackBar: MatSnackBar, private _formBuilder: FormBuilder,
+  public configServices: ConfiguracoesService) {
+
+  }
+
+  remover(item, id){
+    switch(item){
+      case "Diagnostico": { 
+        this.configServices.removeDiagnostico(id).then( r=> {
+          this.dialogRef.close();
+          this.openSnackBar(item +" removido com sucesso.")
+        }).catch(err => {
+          this.openSnackBar("Ocorreu algum erro ao remover. Tente novamente ou contacte a equipe de suporte.")
+        })
+      } 
+      case "Conduta": { 
+        this.configServices.removeConduta(id).then( r=> {
+          this.dialogRef.close();
+          this.openSnackBar(item +" removida com sucesso.")
+        }).catch(err => {
+          this.openSnackBar("Ocorreu algum erro ao remover. Tente novamente ou contacte a equipe de suporte.")
+        })
+      }
+      case "Consulta": { 
+        this.configServices.removeCategoriaConsulta(id).then( r=> {
+          this.dialogRef.close();
+          this.openSnackBar(item +" removida com sucesso.")
+        }).catch(err => {
+          this.openSnackBar("Ocorreu algum erro ao remover. Tente novamente ou contacte a equipe de suporte.")
+        })
+      }
+     default: { 
+        break; 
+     }
+    }
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{

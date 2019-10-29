@@ -58,7 +58,7 @@ import 'hammerjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { from } from 'rxjs';
 import { PacienteService } from '../services/paciente.service';
-import { ConfiguracoesComponent } from './configuracoes.component';
+import { ConfiguracoesComponent, ConfirmacaoDialog } from './configuracoes.component';
 import { ConfuguiracoesRoutes } from './configuracoes.routing';
 import { ConfiguracoesService } from '../services/configuracoes.service';
 
@@ -125,9 +125,11 @@ import { ConfiguracoesService } from '../services/configuracoes.service';
     
   ],
   declarations: [
-    ConfiguracoesComponent
+    ConfiguracoesComponent,
+    ConfirmacaoDialog
   ],
   entryComponents: [
+    ConfirmacaoDialog
   ],
 })
 

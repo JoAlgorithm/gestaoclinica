@@ -273,13 +273,13 @@ export class ListagemComponent implements OnInit {
       }
       
     });
-   dialogRef.afterClosed().subscribe(result => {
-    
-    console.log('The dialog was closed');
-    
-    // this.animal = result;
-    
-   });
+    dialogRef.afterClosed().subscribe(result => {
+      
+      console.log('The dialog was closed');
+      
+      // this.animal = result;
+      
+    });
    
   
     }

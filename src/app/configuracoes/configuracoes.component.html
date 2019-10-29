@@ -101,6 +101,13 @@
                                 <mat-icon>create</mat-icon>
                             </button></mat-cell>
                         </ng-container>
+
+                        <ng-container matColumnDef="remover">
+                            <mat-header-cell *matHeaderCellDef> Remover </mat-header-cell>
+                            <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Remover" (click)="removeItem('Consulta', row.nome ,row.id)">  
+                                <mat-icon>delete</mat-icon>
+                            </button></mat-cell>
+                        </ng-container>
                 
                         <mat-header-row *matHeaderRowDef="displayedColumnsCategoriaC"></mat-header-row>
                         <mat-row *matRowDef="let row; columns: displayedColumnsCategoriaC;">
@@ -195,14 +202,14 @@
           
                 <ng-container matColumnDef="editar">
                     <mat-header-cell *matHeaderCellDef> Editar </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Editar"  (click)="editarDiagnostico(row)">  
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Editar" (click)="editarDiagnostico(row)">  
                         <mat-icon>create</mat-icon>
                     </button></mat-cell>
                 </ng-container>
           
                 <ng-container matColumnDef="remover">
                   <mat-header-cell *matHeaderCellDef> Remover </mat-header-cell>
-                  <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Remover">  
+                  <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Remover" (click)="removeItem('Diagnostico', row.nome ,row.id)">  
                       <mat-icon>delete</mat-icon>
                   </button></mat-cell>
                 </ng-container>
@@ -290,6 +297,15 @@
                                 <mat-icon>create</mat-icon>
                             </button></mat-cell>
                         </ng-container>
+
+                        <ng-container matColumnDef="remover">
+                            <mat-header-cell *matHeaderCellDef> Remover </mat-header-cell>
+                            <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Remover" (click)="removeItem('Conduta', row.nome ,row.id)">  
+                                <mat-icon>delete</mat-icon>
+                            </button></mat-cell>
+                        </ng-container>
+
+                        
                 
                         <mat-header-row *matHeaderRowDef="displayedColumnsCondutaC"></mat-header-row>
                         <mat-row *matRowDef="let row; columns: displayedColumnsCondutaC;">
