@@ -1,0 +1,7 @@
+<div mat-dialog-content>
+    <p>Deseja realmente remover o(a) {{data.item}} ?</p>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancelar</button>
+    <button mat-button (click)="remover(data.item, data.id)">Remover</button>
+</div> 

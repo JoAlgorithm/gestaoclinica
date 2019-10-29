@@ -1,5 +1,6 @@
 import { UnidadeMedida } from "./un";
 import { CategoriaMedicamento } from "./categoria_medicamento";
+import { TipoEstoque } from "./tipo_estoque";
 
 export class Medicamento {
     id: string;
@@ -23,11 +24,18 @@ export class Medicamento {
     // Unidade
     un?: UnidadeMedida;
 
-    //Categoria tecnicamente chamada de Apresentacao pode ser
+    //Categoria tecnicamente chamada de Forma farmaceutica
     // Comprimido
     // Injectavel
     // Xarope
     categoria?: CategoriaMedicamento;
+
+    //Tipo tecnicamente chamado de Categoria
+    // Na verdade comprimido e um nome generico, em gestaio de estoques de farmacias separam-se as opcoes em
+    // 1. Medicamentos (paracetamol, amoxicilina, etc)
+    // 2. Material medico cirugico (luvas, algodao, etc)
+    // 3. Consumiveis de laboratorio ()
+    tipo?: TipoEstoque;
 
     min?: number;
     //max?: number;

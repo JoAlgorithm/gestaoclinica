@@ -64,7 +64,7 @@
                     
                             <!--NOME DO DIAGNOSITOC-->
                             <mat-form-field style="width: 45%">
-                                <input matInput placeholder="Nome" formControlName="cs_nome" [(ngModel)]="categoria_consulta.nome" required>
+                                <input matInput placeholder="Consulta" formControlName="cs_nome" [(ngModel)]="categoria_consulta.nome" required>
                             </mat-form-field>
             
                             <!--PRECO DO DIAGNOSITOC-->
@@ -86,7 +86,7 @@
                         <mat-table [dataSource]="dataSourseCategoriaC">
                         
                         <ng-container matColumnDef="nome">
-                            <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef> Consulta </mat-header-cell>
                             <mat-cell *matCellDef="let row"> {{row.nome}}</mat-cell>
                         </ng-container>
                 

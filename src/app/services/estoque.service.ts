@@ -27,6 +27,10 @@ export class EstoqueService {
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/uns').update(un.id, un);
     return this.db.list('uns/'+this.authService.get_clinica_id + '/').update(un.id, un);
   }
+  removeUN(id){
+    return this.db.list('uns/'+this.authService.get_clinica_id + '/').remove(id);
+  }
+
   //Retorna a lista de depositos
   getDepositos() {
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/depositos');
@@ -42,6 +46,10 @@ export class EstoqueService {
   updateDeposito(dp: Deposito){
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/depositos').update(dp.id, dp);
     return this.db.list('depositos/'+this.authService.get_clinica_id + '/').update(dp.id, dp);
+  }
+
+  removeDeposito(id){
+    return this.db.list('depositos/'+this.authService.get_clinica_id + '/').remove(id);
   }
 
 
@@ -60,6 +68,10 @@ export class EstoqueService {
   updateMedicamentos(md: Medicamento){
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/medicamentos').update(md.id, md);
     return this.db.list('medicamentos/'+this.authService.get_clinica_id + '/').update(md.id, md);
+  }
+
+  removeMedicamento(id){
+    return this.db.list('medicamentos/'+this.authService.get_clinica_id + '/').remove(id);
   }
 
   //Retorna de categorias de medicamentos
@@ -90,5 +102,11 @@ export class EstoqueService {
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/estoquesmovimentos');
     return this.db.list('estoquesmovimentos/'+this.authService.get_clinica_id + '/');
   }
+
+  getTiposEstoque(){
+    return this.db.list('tiposestoque/'+this.authService.get_clinica_id + '/');
+  }
+
+  
 
 }

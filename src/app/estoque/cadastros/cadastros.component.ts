@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { Deposito } from '../../classes/deposito';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { EstoqueService } from '../../services/estoque.service';
 import { AuthService } from '../../services/auth.service';
 import { UnidadeMedida } from '../../classes/un';
@@ -9,6 +9,8 @@ import { Medicamento } from '../../classes/medicamento';
 import { CategoriaMedicamento } from '../../classes/categoria_medicamento';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { FormControl } from '@angular/forms';
+import { TipoEstoque } from '../../classes/tipo_estoque';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-cadastros',
   templateUrl: './cadastros.component.html',
@@ -21,6 +23,8 @@ export class CadastrosComponent implements OnInit {
   /*
   * VARIAVEIS DA TAB MEDICAMENTOS
   */
+  desabilitar_fm = false;
+  tipos_estoque: TipoEstoque[];
   cats_medicamento: CategoriaMedicamento[];
   cats_medicamento_aux: CategoriaMedicamento[];
   medicamento: Medicamento;
@@ -29,7 +33,7 @@ export class CadastrosComponent implements OnInit {
   medicamentoFormGroup: FormGroup; //Fomulario
 
   dataSourseMedicamento: MatTableDataSource<Medicamento>;
-  displayedColumnsMedicamento = ['codigo', 'categoria', 'nome_g', 'nome_c', 'un', 'preco_venda', 'min', 'composicao', 'editar'];
+  displayedColumnsMedicamento = ['codigo', 'tipo' ,'categoria', 'nome_g', 'nome_c', 'un', 'preco_venda', 'min', 'composicao', 'editar', 'remover'];
   @ViewChild(MatPaginator) paginatorMedicamento: MatPaginator;
 
   /*
@@ -41,7 +45,7 @@ export class CadastrosComponent implements OnInit {
   depositoFormGroup: FormGroup; //Fomulario
 
   dataSourseDeposito: MatTableDataSource<Deposito>;
-  displayedColumnsDeposito = ['nome', 'descricao', 'editar'];
+  displayedColumnsDeposito = ['nome', 'descricao', 'editar', 'remover'];
   @ViewChild(MatPaginator) paginatorDeposito: MatPaginator;
   //@ViewChild(MatSort) sortDiagnostico: MatSort;
 
@@ -55,11 +59,11 @@ export class CadastrosComponent implements OnInit {
   unFormGroup: FormGroup; //Fomulario
 
   dataSourseUN: MatTableDataSource<UnidadeMedida>;
-  displayedColumnsUN = ['nome', 'editar'];
+  displayedColumnsUN = ['nome', 'editar', 'remover'];
   @ViewChild(MatPaginator) paginatorUN: MatPaginator;
 
   constructor(private _formBuilder: FormBuilder, public estoqueService: EstoqueService,
-    public snackBar: MatSnackBar, private authService: AuthService) {
+    public snackBar: MatSnackBar, private authService: AuthService, public dialog: MatDialog) {
     this.deposito = new Deposito();
     this.un = new UnidadeMedida();
     this.medicamento = new Medicamento();
@@ -70,6 +74,7 @@ export class CadastrosComponent implements OnInit {
      
     //TAB MEDICAMENTOS
     this.medicamentoFormGroup = this._formBuilder.group({
+      m_tipo: ['', Validators.required],
       m_categoria: ['', Validators.required],
       m_nome_generico: ['', Validators.required],
       m_nome_comercial: ['', Validators.required],
@@ -79,6 +84,15 @@ export class CadastrosComponent implements OnInit {
       m_min: [''],
     });
 
+    this.estoqueService.getTiposEstoque().snapshotChanges().subscribe(data => {
+      this.tipos_estoque = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as TipoEstoque;
+      });
+    })
+    
     this.estoqueService.getCategoriasMedicamento().snapshotChanges().subscribe(data => {
       this.cats_medicamento = data.map(e => {
         return {
@@ -143,6 +157,27 @@ export class CadastrosComponent implements OnInit {
       this.uns_aux=this.uns;
     })
   }
+
+
+  removeItem(item, nome ,id){
+    const dialogRef = this.dialog.open(ConfirmacaoDialog, {
+      width: '500px',
+      data:{item: item, nome: nome , id: id}
+    });
+    dialogRef.afterClosed().subscribe(result => {  
+      //console.log('The dialog was closed');
+    });
+  }
+  
+  mudarCategoria(){
+    if(this.medicamento.tipo.nome == "Medicamento"){
+      this.desabilitar_fm = false;
+    }else{
+      this.desabilitar_fm = true;
+      this.medicamento.categoria = null;
+    }
+  }
+
   editarMedicamento(medicamento: Medicamento){
     this.medicamento = medicamento;
   }
@@ -150,6 +185,7 @@ export class CadastrosComponent implements OnInit {
   editarDeposito(deposito: Deposito){
     this.deposito= deposito;
   }
+
   editarUnidade(Unidade: UnidadeMedida){
     this.un= Unidade;
   }
@@ -161,7 +197,8 @@ export class CadastrosComponent implements OnInit {
    this.cats_medicamento.filter((unit) => unit.nome.indexOf(filterValue) > -1)
    this.cats_medicamento.filter(v => v.nome == filterValue)
   }
-filtrartipomedic="";
+
+  filtrartipomedic="";
   filtrarTipoMedicamento(filtrartipomedic) {
     if(filtrartipomedic){
       filtrartipomedic = filtrartipomedic.trim(); // Remove whitespace
@@ -173,7 +210,8 @@ filtrartipomedic="";
       this.cats_medicamento = this.cats_medicamento_aux;
     }
   }
-filterunidad="";
+
+  filterunidad="";
   filtrarUnidade(filterunidad) {
     if(filterunidad){
       filterunidad = filterunidad.trim(); // Remove whitespace
@@ -185,7 +223,6 @@ filterunidad="";
       this.uns = this.uns_aux;
     }
   }
-
 
   registarMedicamento(){
     if(this.medicamento.nome_generico || this.medicamento.categoria || this.medicamento.un || this.medicamento.preco_venda){
@@ -274,6 +311,64 @@ filterunidad="";
       })
     }
   }}
+
+  openSnackBar(mensagem) {
+    this.snackBar.open(mensagem, null,{
+      duration: 2000
+    })
+  }
+
+}
+
+
+//ConfirmacaoDialog --------------------------------------------------------
+@Component({
+  selector: 'confirmacao-dialog',
+  templateUrl: 'confirmar.component.html',
+})
+export class ConfirmacaoDialog {
+
+  constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<ConfirmacaoDialog>, private router: Router,
+  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, 
+   public snackBar: MatSnackBar, private _formBuilder: FormBuilder,
+    public estoqueService: EstoqueService) {
+  }
+
+  remover(item, id){
+    switch(item){
+      case "UN": { 
+        this.estoqueService.removeUN(id).then( r=> {
+          this.dialogRef.close();
+          this.openSnackBar(item +" removido com sucesso.")
+        }).catch(err => {
+          this.openSnackBar("Ocorreu algum erro ao remover. Tente novamente ou contacte a equipe de suporte.")
+        })
+      } 
+      case "Deposito": { 
+        this.estoqueService.removeDeposito(id).then( r=> {
+          this.dialogRef.close();
+          this.openSnackBar(item +" removida com sucesso.")
+        }).catch(err => {
+          this.openSnackBar("Ocorreu algum erro ao remover. Tente novamente ou contacte a equipe de suporte.")
+        })
+      }
+      case "Medicamento": { 
+        this.estoqueService.removeMedicamento(id).then( r=> {
+          this.dialogRef.close();
+          this.openSnackBar(item +" removida com sucesso.")
+        }).catch(err => {
+          this.openSnackBar("Ocorreu algum erro ao remover. Tente novamente ou contacte a equipe de suporte.")
+        })
+      }
+      default: { 
+          break; 
+      }
+    }
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{
