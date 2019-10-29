@@ -594,11 +594,17 @@ this.depositos_aux=this.data.depositos;
   
       this.consulta = new Consulta();
       this.consulta.data = dia +"/"+mes+"/"+ano;
+      this.consulta.ano = ano;
+
       this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
       this.consulta.paciente = paciente;
       this.consulta.movimentosestoque = this.movimentos;
       this.consulta.status = "Encerrada";
       this.consulta.tipo = "MEDICAMENTO";
+      
+      this.consulta.paciente_nome = paciente.nome;
+      this.consulta.paciente_apelido = paciente.apelido;
+      this.consulta.paciente_nid = paciente.nid;
   
       //Criar uma faturacao da consulta do tipo MEDICAMENTO --------------------
       let faturacao = new Faturacao();
@@ -611,6 +617,7 @@ this.depositos_aux=this.data.depositos;
       faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
       faturacao.ano = new Date().getFullYear();
       faturacao.id = this.nr_fatura+"";
+      //faturacao.subcategoria = this.
   
   
       //Persistir informacao na base de dados ----------------------------
@@ -1024,11 +1031,16 @@ this.depositos_aux=this.data.depositos;
 
       this.consulta = new Consulta();
       this.consulta.data = dia +"/"+mes+"/"+ano;
+      this.consulta.ano = ano;
       this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
       this.consulta.paciente = paciente;
       this.consulta.condutas_clinicas = this.condutas;
       this.consulta.status = "Encerrada";
       this.consulta.tipo = "CONDUTA CLINICA";
+
+      this.consulta.paciente_nome = paciente.nome;
+      this.consulta.paciente_apelido = paciente.apelido;
+      this.consulta.paciente_nid = paciente.nid;
 
       //Criar uma faturacao da consulta do tipo CONDUTA CLINICA --------------------
       let faturacao = new Faturacao();
@@ -1038,6 +1050,7 @@ this.depositos_aux=this.data.depositos;
       //faturacao.consulta = this.consulta;
       //faturacao.condutas_clinicas = this.consulta.condutas_clinicas;
       faturacao.id = this.nr_fatura+"";
+      //faturacao.subcategoria = this.condu
       
       faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
       faturacao.ano = new Date().getFullYear();
@@ -1364,6 +1377,7 @@ categorias_consulta: CategoriaConsulta[];
       let mes = +(new Date().getMonth()) + +1;
       let ano = new Date().getFullYear();
       this.consulta.data = dia +"/"+mes+"/"+ano;
+      this.consulta.ano = ano;
       this.DiarioPdf(paciente);
 
       this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
@@ -1372,6 +1386,12 @@ categorias_consulta: CategoriaConsulta[];
       this.consulta.tipo = tipo;
       this.consulta.preco_consulta_medica = this.categoria.preco;
       this.consulta.categoria = this.categoria;
+
+      this.consulta.paciente_nome = this.consulta.paciente.nome;
+      this.consulta.paciente_apelido = this.consulta.paciente.apelido;
+      this.consulta.paciente_nid= this.consulta.paciente.nid;
+
+      this.consulta.timestamp = new Date().valueOf();
 
       let data = Object.assign({}, this.consulta);
 
@@ -1955,11 +1975,16 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
 
     this.consulta = new Consulta();
     this.consulta.data = dia +"/"+mes+"/"+ano;
+    this.consulta.ano = ano;
     this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
     this.consulta.paciente = paciente;
     this.consulta.diagnosticos_aux = this.diagnosticos;
     this.consulta.status = "Encerrada";
     this.consulta.tipo = "DIAGNOSTICO AUX";
+
+    this.consulta.paciente_nome = paciente.nome;
+    this.consulta.paciente_apelido = paciente.apelido;
+    this.consulta.paciente_nid = paciente.nid;
 
     //Criar uma faturacao da consulta do tipo CONDUTA CLINICA --------------------
     let faturacao = new Faturacao();

@@ -109,7 +109,13 @@ export class ConfiguracoesService {
   //Cadastra NRCOTACAO
   addNrCotacao(nr: NrCotacao){
     //return this.db.list('clinicas/'+this.authService.get_clinica_id +'/nrscotacoes').update(nr.id, nr);
-    return this.db.list('nrscotacoes/'+this.authService.get_clinica_id +'/').update(nr.id, nr);
+    
+    /*let chave = nr.id;
+    if(nr.id !== (new Date().getFullYear()+'000001')){
+      chave = (+chave - +1)+"";
+    }*/
+
+    return this.db.list('nrscotacoes/'+this.authService.get_clinica_id +'/').update('nr', nr);
   }
 
   //Retorna NRCOTACAO
@@ -121,7 +127,7 @@ export class ConfiguracoesService {
   //Cadastra NRFATURA
   addNrFatura(nr: NrFatura){
     //return this.db.list('clinicas/'+this.authService.get_clinica_id +'/nrsfaturas').update(nr.id, nr);
-    return this.db.list('nrsfaturas/'+this.authService.get_clinica_id +'/').update(nr.id, nr);
+    return this.db.list('nrsfaturas/'+this.authService.get_clinica_id +'/').update('nr', nr);
   }
 
   //Retorna NRCOTACAO
@@ -130,5 +136,8 @@ export class ConfiguracoesService {
     return this.db.list('nrsfaturas/'+this.authService.get_clinica_id + '/');
   }
 
+  getAnos() {
+    return this.db.list('anos/'+this.authService.get_clinica_id + '/');
+  }
 
 }

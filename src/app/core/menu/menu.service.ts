@@ -101,6 +101,38 @@ const MENUITEMS_MEDICO:Menu[] = [
   }
 ];
 
+const MENUITEMS_ADMNISTRATIVO:Menu[] = [
+  {
+    state: 'dashboard',
+    //state: 'home',
+    name: 'INICIO',
+    type: 'link',
+    icon: 'home'
+  },
+  {
+    state: 'consultas',
+    name: 'CONSULTAS',
+    type: 'link',
+    icon: 'assignment_ind',
+  },
+  {
+    state: 'estoque',
+    name: 'ESTOQUE',
+    type: 'sub',
+    icon: 'local_pharmacy',
+    children: [
+      {state: 'estoque_movimentos', name: 'Movimentos'},
+      {state: 'estoque_cadastros', name: 'Cadastros'}
+    ]
+  },
+  {
+    state: 'configuracoes',
+    name: 'CONFIGURACOES',
+    type: 'link',
+    icon: 'settings',
+  }
+];
+
 
 
 @Injectable()
@@ -114,16 +146,16 @@ export class MenuService {
 
   getAll(): Menu[] {
     switch(this.authService.get_perfil) { 
-      case "Admnistrativo": { 
+      case "Clinica_Admnistrativo": { 
          //statements; 
-         return MENUITEMS;
+         return MENUITEMS_ADMNISTRATIVO;
       } 
-      case "Rececionista": { 
+      case "Clinica_Rececionista": { 
          //statements; 
          return MENUITEMS_RECECIONISTA;
          //break; 
       } 
-      case "Medico": { 
+      case "Clinica_Medico": { 
         //statements; 
         return MENUITEMS_MEDICO;
         //break; 

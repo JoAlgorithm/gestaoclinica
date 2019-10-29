@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/core';
 import { Consulta } from './../classes/consulta';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 import { PacienteService } from './../services/paciente.service';
@@ -19,7 +19,11 @@ import * as deepEqual from "deep-equal";
   templateUrl: './consultas.component.html',
   styleUrls: ['./consultas.component.scss']
 })
-export class ConsultasComponent implements OnInit {
+export class ConsultasComponent implements OnInit, AfterViewInit {
+
+  perfil = "";
+  acesso_cancelar = false;
+  acesso_atender = false;
 
   consultas: Consulta[]; //Lista de todas as consultas da base de dados
 
@@ -62,7 +66,38 @@ export class ConsultasComponent implements OnInit {
     public dialog: MatDialog, public snackBar: MatSnackBar, private router: Router, public configServices:ConfiguracoesService) {
    }
 
+   ngAfterViewInit() {
+    
+  }
+
   ngOnInit() {
+    this.perfil = this.authService.get_perfil;
+
+    switch(this.perfil) { 
+      case "Clinica_Admin": { 
+        this.acesso_atender = true;
+        this.acesso_cancelar = true;
+        break;
+      }
+
+      case "Clinica_Medico": { 
+        this.acesso_atender = true;
+        this.acesso_cancelar = false;
+        break;
+      }
+
+      case "Clinica_Admnistrativo": { 
+        this.acesso_atender = false;
+        this.acesso_cancelar = true;
+        break;
+      }
+      
+      default:{
+        break;
+      }
+    }
+    console.log("Perfil "+ this.perfil);
+
     this.pacienteService.getConsultas().snapshotChanges().subscribe(data => {
       this.consultas = data.map(e => {
         return {
@@ -74,7 +109,7 @@ export class ConsultasComponent implements OnInit {
 
       //Consultas PENDENTES
       this.dataSoursePendentes=new MatTableDataSource(
-        this.consultas.filter(c =>c.status === "Aberta" && c.tipo === "Consulta Medica").sort((a, b) => a.data > b.data ? 1 : -1)
+        this.consultas.filter(c =>c.status === "Aberta" && c.tipo === "Consulta Medica").sort((a, b) => a.timestamp > b.timestamp ? 1 : -1)
       );
       setTimeout(() => this.dataSoursePendentes.paginator = this.paginatorPendentes);
       this.dataSoursePendentes.sort = this.sortPendentes;
@@ -158,7 +193,7 @@ export class ConsultasComponent implements OnInit {
 
     let dataSourseHistConsultas: MatTableDataSource<Consulta>; //Tabela de consultas pendentes
     dataSourseHistConsultas=new MatTableDataSource(
-      this.consultas.filter(c =>c.status === "Encerrada" && c.tipo == "Consulta Medica" && c.paciente.nid == consulta.paciente.nid).sort((a, b) => a.data_encerramento > b.data_encerramento ? 1 : -1)
+      this.consultas.filter(c =>c.status === "Encerrada" && c.tipo == "Consulta Medica" && c.paciente_nid == consulta.paciente_nid).sort((a, b) => a.data_encerramento > b.data_encerramento ? 1 : -1)
     );
     
     //A tabela de diagnosticos é enviada para o dialog pura
@@ -437,10 +472,18 @@ export class ConsultasComponent implements OnInit {
     consulta.encerrador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
     consulta.data_encerramento = dia +"/"+mes+"/"+ano;
 
+    consulta.paciente_nome = consulta.paciente.nome;
+    consulta.paciente_apelido = consulta.paciente.apelido;
+    consulta.paciente_nid = consulta.paciente.nid;
+    //consulta.paciente = null;  passar isso no metodo update
+    
+
     let data = Object.assign({}, consulta);
 
+    //Consulta ja foi faturada
+
     //Faturar consulta
-    let faturacao = new Faturacao();
+    /*let faturacao = new Faturacao();
     faturacao.categoria = "CONSULTA_MEDICA";
     faturacao.valor = consulta.preco_consulta_medica;
     faturacao.data = new Date();
@@ -448,17 +491,19 @@ export class ConsultasComponent implements OnInit {
     faturacao.faturador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
     faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
     faturacao.ano = new Date().getFullYear();
-    let f = Object.assign({},faturacao);
+    //faturacao.id = this.nr
+    let f = Object.assign({},faturacao);*/
 
     this.pacienteService.updateConsulta(data)
-
     .then( res => {
-      this.pacienteService.faturar(f).then(r => {
-        this.dialogRef.close();
-        this.openSnackBar("Consulta encerrada com sucesso");
+      this.dialogRef.close();
+      this.openSnackBar("Consulta encerrada com sucesso");
+
+      /*this.pacienteService.faturar(f).then(r => {
+        
       }, r =>{
         console.log("ERRO: " + r.message)
-      })
+      })*/
 
     }).catch( err => {
       console.log("ERRO: " + err.message)
