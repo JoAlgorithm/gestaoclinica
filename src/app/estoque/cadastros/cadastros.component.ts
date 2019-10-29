@@ -122,7 +122,8 @@ export class CadastrosComponent implements OnInit {
         } as Deposito;
       });
       this.dataSourseDeposito=new MatTableDataSource(this.depositos.sort((a, b) => a.nome > b.nome ? 1 : -1));
-       this.dataSourseDeposito.paginator = this.paginatorDeposito;
+     this.dataSourseDeposito.paginator = this.paginatorDeposito;
+     
     })
 
     //TAB UNIDADES DE MEDIDA
