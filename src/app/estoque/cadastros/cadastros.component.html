@@ -116,7 +116,7 @@
             <mat-row *matRowDef="let row; columns: displayedColumnsMedicamento;">
             </mat-row>
             </mat-table>
-            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" ></mat-paginator>
         </div>
 
         </mat-card-content>
@@ -166,10 +166,10 @@
               </ng-container>
       
               <mat-header-row *matHeaderRowDef="displayedColumnsDeposito"></mat-header-row>
-              <mat-row *matRowDef="let row; columns: displayedColumnsDeposito;">
+              <mat-row *matRowDef="let row; columns: displayedColumnsDeposito;" >
               </mat-row>
               </mat-table>
-              <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+              <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" ></mat-paginator>
           </div>
           
 

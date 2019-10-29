@@ -64,10 +64,13 @@ export class ListagemComponent implements OnInit {
   diagnosticos:DiagnosticoAuxiliar[];
 
   condutas:CondutaClinica[];
-
+  
+ 
   tiposconduta: TipoCondutaClinica[];
+  tiposcondutas_aux: TipoCondutaClinica[];
 
   categorias_consulta: CategoriaConsulta[];
+  categorias_consulta_aux:CategoriaConsulta[];
 
   tipos_diagnosticos: TipoDiagnosticoAux[];
   tipos_diagnosticos_aux: TipoDiagnosticoAux[];
@@ -169,7 +172,8 @@ export class ListagemComponent implements OnInit {
           id: e.payload.key,
           ...e.payload.val(),
         } as TipoCondutaClinica;
-      })
+      });
+      this.tiposcondutas_aux=this.tiposconduta;
     })
     
     this.configServices.getDiagnosticos().snapshotChanges().subscribe(data => {
@@ -196,7 +200,8 @@ export class ListagemComponent implements OnInit {
           id: e.payload.key,
           ...e.payload.val(),
         } as CategoriaConsulta;
-      })
+      });
+    
     })
 
     this.configServices.getTiposDiagnosticos().snapshotChanges().subscribe(data => {
@@ -207,7 +212,7 @@ export class ListagemComponent implements OnInit {
           ...e.payload.val(),
         } as TipoDiagnosticoAux;
       });
-      this.tipos_diagnosticos_aux=this.tipos_diagnosticos;
+      
     })
 
     this.configServices.getSubTiposDiagnosticos().snapshotChanges().subscribe(data => {
@@ -421,6 +426,8 @@ export class MedicamentosDialog {
 
   medicamento: Medicamento;
   deposito: Deposito;
+  depositos: Deposito[];
+  depositos_aux: Deposito[];
   preco_total:Number = 0;
   max: Number = 1;
   min: Number = 1;
@@ -438,7 +445,7 @@ export class MedicamentosDialog {
     
     this.deposito = new Deposito();
     this.medicamento = new Medicamento();
-
+this.depositos_aux=this.data.depositos;
     this.medicamentoFormGroup = this._formBuilder.group({
       deposito: ['', Validators.required],
       medicamento: ['', Validators.required],
@@ -456,6 +463,27 @@ export class MedicamentosDialog {
     this.nr_fatura = this.data.nr_fatura; //PDF
     console.log("dialog nr fatura: "+this.nr_fatura);
   }
+
+  filtrodeposito="";
+  filtrarDepositos(filtrodeposito) {
+    if(filtrodeposito){
+      filtrodeposito = filtrodeposito.trim(); // Remove whitespace
+      filtrodeposito = filtrodeposito.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.depositos= null;
+
+  this.data.depositos = this.depositos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtrodeposito) > -1);     
+    }else{
+      this.data.depositos = this.depositos_aux;
+    }
+  }
+
+
+
+
+
+
+
 
   getMedicamentos(deposito: Deposito){
     this.medicamentos = [];
@@ -879,9 +907,11 @@ export class MedicamentosDialog {
 
   condutaFormGroup: FormGroup;
   condutas: CondutaClinica[] = [];
+  condutas_aux: CondutaClinica[]
   conduta: CondutaClinica;
   tipoconduta: TipoCondutaClinica;
-
+  tiposconduta: TipoCondutaClinica[];
+  tiposcondutas_aux: TipoCondutaClinica[];
   dataSourse: MatTableDataSource<CondutaClinica>;
   displayedColumns = ['tipo','nome', 'preco', 'remover'];
 
@@ -889,6 +919,7 @@ export class MedicamentosDialog {
   preco_total:Number = 0;
 
   tiposcondutas_param: TipoCondutaClinica[]; //Passadas no parametro data
+
   condutas_param: CondutaClinica[]; //Passadas no parametro data
   condutas_alternativas: CondutaClinica[];
   
@@ -898,7 +929,9 @@ export class MedicamentosDialog {
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.conduta = new CondutaClinica();
     this.tipoconduta = new TipoCondutaClinica();
-
+    
+    this.tiposcondutas_aux = this.data.tiposconduta;
+    this.condutas_aux = this.data.condutas;
     this.condutaFormGroup = this._formBuilder.group({
       conduta_tipo: ['', Validators.required],
       conduta_nome: ['', Validators.required],
@@ -911,12 +944,47 @@ export class MedicamentosDialog {
     this.tiposcondutas_param = this.data.tiposconduta;
     this.condutas_param = this.data.condutas;
     //this.condutas_alternativas = this.condutas_param;
-
+ 
     this.clinica = this.data.clinica; //PDF
     this.nr_cotacao = this.data.nr_cotacao; //PDF
     this.nr_fatura = this.data.nr_fatura; //PDF
     console.log("dialog nr fatura: "+this.nr_fatura);
   }
+  
+
+  filtroTipoconduta="";
+  filtrarTiposcondutas(filtroTipoconduta) {
+    if(filtroTipoconduta){
+      filtroTipoconduta = filtroTipoconduta.trim(); // Remove whitespace
+      filtroTipoconduta = filtroTipoconduta.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.tiposconduta= null;
+
+  this.data.tiposconduta = this.tiposcondutas_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtroTipoconduta) > -1);     
+    }else{
+      this.data.tiposconduta = this.tiposcondutas_aux;
+    }
+  }
+
+  filtroconduta="";
+  filtrarCondutas(filtroconduta) {
+    if(filtroconduta){
+      filtroconduta = filtroconduta.trim(); // Remove whitespace
+      filtroconduta = filtroconduta.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.condutas= null;
+
+  this.data.condutas = this.condutas_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtroconduta) > -1);     
+    }else{
+      this.data.condutas = this.condutas_aux;
+    }
+  }
+
+
+
+
+
+
   
   addConduta(conduta:CondutaClinica){
     if(conduta.nome){
@@ -1249,14 +1317,17 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
     clinica: Clinica; //PDF
     nr_cotacao = 0; //PDF
     nr_fatura = 0; //PDF
-  
+    //categorias_consulta: CategoriaConsulta[];
+  //  categorias_consulta_aux: CategoriaConsulta[];
     desabilitar: boolean = false; //Fatura
     desabilitar2: boolean = false; //Cotacao
     texto: string = "Marcar consulta"; //Fatura
     texto2: string = "Cotar"; //Cotacao
 
   consultasFormGroup: FormGroup;
-  //categorias: CategoriaConsulta[] = [];
+categorias: CategoriaConsulta[] = [];
+categorias_aux: CategoriaConsulta[];
+categorias_consulta: CategoriaConsulta[];
   categoria:CategoriaConsulta;
 
   consulta?: Consulta;
@@ -1267,22 +1338,36 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.categoria = new CategoriaConsulta();
     this.consulta = new Consulta();
-
+    this.categorias_aux=this.data.categorias_consulta;
     this.consultasFormGroup = this._formBuilder.group({
       categoria_nome: ['', Validators.required],
       categoria_preco: ['', Validators.required]
     });
     this.consultasFormGroup.controls['categoria_preco'].disable();
-
+  
     this.clinica = this.data.clinica; //PDF
     this.nr_cotacao = this.data.nr_cotacao; //PDF
     this.nr_fatura = this.data.nr_fatura; //PDF
     console.log("dialog nr fatura: "+this.nr_fatura);
   }
-
+ 
   onNoClick(): void {
     this.dialogRef.close();
   }
+  filtroconsulta="";
+  filtrarConsultas(filtroconsulta) {
+    if(filtroconsulta){
+      filtroconsulta = filtroconsulta.trim(); // Remove whitespace
+      filtroconsulta = filtroconsulta.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.categorias_consulta= null;
+
+  this.data.categorias_consulta = this.categorias_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtroconsulta) > -1);     
+    }else{
+      this.data.categorias_consulta = this.categorias_aux;
+    }
+  }
+
 
   marcarConsulta(paciente, tipo){
     if(this.categoria.nome){ //Garantir que categoria foi selecionada

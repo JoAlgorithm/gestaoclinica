@@ -2,9 +2,12 @@
 <div mat-dialog-content>
   <p>Selecione as condutas clinicas solicitadas pelo cliente</p>
 <!--(change)="onSelect($event.target.value)"-->
-  <form [formGroup]="condutaFormGroup">
+ <!-- <form [formGroup]="condutaFormGroup">-->
     <mat-form-field style="width: 31%">
-        <mat-select placeholder="Tipo conduta" formControlName="conduta_tipo" [(ngModel)]="tipoconduta" (selectionChange)="onSelect(tipoconduta)" required>
+        <mat-select placeholder="Tipo conduta"  [(ngModel)]="tipoconduta" (selectionChange)="onSelect(tipoconduta)" required>
+                <mat-option >
+                        <ngx-mat-select-search [(ngModel)]="filtroTipoconduta"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTiposcondutas($event.target.value)"></ngx-mat-select-search>
+                      </mat-option>
             <mat-option *ngFor="let tipoconduta of data.tiposconduta" [value]="tipoconduta">
                 {{tipoconduta.nome}}
             </mat-option>
@@ -12,7 +15,10 @@
     </mat-form-field>
 
     <mat-form-field style="width: 31%">
-        <mat-select placeholder="Conduta clinica" formControlName="conduta_nome" [(ngModel)]="conduta" required>
+        <mat-select placeholder="Conduta clinica" [(ngModel)]="conduta" required>
+                <mat-option >
+                        <ngx-mat-select-search [(ngModel)]="filtroconduta"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarCondutas($event.target.value)"></ngx-mat-select-search>
+                      </mat-option>
             <mat-option *ngFor="let conduta of data.condutas" [value]="conduta">
                 {{conduta.nome}}
             </mat-option>
@@ -20,13 +26,13 @@
     </mat-form-field>
 
     <mat-form-field style="width: 31%">
-        <input matInput placeholder="Preco" formControlName="conduta_preco" [(ngModel)]="conduta.preco" required>
+        <input matInput placeholder="Preco"  [(ngModel)]="conduta.preco" required>
     </mat-form-field>
 
     <button mat-icon-button (click)="addConduta(conduta)" matTooltip="Agendar {{conduta.nome}}">
             <mat-icon>add_circle</mat-icon>
     </button>
-   </form>
+   <!--</form>-->
 
    <mat-table [dataSource]="dataSourse" matSort>
         
