@@ -3,7 +3,7 @@
     <p>Selecione a categoria de consultas solicitada pelo cliente</p>
    <!--<form [formGroup]="consultasFormGroup">-->
         <mat-form-field style="width: 49%">
-            <mat-select placeholder="Tipo conduta"  [(ngModel)]="categoria" required>
+            <mat-select placeholder="Tipo consulta"  [(ngModel)]="categoria" required>
               
                     <mat-option >
                             <ngx-mat-select-search [(ngModel)]="filtroconsulta"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarConsultas($event.target.value)"></ngx-mat-select-search>
