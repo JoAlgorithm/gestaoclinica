@@ -70,7 +70,7 @@
                   <mat-row *matRowDef="let row; columns: displayedColumnsPendentes;">
                   </mat-row>
                   </mat-table>
-                  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                  <mat-paginator #paginatorPendentes [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
           </mat-card-content>
       </mat-card>
 
@@ -144,7 +144,7 @@
                 <mat-row *matRowDef="let row; columns: displayedColumnsEAndamento;">
                 </mat-row>
                 </mat-table>
-                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                <mat-paginator #paginatorAndamento [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
             
         </mat-card-content>
     </mat-card>
@@ -221,7 +221,7 @@
                 <mat-row *matRowDef="let row; columns: displayedColumnsEncerradas;">
                 </mat-row>
                 </mat-table>
-                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                <mat-paginator #paginatorEncerradass [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
             
         </mat-card-content>
     </mat-card>
@@ -282,7 +282,7 @@
                     <mat-row *matRowDef="let row; columns: displayedColumnsCanceladas;">
                     </mat-row>
                     </mat-table>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    <mat-paginator #paginatorCanceladas [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
                 
             </mat-card-content>
         </mat-card>

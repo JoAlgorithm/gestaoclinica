@@ -48,7 +48,7 @@ export class ConfiguracoesComponent implements OnInit {
   //ATRIBUTOS DA TABELA
   dataSourseDiagnostico: MatTableDataSource<DiagnosticoAuxiliar>;
   displayedColumnsDiagnostico = ['tipo','subtipo','nome','preco', 'editar', 'remover'];
-  @ViewChild(MatPaginator) paginatorDiagnostico: MatPaginator;
+  @ViewChild('paginatorDiagnostico', { read: MatPaginator }) paginatorDiagnostico: MatPaginator;
   @ViewChild(MatSort) sortDiagnostico: MatSort;
 
 
@@ -75,7 +75,7 @@ export class ConfiguracoesComponent implements OnInit {
 
   dataSourseUser: MatTableDataSource<User>;
   displayedColumnsUser = ['displayName','email', 'perfil'];
-  @ViewChild(MatPaginator) paginatorUser: MatPaginator;
+  @ViewChild('paginatorUser', { read: MatPaginator }) paginatorUser: MatPaginator;
   @ViewChild(MatSort) sortUser: MatSort;
 
   /*
@@ -90,7 +90,7 @@ export class ConfiguracoesComponent implements OnInit {
   //ATRIBUTOS DA TABELA
   dataSourseCategoriaC: MatTableDataSource<CategoriaConsulta>;
   displayedColumnsCategoriaC = ['nome','preco', 'editar', 'remover'];
-  @ViewChild(MatPaginator) paginatorCategoriaC: MatPaginator;
+  @ViewChild('paginatorCategoriaC', { read: MatPaginator }) paginatorCategoriaC: MatPaginator;
   @ViewChild(MatSort) sortCategoriaC: MatSort;
 
   constructor(private _formBuilder: FormBuilder, public configServices: ConfiguracoesService, public snackBar: MatSnackBar,
@@ -112,7 +112,7 @@ export class ConfiguracoesComponent implements OnInit {
   //ATRIBUTOS DA TABELA
   dataSourseCondutaC: MatTableDataSource<CondutaClinica>;
   displayedColumnsCondutaC = ['tipo','nome','preco', 'editar', 'remover'];
-  @ViewChild(MatPaginator) paginatorCondutaC: MatPaginator;
+  @ViewChild('paginatorCondutaC', { read: MatPaginator }) paginatorCondutaC: MatPaginator;
   @ViewChild(MatSort) sortCondutaC: MatSort;
 
 
@@ -211,7 +211,7 @@ export class ConfiguracoesComponent implements OnInit {
       this.dataSourseUser=new MatTableDataSource(
         this.users.filter(u => u.clinica_id+"" === this.authService.get_clinica_id+"").sort((a, b) => a.displayName > b.displayName ? 1 : -1)
       );
-      this.dataSourseUser.paginator = this.paginatorUser;
+      setTimeout(()=> this.dataSourseUser.paginator = this.paginatorUser);
     })
 
 
@@ -231,7 +231,7 @@ export class ConfiguracoesComponent implements OnInit {
       this.dataSourseCategoriaC=new MatTableDataSource(
         this.categorias_consulta.sort((a, b) => a.nome > b.nome ? 1 : -1)
       );
-      this.dataSourseCategoriaC.paginator = this.paginatorCategoriaC;
+      setTimeout(()=> this.dataSourseCategoriaC.paginator = this.paginatorCategoriaC);
     })
 
 
@@ -263,7 +263,7 @@ export class ConfiguracoesComponent implements OnInit {
       this.dataSourseCondutaC = new MatTableDataSource(
         this.condutas_clinica.sort((a, b) => a.tipo.id > b.tipo.id ? 1 : -1)
       );
-      this.dataSourseCondutaC.paginator = this.paginatorCondutaC;
+      setTimeout(()=> this.dataSourseCondutaC.paginator = this.paginatorCondutaC);
     })
 
   }//FIM ngOnInit
@@ -325,7 +325,7 @@ export class ConfiguracoesComponent implements OnInit {
 
         if(data.id){ 
           //Ja tem ID ja Conduta entao deve atualizar
-          this.configServices.updateClinica(data)
+          this.configServices.updateCategoriaConsulta(data)
           .then( res => {
             this.categoria_consulta = new CategoriaConsulta();
             this.categorias_consultaFormGroup.reset;

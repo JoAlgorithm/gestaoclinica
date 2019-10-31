@@ -49,6 +49,12 @@ export class ConfiguracoesService {
     return this.db.list('categoriasconsulta/'+this.authService.get_clinica_id + '/').push(categoriaConsulta);
   }
 
+  //Cadastra o CATEGORIAS DE CONSULTAS
+  updateCategoriaConsulta(categoriaConsulta: CategoriaConsulta){
+    //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/categoriasconsulta').push(categoriaConsulta);
+    return this.db.list('categoriasconsulta/'+this.authService.get_clinica_id + '/').update(categoriaConsulta.id+"", categoriaConsulta);
+  }
+
   removeCategoriaConsulta(id){
     return this.db.list('categoriasconsulta/'+this.authService.get_clinica_id + '/').remove(id+"");
   }

@@ -30,26 +30,26 @@ export class ConsultasComponent implements OnInit, AfterViewInit {
   //Atributos da tabela de consultas PENDENTES
   dataSoursePendentes: MatTableDataSource<Consulta>; //Tabela de consultas pendentes
   displayedColumnsPendentes = ['data','tipo','nid','apelido', 'nome', 'preco' , 'cancelar', 'atender'];
-  @ViewChild(MatPaginator) paginatorPendentes: MatPaginator;
+  @ViewChild('paginatorPendentes', { read: MatPaginator }) paginatorPendentes: MatPaginator;
   @ViewChild(MatSort) sortPendentes: MatSort;
 
   //Atributos da tabela de consultas CANCELADAS
   dataSourseCanceladas: MatTableDataSource<Consulta>; //Tabela de consultas canceladas
   displayedColumnsCanceladas = ['data','nid','apelido', 'nome', 'justificativa', 'cancelador'];
-  @ViewChild(MatPaginator) paginatorCanceladas: MatPaginator;
+  @ViewChild('paginatorCanceladas', { read: MatPaginator }) paginatorCanceladas: MatPaginator;
   @ViewChild(MatSort) sortCanceladas: MatSort;
 
   //Atributos da tabela de consultas ENCERRADAS
   dataSourseEncerradas: MatTableDataSource<Consulta>; //Tabela de consultas canceladas
   displayedColumnsEncerradas = ['data','nid','apelido', 'nome', 'diagnostico','tratamento','internamento', 'detalhes'];
-  @ViewChild(MatPaginator) paginatorEncerradass: MatPaginator;
+  @ViewChild('paginatorEncerradass', { read: MatPaginator }) paginatorEncerradass: MatPaginator;
   @ViewChild(MatSort) sortEncerradas: MatSort;
 
 
   //Atributos da tabela de consultas EM DIAGNOSTICO OU INTERNAMENTO
   dataSourseAndamento: MatTableDataSource<Consulta>; //Tabela de consultas canceladas
   displayedColumnsEAndamento = ['data','nid','apelido', 'nome', 'diagnostico','status','atender'];
-  @ViewChild(MatPaginator) paginatorAndamento: MatPaginator;
+  @ViewChild('paginatorAndamento', { read: MatPaginator }) paginatorAndamento: MatPaginator;
   @ViewChild(MatSort) sortAndamento: MatSort;
 
   
@@ -132,7 +132,7 @@ export class ConsultasComponent implements OnInit, AfterViewInit {
       this.dataSourseAndamento=new MatTableDataSource(
         this.consultas.filter(c => (c.status === "Diagnostico" || c.status === "Internamento" || c.status === "Em andamento") && c.tipo === "Consulta Medica").sort((a, b) => a.data > b.data ? 1 : -1)
       );
-      this.dataSourseAndamento.paginator = this.paginatorAndamento;
+      setTimeout(()=> this.dataSourseAndamento.paginator = this.paginatorAndamento);
     })
 
     this.configServices.getDiagnosticos().snapshotChanges().subscribe(data => {
@@ -323,7 +323,7 @@ export class ConsultasComponent implements OnInit, AfterViewInit {
   //Atributos da tabela de HISTORICO DE CONSULTAS
   //dataSourseHistConsultas: MatTableDataSource<Consulta>; //Tabela de consultas pendentes
   displayedColumnsHistConsultas = ['data','diagnostico','tratamento','internamento', 'detalhes'];
-  @ViewChild(MatPaginator) paginatorHistConsultas: MatPaginator;
+  @ViewChild('paginatorHistConsultas', { read: MatPaginator }) paginatorHistConsultas: MatPaginator;
 
   //temHistorico = false;
 
@@ -624,7 +624,7 @@ export class ConsultasComponent implements OnInit, AfterViewInit {
       });
     }
     this.diagnosticos_aux = this.data.diagnosticos;
-    
+    setTimeout(() => this.data.consultas.paginator = this.paginatorHistConsultas);
 
 
     //this.toppings.setValue(this.data.consulta.diagnosticos_aux);

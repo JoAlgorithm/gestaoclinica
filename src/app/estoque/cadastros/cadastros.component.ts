@@ -34,7 +34,7 @@ export class CadastrosComponent implements OnInit {
 
   dataSourseMedicamento: MatTableDataSource<Medicamento>;
   displayedColumnsMedicamento = ['codigo', 'tipo' ,'categoria', 'nome_g', 'nome_c', 'un', 'preco_venda', 'min', 'composicao', 'editar', 'remover'];
-  @ViewChild(MatPaginator) paginatorMedicamento: MatPaginator;
+  @ViewChild('paginatorMedicamento', { read: MatPaginator }) paginatorMedicamento: MatPaginator;
 
   /*
   * VARIAVEIS DA TAB DEPOSITOS
@@ -46,7 +46,7 @@ export class CadastrosComponent implements OnInit {
 
   dataSourseDeposito: MatTableDataSource<Deposito>;
   displayedColumnsDeposito = ['nome', 'descricao', 'editar', 'remover'];
-  @ViewChild(MatPaginator) paginatorDeposito: MatPaginator;
+  @ViewChild('paginatorDeposito', { read: MatPaginator }) paginatorDeposito: MatPaginator;
   //@ViewChild(MatSort) sortDiagnostico: MatSort;
 
   /*
@@ -60,7 +60,7 @@ export class CadastrosComponent implements OnInit {
 
   dataSourseUN: MatTableDataSource<UnidadeMedida>;
   displayedColumnsUN = ['nome', 'editar', 'remover'];
-  @ViewChild(MatPaginator) paginatorUN: MatPaginator;
+  @ViewChild('paginatorUN', { read: MatPaginator }) paginatorUN: MatPaginator;
 
   constructor(private _formBuilder: FormBuilder, public estoqueService: EstoqueService,
     public snackBar: MatSnackBar, private authService: AuthService, public dialog: MatDialog) {
@@ -111,7 +111,7 @@ export class CadastrosComponent implements OnInit {
         } as Medicamento;
       });
       this.dataSourseMedicamento=new MatTableDataSource(this.medicamentos.sort((a, b) => a.codigo > b.codigo ? 1 : -1));
-      this.dataSourseMedicamento.paginator = this.paginatorMedicamento;
+      setTimeout(()=> this.dataSourseMedicamento.paginator = this.paginatorMedicamento);
 
       //Gerar codigo do proximo medicamento
       if(typeof this.medicamentos !== 'undefined' && this.medicamentos.length > 0){
@@ -136,8 +136,7 @@ export class CadastrosComponent implements OnInit {
         } as Deposito;
       });
       this.dataSourseDeposito=new MatTableDataSource(this.depositos.sort((a, b) => a.nome > b.nome ? 1 : -1));
-     this.dataSourseDeposito.paginator = this.paginatorDeposito;
-     
+      setTimeout(()=> this.dataSourseDeposito.paginator = this.paginatorDeposito);
     })
 
     //TAB UNIDADES DE MEDIDA
@@ -153,7 +152,7 @@ export class CadastrosComponent implements OnInit {
         } as UnidadeMedida;
       });
       this.dataSourseUN=new MatTableDataSource(this.uns.sort((a, b) => a.nome > b.nome ? 1 : -1));
-      this.dataSourseUN.paginator = this.paginatorUN;
+      setTimeout(()=> this.dataSourseUN.paginator = this.paginatorUN);
       this.uns_aux=this.uns;
     })
   }

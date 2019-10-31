@@ -265,7 +265,7 @@
                 <mat-row *matRowDef="let row; columns: displayedColumnsHistConsultas;">
                 </mat-row>
             </mat-table>
-            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            <mat-paginator #paginatorHistConsultas [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 
     </mat-expansion-panel>
 

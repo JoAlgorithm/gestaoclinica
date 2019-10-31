@@ -62,12 +62,12 @@
                     <h5>FORMULARIO DE CADASTRO DE CONSULTA MEDICA</h5>
                     <form [formGroup]="categorias_consultaFormGroup">
                     
-                            <!--NOME DO DIAGNOSITOC-->
+                            <!--NOME DO CONSULTA-->
                             <mat-form-field style="width: 45%">
                                 <input matInput placeholder="Consulta" formControlName="cs_nome" [(ngModel)]="categoria_consulta.nome" required>
                             </mat-form-field>
             
-                            <!--PRECO DO DIAGNOSITOC-->
+                            <!--PRECO DO CONSULTA-->
                             <mat-form-field style="width: 45%">
                                 <input matInput placeholder="Preco" formControlName="cs_preco" [(ngModel)]="categoria_consulta.preco" required>
                             </mat-form-field>
@@ -113,7 +113,7 @@
                         <mat-row *matRowDef="let row; columns: displayedColumnsCategoriaC;">
                         </mat-row>
                         </mat-table>
-                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                        <mat-paginator #paginatorCategoriaC [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
                 
                     </div>
 
@@ -218,7 +218,7 @@
                 <mat-row *matRowDef="let row; columns: displayedColumnsDiagnostico;">
                 </mat-row>
               </mat-table>
-              <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+              <mat-paginator #paginatorDiagnostico [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
         
           </div>
 
@@ -311,7 +311,7 @@
                         <mat-row *matRowDef="let row; columns: displayedColumnsCondutaC;">
                         </mat-row>
                         </mat-table>
-                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                        <mat-paginator #paginatorCondutaC [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
                 
                     </div>
 
@@ -383,7 +383,7 @@
                     <mat-row *matRowDef="let row; columns: displayedColumnsUser;">
                     </mat-row>
                 </mat-table>
-                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator> 
+                <mat-paginator #paginatorUser [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator> 
             </div>
 
         </mat-card-content>
