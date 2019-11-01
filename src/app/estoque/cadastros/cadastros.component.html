@@ -137,7 +137,7 @@
             <mat-row *matRowDef="let row; columns: displayedColumnsMedicamento;">
             </mat-row>
             </mat-table>
-            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" ></mat-paginator>
+            <mat-paginator #paginatorMedicamento [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
         </div>
 
         </mat-card-content>
@@ -197,7 +197,7 @@
               <mat-row *matRowDef="let row; columns: displayedColumnsDeposito;" >
               </mat-row>
               </mat-table>
-              <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" ></mat-paginator>
+              <mat-paginator #paginatorDeposito [pageSizeOptions]="[5, 10, 25, 100]" ></mat-paginator>
           </div>
           
 
@@ -248,7 +248,7 @@
             <mat-row *matRowDef="let row; columns: displayedColumnsUN;">
             </mat-row>
             </mat-table>
-            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            <mat-paginator #paginatorUN [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
           </div>
 
         </mat-card-content>
