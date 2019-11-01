@@ -73,7 +73,7 @@ export class Consulta {
     //tratamento_clinico_prestar_servico?:String;
     //observacoes?:String;
 
-    justificativa_cancelamento?:String;
+     
     cancelador?: String; //Quem cancelou a consulta
 
     diagnosticos?: DiagnosticoAuxiliar[];
