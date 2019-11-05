@@ -10,7 +10,7 @@
 
           <!--CATEGORIA-->
             <mat-form-field style="width: 31%">
-                <mat-select placeholder="Categoria" [(ngModel)]="medicamento.tipo" required (selectionChange)="mudarCategoria(tipo)">
+                <mat-select placeholder="Categoria" [(ngModel)]="medicamento.tipo" required (selectionChange)="mudarCategoria(medicamento.tipo)">
                   <mat-option *ngFor="let tipo of tipos_estoque" [value]="tipo">
                     {{tipo.nome }}
                   </mat-option>             
