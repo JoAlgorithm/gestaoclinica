@@ -1,0 +1,33 @@
+<mat-table [dataSource]="dataSourse" matSort >
+        <ng-container matColumnDef="categoria">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> categoria </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.tipo}}</mat-cell>
+              </ng-container>
+  
+    <ng-container matColumnDef="paciente">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Nome do Paciente </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.paciente_nome}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="nid">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>NID do Paciente </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.paciente_nid}}</mat-cell>
+          </ng-container>
+
+    <ng-container matColumnDef="paciente_apelido">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Apelido </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.paciente_apelido}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="marcador">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>marcador da consulta </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.marcador}}</mat-cell>
+        </ng-container>
+
+    
+   
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;">
+    </mat-row>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>

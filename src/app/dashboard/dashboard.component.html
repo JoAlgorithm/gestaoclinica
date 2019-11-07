@@ -14,7 +14,7 @@
 
     <!-- CARTAO COM TOTAL DE PACIENTES CADASTRADOS NA CLINICA -->
     <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">
-      <mat-card class="card-widget mat-teal">
+      <mat-card class="card-widget mat-teal" mat-icon-button (click)="Lista_pacientes(row)">
         <div mat-card-widget>
           <div mat-card-float-icon>
             <mat-icon>person</mat-icon>
@@ -29,7 +29,7 @@
 
     <!-- CARTAO COM TOTAL DE DIAGNOSTICOS AUX CADASTRADOS -->
     <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">
-        <mat-card class="card-widget mat-indigo">
+        <mat-card class="card-widget mat-indigo"  mat-icon-button (click)="Lista_consulta(row)" >
           <div mat-card-widget>
             <div mat-card-float-icon>
               <mat-icon>airline_seat_recline_extra</mat-icon>
@@ -44,7 +44,7 @@
 
       <!-- CARTAO COM TOTAL DE CONSULTAS MEDICAS ATENDIDAS -->
       <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">
-        <mat-card class="card-widget mat-red">
+        <mat-card class="card-widget mat-red"   mat-icon-button (click)="Lista_dialogo(row)" >
           <div mat-card-widget>
             <div mat-card-float-icon>
               <mat-icon>enhanced_encryption</mat-icon>
@@ -59,7 +59,7 @@
 
       <!-- CARTAO COM TOTAL DE CONSULTAS MEDICAS ATENDIDAS -->
       <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100" style="width: 80%">
-        <mat-card class="card-widget mat-purple">
+        <mat-card class="card-widget mat-purple"   mat-icon-button (click)="Lista_conduta(row)">
           <div mat-card-widget>
             <div mat-card-float-icon>
               <mat-icon>local_hospital</mat-icon>

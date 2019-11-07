@@ -1,10 +1,14 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { PacienteService } from '../services/paciente.service';
 import { Paciente } from '../classes/paciente';
 import { ConfiguracoesService } from '../services/configuracoes.service';
 import { DiagnosticoAuxiliar } from '../classes/diagnostico_aux';
 import { Consulta } from '../classes/consulta';
 import { Faturacao } from '../classes/faturacao';
+import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar } from '@angular/material';
+import { OnInit} from '@angular/core';
+import { Inject} from '@angular/core';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 import * as jsPDF from 'jspdf';
 import { format } from 'util';
@@ -81,7 +85,7 @@ export class DashboardComponent {
   ano:string = (new Date()).getFullYear()+"";
 
   constructor(private pacienteService: PacienteService, private configService: ConfiguracoesService,
-    public authService: AuthService){
+    public authService: AuthService, public dialog: MatDialog){
   }
 
 
@@ -400,7 +404,77 @@ export class DashboardComponent {
 
     
 
+
+
+
+
+
+
   }
+  Lista_pacientes(paciente){
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      width: '1000px', 
+      
+     // data: {nome: paciente.nome}
+    });
+   
+   dialogRef.afterClosed().subscribe(result => {
+    console.log('The dialog was closed');
+    // this.animal = result;
+    
+   });
+   
+  } 
+
+  Lista_conduta(paciente){
+    const dialogRef = this.dialog.open(dialogconduta, {
+      width: '1000px', 
+      
+     // data: {nome: paciente.nome}
+    });
+   
+   dialogRef.afterClosed().subscribe(result => {
+    console.log('The dialog was closed');
+    // this.animal = result;
+    
+   });
+   
+  } 
+
+  Lista_consulta(paciente){
+    const dialogRef = this.dialog.open(dialogconsultas, {
+      width: '1000px', 
+      
+     // data: {nome: paciente.nome}
+    });
+   
+   dialogRef.afterClosed().subscribe(result => {
+    console.log('The dialog was closed');
+    // this.animal = result;
+    
+   });
+   
+  } 
+
+
+  Lista_dialogo(paciente){
+    const dialogRef = this.dialog.open(dialogdiagnostico, {
+      width: '1000px', 
+      
+     // data: {nome: paciente.nome}
+    });
+   
+   dialogRef.afterClosed().subscribe(result => {
+    console.log('The dialog was closed');
+    // this.animal = result;
+    
+   });
+   
+  } 
+
+
+
+
 
   public pieOptions: any = Object.assign({
     responsive: true,
@@ -744,5 +818,161 @@ export class DashboardComponent {
     })
   }
 
+ 
 
 }
+export interface DialogData {
+  animal: string;
+  name: string;
+}
+@Component({
+  selector: 'dialog-overview-example-dialog',
+  templateUrl: './paciente.component.html',
+})
+
+
+export class DialogOverviewExampleDialog {
+ pacientes: Paciente[];
+ 
+ @ViewChild(MatPaginator) paginator: MatPaginator;
+@ViewChild(MatSort) sort: MatSort;
+  dataSourse: MatTableDataSource<Paciente>;
+  displayedColumns = ['nid','nome','apelido','genero'];
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData, private pacienteService: PacienteService ,public dialog: MatDialog,) {
+
+      this.pacienteService.getPacientes().snapshotChanges().subscribe(data => {
+        this.pacientes = data.map(e => {
+          return {
+            id: e.payload.key,
+            ...e.payload.val(),
+          } as Paciente;
+        })
+        this.dataSourse=new MatTableDataSource(this.pacientes.sort((a, b) => a.nid - b.nid));
+        this.dataSourse.paginator = this.paginator;
+        this.dataSourse.sort = this.sort;
+      })
+
+    }
+   
+    
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+  
+  closeModal(){
+ 
+    this.dialogRef.close();
+  }
+
+  
+  
+}
+
+@Component({
+  selector: 'dialogconsultas',
+  templateUrl: './consulta.component.html',
+})
+
+
+export class dialogconsultas {
+  consultas: Consulta[];
+  consultas_encerradas_medicas: any;
+  ano:string = (new Date()).getFullYear()+"";
+ @ViewChild(MatPaginator) paginator: MatPaginator;
+@ViewChild(MatSort) sort: MatSort;
+  dataSourse: MatTableDataSource<Consulta>;
+  displayedColumns = ['categoria','nid','paciente','paciente_apelido','marcador'];
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData, private pacienteService: PacienteService ,public dialog: MatDialog,) {
+
+      this.pacienteService.getConsultasRelatorio(this.ano).snapshotChanges().subscribe(data => {
+        this.consultas = data.map(e => {
+          return {
+            id: e.payload.key,
+            ...e.payload.val(),
+          } as Consulta;
+        })
+        this.dataSourse=new MatTableDataSource(this.consultas.filter( c => c.tipo == "Consulta Medica").sort((a, b)  => a.categoria > b.categoria ? 1 : -1));
+        this.dataSourse.paginator = this.paginator;
+        this.dataSourse.sort = this.sort;
+      })
+      }
+    
+
+
+    }
+
+    @Component({
+      selector: 'dialogdiagnostico',
+      templateUrl: './consulta.component.html',
+    })
+    
+    
+    export class dialogdiagnostico {
+      consultas: Consulta[];
+      consultas_encerradas_medicas: any;
+      ano:string = (new Date()).getFullYear()+"";
+     @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+      dataSourse: MatTableDataSource<Consulta>;
+      displayedColumns = ['categoria','nid','paciente','paciente_apelido','marcador'];
+    
+      constructor(
+        public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+        @Inject(MAT_DIALOG_DATA) public data: DialogData, private pacienteService: PacienteService ,public dialog: MatDialog,) {
+    
+          this.pacienteService.getConsultasRelatorio(this.ano).snapshotChanges().subscribe(data => {
+            this.consultas = data.map(e => {
+              return {
+                id: e.payload.key,
+                ...e.payload.val(),
+              } as Consulta;
+            })
+            this.dataSourse=new MatTableDataSource(this.consultas.filter( c => c.tipo == "DIAGNOSTICO AUX").sort((a, b)  => a.categoria > b.categoria ? 1 : -1));
+            this.dataSourse.paginator = this.paginator;
+            this.dataSourse.sort = this.sort;
+          })
+          }
+        
+        }
+
+
+        @Component({
+          selector: 'dialogconduta',
+          templateUrl: './conduta.component.html',
+        })
+        
+        
+        export class dialogconduta {
+          consultas: Consulta[];
+          consultas_encerradas_medicas: any;
+          ano:string = (new Date()).getFullYear()+"";
+         @ViewChild(MatPaginator) paginator: MatPaginator;
+        @ViewChild(MatSort) sort: MatSort;
+          dataSourse: MatTableDataSource<Consulta>;
+          displayedColumns = ['categoria','nid','paciente','paciente_apelido','marcador'];
+        
+          constructor(
+            public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+            @Inject(MAT_DIALOG_DATA) public data: DialogData, private pacienteService: PacienteService ,public dialog: MatDialog,) {
+        
+              this.pacienteService.getConsultasRelatorio(this.ano).snapshotChanges().subscribe(data => {
+                this.consultas = data.map(e => {
+                  return {
+                    id: e.payload.key,
+                    ...e.payload.val(),
+                  } as Consulta;
+                })
+                this.dataSourse=new MatTableDataSource(this.consultas.filter( c => c.tipo == "CONDUTA CLINICA").sort((a, b)  => a.categoria > b.categoria ? 1 : -1));
+                this.dataSourse.paginator = this.paginator;
+                this.dataSourse.sort = this.sort;
+              })
+              }
+            
+            }
