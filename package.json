@@ -63,6 +63,7 @@
     "rxjs": "^6.0.0",
     "rxjs-compat": "^6.5.2",
     "screenfull": "3.3.2",
+    "tslib": "^1.10.0",
     "zone.js": "0.8.20"
   },
   "devDependencies": {

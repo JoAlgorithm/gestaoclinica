@@ -83,18 +83,38 @@ export class EstoqueService {
   //Cadastra medicamento no deposito
   addMedicamentoDeposito(mvt: MovimentoEstoque){
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/depositos/'+mvt.deposito.id+'/medicamentos/').update(mvt.medicamento.id, mvt.medicamento);
+    
+    //removendo informacoes redundantes para dar eficiencia e perfomance a base de dados
+    /*let id_deposito = mvt.deposito.id;
+    let id_medicamento = mvt.medicamento.id;
+    mvt.deposito = null;
+    mvt.medicamento = null;*/
+    
+
     return this.db.list('depositos/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/medicamentos/').update(mvt.medicamento.id, mvt.medicamento);
   }
 
   //Cadastra movimento no medicamento
   addMovimentoItem(mvt: MovimentoEstoque){
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/medicamentos/'+mvt.medicamento.id+'/movimentos/').push(mvt);
-    return this.db.list('medicamentos/'+this.authService.get_clinica_id + '/'+mvt.medicamento.id+'/movimentos/').push(mvt);
+    
+    //eliminar redundancia de dados para dar agilidade e perfomance a base de dados
+    mvt.deposito_nome = mvt.deposito.nome;
+    mvt.deposito = null;
+    let medicamento_id = mvt.medicamento.id;
+    mvt.medicamento = null;
+    
+    return this.db.list('medicamentos/'+this.authService.get_clinica_id + '/'+medicamento_id+'/movimentos/').push(mvt);
   }
 
   //Cadastra movimentos na tbl de movimentos
   addMovimento(mvt: MovimentoEstoque){
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/estoquesmovimentos/').push(mvt);
+
+    //Eliminar dados desnecessarios para garantir a perfomance do banco
+    //mvt.deposito_nome = mvt.deposito.nome;
+    //mvt.deposito = null;
+
     return this.db.list('estoquesmovimentos/'+this.authService.get_clinica_id + '/').push(mvt);
   }
 

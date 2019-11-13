@@ -75,6 +75,30 @@ export class PacienteService {
     updatedUserData['/lista_completa/'+consulta.id] = consulta;
   
     if(consulta.status == 'Encerrada' || consulta.status == 'Cancelada'){
+      if(consulta.diagnosticos_aux){ //eliminando informacoes desnecessarias dos diagnosticos
+        consulta.diagnosticos_aux.forEach(element => {
+          element.tipo = null;
+          element.subtipo = null;
+          element.faturado = null;
+        });
+      }
+
+      if(consulta.movimentosestoque){ //eliminando informacoes desnecessarias dos movimentosestoque
+        consulta.movimentosestoque.forEach(element => {
+          element.deposito_nome = element.deposito.nome;
+          element.deposito = null;
+
+          element.medicamento_nome = element.medicamento.nome_comercial;
+          element.medicamento = null;
+        });
+      }
+
+      if(consulta.condutas_clinicas){ //eliminando informacoes desnecessarias das condutasclinicas
+        consulta.condutas_clinicas.forEach(element => {
+          element.tipo = null;
+        });
+      }
+
       consulta.paciente = null;
       updatedUserData['/lista_relatorio/'+ consulta.ano + '/'+consulta.id] = consulta;
     }

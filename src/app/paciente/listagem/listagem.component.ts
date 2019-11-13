@@ -2285,10 +2285,10 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
 
 
 
-  export interface DialogData {
+  /*export interface DialogData {
     animal: string;
     name: string;
-  }
+  }*/
   
   /**
    * @title Dialog Overview
@@ -2302,22 +2302,17 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   
   export class DialogDetalhes {
     
+    constructor(public dialogRef: MatDialogRef<DialogDetalhes>, @Inject(MAT_DIALOG_DATA) public data: any,
+    private pacienteService: PacienteService) {
 
+    }
 
-    constructor(
-      public dialogRef: MatDialogRef<DialogDetalhes>,
-      @Inject(MAT_DIALOG_DATA) public data: DialogData,private pacienteService: PacienteService) {
-       
-        
-        
-      }
-      closeModal(){
-   
-        this.dialogRef.close();
-      }
+    closeModal(){
+      this.dialogRef.close();
+    }
       
-    
   }
+
   @Component({
     selector: 'dialog-editar',
     templateUrl: './editar.component.html',
@@ -2328,48 +2323,45 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   export class DialogEditar{
   
     constructor(private _formBuilder: FormBuilder, public dialog: MatDialog,
-      public dialogRef: MatDialogRef<DialogEditar>,
-      @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
-      public pacienteService: PacienteService,  public snackBar: MatSnackBar, public configServices:ConfiguracoesService) {}
-      pacientes: Paciente[];
+    public dialogRef: MatDialogRef<DialogEditar>,
+    @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
+    public pacienteService: PacienteService,  public snackBar: MatSnackBar, public configServices:ConfiguracoesService)
+    {
 
-      
+    }
 
-      GuardarDados(paciente){
-        let data = Object.assign({}, paciente)
-        this.pacienteService.updatePaciente(data) 
-        .then( res => {
-    
-          
-          
-            this.openSnackBar("Dados Guardados com sucesso");
-        }).catch(erro => {
-          this.openSnackBar("Ocorreu um erro ao atualizar os dados. Consulte o Admin do sistema.");
-            console.log("Erro ao atualizar dados do paciente na consulta: "+erro.message)
-        });
-      }
+    pacientes: Paciente[];
+
+    GuardarDados(paciente){
+      let data = Object.assign({}, paciente)
+      this.pacienteService.updatePaciente(data) 
+      .then( res => {
+  
+        this.openSnackBar("Dados Guardados com sucesso");
+      }).catch(erro => {
+        this.openSnackBar("Ocorreu um erro ao atualizar os dados. Consulte o Admin do sistema.");
+          console.log("Erro ao atualizar dados do paciente na consulta: "+erro.message)
+      });
+    }
+
     onNoClick(): void {
       this.dialogRef.close();
     }
     
     closeModal(){
-   
       this.dialogRef.close();
-
     }
-   
+
+    openSnackBar(mensagem) {
+      /*this.snackBar.openFromComponent(null, {
+      duration: 2000,
+      announcementMessage: mensagem
+      });*/
+      this.snackBar.open(mensagem, null,{
+        duration: 4000
       
-  
-  openSnackBar(mensagem) {
-    /*this.snackBar.openFromComponent(null, {
-    duration: 2000,
-    announcementMessage: mensagem
-    });*/
-    this.snackBar.open(mensagem, null,{
-      duration: 4000
-     
-    })
-  }
+      })
+    }
 }
     
    

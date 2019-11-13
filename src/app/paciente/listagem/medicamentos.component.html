@@ -17,7 +17,7 @@
 
         <!--MEDICAMENTOS-->
         <mat-form-field style="width: 31%">
-            <mat-select placeholder="Medicamento"  [(ngModel)]="medicamento" (selectionChange)="limitarQuantidade(medicamento.qtd_disponivel)"  required>
+            <mat-select placeholder="Medicamento"  [(ngModel)]="medicamento" (selectionChange)="limitarQuantidade()"  required>
                     
                 <mat-option *ngFor="let medicamento of medicamentos" [value]="medicamento">
                     {{medicamento.nome_generico}}
@@ -45,7 +45,7 @@
             <input matInput placeholder="Prec Tot."  [(ngModel)]="medicamento.preco_venda_total" required>
         </mat-form-field>
 
-        <button mat-icon-button (click)="addMedicamento(medicamento)" matTooltip="Adicionar {{medicamento.nome_generico}}">
+        <button mat-icon-button (click)="addMedicamento()" matTooltip="Adicionar {{medicamento.nome_generico}}">
             <mat-icon>add_circle</mat-icon>
         </button>
 
