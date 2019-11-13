@@ -822,7 +822,7 @@ this.depositos_aux=this.data.depositos;
       doc.text(element.medicamento.preco_venda.toFixed(2).replace(".",",")+"", 294, linha)
       doc.text((element.medicamento.preco_venda*element.quantidade).toFixed(2).replace(".",",")+"", 354, linha)
   
-      preco_total = +preco_total + +element.medicamento.preco_venda;
+      preco_total = +preco_total + +element.medicamento.preco_venda*element.quantidade;
       item = +item + +1;
       linha = +linha + +20;
     });   
