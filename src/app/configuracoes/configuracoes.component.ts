@@ -172,6 +172,8 @@ export class ConfiguracoesComponent implements OnInit {
     .subscribe(c => {
       this.clinica = c;
     })
+    console.log("teste");
+    console.log("clinica nome "+this.clinica.nome)
     this.dados_geraisFormGroup = this._formBuilder.group({
       clinica_nome: ['', Validators.required],
       clinica_endereco: ['', Validators.required],

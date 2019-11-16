@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 import {FullscreenOverlayContainer, OverlayContainer} from '@angular/cdk/overlay';
-import {  DialogDetalhes, MedicamentosDialog, DialogEditar } from './listagem/listagem.component';
+import {  DialogDetalhes, MedicamentosDialog, DialogEditar, RemoverDialog } from './listagem/listagem.component';
 import {CdkTableModule} from '@angular/cdk/table';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {A11yModule} from '@angular/cdk/a11y';
@@ -150,7 +150,8 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     ConsultasDialog,
     DialogDetalhes,
     DialogEditar,
-    MedicamentosDialog
+    MedicamentosDialog,
+    RemoverDialog
   ],
   entryComponents: [
     DiagnosticosDialog,
@@ -159,7 +160,8 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     ConsultasDialog,
     DialogDetalhes,
     MedicamentosDialog,
-    DialogEditar
+    DialogEditar,
+    RemoverDialog
   ],
 })
 

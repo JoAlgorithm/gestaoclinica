@@ -18,6 +18,8 @@ import { Inject} from '@angular/core';
 })
 export class CadastroComponent implements OnInit {
 
+  clicou = false;
+  texto = "FINALIZAR CADASTRO";
   isLinear = true;
   paciente:  Paciente;
 
@@ -66,6 +68,16 @@ export class CadastroComponent implements OnInit {
     public snackBar: MatSnackBar, private router: Router) {
 
     this.paciente = new Paciente();
+    this.paciente.localidade = "";
+    this.paciente.avenida = "";
+    this.paciente.rua = "";
+    this.paciente.casa = "";
+    this.paciente.celula = "";
+    this.paciente.quarteirao = "";
+    this.paciente.posto_admnistrativo = "";
+    this.paciente.referencia_nome = "";
+    this.paciente.referencia_apelido= "";
+    this.paciente.referencia_telefone= "";
     /*this.paciente.nome = "Luis"
     this.paciente.apelido = "Jo"
     this.paciente.sexo = "Masculino"
@@ -142,6 +154,8 @@ export class CadastroComponent implements OnInit {
   }
 
   registarPaciente(){
+    this.clicou = true;
+    this.texto = "AGUARDE...";
 
     //this.paciente.id = "123456"
 
@@ -154,6 +168,8 @@ export class CadastroComponent implements OnInit {
       this.openSnackBar("Paciente cadastrado com sucesso");
     }, err=> {
       console.log("ERRO: " + err.message)
+      this.clicou = false;
+      this.texto = "FINALIZAR CADASTRO";
     })
 
   }

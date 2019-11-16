@@ -57,10 +57,10 @@ export class PacienteService {
     return this.db.list('pacientes/'+this.authService.get_clinica_id + '/').update(paciente.id, paciente)
   }
 
-  deletePaciente(paciente: Paciente){
+  deletePaciente(id){
     //this.firestore.doc('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).delete();
     //return this.db.object('clinicas/'+this.authService.get_clinica_id + '/pacientes/' + paciente.id).remove();
-    return this.db.object('pacientes/'+this.authService.get_clinica_id + '/' + paciente.id).remove();
+    return this.db.object('pacientes/'+this.authService.get_clinica_id + '/' + id).remove();
   }
 
   //CONSULTAS

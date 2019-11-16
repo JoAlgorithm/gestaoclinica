@@ -90,6 +90,14 @@
           </mat-menu>
         </mat-cell>
       </ng-container>
+
+      
+      <ng-container matColumnDef="remover">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Remover </mat-header-cell>
+        <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="remover(row)" [disabled]="acesso_remover">
+            <mat-icon>delete</mat-icon>
+          </button></mat-cell>
+      </ng-container>
       
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

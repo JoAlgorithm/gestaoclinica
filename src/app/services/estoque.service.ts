@@ -102,6 +102,7 @@ export class EstoqueService {
     mvt.deposito_nome = mvt.deposito.nome;
     mvt.deposito = null;
     let medicamento_id = mvt.medicamento.id;
+    mvt.medicamento_nome = mvt.medicamento.nome_comercial;
     mvt.medicamento = null;
     
     return this.db.list('medicamentos/'+this.authService.get_clinica_id + '/'+medicamento_id+'/movimentos/').push(mvt);
