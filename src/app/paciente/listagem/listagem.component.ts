@@ -37,6 +37,9 @@ import { NrFatura } from '../../classes/nr_fatura';
 })
 export class ListagemComponent implements OnInit {
 
+  perfil = "";
+  acesso_remover = true;
+
   nrscotacao: NrCotacao[]; //PDF
   nr_cotacao = 0; //PDF
   nrsfaturcao: NrFatura[]; //PDF
@@ -53,7 +56,7 @@ export class ListagemComponent implements OnInit {
   data_nascimento: Date;
   pacientes: Paciente[];
   dataSourse: MatTableDataSource<Paciente>;
-  displayedColumns = ['nid','apelido', 'nome', 'sexo', 'documento_identificacao', 'referencia_telefone', 'detalhe','editar', 'consulta'];
+  displayedColumns = ['nid','apelido', 'nome', 'sexo', 'documento_identificacao', 'referencia_telefone', 'detalhe','editar', 'consulta', 'remover'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -111,6 +114,11 @@ export class ListagemComponent implements OnInit {
  }
 
   ngOnInit() {
+    this.perfil = this.authService.get_perfil;
+    if(this.perfil == 'Clinica_Admin'){
+      this.acesso_remover = false;
+    }
+
     //PDF
     this.configServices.getNrsCotacao().snapshotChanges().subscribe(data => {
       this.nrscotacao = data.map(e => {
@@ -389,6 +397,18 @@ export class ListagemComponent implements OnInit {
     
   }
 
+  remover(row: Paciente){
+
+    let dialogRef = this.dialog.open(RemoverDialog, {
+      width: '500px',
+      data: { paciente: row }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log("result "+result);
+    });
+  }
+
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
@@ -399,6 +419,45 @@ export class ListagemComponent implements OnInit {
   
 
 }
+
+
+
+//RemoverDialog --------------------------------------------------------
+@Component({
+  selector: 'remover-dialog',
+  templateUrl: 'remover.component.html',
+})
+export class RemoverDialog {
+
+  constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<RemoverDialog>, private router: Router,
+  @Inject(MAT_DIALOG_DATA) public data: any, public pacienteService:PacienteService, 
+   public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
+
+  }
+
+  remover(id){
+    this.pacienteService.deletePaciente(id)
+    .then(r =>{
+      this.dialogRef.close();
+      this.openSnackBar("Removido com sucesso");
+    },err =>{
+      this.openSnackBar("Ocorreu um erro ao remover! Contacte a equipe de suporte ou tente novamente");
+    })
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  openSnackBar(mensagem) {
+    this.snackBar.open(mensagem, null,{
+      duration: 2000
+    })
+  }
+
+}
+
+
 
 
 //MedicamentosDialog --------------------------------------------------------
@@ -445,7 +504,7 @@ export class MedicamentosDialog {
     
     this.deposito = new Deposito();
     this.medicamento = new Medicamento();
-this.depositos_aux=this.data.depositos;
+    this.depositos_aux=this.data.depositos;
     this.medicamentoFormGroup = this._formBuilder.group({
       deposito: ['', Validators.required],
       medicamento: ['', Validators.required],

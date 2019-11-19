@@ -212,7 +212,7 @@
 
       <div>
           <button mat-button matStepperPrevious>VOLTAR</button>
-          <button mat-button (click)="registarPaciente()">FINALIZAR CADASTRO</button>
+          <button mat-button (click)="registarPaciente()" [disabled]="clicou">{{texto}}</button>
       </div>
 
       </form>
