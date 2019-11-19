@@ -331,7 +331,7 @@ export class PendentesComponent implements OnInit {
     if(categoria == 'Cotacao'){
       nome = "COTAÇÃO";
     }else{
-      nome = "FATURA";
+      nome = "RECIBO";
     }
 
     if(this.clinica.endereco){
@@ -715,7 +715,7 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
     if(categoria == 'Cotacao'){
       nome = "COT";
     }else{
-      nome = "FAT";
+      nome = "REC";
     }
 
     if(this.clinica.endereco){

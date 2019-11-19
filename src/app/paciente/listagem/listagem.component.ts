@@ -805,7 +805,7 @@ export class MedicamentosDialog {
       if(categoria == 'Cotacao'){
         nome = "COTAÇÃO";
       }else{
-        nome = "FATURA";
+        nome = "RECIBO";
       }
     
       if(this.clinica.endereco){
@@ -1220,7 +1220,7 @@ export class MedicamentosDialog {
     if(categoria == 'Cotacao'){
       nome = "COTAÇÃO";
     }else{
-      nome = "FATURA";
+      nome = "RECIBO";
     }
   
     if(this.clinica.endereco){
@@ -1505,7 +1505,7 @@ categorias_consulta: CategoriaConsulta[];
     if(categoria == 'Cotacao'){
       nome = "COTAÇÃO";
     }else{
-      nome = "FATURA";
+      nome = "RECIBO";
     }
   
     if(this.clinica.endereco){
@@ -2145,7 +2145,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     if(categoria == 'Cotacao'){
       nome = "COTAÇÃO";
     }else{
-      nome = "FATURA";
+      nome = "RECIBO";
     }
   
     if(this.clinica.endereco){
