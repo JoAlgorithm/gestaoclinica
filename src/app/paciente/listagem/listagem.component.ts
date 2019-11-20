@@ -39,7 +39,7 @@ export class ListagemComponent implements OnInit {
 
   perfil = "";
   acesso_remover = true;
-
+  clinica: Clinica = new Clinica();
   nrscotacao: NrCotacao[]; //PDF
   nr_cotacao = 0; //PDF
   nrsfaturcao: NrFatura[]; //PDF
@@ -52,6 +52,11 @@ export class ListagemComponent implements OnInit {
       this.isLoading = !this.isLoading;
   }
 
+
+
+ 
+
+
   datanascimento: Date;
   data_nascimento: Date;
   pacientes: Paciente[];
@@ -62,7 +67,7 @@ export class ListagemComponent implements OnInit {
 
   consulta: Consulta;
  
-  clinica: Clinica;
+
 
   diagnosticos:DiagnosticoAuxiliar[];
 
@@ -800,7 +805,7 @@ export class MedicamentosDialog {
       if(categoria == 'Cotacao'){
         nome = "COTAÇÃO";
       }else{
-        nome = "FATURA";
+        nome = "RECIBO";
       }
     
       if(this.clinica.endereco){
@@ -1215,7 +1220,7 @@ export class MedicamentosDialog {
     if(categoria == 'Cotacao'){
       nome = "COTAÇÃO";
     }else{
-      nome = "FATURA";
+      nome = "RECIBO";
     }
   
     if(this.clinica.endereco){
@@ -1500,7 +1505,7 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
     if(categoria == 'Cotacao'){
       nome = "COTAÇÃO";
     }else{
-      nome = "FATURA";
+      nome = "RECIBO";
     }
   
     if(this.clinica.endereco){
@@ -2170,7 +2175,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     if(categoria == 'Cotacao'){
       nome = "COTAÇÃO";
     }else{
-      nome = "FATURA";
+      nome = "RECIBO";
     }
   
     if(this.clinica.endereco){
@@ -2388,17 +2393,6 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
   /*export interface DialogData {
     animal: string;
     name: string;
@@ -2415,11 +2409,142 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   
   
   export class DialogDetalhes {
-    
+   
     constructor(public dialogRef: MatDialogRef<DialogDetalhes>, @Inject(MAT_DIALOG_DATA) public data: any,
     private pacienteService: PacienteService) {
 
     }
+    clinica: Clinica;
+    pacientes: Paciente[];
+    
+    gerarPDFDados(paciente){
+  let doc = new jsPDF({
+    orientation: 'p',
+    unit: 'px',
+    format: 'a4',
+    putOnlyUsedFonts:true,
+  });
+
+  let specialElementHandlers ={
+    '#editor': function(element,renderer){return true;} 
+  }
+  let dia = new Date().getDate();
+  let mes = +(new Date().getMonth()) + +1;
+  let ano = new Date().getFullYear();
+ let dataemisao = dia +"/"+mes+"/"+ano;  
+
+  var img = new Image();
+  img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+  doc.addImage(img,"PNG", 170, 40,100, 100);
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontStyle("bold");
+  doc.setFontSize(12);
+  doc.text("Nome do Paciente:", 50, 195);
+  doc.text("NID:", 250, 195);
+  doc.text("Apelido:", 50, 215);
+  doc.text("Genero: ", 250, 215);
+  doc.text("Documento:", 50, 235);
+  doc.text("Numero de documento:", 250, 235);
+  doc.text("Bairro:", 250, 255);
+   doc.text("Localidade:", 50, 255);
+   doc.text("Avenida:", 50, 275);
+   doc.text("Casa:", 250, 275);
+   doc.text("Celula:", 50, 295);
+   doc.text("Quarteirao:", 250, 295);
+   doc.text("Posto Administrativo:", 50, 315);
+   doc.text("Distrito:", 250, 315);
+   doc.text("Provincia:", 50, 335);
+   doc.text("Nome Referencial:", 250, 335);
+   doc.text("Apelido:", 50, 355);
+   doc.text("Telefone:", 250, 355);
+
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(12);
+  
+  
+  doc.text(paciente.nome, 140, 195);
+ 
+  doc.text(paciente.nid+"", 272, 195);
+  
+  doc.text(paciente.apelido, 93, 215);
+
+  doc.text(paciente.genero,288, 215);
+
+ 
+  doc.text(paciente.documento_identificacao, 103, 235);
+
+  doc.text(paciente.nr_documento_identificacao+"", 356, 235);
+
+ 
+  doc.text(paciente.localidade, 110, 255);
+ 
+ 
+  doc.text(paciente.bairro, 287, 255);
+
+  
+  doc.text(paciente.avenida, 96, 275);
+ 
+
+  doc.text(paciente.casa+"", 280, 275);
+ 
+
+ doc.text(paciente.celula+"", 90, 295);
+
+ 
+   doc.text(paciente.quarteirao+"", 310, 295);
+  
+  
+   doc.text(paciente.posto_admnistrativo, 165, 315);
+  
+   doc.text(paciente.distrito, 299, 315);
+
+
+   
+  
+   doc.text(paciente.provincia, 104, 335);
+
+ 
+  
+   doc.text(paciente.acompanhante_nome, 343, 335);
+
+  
+
+   doc.text(paciente.acompanhante_apelido, 94, 355);
+
+ 
+
+   doc.text(paciente.acompanhante_telefone, 298, 355);
+
+
+
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontStyle("bold");
+  doc.setFontSize(14);
+  doc.text("DADOS DO PACIENTE", 170, 145);
+ 
+
+
+
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontSize(10);
+ 
+ // doc.text("Processado pelo computador", 170, 580);
+  
+  
+  doc.text("Processado pelo computador", 165, 550);
+
+ 
+
+  doc.setFontStyle("bold");
+ 
+
+  doc.save(paciente.nome +'.pdf'); 
+}
+
 
     closeModal(){
       this.dialogRef.close();
