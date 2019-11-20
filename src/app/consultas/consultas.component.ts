@@ -253,7 +253,28 @@ export class ConsultasComponent implements OnInit, AfterViewInit {
       duration: 2000
     })
   }
+   
+  detalhes(doente){
   
+    const dialogRef = this.dialog.open(DialogDetalhes, {
+     
+      width: '1000px',
+     data: { data:doente.data, nid: doente.paciente_nid,
+       nome: doente.paciente_nome,
+       apelido: doente.paciente_apelido,
+       diagnostico: doente.diagnostico_final,
+       tratamento: doente.tratamento_efetuar,
+       queixa:doente.queixas_principais,
+       historia:doente.historia_doenca_atual,
+       diagnostico_aux:doente.diagnosticos_aux,
+       observacoes: doente.observacoes,
+
+        
+      }
+    });
+  }
+
+
 
 }
 
@@ -336,7 +357,7 @@ export class ConsultasComponent implements OnInit, AfterViewInit {
 
   constructor(  public dialogRef: MatDialogRef<AtenderConsultaDialog>,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
-  public pacienteService: PacienteService,  public snackBar: MatSnackBar, public configServices:ConfiguracoesService) {
+  public pacienteService: PacienteService, public dialog: MatDialog, public snackBar: MatSnackBar, public configServices:ConfiguracoesService) {
     
     this.diagnosticos_param = this.data.diagnosticos;
     this.subtipos_diagnosticos_param = this.data.subtipos_diagnosticos;
@@ -646,6 +667,30 @@ export class ConsultasComponent implements OnInit, AfterViewInit {
   }
 
 
+  detalhesAtender(doente){
+  
+    const dialogRef = this.dialog.open(DialogDetalhes, {
+     
+      width: '1000px',
+     data: { data:doente.data, nid: doente.paciente_nid,
+       nome: doente.paciente_nome,
+       apelido: doente.paciente_apelido,
+       diagnostico: doente.diagnostico_final,
+       tratamento: doente.tratamento_efetuar,
+       queixa:doente.queixas_principais,
+       historia:doente.historia_doenca_atual,
+       diagnostico_aux:doente.diagnosticos_aux,
+       observacoes: doente.observacoes,
+
+        
+      }
+    });
+  }
+
+
+
+
+
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{
       duration: 2000
@@ -714,4 +759,26 @@ export class CancelarConsultaDialog {
     })
   }
 
+
+}
+@Component({
+  selector: 'dialog-detalhes',
+  templateUrl: './detalhes.component.html',
+  styleUrls: ['./detalhes.component.scss']
+})
+
+
+export class DialogDetalhes {
+ 
+  constructor(public dialogRef: MatDialogRef<DialogDetalhes>, @Inject(MAT_DIALOG_DATA) public data: any,
+  private pacienteService: PacienteService) {
+
+  }
+ 
+
+
+  closeModal(){
+    this.dialogRef.close();
+  }
+    
 }

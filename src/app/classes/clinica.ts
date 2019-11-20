@@ -14,4 +14,5 @@ export class Clinica {
     moeda?:string; //Nao esta em uso
     telefone?: string;
     email?: string;
+    nuit?:string;
 }

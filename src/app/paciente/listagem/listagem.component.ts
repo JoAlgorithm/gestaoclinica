@@ -271,6 +271,7 @@ export class ListagemComponent implements OnInit {
        acompanhante_nome:doente.referencia_nome,
        acompanhante_apelido:doente.referencia_apelido,
       acompanhante_telefone: doente.referencia_telefone,
+      nuit: doente.nuit,
         
       }
     });
@@ -1318,19 +1319,20 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
   doc.setFontSize(10);
 
   doc.text("Processado pelo computador", 170, 580);
-  doc.text(this.clinica.endereco, 50, 75);
-  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
-  doc.text("Email: "+this.clinica.email, 50, 95);
-  doc.text("Cell: "+this.clinica.telefone, 50, 105);
-  
-  doc.text("Nome do Paciente:", 50, 125);
-  doc.text(paciente.nome, 128, 125);
-  doc.text("NID:", 250, 125);
-  doc.text(paciente.nid+"", 268, 125);
-  doc.text("Apelido:", 50, 145);
-  doc.text(paciente.apelido, 89, 145);
-  doc.text("Data de emissão: ", 250, 145);
-  doc.text(dataemisao, 322, 145);
+  doc.text(this.clinica.endereco, 50, 65);
+  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,75);
+  doc.text("Email: "+this.clinica.email, 50, 85);
+  doc.text("Cell: "+this.clinica.telefone, 50, 95);
+  doc.text("NUIT: "+this.clinica.nuit, 50, 105);
+  doc.text("Nome do Paciente:"+paciente.nome, 50, 125);
+//doc.text(paciente.nome, 128, 125);
+doc.text("NID:"+paciente.nid, 250, 125);
+//doc.text(paciente.nid+"", 268, 125);
+doc.text("Apelido:"+paciente.apelido, 50, 145);
+// doc.text(paciente.apelido, 89, 145);
+doc.text("Data de emissão:"+dataemisao, 250, 145);
+//doc.text(dataemisao, 322, 145);
+doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
   doc.setFillColor(50,50,50);
   doc.rect ( 50, 170 , 40 , 20 ); 
   doc.rect (  50, 190 , 40 , 320 ); 
@@ -1628,19 +1630,20 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
   doc.setFontSize(10);
 
   doc.text("Processado pelo computador", 170, 580);
-  doc.text(this.clinica.endereco, 50, 75);
-  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
-  doc.text("Email: "+this.clinica.email, 50, 95);
-  doc.text("Cell: "+this.clinica.telefone, 50, 105);
-  
-  doc.text("Nome do Paciente:", 50, 125);
-  doc.text(paciente.nome, 128, 125);
-  doc.text("NID:", 250, 125);
-  doc.text(paciente.nid+"", 268, 125);
-  doc.text("Apelido:", 50, 145);
-  doc.text(paciente.apelido, 89, 145);
-  doc.text("Data de emissão: ", 250, 145);
-  doc.text(dataemisao, 322, 145);
+  doc.text(this.clinica.endereco, 50, 65);
+  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,75);
+  doc.text("Email: "+this.clinica.email, 50, 85);
+  doc.text("Cell: "+this.clinica.telefone, 50, 95);
+  doc.text("NUIT: "+this.clinica.nuit, 50, 105);
+  doc.text("Nome do Paciente:"+paciente.nome, 50, 125);
+  //doc.text(paciente.nome, 128, 125);
+  doc.text("NID:"+paciente.nid, 250, 125);
+  //doc.text(paciente.nid+"", 268, 125);
+  doc.text("Apelido:"+paciente.apelido, 50, 145);
+ // doc.text(paciente.apelido, 89, 145);
+ doc.text("Data de emissão:"+dataemisao, 250, 145);
+  //doc.text(dataemisao, 322, 145);
+  doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
   doc.setFillColor(50,50,50);
   doc.rect ( 50, 170 , 40 , 20 ); 
   doc.rect (  50, 190 , 40 , 320 ); 
@@ -1691,7 +1694,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
      docu.setFont("Courier");
      docu.setFontStyle("normal"); 
      docu.setFontSize(12);
-     docu.text(paciente.nome,77, 112);
+     docu.text(paciente.nome+" "+paciente.apelido,77, 112);
      docu.text(paciente.nid+"", 252, 112);
      docu.setFontStyle("bold");
      docu.text("Nome:", 52, 112);
@@ -2297,19 +2300,20 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   doc.setFontSize(10);
 
   doc.text("Processado pelo computador", 170, 580);
-  doc.text(this.clinica.endereco, 50, 75);
-  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
-  doc.text("Email: "+this.clinica.email, 50, 95);
-  doc.text("Cell: "+this.clinica.telefone, 50, 105);
-  
-  doc.text("Nome do Paciente:", 50, 125);
-  doc.text(paciente.nome, 128, 125);
-  doc.text("NID:", 250, 125);
-  doc.text(paciente.nid+"", 268, 125);
-  doc.text("Apelido:", 50, 145);
-  doc.text(paciente.apelido, 89, 145);
-  doc.text("Data de emissão: ", 250, 145);
-  doc.text(dataemisao, 322, 145);
+  doc.text(this.clinica.endereco, 50, 65);
+  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,75);
+  doc.text("Email: "+this.clinica.email, 50, 85);
+  doc.text("Cell: "+this.clinica.telefone, 50, 95);
+  doc.text("NUIT: "+this.clinica.nuit, 50, 105);
+  doc.text("Nome do Paciente:"+paciente.nome, 50, 125);
+//doc.text(paciente.nome, 128, 125);
+doc.text("NID:"+paciente.nid, 250, 125);
+//doc.text(paciente.nid+"", 268, 125);
+doc.text("Apelido:"+paciente.apelido, 50, 145);
+// doc.text(paciente.apelido, 89, 145);
+doc.text("Data de emissão:"+dataemisao, 250, 145);
+//doc.text(dataemisao, 322, 145);
+doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
   doc.setFillColor(50,50,50);
   doc.rect ( 50, 170 , 40 , 20 ); 
   doc.rect (  50, 190 , 40 , 320 ); 
@@ -2432,92 +2436,91 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   let mes = +(new Date().getMonth()) + +1;
   let ano = new Date().getFullYear();
  let dataemisao = dia +"/"+mes+"/"+ano;  
-
   var img = new Image();
   img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
   doc.addImage(img,"PNG", 170, 40,100, 100);
   doc.setFont("Courier");
   doc.setFontStyle("normal"); 
-  doc.setFontStyle("bold");
+ // doc.setFontStyle("bold");
   doc.setFontSize(12);
-  doc.text("Nome do Paciente:", 50, 195);
-  doc.text("NID:", 250, 195);
-  doc.text("Apelido:", 50, 215);
-  doc.text("Genero: ", 250, 215);
-  doc.text("Documento:", 50, 235);
-  doc.text("Numero de documento:", 250, 235);
-  doc.text("Bairro:", 250, 255);
-   doc.text("Localidade:", 50, 255);
-   doc.text("Avenida:", 50, 275);
-   doc.text("Casa:", 250, 275);
-   doc.text("Celula:", 50, 295);
-   doc.text("Quarteirao:", 250, 295);
-   doc.text("Posto Administrativo:", 50, 315);
-   doc.text("Distrito:", 250, 315);
-   doc.text("Provincia:", 50, 335);
-   doc.text("Nome Referencial:", 250, 335);
-   doc.text("Apelido:", 50, 355);
-   doc.text("Telefone:", 250, 355);
-
+  doc.text("Nome do Paciente:"+paciente.nome,50, 195);
+  doc.text("NID:"+paciente.nid, 250, 195);
+  doc.text("Apelido:"+paciente.apelido, 50, 215);
+  doc.text("Genero:"+paciente.genero, 250, 215);
+  doc.text("Documento:"+paciente.documento_identificacao, 50, 235);
+  doc.text("Numero de documento:"+paciente.nr_documento_identificacao, 250, 235);
+  doc.text("Bairro:"+paciente.bairro, 250, 255);
+   doc.text("Localidade:"+paciente.localidade, 50, 255);
+   doc.text("Avenida:"+paciente.avenida, 50, 275);
+   doc.text("Casa:"+paciente.casa, 250, 275);
+   doc.text("Celula:"+paciente.celula, 50, 295);
+   doc.text("Quarteirao:"+paciente.quarteirao, 250, 295);
+   doc.text("Posto Administrativo:"+paciente.posto_admnistrativo, 50, 315);
+   doc.text("Distrito:"+paciente.distrito, 250, 315);
+   doc.text("Provincia:"+paciente.provincia, 50, 335);
+   doc.text("Nome Referencial:"+paciente.acompanhante_nome, 250, 335);
+   doc.text("Apelido:"+paciente.acompanhante_apelido, 50, 355);
+   doc.text("Telefone:"+paciente.acompanhante_telefone, 250, 355);
+   doc.text("NUIT do paciente:"+paciente.nuit, 50, 375);
   doc.setFont("Courier");
   doc.setFontStyle("normal"); 
   doc.setFontSize(12);
   
   
-  doc.text(paciente.nome, 140, 195);
+ // doc.text(paciente.nome, 140, 195);
  
-  doc.text(paciente.nid+"", 272, 195);
+  //doc.text(paciente.nid+"", 272, 195);
   
-  doc.text(paciente.apelido, 93, 215);
-
-  doc.text(paciente.genero,288, 215);
-
- 
-  doc.text(paciente.documento_identificacao, 103, 235);
-
-  doc.text(paciente.nr_documento_identificacao+"", 356, 235);
+ // doc.text(paciente.apelido, 93, 215);
+//
+ // doc.text(paciente.genero,288, 215);
 
  
-  doc.text(paciente.localidade, 110, 255);
+ // doc.text(paciente.documento_identificacao, 103, 235);
+
+ // doc.text(paciente.nr_documento_identificacao+"", 356, 235);
+
+ 
+ // doc.text(paciente.localidade, 110, 255);
  
  
-  doc.text(paciente.bairro, 287, 255);
+ // doc.text(paciente.bairro, 287, 255);
 
   
-  doc.text(paciente.avenida, 96, 275);
+ // doc.text(paciente.avenida, 96, 275);
  
 
-  doc.text(paciente.casa+"", 280, 275);
+ // doc.text(paciente.casa+"", 280, 275);
  
 
- doc.text(paciente.celula+"", 90, 295);
+// doc.text(paciente.celula+"", 90, 295);
 
  
-   doc.text(paciente.quarteirao+"", 310, 295);
+ //  doc.text(paciente.quarteirao+"", 310, 295);
   
   
-   doc.text(paciente.posto_admnistrativo, 165, 315);
+  // doc.text(paciente.posto_admnistrativo, 165, 315);
   
-   doc.text(paciente.distrito, 299, 315);
+  // doc.text(paciente.distrito, 299, 315);
 
 
    
   
-   doc.text(paciente.provincia, 104, 335);
+  // doc.text(paciente.provincia, 104, 335);
 
  
   
-   doc.text(paciente.acompanhante_nome, 343, 335);
+   //doc.text(paciente.acompanhante_nome, 343, 335);
 
   
 
-   doc.text(paciente.acompanhante_apelido, 94, 355);
+  // doc.text(paciente.acompanhante_apelido, 94, 355);
 
  
 
-   doc.text(paciente.acompanhante_telefone, 298, 355);
+   //doc.text(paciente.acompanhante_telefone, 298, 355);
 
-
+  //doc.text(paciente.nuit, 145, 375);
 
   doc.setFont("Courier");
   doc.setFontStyle("normal"); 

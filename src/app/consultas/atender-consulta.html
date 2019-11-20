@@ -256,7 +256,7 @@
             
                 <ng-container matColumnDef="detalhes">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Detalhes </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Detalhes da consulta">  
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="detalhesAtender(row)">  
                         <mat-icon>list</mat-icon>
                         </button></mat-cell>
                 </ng-container>

@@ -1,0 +1,67 @@
+<div class="modal-dialog modal-lg" style="padding:0px;margin:0px;" >
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" align="center">CONSULTA ENCERRADA</h3>
+        </div>
+        <div class="modal-body">
+          <table table style="width:100%" border="1">
+            <tr>
+              <th>DATA DE ENCERRAMENTO</th>
+              <td>{{data.data}}</td>   
+</tr>
+
+<tr>
+ <th>NID DO PACIENTE</th>
+<td>{{data.nid}}</td>  
+</tr>  
+    
+ <tr>
+<th>NOME DO PACIENTE</th>
+ <td>{{data.nome}}</td>  
+   </tr>  
+            
+ <tr>
+ <th>APELIDO DO PACIENTE</th>
+<td>{{data.apelido}}</td>  
+ </tr>
+ <tr>            
+<th>QUEIXA PRINCIPAL</th>
+<td>{{data.queixa}}</td>  
+     </tr>       
+ <tr>            
+ <th>HISTÓRIA DA DOENÇA</th>
+<td>{{data.historia}}</td>  
+</tr> 
+ <tr>            
+<th>DIAGNOSTICO AUXILIAR</th>
+ <td>{{data.diagnostico_aux}}</td>  
+  </tr>   
+  <tr>
+  <th>DIAGNOSTICO FINAL</th>
+ <td>{{data.diagnostico}}</td>  
+ </tr>  
+  <tr>            
+ <th>TRATAMENTO</th>
+<td>{{data.tratamento}}</td>  
+ </tr>          
+
+
+ 
+
+ <!-- <tr>            
+<th>OBSERVACOES</th>
+ <td>{{data.observacoes}}</td>  
+  </tr> -->
+         
+         
+          </table>
+          <br>
+        </div>
+        <div class="modal-footer">
+                   
+            <button mat-button class="waves-effect waves-light btn" data-dismiss="modal" (click)="closeModal()">SAIR<i class="large material-icons">close</i></button>
+           
+          </div>
+       
+    </div>
+</div>

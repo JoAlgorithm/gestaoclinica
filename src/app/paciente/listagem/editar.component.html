@@ -8,11 +8,10 @@
       <textarea matInput placeholder="Leave a comment"></textarea>
     </mat-form-field>
   </form>-->
- 
+
   <mat-horizontal-stepper [linear]="true" #stepper>
   
-
-      
+    <mat-step [stepControl]="firstFormGroup">
         <ng-template matStepLabel>DADOS DO PACIENTE </ng-template>
         <mat-form-field style="width: 33%">
           <input matInput placeholder="Nome completo"  [(ngModel)]="data.doente.nome" required>
@@ -52,6 +51,9 @@
     <input matInput placeholder="Numero de Documento"  [(ngModel)]="data.doente.nr_documento_identificacao" required>
 </mat-form-field>
 <mat-form-field style="width: 33%">
+    <input matInput placeholder="NUIT"  [(ngModel)]="data.doente.nuit" required>
+</mat-form-field>
+<mat-form-field style="width: 33%">
     <input matInput placeholder="Localidade"  [(ngModel)]="data.doente.localidade" required>
 </mat-form-field>
 <mat-form-field style="width: 33%">
@@ -73,7 +75,7 @@
     <input matInput placeholder="Quarteirao"  [(ngModel)]="data.doente.quarteirao" required>
 </mat-form-field>
 <mat-form-field style="width: 33%">
-    <input matInput placeholder="Posto Adminiatrativo"  [(ngModel)]="data.doente.posto_administrativo" required>
+    <input matInput placeholder="Posto Adminiatrativo"  [(ngModel)]="data.doente.posto_admnistrativo" required>
 </mat-form-field>
 <mat-form-field style="width: 33%">
     <input matInput placeholder="Distrito"  [(ngModel)]="data.doente.distrito" required>
@@ -104,7 +106,7 @@
         </div>
 
        
-     
+    </mat-step>
     
       </mat-horizontal-stepper>
        
