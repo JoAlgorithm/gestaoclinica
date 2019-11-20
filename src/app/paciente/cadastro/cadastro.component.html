@@ -87,15 +87,11 @@
         <mat-form-field style="width: 33%">
           <input matInput placeholder="Quarteirao" formControlName="paciente_quarteirao" [(ngModel)]="paciente.quarteirao" >
         </mat-form-field>
-
-        
+       
         <!--posto_admnistrativo DE IDENTIFICACAO-->
         <mat-form-field style="width: 33%">
           <input matInput placeholder="Posto admnistrativo" formControlName="paciente_posto_admnistrativo" [(ngModel)]="paciente.posto_admnistrativo">
         </mat-form-field>
-
-        
-        
 
         <!--PROVINCIA-->
         <mat-form-field style="width: 33%">
@@ -109,6 +105,11 @@
         <!--TELEFONE-->
         <mat-form-field style="width: 33%">
           <input matInput placeholder="Telefone" formControlName="paciente_telefone" [(ngModel)]="paciente.telefone" type="tel" minlength="9" maxlength="9">
+        </mat-form-field>
+
+        <!--NUIT-->
+        <mat-form-field style="width: 33%">
+          <input matInput placeholder="Nuit" formControlName="paciente_nuit" [(ngModel)]="paciente.nuit">
         </mat-form-field>
 
         <!--LOCAL DE EMISSAO--

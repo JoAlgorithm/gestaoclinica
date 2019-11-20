@@ -19,6 +19,7 @@ export class Paciente {
     distrito?: string;
     provincia?:string;
     telefone?:string;
+    nuit?:string;
 
     //Dados da pessoa de referencia
     referencia_nome?:string;

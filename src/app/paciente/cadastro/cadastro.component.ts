@@ -124,6 +124,7 @@ export class CadastroComponent implements OnInit {
       paciente_provincia: ['', Validators.required],
 
       paciente_telefone: [''],
+      paciente_nuit: [''],
     });
 
     this.secondFormGroup = this._formBuilder.group({
