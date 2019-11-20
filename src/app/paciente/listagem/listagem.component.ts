@@ -1384,9 +1384,9 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
     texto2: string = "Cotar"; //Cotacao
 
   consultasFormGroup: FormGroup;
-categorias: CategoriaConsulta[] = [];
-categorias_aux: CategoriaConsulta[];
-categorias_consulta: CategoriaConsulta[];
+  categorias: CategoriaConsulta[] = [];
+  categorias_aux: CategoriaConsulta[];
+  categorias_consulta: CategoriaConsulta[];
   categoria:CategoriaConsulta;
 
   consulta?: Consulta;
@@ -1577,14 +1577,38 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
 
   doc.text(item+"", 55, linha) //item
   doc.text("1", 257, linha) //quantidade
-  doc.text(categoriaConsulta.nome , 95, linha) //descricao
+
+  let string1 = "";
+  let string2 = "";
+  let linhaAlternativo = 0;
+  if(categoriaConsulta.nome.length > 26){
+    string1 = categoriaConsulta.nome.substr(0,26);
+    let q = +categoriaConsulta.nome.length - +26;
+    string2 = categoriaConsulta.nome.substr(q).toString().trim();
+
+    linhaAlternativo = +linha+ +20;
+
+    doc.text(string1 , 95, linha) //descricao
+    doc.text(string2 , 95, linhaAlternativo) //descricao
+
+  }else{
+    doc.text(categoriaConsulta.nome , 95, linha) //descricao
+  }
+
+  
   
   doc.text(categoriaConsulta.preco+"", 294, linha)
   doc.text(categoriaConsulta.preco+"", 354, linha)
 
   preco_total = +categoriaConsulta.preco;
   item = +item + +1;
-  linha = +linha + +20;
+
+  if(linhaAlternativo > 0){
+    linha = +linha + +40;
+  }else{
+    linha = +linha + +20;
+  }
+  
    
    
   doc.setFont("Courier");
@@ -2027,55 +2051,61 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
 
 
   faturarDiagnostico(paciente:Paciente){
-    //Abrir uma consulta DIAGNOSTICO AUXILIAR --------------------
-    let dia = new Date().getDate();
-    let mes = +(new Date().getMonth()) + +1;
-    let ano = new Date().getFullYear();
+    if(this.diagnosticos.length>0){
 
-    this.consulta = new Consulta();
-    this.consulta.data = dia +"/"+mes+"/"+ano;
-    this.consulta.ano = ano;
-    this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
-    this.consulta.paciente = paciente;
-    this.consulta.diagnosticos_aux = this.diagnosticos;
-    this.consulta.status = "Encerrada";
-    this.consulta.tipo = "DIAGNOSTICO AUX";
+      //Abrir uma consulta DIAGNOSTICO AUXILIAR --------------------
+      let dia = new Date().getDate();
+      let mes = +(new Date().getMonth()) + +1;
+      let ano = new Date().getFullYear();
 
-    this.consulta.paciente_nome = paciente.nome;
-    this.consulta.paciente_apelido = paciente.apelido;
-    this.consulta.paciente_nid = paciente.nid;
+      this.consulta = new Consulta();
+      this.consulta.data = dia +"/"+mes+"/"+ano;
+      this.consulta.ano = ano;
+      this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+      this.consulta.paciente = paciente;
+      this.consulta.diagnosticos_aux = this.diagnosticos;
+      this.consulta.status = "Encerrada";
+      this.consulta.tipo = "DIAGNOSTICO AUX";
 
-    //Criar uma faturacao da consulta do tipo CONDUTA CLINICA --------------------
-    let faturacao = new Faturacao();
-    faturacao.categoria = "DIAGNOSTICO_AUX";
-    faturacao.valor = this.preco_total;
-    faturacao.data = new Date();
-    //faturacao.consulta = this.consulta;
-    //faturacao.diagnostico_aux = this.consulta.diagnosticos_aux;
-    
-    faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
-    faturacao.ano = new Date().getFullYear();
-    faturacao.id = this.nr_fatura+"";
+      this.consulta.paciente_nome = paciente.nome;
+      this.consulta.paciente_apelido = paciente.apelido;
+      this.consulta.paciente_nid = paciente.nid;
 
-    //Persistir informacao na base de dados ----------------------------
-    let data = Object.assign({}, faturacao);
-    let d = Object.assign({}, this.consulta); 
+      //Criar uma faturacao da consulta do tipo CONDUTA CLINICA --------------------
+      let faturacao = new Faturacao();
+      faturacao.categoria = "DIAGNOSTICO_AUX";
+      faturacao.valor = this.preco_total;
+      faturacao.data = new Date();
+      //faturacao.consulta = this.consulta;
+      //faturacao.diagnostico_aux = this.consulta.diagnosticos_aux;
+      
+      faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
+      faturacao.ano = new Date().getFullYear();
+      faturacao.id = this.nr_fatura+"";
 
-    this.pacienteService.faturar(data)
-    .then( res => {
-      this.pacienteService.marcarConsulta(d)
-      .then(r => {
-        this.downloadPDF(this.diagnosticos, paciente, "Faturacao");
-        this.dialogRef.close();
-        this.openSnackBar("Faturado com sucesso");
-      }, er => {
-        console.log("ERRO: " + er.message)
+      //Persistir informacao na base de dados ----------------------------
+      let data = Object.assign({}, faturacao);
+      let d = Object.assign({}, this.consulta); 
+
+      this.pacienteService.faturar(data)
+      .then( res => {
+        this.pacienteService.marcarConsulta(d)
+        .then(r => {
+          this.downloadPDF(this.diagnosticos, paciente, "Faturacao");
+          this.dialogRef.close();
+          this.openSnackBar("Faturado com sucesso");
+        }, er => {
+          console.log("ERRO: " + er.message)
+          this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
+        })      
+      }, err=>{
+        console.log("ERRO: " + err.message)
         this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
-      })      
-    }, err=>{
-      console.log("ERRO: " + err.message)
-      this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
-    })
+      })
+
+    }else{
+      this.openSnackBar("Adicione pelo menos um diagnostico");
+    }
 
   }
 
@@ -2118,7 +2148,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
 
 
   cotar(paciente: Paciente){
-    if(this.diagnosticos){
+    if(this.diagnosticos.length>0){
       this.desabilitar2 = true;
       this.texto2 = "AGUARDE UM INSTANTE...";
 
@@ -2216,13 +2246,38 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   diagnosticos.forEach(element => {
     doc.text(item+"", 55, linha) //item
     doc.text("1", 257, linha) //quantidade
-    doc.text(element.nome , 95, linha) //descricao
+
+    let string1 = "";
+    let string2 = "";
+    let linhaAlternativo = 0;
+    if(element.nome.length > 26){
+      string1 = element.nome.substr(0,26);
+      let q = +element.nome.length - +26;
+      string2 = element.nome.substr(q).toString().trim();
+
+      linhaAlternativo = +linha+ +20;
+
+      doc.text(string1 , 95, linha) //descricao
+      doc.text(string2 , 95, linhaAlternativo) //descricao
+
+    }else{
+      doc.text(element.nome , 95, linha) //descricao
+    }
+    //doc.text(element.nome , 95, linha) //descricao
+
+
     doc.text(element.preco+"", 294, linha)
     doc.text(element.preco+"", 354, linha)
 
     preco_total = +preco_total + +element.preco;
     item = +item + +1;
-    linha = +linha + +20;
+
+    if(linhaAlternativo >0){
+      linha = +linha + +40;
+    }else{
+      linha = +linha + +20;
+    }
+    
   });   
    
   doc.setFont("Courier");

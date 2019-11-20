@@ -78,6 +78,7 @@ export class CadastroComponent implements OnInit {
     this.paciente.referencia_nome = "";
     this.paciente.referencia_apelido= "";
     this.paciente.referencia_telefone= "";
+    this.paciente.telefone = "";
     /*this.paciente.nome = "Luis"
     this.paciente.apelido = "Jo"
     this.paciente.sexo = "Masculino"
@@ -121,6 +122,8 @@ export class CadastroComponent implements OnInit {
       paciente_posto_admnistrativo: [''],
       paciente_distrito: ['', Validators.required],
       paciente_provincia: ['', Validators.required],
+
+      paciente_telefone: [''],
     });
 
     this.secondFormGroup = this._formBuilder.group({

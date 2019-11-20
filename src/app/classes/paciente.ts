@@ -18,6 +18,7 @@ export class Paciente {
     posto_admnistrativo?:string;
     distrito?: string;
     provincia?:string;
+    telefone?:string;
 
     //Dados da pessoa de referencia
     referencia_nome?:string;

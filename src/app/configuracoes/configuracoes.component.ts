@@ -14,6 +14,7 @@ import { TipoCondutaClinica } from '../classes/tipo_conduta_clinica';
 import { TipoDiagnosticoAux } from '../classes/tipo_diagnostico';
 import { SubTipoDiagnosticoAux } from '../classes/subtipo_diagnostico';
 import { Router } from '@angular/router';
+import { Seguradora } from '../classes/seguradora';
 
 
 @Component({
@@ -29,6 +30,21 @@ export class ConfiguracoesComponent implements OnInit {
   editar_conduta = false;
   editar_diagnostico = false;
   editar_consultas = false;
+
+    /*
+    * VARIAVEIS DA TAB SEGURADORAS
+    */
+  seguradora: Seguradora;
+  seguradoras: Seguradora[];
+
+  //ATRIBUTOS DO FORLMULARIO
+  cadastro_seguradoraFormGroup: FormGroup;
+
+  //ATRIBUTOS DA TABELA
+  dataSourseSeguradora: MatTableDataSource<Seguradora>;
+  displayedColumnsSeguradora = ['nome','telefone','endereco','pais', 'editar', 'remover'];
+  @ViewChild('paginatorDSeguradora', { read: MatPaginator }) paginatorSeguradora: MatPaginator;
+  @ViewChild(MatSort) sortSeguradora: MatSort;
 
   /*
   * VARIAVEIS DA TAB DIAGNOSTICO AUXILIAR

@@ -9,6 +9,7 @@ import { CategoriaConsulta } from '../classes/categoria_consulta';
 import { CondutaClinica } from '../classes/conduta_clinica';
 import { NrCotacao } from '../classes/nr_cotacao';
 import { NrFatura } from '../classes/nr_fatura';
+import { Seguradora } from '../classes/seguradora';
 
 @Injectable()
 export class ConfiguracoesService {
@@ -159,6 +160,19 @@ export class ConfiguracoesService {
 
   getAnos() {
     return this.db.list('anos/'+this.authService.get_clinica_id + '/');
+  }
+
+  //Cadastra SEGURADORAS
+  createSeguradora(seguradora: Seguradora){
+    return this.db.list('seguradoras/'+this.authService.get_clinica_id + '/').push(seguradora);
+  }
+
+  updateSeguradora(seguradora: Seguradora){
+    return this.db.list('seguradoras/'+this.authService.get_clinica_id + '/').update(seguradora.id, seguradora);
+  }
+
+  removeSeguradoraa(id){
+    return this.db.list('seguradoras/'+this.authService.get_clinica_id + '/').remove(id+"");
   }
 
   

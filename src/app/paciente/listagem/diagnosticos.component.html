@@ -52,7 +52,7 @@
         
         <ng-container matColumnDef="tipo">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.tipo.nome}}</mat-cell>
+            <mat-cell *matCellDef="let row">{{row.tipo?.nome}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="subtipo">

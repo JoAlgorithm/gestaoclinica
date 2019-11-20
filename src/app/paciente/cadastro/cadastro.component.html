@@ -97,13 +97,18 @@
         
         
 
-      <!--PROVINCIA-->
+        <!--PROVINCIA-->
         <mat-form-field style="width: 33%">
           <mat-select placeholder="Provincia" formControlName="paciente_provincia" [(ngModel)]="paciente.provincia" required >
               <mat-option *ngFor="let provincia of provincias" [value]="provincia.value">
                   {{provincia.viewValue}}
               </mat-option>
           </mat-select>
+        </mat-form-field>
+
+        <!--TELEFONE-->
+        <mat-form-field style="width: 33%">
+          <input matInput placeholder="Telefone" formControlName="paciente_telefone" [(ngModel)]="paciente.telefone" type="tel" minlength="9" maxlength="9">
         </mat-form-field>
 
         <!--LOCAL DE EMISSAO--
@@ -193,21 +198,21 @@
      <!--DADOS MESTRES DO ENCARREGADO-->
      <mat-step [stepControl]="secondFormGroup">
       <form [formGroup]="secondFormGroup">
-          <ng-template matStepLabel>PESSOA DE REFERENCIA</ng-template>
+        <ng-template matStepLabel>PESSOA DE REFERENCIA</ng-template>
         
       <!--NOME DO ESTUDANTE-->
       <mat-form-field style="width: 33%">
-          <input matInput placeholder="Nome" formControlName="paciente_referencia_nome" [(ngModel)]="paciente.referencia_nome">
+        <input matInput placeholder="Nome" formControlName="paciente_referencia_nome" [(ngModel)]="paciente.referencia_nome">
       </mat-form-field>
 
       <!--Apelido DO ESTUDANTE-->
       <mat-form-field style="width: 33%">
-          <input matInput placeholder="Apelido" formControlName="paciente_referencia_apelido" [(ngModel)]="paciente.referencia_apelido">
+        <input matInput placeholder="Apelido" formControlName="paciente_referencia_apelido" [(ngModel)]="paciente.referencia_apelido">
       </mat-form-field>
 
       <!--Telefone DO ESTUDANTE-->
       <mat-form-field style="width: 33%">
-          <input matInput placeholder="Telefone" formControlName="paciente_referencia_telefone" [(ngModel)]="paciente.referencia_telefone" minlength="9" maxlength="9">
+        <input matInput placeholder="Telefone" formControlName="paciente_referencia_telefone" [(ngModel)]="paciente.referencia_telefone" minlength="9" maxlength="9">
       </mat-form-field>
 
       <div>
