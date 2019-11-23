@@ -259,7 +259,7 @@ export class ListagemComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogDetalhes, {
      
       width: '1000px',
-     data: { nid: doente.nid,data_nascimento: doente.datanascimento,apelido: doente.apelido, 
+     data: { nid: doente.nid,telefone: doente.telefone, data_nascimento: doente.datanascimento,apelido: doente.apelido, 
       nome: doente.nome, genero:doente.sexo,
        documento_identificacao: doente.documento_identificacao, 
        nr_documento_identificacao: doente.nr_documento_identificacao,
