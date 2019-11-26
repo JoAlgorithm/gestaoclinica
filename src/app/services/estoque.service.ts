@@ -9,7 +9,7 @@ import { MovimentoEstoque } from '../classes/movimento_estoque';
 @Injectable()
 export class EstoqueService {
 
-  constructor(private db: AngularFireDatabase, private authService: AuthService) {
+  constructor(public db: AngularFireDatabase, private authService: AuthService) {
   }
 
   //Retorna a lista de unidades de medida
@@ -62,7 +62,8 @@ export class EstoqueService {
   //Cadastra medicamentos
   createMedicamento(md: Medicamento){
     //return this.db.list('clinicas/'+this.authService.get_clinica_id + '/medicamentos').push(md);
-    return this.db.list('medicamentos/'+this.authService.get_clinica_id + '/').push(md);
+    //return this.db.list('medicamentos/'+this.authService.get_clinica_id + '/').push(md);
+    return this.db.list('medicamentos/'+this.authService.get_clinica_id + '/').update(md.codigo+"", md);
   }
 
   updateMedicamentos(md: Medicamento){
@@ -89,9 +90,11 @@ export class EstoqueService {
     let id_medicamento = mvt.medicamento.id;
     mvt.deposito = null;
     mvt.medicamento = null;*/
-    
+    //console.log("Deposito id "+mvt.deposito.id);
 
+    //return this.db.list('depositos/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/medicamentos/').update(mvt.medicamento.codigo+"", mvt.medicamento);
     return this.db.list('depositos/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/medicamentos/').update(mvt.medicamento.id, mvt.medicamento);
+
   }
 
   //Cadastra movimento no medicamento
@@ -126,6 +129,34 @@ export class EstoqueService {
 
   getTiposEstoque(){
     return this.db.list('tiposestoque/'+this.authService.get_clinica_id + '/');
+  }
+
+  //Cadastra o movimento na tabela de movimentos "estoquesmovimentos"
+  //Cadastra o movimento no item "medicamentos"
+  //Cadastra o movimento no deposito "depositos"
+  //Elimina informacoes desnecessarias
+  updateEstoque(updatedUserData){
+    /*var updatedUserData = {};
+
+
+    movimentos.forEach(mvt => {
+    //Array.from(movimentos).forEach(mvt => {
+      let key = this.db.list('estoquesmovimentos/'+this.authService.get_clinica_id).push('').key;
+      
+      //Gravando na tabela de depositos "depositos"
+      updatedUserData['/depositos/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/medicamentos/'+mvt.medicamento.id] = mvt.medicamento;
+
+      //Gravando na tabela de movimentos "estoquesmovimentos"
+      //eliminar redundancia de dados para dar agilidade e perfomance a base de dados
+      mvt.deposito_nome = mvt.deposito.nome;
+      mvt.deposito = null;
+      let medicamento_id = mvt.medicamento.id;
+      mvt.medicamento_nome = mvt.medicamento.nome_comercial;
+      mvt.medicamento = null;
+      updatedUserData['/estoquesmovimentos/'+this.authService.get_clinica_id+"/"+key] = mvt;
+    });*/
+
+    return this.db.object('/').update(updatedUserData);
   }
 
   

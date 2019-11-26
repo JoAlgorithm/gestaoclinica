@@ -5,9 +5,9 @@
  <!-- <form [formGroup]="condutaFormGroup">-->
     <mat-form-field style="width: 31%">
         <mat-select placeholder="Tipo conduta"  [(ngModel)]="tipoconduta" (selectionChange)="onSelect(tipoconduta)" required>
-                <mat-option >
-                        <ngx-mat-select-search [(ngModel)]="filtroTipoconduta"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTiposcondutas($event.target.value)"></ngx-mat-select-search>
-                      </mat-option>
+            <mat-option >
+                <ngx-mat-select-search [(ngModel)]="filtroTipoconduta"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTiposcondutas($event.target.value)"></ngx-mat-select-search>
+            </mat-option>
             <mat-option *ngFor="let tipoconduta of data.tiposconduta" [value]="tipoconduta">
                 {{tipoconduta.nome}}
             </mat-option>
@@ -16,9 +16,9 @@
 
     <mat-form-field style="width: 31%">
         <mat-select placeholder="Conduta clinica" [(ngModel)]="conduta" required>
-                <mat-option >
-                        <ngx-mat-select-search [(ngModel)]="filtroconduta"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarCondutas($event.target.value)"></ngx-mat-select-search>
-                      </mat-option>
+            <mat-option >
+                <ngx-mat-select-search [(ngModel)]="filtroconduta"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarCondutas($event.target.value)"></ngx-mat-select-search>
+            </mat-option>
             <mat-option *ngFor="let conduta of data.condutas" [value]="conduta">
                 {{conduta.nome}}
             </mat-option>
@@ -38,7 +38,7 @@
         
         <ng-container matColumnDef="tipo">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.tipo.nome}}</mat-cell>
+            <mat-cell *matCellDef="let row">{{row.tipo?.nome}}</mat-cell>
         </ng-container> 
     
         <ng-container matColumnDef="nome">

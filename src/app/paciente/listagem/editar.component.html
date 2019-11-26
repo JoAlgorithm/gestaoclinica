@@ -9,10 +9,6 @@
     </mat-form-field>
   </form>-->
 
-  <mat-horizontal-stepper [linear]="true" #stepper>
-  
-    <mat-step [stepControl]="firstFormGroup">
-        <ng-template matStepLabel>DADOS DO PACIENTE </ng-template>
         <mat-form-field style="width: 33%">
           <input matInput placeholder="Nome completo"  [(ngModel)]="data.doente.nome" required>
       </mat-form-field>
@@ -105,10 +101,7 @@
   
         </div>
 
-       
-    </mat-step>
-    
-      </mat-horizontal-stepper>
+
        
          
     

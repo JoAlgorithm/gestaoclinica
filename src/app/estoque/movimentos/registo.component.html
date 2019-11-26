@@ -32,17 +32,17 @@
   
         <ng-container matColumnDef="deposito">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Deposito </mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.deposito.nome}}</mat-cell>
+            <mat-cell *matCellDef="let row">{{row.deposito?.nome}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="medicamento">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Medicamento </mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.medicamento.nome_generico}}</mat-cell>
+            <mat-cell *matCellDef="let row">{{row.medicamento?.nome_generico}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="qtd">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.quantidade}}</mat-cell>
+            <mat-cell *matCellDef="let row">{{row?.quantidade}}</mat-cell>
         </ng-container>
         
 

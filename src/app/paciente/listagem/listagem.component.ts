@@ -526,7 +526,7 @@ export class MedicamentosDialog {
     this.clinica = this.data.clinica; //PDF
     this.nr_cotacao = this.data.nr_cotacao; //PDF
     this.nr_fatura = this.data.nr_fatura; //PDF
-    console.log("dialog nr fatura: "+this.nr_fatura);
+    ///console.log("dialog nr fatura: "+this.nr_fatura);
   }
 
   filtrodeposito="";
@@ -542,12 +542,6 @@ export class MedicamentosDialog {
       this.data.depositos = this.depositos_aux;
     }
   }
-
-
-
-
-
-
 
 
   getMedicamentos(deposito: Deposito){
@@ -593,7 +587,7 @@ export class MedicamentosDialog {
       if(check){
         if( Number(this.medicamento.qtd_solicitada) <= Number(this.medicamento.qtd_disponivel)){
           this.movimento.medicamento = this.medicamento;
-          this.movimento.deposito = this.deposito;  
+          this.movimento.deposito = this.deposito;
           this.movimento.quantidade = this.medicamento.qtd_solicitada;  
     
           this.movimento.medicamento.preco_venda_total = this.medicamento.preco_venda*this.medicamento.qtd_solicitada;
@@ -613,7 +607,6 @@ export class MedicamentosDialog {
       }else{
         this.openSnackBar("Medicamento ja adicionado a lista");
       }
-
     }else{
       this.openSnackBar("Selecione um medicamento");
     }
@@ -640,17 +633,44 @@ export class MedicamentosDialog {
     }
   }
 
- 
+  faturarTeste(paciente: Paciente){
+    if(this.movimentos.length>0){ //Verificar se tem informacao no array
+      this.desabilitar = true;
+      this.texto = "AGUARDE UM INSTANTE...";
 
+      //Abrir uma CONSULTA CLINICA --------------------
+      let dia = new Date().getDate();
+      let mes = +(new Date().getMonth()) + +1;
+      let ano = new Date().getFullYear();  
+      this.consulta = new Consulta();
+      this.consulta.data = dia +"/"+mes+"/"+ano;
+      this.consulta.ano = ano;
+      this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+      this.consulta.paciente = paciente;
+      this.consulta.movimentosestoque = this.movimentos;
+      this.consulta.status = "Encerrada";
+      this.consulta.tipo = "MEDICAMENTO";      
+      this.consulta.paciente_nome = paciente.nome;
+      this.consulta.paciente_apelido = paciente.apelido;
+      this.consulta.paciente_nid = paciente.nid;
 
-
+      this.movimentos.forEach(mvt => {
+        console.log("MVT ------------------")
+        console.log("Qtd solicitada "+mvt.medicamento.qtd_solicitada);
+        console.log("Nome comercial: "+mvt.medicamento.nome_comercial);
+        console.log("");
+      });
+    }else{
+      this.openSnackBar("Adicione pelo menos um medicamento.");
+    }
+  }
 
 
   //AO FATURAR PRECISA ATUALIZAR A QTD DISPONIVEL DO ITEM NO DEPOSITO
   faturar(paciente: Paciente){
     if(this.movimentos.length>0){
       this.desabilitar = true;
-      this.texto = "AGUARDE UM INSTANTE..."
+      this.texto = "AGUARDE UM INSTANTE...";
   
       //Abrir uma CONSULTA CLINICA --------------------
       let dia = new Date().getDate();
@@ -695,13 +715,23 @@ export class MedicamentosDialog {
         .then(r => {
   
           //Para cada medicamento precisamos criar e salvar o movimento de Saida por venda
+          console.log("qtd solicitada: "+this.movimentos[0].medicamento.qtd_solicitada)
           this.movimentos.forEach(mvt => {
+
+            console.log("MVT ------------------")
+            console.log("Qtd solicitada "+mvt.medicamento.qtd_solicitada);
+            console.log("Nome comercial: "+mvt.medicamento.nome_comercial);
+            console.log("");
+
             mvt.medicamento.qtd_solicitada = null;
             mvt.data_movimento = dia +"/"+mes+"/"+ano;
             mvt.movimentador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
             mvt.tipo_movimento = "Saida por venda";
+
+            //console.log("id deposito: "+mvt.deposito.id)
   
             let d = Object.assign({}, mvt); 
+            //d.medicamento.qtd_solicitada = null;
             
   
             //2. Salvar esse movimento do item no deposito para vermos posicao de estoque por deposito
@@ -723,6 +753,7 @@ export class MedicamentosDialog {
             })
   
           });
+
           //this.gerarPDF(this.movimentos , paciente, 'Faturacao', d.id);
           this.downloadPDF(this.movimentos, paciente, "Faturacao");          
           this.dialogRef.close();
@@ -1023,9 +1054,9 @@ export class MedicamentosDialog {
       filtroTipoconduta = filtroTipoconduta.trim(); // Remove whitespace
       filtroTipoconduta = filtroTipoconduta.toLowerCase(); // Datasource defaults to lowercase matches
      
-    this.tiposconduta= null;
+      this.tiposconduta= null;
 
-  this.data.tiposconduta = this.tiposcondutas_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtroTipoconduta) > -1);     
+      this.data.tiposconduta = this.tiposcondutas_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtroTipoconduta) > -1);     
     }else{
       this.data.tiposconduta = this.tiposcondutas_aux;
     }

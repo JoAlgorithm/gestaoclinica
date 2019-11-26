@@ -90,327 +90,318 @@ export class DashboardComponent {
 
 
   ngOnInit() {
-    this.perfil = this.authService.get_perfil;
-    this.username = this.authService.get_user_displayName;
-    if(this.perfil == 'Clinica_Admin'){
-      this.acesso_indicadores = true;
-    }
+    setTimeout(() => {
+      this.perfil = this.authService.get_perfil;
+      this.username = this.authService.get_user_displayName;
 
-    this.configService.getAnos().snapshotChanges().subscribe(data => {
-      this.anos = data.map(e => {
-        return {
-          id: e.payload.key
-        }
-      })
-      /*this.anos.forEach(element => {
-        if(element.id == this.ano){
-          console.log("Selecionar ano "+element.id)
-        }
-      });*/
-    })
-
-    //let doc = new jsPDF();
-    //doc.save("PDF")
-    //this.pacienteService.limparConsultas();
-
-    this.pacienteService.getPacientes().snapshotChanges().subscribe(data => {
-      this.pacientes = data.map(e => {
-        return {
-          id: e.payload.key,
-          ...e.payload.val(),
-        } as Paciente;
-      })      
-    })
-
-    this.configService.getDiagnosticos().snapshotChanges().subscribe(data => {
-      this.diagnosticos = data.map(e => {
-        return {
-          id: e.payload.key,
-          ...e.payload.val(),
-        } as DiagnosticoAuxiliar;
-      })
-    })
-
-    /*this.pacienteService.getConsultas().snapshotChanges().subscribe(data => {
-      this.consultas = data.map(e => {
-        return {
-          id: e.payload.key,
-          ...e.payload.val(),
-        } as Consulta;
-      })
-      this.consultas_encerradas_medicas = this.consultas.filter( c => c.status === "Encerrada" && c.tipo == "Consulta Medica").length;
-      
-      this.consultas_encerradas_diagnosticos = this.consultas.filter( c => c.status === "Encerrada" && c.tipo == "DIAGNOSTICO AUX").length;
-      
-      this.consultas_encerradas_condutas = this.consultas.filter( c => c.status === "Encerrada" && c.tipo == "CONDUTA CLINICA").length;
-      
-      this.consultas.filter( c => c.tipo == "Consulta Medica").forEach(element => {
-        if(element.diagnosticos_aux){
-          if(element.diagnosticos_aux.length>0){
-            this.consultas_encerradas_diagnosticos = +this.consultas_encerradas_diagnosticos + +1;
+      if(this.perfil == 'Clinica_Admin'){
+        this.acesso_indicadores = true;
+      }
+      this.configService.getAnos().snapshotChanges().subscribe(data => {
+        this.anos = data.map(e => {
+          return {
+            id: e.payload.key
           }
-        }
-      });
-
-    })*/
-    this.pacienteService.getConsultasRelatorio(this.ano).snapshotChanges().subscribe(data => {
-      this.consultas = data.map(e => {
-        return {
-          id: e.payload.key,
-          ...e.payload.val(),
-        } as Consulta;
+        })
       })
-      this.consultas_encerradas_medicas = this.consultas.filter( c => c.tipo == "Consulta Medica").length;
-      this.consultas_encerradas_diagnosticos = this.consultas.filter( c => c.tipo == "DIAGNOSTICO AUX").length;
-      this.consultas_encerradas_condutas = this.consultas.filter( c => c.tipo == "CONDUTA CLINICA").length;
-
-    })
-
-    this.pacienteService.getFaturacoes(this.ano).snapshotChanges().subscribe(data => {
-      this.faturacoes = data.map(e => {
-        return {
-          id: e.payload.key,
-          //data: e.payload.val()['data'] as Date,
-          ...e.payload.val(),
-        } as Faturacao;
-      }) 
-      
-      this.faturacoes.forEach(element => {
-        //console.log("Mes: "+ element.mes+" Ano: "+element.ano+" Categoria: "+element.categoria) 
-        this.total_valor = +this.total_valor + +element.valor;
-
-        if(element.categoria == "DIAGNOSTICO_AUX"){
-
-          switch(element.mes) { 
-            case "Janeiro": { 
-              this.jan_diagnostico = +this.jan_diagnostico + +1;
-              this.jan_consulta_valor = +this.jan_consulta_valor+ +element.valor;
-               break;
-            } 
-            case "Fevereiro": { 
-              this.fev_diagnostico = +this.fev_diagnostico + +1;
-              this.fev_consulta_valor = +this.fev_consulta_valor+ +element.valor;
-              break;
-            } 
-            case "Marco": { 
-              this.marc_diagnostico = +this.marc_diagnostico + +1;
-              this.marc_consulta_valor = +this.marc_consulta_valor+ +element.valor;
-              break ; 
-            }
-            case "Abril": { 
-              this.abril_diagnostico = +this.abril_diagnostico + +1;
-              this.abril_consulta_valor = +this.abril_consulta_valor+ +element.valor;
-              break ; 
-            }
-            case "Maio": { 
-              this.maio_diagnostico = +this.maio_diagnostico + +1;
-              this.maio_consulta_valor = +this.maio_consulta_valor+ +element.valor;
-              break ; 
-            }
-            case "Junho": { 
-              this.junho_diagnostico = +this.junho_diagnostico + +1;
-              this.junho_consulta_valor = +this.junho_consulta_valor+ +element.valor;
-              break ; 
-            }
-            case "Julho": { 
-              this.julh_diagnostico = +this.julh_diagnostico + +1;
-              this.julh_consulta_valor = +this.julh_consulta_valor+ +element.valor;
-              break; 
-            }
-            case "Agosto": { 
-              this.agos_diagnostico = +this.agos_diagnostico + +1;
-              this.agos_consulta_valor = +this.agos_consulta_valor+ +element.valor;
-              break; 
-            }  
-            case "Setembro": { 
-              this.set_diagnostico = +this.set_diagnostico + +1;
-              this.set_consulta_valor = +this.set_consulta_valor+ +element.valor;
-              break; 
-            }
-            case "Outubro": { 
-              this.out_diagnostico = +this.out_diagnostico + +1;
-              this.out_consulta_valor = +this.out_consulta_valor+ +element.valor;
-              break; 
-            }
-            case "Novembro": { 
-              this.nov_diagnostico = +this.nov_diagnostico + +1;
-              this.nov_consulta_valor = +this.nov_consulta_valor+ +element.valor;
-              break; 
-            }
-            case "Dezembro": { 
-              this.dez_diagnostico = +this.dez_diagnostico + +1;
-              this.dez_consulta_valor = +this.dez_consulta_valor+ +element.valor;
-              break; 
-            }
-            default: { 
-               //statements; 
-               break; 
-            } 
-         }//Fim switch case 
-
-        }else if(element.categoria == "CONSULTA_MEDICA"){
-
-          switch(element.mes) { 
-            case "Janeiro": { 
-              this.jan_consulta_nr = +this.jan_consulta_nr + +1;
-              this.jan_consulta_valor = +this.jan_consulta_valor+ +element.valor;
-               break;
-            } 
-            case "Fevereiro": { 
-              this.fev_consulta_nr = +this.fev_consulta_nr + +1;
-              this.fev_consulta_valor = +this.fev_consulta_valor+ +element.valor;
-              break;
-            } 
-            case "Marco": { 
-              this.marc_consulta_nr = +this.marc_consulta_nr + +1;
-              this.marc_consulta_valor = +this.marc_consulta_valor+ +element.valor;
-              break ; 
-            }
-            case "Abril": { 
-              this.abril_consulta_nr = +this.abril_consulta_nr + +1;
-              this.abril_consulta_valor = +this.abril_consulta_valor+ +element.valor;
-              break ; 
-            }
-            case "Maio": { 
-              this.maio_consulta_nr = +this.maio_consulta_nr + +1;
-              this.maio_consulta_valor = +this.maio_consulta_valor+ +element.valor;
-              break ; 
-            }
-            case "Junho": { 
-              this.junho_consulta_nr = +this.junho_consulta_nr + +1;
-              this.junho_consulta_valor = +this.junho_consulta_valor+ +element.valor;
-              break ; 
-            }
-            case "Julho": { 
-              this.julh_consulta_nr = +this.julh_consulta_nr + +1;
-              this.julh_consulta_valor = +this.julh_consulta_valor+ +element.valor;
-              break; 
-            }
-            case "Agosto": { 
-              this.agos_consulta_nr = +this.agos_consulta_nr + +1;
-              this.agos_consulta_valor = +this.agos_consulta_valor+ +element.valor;
-              break; 
-            }  
-            case "Setembro": { 
-              this.set_consulta_nr = +this.set_consulta_nr + +1;
-              this.set_consulta_valor = +this.set_consulta_valor+ +element.valor;
-              break; 
-            }
-            case "Outubro": { 
-              this.out_consulta_nr = +this.out_consulta_nr + +1;
-              this.out_consulta_valor = +this.out_consulta_valor+ +element.valor;
-              break; 
-            }
-            case "Novembro": { 
-              this.nov_consulta_nr = +this.nov_consulta_nr + +1;
-              this.nov_consulta_valor = +this.nov_consulta_valor+ +element.valor;
-              break; 
-            }
-            case "Dezembro": { 
-              this.dez_consulta_nr = +this.dez_consulta_nr + +1;
-              this.dez_consulta_valor = +this.dez_consulta_valor+ +element.valor;
-              break; 
-            }
-            default: { 
-               //statements; 
-               break; 
-            } 
-         }//Fim switch case 
-            
-        }//Fim if consulta medica
+  
+      this.pacienteService.getPacientes().snapshotChanges().subscribe(data => {
+        this.pacientes = data.map(e => {
+          return {
+            id: e.payload.key,
+            ...e.payload.val(),
+          } as Paciente;
+        })      
+      })
+  
+      this.configService.getDiagnosticos().snapshotChanges().subscribe(data => {
+        this.diagnosticos = data.map(e => {
+          return {
+            id: e.payload.key,
+            ...e.payload.val(),
+          } as DiagnosticoAuxiliar;
+        })
+      })
+  
+      /*this.pacienteService.getConsultas().snapshotChanges().subscribe(data => {
+        this.consultas = data.map(e => {
+          return {
+            id: e.payload.key,
+            ...e.payload.val(),
+          } as Consulta;
+        })
+        this.consultas_encerradas_medicas = this.consultas.filter( c => c.status === "Encerrada" && c.tipo == "Consulta Medica").length;
         
-      });//Fim do loop
+        this.consultas_encerradas_diagnosticos = this.consultas.filter( c => c.status === "Encerrada" && c.tipo == "DIAGNOSTICO AUX").length;
+        
+        this.consultas_encerradas_condutas = this.consultas.filter( c => c.status === "Encerrada" && c.tipo == "CONDUTA CLINICA").length;
+        
+        this.consultas.filter( c => c.tipo == "Consulta Medica").forEach(element => {
+          if(element.diagnosticos_aux){
+            if(element.diagnosticos_aux.length>0){
+              this.consultas_encerradas_diagnosticos = +this.consultas_encerradas_diagnosticos + +1;
+            }
+          }
+        });
+  
+      })*/
+      this.pacienteService.getConsultasRelatorio(this.ano).snapshotChanges().subscribe(data => {
+        this.consultas = data.map(e => {
+          return {
+            id: e.payload.key,
+            ...e.payload.val(),
+          } as Consulta;
+        })
+        this.consultas_encerradas_medicas = this.consultas.filter( c => c.tipo == "Consulta Medica").length;
+        this.consultas_encerradas_diagnosticos = this.consultas.filter( c => c.tipo == "DIAGNOSTICO AUX").length;
+        this.consultas_encerradas_condutas = this.consultas.filter( c => c.tipo == "CONDUTA CLINICA").length;
+  
+      })
+  
+      this.pacienteService.getFaturacoes(this.ano).snapshotChanges().subscribe(data => {
+        this.faturacoes = data.map(e => {
+          return {
+            id: e.payload.key,
+            //data: e.payload.val()['data'] as Date,
+            ...e.payload.val(),
+          } as Faturacao;
+        }) 
+        
+        this.faturacoes.forEach(element => {
+          //console.log("Mes: "+ element.mes+" Ano: "+element.ano+" Categoria: "+element.categoria) 
+          this.total_valor = +this.total_valor + +element.valor;
+  
+          if(element.categoria == "DIAGNOSTICO_AUX"){
+  
+            switch(element.mes) { 
+              case "Janeiro": { 
+                this.jan_diagnostico = +this.jan_diagnostico + +1;
+                this.jan_consulta_valor = +this.jan_consulta_valor+ +element.valor;
+                 break;
+              } 
+              case "Fevereiro": { 
+                this.fev_diagnostico = +this.fev_diagnostico + +1;
+                this.fev_consulta_valor = +this.fev_consulta_valor+ +element.valor;
+                break;
+              } 
+              case "Marco": { 
+                this.marc_diagnostico = +this.marc_diagnostico + +1;
+                this.marc_consulta_valor = +this.marc_consulta_valor+ +element.valor;
+                break ; 
+              }
+              case "Abril": { 
+                this.abril_diagnostico = +this.abril_diagnostico + +1;
+                this.abril_consulta_valor = +this.abril_consulta_valor+ +element.valor;
+                break ; 
+              }
+              case "Maio": { 
+                this.maio_diagnostico = +this.maio_diagnostico + +1;
+                this.maio_consulta_valor = +this.maio_consulta_valor+ +element.valor;
+                break ; 
+              }
+              case "Junho": { 
+                this.junho_diagnostico = +this.junho_diagnostico + +1;
+                this.junho_consulta_valor = +this.junho_consulta_valor+ +element.valor;
+                break ; 
+              }
+              case "Julho": { 
+                this.julh_diagnostico = +this.julh_diagnostico + +1;
+                this.julh_consulta_valor = +this.julh_consulta_valor+ +element.valor;
+                break; 
+              }
+              case "Agosto": { 
+                this.agos_diagnostico = +this.agos_diagnostico + +1;
+                this.agos_consulta_valor = +this.agos_consulta_valor+ +element.valor;
+                break; 
+              }  
+              case "Setembro": { 
+                this.set_diagnostico = +this.set_diagnostico + +1;
+                this.set_consulta_valor = +this.set_consulta_valor+ +element.valor;
+                break; 
+              }
+              case "Outubro": { 
+                this.out_diagnostico = +this.out_diagnostico + +1;
+                this.out_consulta_valor = +this.out_consulta_valor+ +element.valor;
+                break; 
+              }
+              case "Novembro": { 
+                this.nov_diagnostico = +this.nov_diagnostico + +1;
+                this.nov_consulta_valor = +this.nov_consulta_valor+ +element.valor;
+                break; 
+              }
+              case "Dezembro": { 
+                this.dez_diagnostico = +this.dez_diagnostico + +1;
+                this.dez_consulta_valor = +this.dez_consulta_valor+ +element.valor;
+                break; 
+              }
+              default: { 
+                 //statements; 
+                 break; 
+              } 
+           }//Fim switch case 
+  
+          }else if(element.categoria == "CONSULTA_MEDICA"){
+  
+            switch(element.mes) { 
+              case "Janeiro": { 
+                this.jan_consulta_nr = +this.jan_consulta_nr + +1;
+                this.jan_consulta_valor = +this.jan_consulta_valor+ +element.valor;
+                 break;
+              } 
+              case "Fevereiro": { 
+                this.fev_consulta_nr = +this.fev_consulta_nr + +1;
+                this.fev_consulta_valor = +this.fev_consulta_valor+ +element.valor;
+                break;
+              } 
+              case "Marco": { 
+                this.marc_consulta_nr = +this.marc_consulta_nr + +1;
+                this.marc_consulta_valor = +this.marc_consulta_valor+ +element.valor;
+                break ; 
+              }
+              case "Abril": { 
+                this.abril_consulta_nr = +this.abril_consulta_nr + +1;
+                this.abril_consulta_valor = +this.abril_consulta_valor+ +element.valor;
+                break ; 
+              }
+              case "Maio": { 
+                this.maio_consulta_nr = +this.maio_consulta_nr + +1;
+                this.maio_consulta_valor = +this.maio_consulta_valor+ +element.valor;
+                break ; 
+              }
+              case "Junho": { 
+                this.junho_consulta_nr = +this.junho_consulta_nr + +1;
+                this.junho_consulta_valor = +this.junho_consulta_valor+ +element.valor;
+                break ; 
+              }
+              case "Julho": { 
+                this.julh_consulta_nr = +this.julh_consulta_nr + +1;
+                this.julh_consulta_valor = +this.julh_consulta_valor+ +element.valor;
+                break; 
+              }
+              case "Agosto": { 
+                this.agos_consulta_nr = +this.agos_consulta_nr + +1;
+                this.agos_consulta_valor = +this.agos_consulta_valor+ +element.valor;
+                break; 
+              }  
+              case "Setembro": { 
+                this.set_consulta_nr = +this.set_consulta_nr + +1;
+                this.set_consulta_valor = +this.set_consulta_valor+ +element.valor;
+                break; 
+              }
+              case "Outubro": { 
+                this.out_consulta_nr = +this.out_consulta_nr + +1;
+                this.out_consulta_valor = +this.out_consulta_valor+ +element.valor;
+                break; 
+              }
+              case "Novembro": { 
+                this.nov_consulta_nr = +this.nov_consulta_nr + +1;
+                this.nov_consulta_valor = +this.nov_consulta_valor+ +element.valor;
+                break; 
+              }
+              case "Dezembro": { 
+                this.dez_consulta_nr = +this.dez_consulta_nr + +1;
+                this.dez_consulta_valor = +this.dez_consulta_valor+ +element.valor;
+                break; 
+              }
+              default: { 
+                 //statements; 
+                 break; 
+              } 
+           }//Fim switch case 
+              
+          }//Fim if consulta medica
+          
+        });//Fim do loop
+  
+        //Info do grafico de linhas com valores faturados
+        this.ComboChartData= [{
+          data: [
+            this.jan_consulta_valor, 
+            this.fev_consulta_valor, 
+            this.marc_consulta_valor, 
+            this.abril_consulta_valor, 
+            this.maio_consulta_valor, 
+            this.junho_consulta_valor, 
+            this.julh_consulta_valor, 
+            this.agos_consulta_valor, 
+            this.set_consulta_valor, 
+            this.out_consulta_valor, 
+            this.nov_consulta_valor, 
+            this.dez_consulta_valor
+          ],
+          label: 'Receita',
+          borderWidth: 1,
+          type: 'line',
+          fill: false
+        }, {
+          data: [
+            this.jan_consulta_nr, 
+            this.fev_consulta_nr, 
+            this.marc_consulta_nr, 
+            this.abril_consulta_nr, 
+            this.maio_consulta_nr, 
+            this.junho_consulta_nr, 
+            this.julh_consulta_nr, 
+            this.agos_consulta_nr, 
+            this.set_consulta_nr, 
+            this.out_consulta_nr, 
+            this.nov_consulta_nr, 
+            this.dez_consulta_nr
+          ],
+          label: 'Consultas',
+          borderWidth: 1,
+          type: 'bar',
+        }];
+  
+  
+        //Info do grafico de barras
+        this.barChartData = [{
+          data: [
+            this.jan_consulta_nr, 
+            this.fev_consulta_nr, 
+            this.marc_consulta_nr, 
+            this.abril_consulta_nr, 
+            this.maio_consulta_nr, 
+            this.junho_consulta_nr, 
+            this.julh_consulta_nr, 
+            this.agos_consulta_nr, 
+            this.set_consulta_nr, 
+            this.out_consulta_nr, 
+            this.nov_consulta_nr, 
+            this.dez_consulta_nr
+          ],
+          label: 'Consulta medica',
+          borderWidth: 0
+        }, {
+          data: [
+            this.jan_diagnostico, 
+            this.fev_diagnostico, 
+            this.marc_diagnostico, 
+            this.abril_diagnostico, 
+            this.maio_diagnostico, 
+            this.junho_diagnostico, 
+            this.julh_diagnostico, 
+            this.agos_diagnostico, 
+            this.set_diagnostico, 
+            this.out_diagnostico, 
+            this.nov_diagnostico, 
+            this.dez_diagnostico
+          ],
+          label: 'Diagnostico Auxiliar',
+          borderWidth: 0
+        }];
+        
+        
+      })
 
-      //Info do grafico de linhas com valores faturados
-      this.ComboChartData= [{
-        data: [
-          this.jan_consulta_valor, 
-          this.fev_consulta_valor, 
-          this.marc_consulta_valor, 
-          this.abril_consulta_valor, 
-          this.maio_consulta_valor, 
-          this.junho_consulta_valor, 
-          this.julh_consulta_valor, 
-          this.agos_consulta_valor, 
-          this.set_consulta_valor, 
-          this.out_consulta_valor, 
-          this.nov_consulta_valor, 
-          this.dez_consulta_valor
-        ],
-        label: 'Receita',
-        borderWidth: 1,
-        type: 'line',
-        fill: false
-      }, {
-        data: [
-          this.jan_consulta_nr, 
-          this.fev_consulta_nr, 
-          this.marc_consulta_nr, 
-          this.abril_consulta_nr, 
-          this.maio_consulta_nr, 
-          this.junho_consulta_nr, 
-          this.julh_consulta_nr, 
-          this.agos_consulta_nr, 
-          this.set_consulta_nr, 
-          this.out_consulta_nr, 
-          this.nov_consulta_nr, 
-          this.dez_consulta_nr
-        ],
-        label: 'Consultas',
-        borderWidth: 1,
-        type: 'bar',
-      }];
+    });
 
-
-      //Info do grafico de barras
-      this.barChartData = [{
-        data: [
-          this.jan_consulta_nr, 
-          this.fev_consulta_nr, 
-          this.marc_consulta_nr, 
-          this.abril_consulta_nr, 
-          this.maio_consulta_nr, 
-          this.junho_consulta_nr, 
-          this.julh_consulta_nr, 
-          this.agos_consulta_nr, 
-          this.set_consulta_nr, 
-          this.out_consulta_nr, 
-          this.nov_consulta_nr, 
-          this.dez_consulta_nr
-        ],
-        label: 'Consulta medica',
-        borderWidth: 0
-      }, {
-        data: [
-          this.jan_diagnostico, 
-          this.fev_diagnostico, 
-          this.marc_diagnostico, 
-          this.abril_diagnostico, 
-          this.maio_diagnostico, 
-          this.junho_diagnostico, 
-          this.julh_diagnostico, 
-          this.agos_diagnostico, 
-          this.set_diagnostico, 
-          this.out_diagnostico, 
-          this.nov_diagnostico, 
-          this.dez_diagnostico
-        ],
-        label: 'Diagnostico Auxiliar',
-        borderWidth: 0
-      }];
-      
-      
-    })
 
     
 
+  } //Fim ngOnInt
 
 
-
-
-
-
-  }
   Lista_pacientes(paciente){
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
       width: '1000px', 

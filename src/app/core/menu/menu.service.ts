@@ -145,6 +145,8 @@ export class MenuService {
 
 
   getAll(): Menu[] {
+
+    //setTimeout(() );
     switch(this.authService.get_perfil) { 
       case "Clinica_Admnistrativo": { 
          //statements; 
@@ -172,7 +174,7 @@ export class MenuService {
   }
 
   add(menu: Menu) {
-    console.log("Menu "+this.authService.get_perfil)
+    //console.log("Menu "+this.authService.get_perfil)
     switch(this.authService.get_perfil) { 
       case "Admnistrativo": { 
          //statements; 

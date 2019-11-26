@@ -54,22 +54,22 @@
     <mat-table [dataSource]="dataSourse" matSort>
         <ng-container matColumnDef="medicamento">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Medicamento </mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.medicamento.nome_generico}}</mat-cell>
+            <mat-cell *matCellDef="let row">{{row.medicamento?.nome_generico}}</mat-cell>
         </ng-container> 
 
         <ng-container matColumnDef="qtd_solicitada">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Qtd Solicitada </mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.medicamento.qtd_solicitada}}</mat-cell>
+            <mat-cell *matCellDef="let row">{{row.medicamento?.qtd_solicitada}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="preco_unit">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Prec Unit. (MZN)</mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.medicamento.preco_venda | currency:' ':'symbol':'1.2-2'}}</mat-cell>
+            <mat-cell *matCellDef="let row">{{row.medicamento?.preco_venda | currency:' ':'symbol':'1.2-2'}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="preco_venda_total">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Prec Tot. (MZN)</mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.medicamento.preco_venda_total | currency:' ':'symbol':'1.2-2'}}</mat-cell>
+            <mat-cell *matCellDef="let row">{{row.medicamento?.preco_venda_total | currency:' ':'symbol':'1.2-2'}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="remover">
@@ -87,6 +87,7 @@
 <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">Cancelar</button>
     <button mat-button [disabled]="desabilitar2" (click)="cotar(data.paciente)">{{texto2}}</button>
-    <button mat-button cdkFocusInitial [disabled]="desabilitar" (click)="faturar(data.paciente)">{{texto}}</button>
+    <!--<button mat-button cdkFocusInitial [disabled]="desabilitar" (click)="faturar(data.paciente)">{{texto}}</button>-->
+    <button mat-button cdkFocusInitial [disabled]="desabilitar" (click)="faturarTeste(data.paciente)">{{texto}}</button>
     <!--<button mat-button cdkFocusInitial [disabled]="desabilitar" (click)="faturar(data.paciente)">Faturar {{preco_total| currency:' ':'symbol':'1.2-2'}} MZN</button>-->
 </div>

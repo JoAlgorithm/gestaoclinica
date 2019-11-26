@@ -10,10 +10,11 @@ import { AuthService } from './../../services/auth.service';
 })
 export class HeaderComponent {
 
+  nomeClina:any = "";
   @Output() toggleSidenav = new EventEmitter<void>();
   @Output() toggleNotificationSidenav = new EventEmitter<void>();
 
-  nomeClina:any = "";
+  
   constructor(private authService: AuthService) {
     /*while(this.nomeClina){
       this.nomeClina = this.authService.get_clinica_nome
@@ -23,16 +24,16 @@ export class HeaderComponent {
     /*const user = JSON.parse(localStorage.getItem("myclinica_user"));
     console.log(user);
     this.nomeClina = user.clinica;*/
-    this.nomeClina = this.authService.get_clinica_nome;
+    setTimeout(() => this.nomeClina  =  this.authService.get_clinica_nome);
   }
 
   ngOnInit() {
-    // setTimeout(() => this.nomeClina  =  this.authService.get_clinica_nome);
+    
     
   }
 
   ngAfterViewInit(){
-    
+    //this.nomeClina = this.authService.get_clinica_nome;
   }
 
   fullScreenToggle(): void {

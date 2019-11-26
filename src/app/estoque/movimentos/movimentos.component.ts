@@ -120,21 +120,34 @@ export class RegistoDialog {
       this.mvt.movimentador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
       this.mvt.tipo_movimento = this.data.tipoMovimento;
 
+      let update_qtd = false;
       //Antes de adicionar calcular a quantidade disponivel se essa adicao for efetuada
       if(this.mvt.deposito.medicamentos){
+        //console.log("entrou 1");
         Object.keys(this.mvt.deposito.medicamentos).forEach(key=>{
           if(this.mvt.medicamento.id == key){
             if(this.mvt.deposito.medicamentos[key].qtd_disponivel){
               this.mvt.medicamento.qtd_disponivel = +this.mvt.deposito.medicamentos[key].qtd_disponivel + +this.mvt.quantidade;
+              update_qtd = true;
             }else{
+              update_qtd = true;
               this.mvt.medicamento.qtd_disponivel = this.mvt.quantidade;
             }
+            //console.log("qtd disponivel INICIAL: "+this.mvt.medicamento.qtd_disponivel);
           }
         })
       }else{
+       // console.log("entrou 2");
+        update_qtd = true;
         this.mvt.medicamento.qtd_disponivel = this.mvt.quantidade;
+        //console.log("qtd disponivel INICIAL2: "+this.mvt.medicamento.qtd_disponivel);
       }
       
+      //console.log("qtd disponivel: "+this.mvt.medicamento.qtd_disponivel);
+      if(!update_qtd){
+        this.mvt.medicamento.qtd_disponivel = this.mvt.quantidade;
+        //console.log("atulizado no final");
+      }
       this.mvts.push(this.mvt);
   
       this.dataSourse=new MatTableDataSource(this.mvts);
@@ -160,8 +173,37 @@ export class RegistoDialog {
   saveMvt(){
     if (typeof this.mvts !== 'undefined' && this.mvts.length > 0) {
 
-      //Percorrer cada linha do array de movimentos
+      var updatedUserData = {};
       this.mvts.forEach(mvt => {
+        this.dialogRef.close();
+        let key = this.estoqueService.db.list('estoquesmovimentos/'+this.authService.get_clinica_id).push('').key;
+        
+        //Gravando na tabela de depositos "depositos"
+        updatedUserData['/depositos/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/medicamentos/'+mvt.medicamento.id] = mvt.medicamento;
+
+        //Gravando na tabela de movimentos "estoquesmovimentos"
+        //eliminar redundancia de dados para dar agilidade e perfomance a base de dados
+        mvt.deposito_nome = mvt.deposito.nome;
+        mvt.deposito = null;
+        mvt.medicamento_nome = mvt.medicamento.nome_comercial;
+        mvt.medicamento = null;
+        updatedUserData['/estoquesmovimentos/'+this.authService.get_clinica_id+"/"+key] = mvt;
+      });
+      
+      //CODIGO NOVO PARA GRAVAR SIMULTANEAMENTE TODOS OS DADOS E NAO HAVER INCONSISTENCIA
+      let d = Object.assign({}, updatedUserData);
+      this.estoqueService.updateEstoque(d) 
+      .then(r =>{
+        this.openSnackBar("Movimento cadastrado com sucesso");
+      }, err =>{
+        this.openSnackBar("Ocorreu um erro ao cadastrar. Tente novamente ou contacte a equipe de suporte.");
+      })
+
+      //Percorrer cada linha do array de movimentos
+      //CODIGO ANTIGO QUE FUNCIONA BEM
+      /*this.mvts.forEach(mvt => {
+        console.log("Qtd disponivel "+mvt.medicamento.qtd_disponivel);
+        
         let d = Object.assign({}, mvt); 
 
         //2. Salvar esse movimento do item no deposito para vermos posicao de estoque por deposito
@@ -185,7 +227,7 @@ export class RegistoDialog {
       });
       this.dialogRef.close();
       this.openSnackBar("Movimento cadastrado com sucesso");
-
+*/
     }else{
       this.openSnackBar("Adicione pelo menos 1 item na tabela");
     }
@@ -218,7 +260,7 @@ export class RegistoDialog {
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{
-      duration: 2000
+      duration: 3000
     })
   }
 
