@@ -16,7 +16,9 @@ export class MovimentoEstoque {
 
     medicamento?: Medicamento;
     medicamento_nome?: string; //usado para normalizar a base de dados
+    medicamento_id?: string; //usado para normalizar a base de dados
     deposito_nome?: string; //usado para normalizar a base de dados
+    deposito_id?: string; //usado para normalizar a base de dados
 
     quantidade?: number;
 

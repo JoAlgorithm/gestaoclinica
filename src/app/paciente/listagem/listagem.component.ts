@@ -487,6 +487,7 @@ export class MedicamentosDialog {
   //medicamentos_adicionados: Medicamento[] = [];
 
   movimentos: MovimentoEstoque[] = [];
+  movimentos_aux: MovimentoEstoque[] = [];
   movimento: MovimentoEstoque = new MovimentoEstoque();
 
   medicamento: Medicamento;
@@ -596,6 +597,7 @@ export class MedicamentosDialog {
           this.medicamento.qtd_disponivel = +this.medicamento.qtd_disponivel - +this.medicamento.qtd_solicitada;
 
           this.movimentos.push(this.movimento);
+          this.movimentos_aux = this.movimentos;
           this.dataSourse=new MatTableDataSource(this.movimentos);
     
           this.medicamento = new Medicamento();
@@ -617,6 +619,7 @@ export class MedicamentosDialog {
     this.preco_total = +this.preco_total - (mv.medicamento.qtd_solicitada*mv.medicamento.preco_venda);
     this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
     this.movimentos.splice(this.movimentos.indexOf(mv), 1);
+    this.movimentos_aux = this.movimentos;
     this.dataSourse=new MatTableDataSource(this.movimentos);
   }
 
@@ -635,6 +638,8 @@ export class MedicamentosDialog {
 
   faturarTeste(paciente: Paciente){
     if(this.movimentos.length>0){ //Verificar se tem informacao no array
+      var updatedUserData = {};
+
       this.desabilitar = true;
       this.texto = "AGUARDE UM INSTANTE...";
 
@@ -646,20 +651,97 @@ export class MedicamentosDialog {
       this.consulta.data = dia +"/"+mes+"/"+ano;
       this.consulta.ano = ano;
       this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
-      this.consulta.paciente = paciente;
-      this.consulta.movimentosestoque = this.movimentos;
-      this.consulta.status = "Encerrada";
-      this.consulta.tipo = "MEDICAMENTO";      
+      //this.consulta.paciente = paciente;
       this.consulta.paciente_nome = paciente.nome;
       this.consulta.paciente_apelido = paciente.apelido;
       this.consulta.paciente_nid = paciente.nid;
+      this.consulta.movimentosestoque = this.movimentos;
+      this.consulta.movimentosestoque.forEach(mvt => {
+        //console.log("mvt.medicamento.qtd_solicitada: "+mvt.medicamento.qtd_solicitada);
+        mvt.medicamento.qtd_solicitada = null;
 
-      this.movimentos.forEach(mvt => {
-        console.log("MVT ------------------")
-        console.log("Qtd solicitada "+mvt.medicamento.qtd_solicitada);
-        console.log("Nome comercial: "+mvt.medicamento.nome_comercial);
-        console.log("");
+        mvt.deposito_nome = mvt.deposito.nome;
+        mvt.deposito_id = mvt.deposito.id;
+        //mvt.deposito = null;
+
+        mvt.medicamento_nome = mvt.medicamento.nome_comercial;
+        mvt.medicamento_id = mvt.medicamento.id;
+        //mvt.medicamento = null;  
+        
+        mvt.data_movimento = dia +"/"+mes+"/"+ano;
+        mvt.movimentador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+        mvt.tipo_movimento = "Saida por venda";
+
+        //Gravando na tabela de depositos "depositos"
+        updatedUserData['/depositos/'+this.authService.get_clinica_id + '/'+mvt.deposito_id+'/medicamentos/'+mvt.medicamento_id] = mvt.medicamento;
+
+        //Gravando na tabela de movimentos "estoquesmovimentos"
+        //eliminar redundancia de dados para dar agilidade e perfomance a base de dados
+        //mvt.deposito_nome = mvt.deposito.nome;
+        mvt.deposito = null;
+        //mvt.medicamento_nome = mvt.medicamento.nome_comercial;
+        let md = mvt.medicamento;
+        mvt.medicamento = null;
+        key = this.estoqueService.db.list('/estoquesmovimentos/'+this.authService.get_clinica_id).push('').key;
+        updatedUserData['/estoquesmovimentos/'+this.authService.get_clinica_id+"/"+key] = mvt;
+        mvt.medicamento = md;
+        console.log("PEGOU MEDICAMENTO: "+mvt.medicamento.nome_comercial)
       });
+      this.consulta.status = "Encerrada";
+      this.consulta.tipo = "MEDICAMENTO";      
+
+
+      //Criar uma faturacao da consulta do tipo MEDICAMENTO --------------------
+      let faturacao = new Faturacao();
+      faturacao.categoria = "MEDICAMENTO";
+      faturacao.valor = this.preco_total;
+      faturacao.data = new Date();
+      faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
+      faturacao.ano = new Date().getFullYear();
+      faturacao.id = this.nr_fatura+"";
+
+      let key = this.estoqueService.db.list('consultas/'+this.authService.get_clinica_id+'/lista_relatorio/'+ this.consulta.ano).push('').key;
+      console.log("Key faturacao e consultas:" +key);
+        
+      //Gravando na tabela de faturacao "faturacao"
+      updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
+
+      //Gravando na tabela de consultas
+      //updatedUserData['consultas/'+this.authService.get_clinica_id+'/lista_completa/'+key] = this.consulta;
+      updatedUserData['consultas/'+this.authService.get_clinica_id+'/lista_relatorio/'+ this.consulta.ano + '/'+key] = this.consulta;
+
+      
+     /* this.movimentos_aux.forEach(mvt => {
+        //mvt.medicamento.qtd_solicitada = null;
+        
+        mvt.data_movimento = dia +"/"+mes+"/"+ano;
+        mvt.movimentador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+        mvt.tipo_movimento = "Saida por venda";
+
+        //Gravando na tabela de depositos "depositos"
+        updatedUserData['/depositos/'+this.authService.get_clinica_id + '/'+mvt.deposito_id+'/medicamentos/'+mvt.medicamento_id] = mvt.medicamento;
+
+        //Gravando na tabela de movimentos "estoquesmovimentos"
+        //eliminar redundancia de dados para dar agilidade e perfomance a base de dados
+        //mvt.deposito_nome = mvt.deposito.nome;
+        //mvt.deposito = null;
+        //mvt.medicamento_nome = mvt.medicamento.nome_comercial;
+        //mvt.medicamento = null;
+        key = this.estoqueService.db.list('/estoquesmovimentos/'+this.authService.get_clinica_id).push('').key;
+        updatedUserData['/estoquesmovimentos/'+this.authService.get_clinica_id+"/"+key] = mvt;
+      });*/
+
+      //GRAVAR SIMULTANEAMENTE TODOS OS DADOS E NAO HAVER INCONSISTENCIA
+      let d = Object.assign({}, updatedUserData);
+      this.estoqueService.updateEstoque(d) 
+      .then(r =>{
+        this.downloadPDF(this.movimentos, paciente, "Faturacao");  
+        this.dialogRef.close();
+        this.openSnackBar("Medicamento faturado com sucesso");
+      }, err =>{
+        this.openSnackBar("Ocorreu um erro ao cadastrar. Tente novamente ou contacte a equipe de suporte.");
+      })
+
     }else{
       this.openSnackBar("Adicione pelo menos um medicamento.");
     }
