@@ -79,6 +79,7 @@ export class CadastroComponent implements OnInit {
     this.paciente.referencia_apelido= "";
     this.paciente.referencia_telefone= "";
     this.paciente.telefone = "";
+    this.paciente.nuit = "";
     /*this.paciente.nome = "Luis"
     this.paciente.apelido = "Jo"
     this.paciente.sexo = "Masculino"

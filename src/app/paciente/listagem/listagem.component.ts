@@ -49,7 +49,7 @@ export class ListagemComponent implements OnInit {
   isLoading: boolean = false;
     
   toggleLoading() {
-      this.isLoading = !this.isLoading;
+    this.isLoading = !this.isLoading;
   }
 
 
@@ -294,7 +294,7 @@ export class ListagemComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       
-      console.log('The dialog was closed');
+      //console.log('The dialog was closed');
       
       // this.animal = result;
       
@@ -317,7 +317,7 @@ export class ListagemComponent implements OnInit {
       data: { paciente: paciente, tipo: tipo, categorias_consulta: this.categorias_consulta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura  }
     });
     dialogRef.afterClosed().subscribe(result => {
-    console.log("result "+result);
+    //console.log("result "+result);
     });
   }
   
@@ -366,7 +366,14 @@ export class ListagemComponent implements OnInit {
       }
       });
       dialogRef.afterClosed().subscribe(result => {
-      console.log("result "+result);
+        this.configServices.getDiagnosticos().snapshotChanges().subscribe(data => {
+          this.diagnosticos = data.map(e => {
+            return {
+              id: e.payload.key,
+              ...e.payload.val(),
+            } as DiagnosticoAuxiliar;
+          })
+        })
       });
     }else{
       this.openSnackBar("Processando nr de cotacao/fatura. Tente novamente.");
@@ -380,7 +387,14 @@ export class ListagemComponent implements OnInit {
       data: { paciente: row, condutas: this.condutas, tiposconduta: this.tiposconduta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura }
       });
       dialogRef.afterClosed().subscribe(result => {
-      console.log("result "+result);
+        this.configServices.getCondutasClinica().snapshotChanges().subscribe(data => {
+          this.condutas = data.map(e => {
+            return {
+              id: e.payload.key,
+              ...e.payload.val(),
+            } as CondutaClinica;
+          })
+        })
       });
     }else{
       this.openSnackBar("Processando nr de cotacao/fatura. Tente novamente.");
@@ -636,7 +650,7 @@ export class MedicamentosDialog {
     }
   }
 
-  faturarTeste(paciente: Paciente){
+  faturar(paciente: Paciente){
     if(this.movimentos.length>0){ //Verificar se tem informacao no array
       var updatedUserData = {};
 
@@ -685,7 +699,7 @@ export class MedicamentosDialog {
         key = this.estoqueService.db.list('/estoquesmovimentos/'+this.authService.get_clinica_id).push('').key;
         updatedUserData['/estoquesmovimentos/'+this.authService.get_clinica_id+"/"+key] = mvt;
         mvt.medicamento = md;
-        console.log("PEGOU MEDICAMENTO: "+mvt.medicamento.nome_comercial)
+        //console.log("PEGOU MEDICAMENTO: "+mvt.medicamento.nome_comercial)
       });
       this.consulta.status = "Encerrada";
       this.consulta.tipo = "MEDICAMENTO";      
@@ -701,7 +715,7 @@ export class MedicamentosDialog {
       faturacao.id = this.nr_fatura+"";
 
       let key = this.estoqueService.db.list('consultas/'+this.authService.get_clinica_id+'/lista_relatorio/'+ this.consulta.ano).push('').key;
-      console.log("Key faturacao e consultas:" +key);
+      //console.log("Key faturacao e consultas:" +key);
         
       //Gravando na tabela de faturacao "faturacao"
       updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
@@ -749,7 +763,7 @@ export class MedicamentosDialog {
 
 
   //AO FATURAR PRECISA ATUALIZAR A QTD DISPONIVEL DO ITEM NO DEPOSITO
-  faturar(paciente: Paciente){
+  /*faturar(paciente: Paciente){
     if(this.movimentos.length>0){
       this.desabilitar = true;
       this.texto = "AGUARDE UM INSTANTE...";
@@ -854,7 +868,7 @@ export class MedicamentosDialog {
     }else{
       this.openSnackBar("Adicione pelo menos um medicamento.");
     }
-  }
+  }*/
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{
@@ -1121,6 +1135,7 @@ export class MedicamentosDialog {
 
     this.tiposcondutas_param = this.data.tiposconduta;
     this.condutas_param = this.data.condutas;
+    //console.log("iniciou: "+this.data.condutas[0].tipo.nome)
     //this.condutas_alternativas = this.condutas_param;
  
     this.clinica = this.data.clinica; //PDF
@@ -1159,11 +1174,6 @@ export class MedicamentosDialog {
   }
 
 
-
-
-
-
-  
   addConduta(conduta:CondutaClinica){
     if(conduta.nome){
       this.condutas.push(conduta);
@@ -1192,16 +1202,16 @@ export class MedicamentosDialog {
     this.data.condutas = this.condutas_param.filter(item => item.tipo.nome == tipo_conduta_clinica.nome);
   }
   
-
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-
   faturar(paciente: Paciente){
     if(this.condutas.length>0){
+      var updatedUserData = {};
       this.desabilitar = true;
       this.texto = "AGUARDE UM INSTANTE..."
+
       //Abrir uma consulta CONDUTA CLINICA --------------------
       let dia = new Date().getDate();
       let mes = +(new Date().getMonth()) + +1;
@@ -1211,8 +1221,12 @@ export class MedicamentosDialog {
       this.consulta.data = dia +"/"+mes+"/"+ano;
       this.consulta.ano = ano;
       this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
-      this.consulta.paciente = paciente;
+      //this.consulta.paciente = paciente;
       this.consulta.condutas_clinicas = this.condutas;
+      //let cd = this.condutas;
+      this.consulta.condutas_clinicas.forEach(element => {
+        element.tipo = null;
+      });
       this.consulta.status = "Encerrada";
       this.consulta.tipo = "CONDUTA CLINICA";
 
@@ -1220,24 +1234,45 @@ export class MedicamentosDialog {
       this.consulta.paciente_apelido = paciente.apelido;
       this.consulta.paciente_nid = paciente.nid;
 
+      let key = this.pacienteService.db.list('consultas/'+this.authService.get_clinica_id +'/lista_relatorio/'+ ano).push('').key;
+      this.consulta.id = key;
+
+      //Gravando a consulta
+      //updatedUserData['consultas/'+this.authService.get_clinica_id + '/lista_completa/'+key] = this.consulta;
+
+      updatedUserData['consultas/'+this.authService.get_clinica_id +'/lista_relatorio/'+ ano + '/'+key] = this.consulta;
+      //this.condutas = cd;
+
       //Criar uma faturacao da consulta do tipo CONDUTA CLINICA --------------------
       let faturacao = new Faturacao();
       faturacao.categoria = "CONDUTA CLINICA";
       faturacao.valor = this.preco_total;
       faturacao.data = new Date();
-      //faturacao.consulta = this.consulta;
-      //faturacao.condutas_clinicas = this.consulta.condutas_clinicas;
       faturacao.id = this.nr_fatura+"";
-      //faturacao.subcategoria = this.condu
-      
-      faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
-      faturacao.ano = new Date().getFullYear();
+      faturacao.mes = mes+"";
+      faturacao.ano = ano;
+
+      //Gravando na tabela de faturacao "faturacao"
+      updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
+
+      //GRAVAR SIMULTANEAMENTE TODOS OS DADOS E NAO HAVER INCONSISTENCIA
+      let d = Object.assign({}, updatedUserData);
+      this.pacienteService.multiSave(d) 
+      .then(r =>{
+        this.downloadPDF(this.condutas, paciente, "Faturacao");        
+          this.dialogRef.close();
+          this.openSnackBar("Faturado com sucesso.");
+      }, err =>{
+        this.desabilitar = false;
+        this.texto = "Faturar";
+        this.openSnackBar("Ocorreu um erro ao cadastrar. Tente novamente ou contacte a equipe de suporte.");
+      })
 
       //Persistir informacao na base de dados ----------------------------
-      let data = Object.assign({}, faturacao);
-      let d = Object.assign({}, this.consulta); 
+      /*let data = Object.assign({}, faturacao);
+      let d = Object.assign({}, this.consulta); */
 
-      this.pacienteService.faturar(data)
+      /*this.pacienteService.faturar(data)
       .then( res => {
         this.pacienteService.marcarConsulta(d)
         .then(r => {
@@ -1251,7 +1286,7 @@ export class MedicamentosDialog {
       }, err=>{
         console.log("ERRO: " + err.message)
         this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
-      })
+      })*/
     }else{
       this.openSnackBar("Adicione pelo menos uma conduta");
     }
@@ -1547,8 +1582,69 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
     }
   }
 
-
   marcarConsulta(paciente, tipo){
+    if(this.categoria.nome){ //Garantir que categoria foi selecionada
+      var updatedUserData = {};
+      this.desabilitar = true;
+      this.texto = "AGUARDE UM INSTANTE...";
+
+      let dia = new Date().getDate();
+      let mes = +(new Date().getMonth()) + +1;
+      let ano = new Date().getFullYear();
+      this.consulta.data = dia +"/"+mes+"/"+ano;
+      this.consulta.ano = ano;
+      this.DiarioPdf(paciente);
+
+      this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
+      this.consulta.paciente = paciente;
+      this.consulta.status = "Aberta";
+      this.consulta.tipo = tipo;
+      this.consulta.preco_consulta_medica = this.categoria.preco;
+      this.consulta.categoria = this.categoria;
+
+      this.consulta.paciente_nome = this.consulta.paciente.nome;
+      this.consulta.paciente_apelido = this.consulta.paciente.apelido;
+      this.consulta.paciente_nid= this.consulta.paciente.nid;
+
+      this.consulta.timestamp = new Date().valueOf();
+
+      let key = this.pacienteService.db.list('consultas/'+this.authService.get_clinica_id + '/lista_completa/').push('').key;
+      this.consulta.id = key;
+
+      //Gravando a consulta
+      updatedUserData['consultas/'+this.authService.get_clinica_id + '/lista_completa/'+key] = this.consulta;
+
+      let faturacao = new Faturacao();
+      faturacao.categoria = "MEDICAMENTO";
+      faturacao.valor = this.categoria.preco;
+      faturacao.data = new Date();
+      faturacao.mes = mes+"";
+      faturacao.ano = ano;
+      faturacao.id = this.nr_fatura+"";
+
+      //Gravando na tabela de faturacao "faturacao"
+      updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
+
+      //GRAVAR SIMULTANEAMENTE TODOS OS DADOS E NAO HAVER INCONSISTENCIA
+      let d = Object.assign({}, updatedUserData);
+      this.pacienteService.multiSave(d) 
+      .then(r =>{
+        this.downloadPDF(this.categoria, paciente, "Faturacao");
+        this.dialogRef.close();
+        this.openSnackBar("Consulta agendada com sucesso.");
+      }, err =>{
+        this.desabilitar2 = false;
+        this.texto2 = "Marcar consulta";
+        this.openSnackBar("Ocorreu um erro ao cadastrar. Tente novamente ou contacte a equipe de suporte.");
+      })
+      
+    }else{
+      this.openSnackBar("Selecione uma categoria de consulta.");
+    }
+
+  }
+
+  /*marcarConsulta(paciente, tipo){
     if(this.categoria.nome){ //Garantir que categoria foi selecionada
       
 
@@ -1580,6 +1676,7 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
         this.dialogRef.close();
         this.openSnackBar("Consulta agendada com sucesso");
       }, err => {
+        
         console.log("ERRO: " + err.message)
         this.openSnackBar("Ocorreu um erro ao marcar a consulta. Contacte o Admin do sistema.");
       })
@@ -1587,7 +1684,7 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
     }else{
       this.openSnackBar("Selecione uma categoria de consulta");
     }
-  }
+  }*/
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{

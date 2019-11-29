@@ -13,7 +13,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 @Injectable()
 export class PacienteService {
 
-  constructor(private db: AngularFireDatabase,
+  constructor(public db: AngularFireDatabase,
     private firestore: AngularFirestore, private authService: AuthService) {
     /*let a = "";
     authService.user.map(user => {
@@ -152,6 +152,9 @@ export class PacienteService {
     return this.db.list('faturacao/'+this.authService.get_clinica_id + '/'+ ano);
   }
 
+  multiSave(updatedUserData){
+    return this.db.object('/').update(updatedUserData);
+  }
 
   //ENVIAR CONSULTAS DE UM COMPONENT PARA O OUTRO
   /*private subject = new Subject<Consulta>();

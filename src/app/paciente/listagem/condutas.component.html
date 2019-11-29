@@ -43,12 +43,12 @@
     
         <ng-container matColumnDef="nome">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.nome}}</mat-cell>
+            <mat-cell *matCellDef="let row">{{row?.nome}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="preco">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Preco (MZN) </mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.preco| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+            <mat-cell *matCellDef="let row">{{row?.preco| currency:' ':'symbol':'1.2-2'}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="remover">
