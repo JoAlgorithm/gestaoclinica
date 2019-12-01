@@ -60,7 +60,7 @@ import { from } from 'rxjs';
 import { PacienteService } from '../services/paciente.service';
 import { ConfiguracoesService } from '../services/configuracoes.service';
 import { EstoqueRoutes } from './estoque.routing';
-import { MovimentosComponent, RegistoDialog } from './movimentos/movimentos.component';
+import { MovimentosComponent, RegistoDialog, SaidaDialog } from './movimentos/movimentos.component';
 import { CadastrosComponent, ConfirmacaoDialog } from './cadastros/cadastros.component';
 import { EstoqueService } from '../services/estoque.service';
 import { AuthService } from '../services/auth.service';
@@ -134,11 +134,13 @@ import { AuthService } from '../services/auth.service';
     MovimentosComponent,
     CadastrosComponent,
     RegistoDialog,
-    ConfirmacaoDialog
+    ConfirmacaoDialog,
+    SaidaDialog
   ],
   entryComponents: [
     RegistoDialog,
-    ConfirmacaoDialog
+    ConfirmacaoDialog,
+    SaidaDialog
   ],
 })
 

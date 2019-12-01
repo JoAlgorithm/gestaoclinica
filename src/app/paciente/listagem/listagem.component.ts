@@ -1446,13 +1446,40 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
   condutas.forEach(element => {
     doc.text(item+"", 55, linha) //item
     doc.text("1", 257, linha) //quantidade
-    doc.text(element.nome , 95, linha) //descricao
+
+    let string1 = "";
+    let string2 = "";
+    let linhaAlternativo = 0;
+    if(element.nome.length > 26){
+      string1 = element.nome.substr(0,26);
+      let q = +element.nome.length - +26;
+      string2 = element.nome.substr(q).toString().trim();
+
+      linhaAlternativo = +linha+ +20;
+
+      doc.text(string1 , 95, linha) //descricao
+      doc.text(string2 , 95, linhaAlternativo) //descricao
+
+    }else{
+      doc.text(element.nome , 95, linha) //descricao
+    }
+    
+    
+
+
     doc.text(element.preco+"", 294, linha)
     doc.text(element.preco+"", 354, linha)
 
     preco_total = +preco_total + +element.preco;
+
+    if(linhaAlternativo > 0){
+      linha = +linha + +40;
+    }else{
+      linha = +linha + +20;
+    }
+
     item = +item + +1;
-    linha = +linha + +20;
+    //linha = +linha + +20;
   });   
    
   doc.setFont("Courier");

@@ -10,6 +10,8 @@ import {MatSnackBar} from '@angular/material';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Inject} from '@angular/core';
+import {Md5} from "md5-typescript";
+
 
 @Component({
   selector: 'app-cadastro',
@@ -105,6 +107,12 @@ export class CadastroComponent implements OnInit {
    }
    
   ngOnInit() {
+    let nome = "Luis jo";
+    nome = Md5.init(nome);
+    //console.log("nome encriptado: "+nome);
+    
+    //console.log("nome desincriptado: "+Md5.ConvertToWordArray(nome))
+
     this.firstFormGroup = this._formBuilder.group({
       paciente_nome: ['', Validators.required],
       paciente_apelido: ['', Validators.required],
@@ -164,6 +172,8 @@ export class CadastroComponent implements OnInit {
 
     //this.paciente.id = "123456"
 
+    //this.paciente.nome = Md5.init(this.paciente.nome);
+    //this.paciente.apelido = Md5.init(this.paciente.apelido);
     this.paciente.status_historia_clinica = false;
     let data = Object.assign({}, this.paciente);
 

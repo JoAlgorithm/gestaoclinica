@@ -1,10 +1,10 @@
 <h1 mat-dialog-title>{{data.tipoMovimento}}</h1>
 <div mat-dialog-content>
-    <p>Preencha os campos para registo de {{data.tipoMovimento}}</p>
+    <p>Preencha os campos para {{data.tipoMovimento}}</p>
 
     <form [formGroup]="mvtFormGroup">
         <mat-form-field style="width: 31%">
-            <mat-select placeholder="Deposito" formControlName="deposito" [(ngModel)]="mvt.deposito"  required>
+            <mat-select placeholder="Deposito" formControlName="deposito" [(ngModel)]="deposito" (selectionChange)="getMedicamentos(deposito)" required>
                 <mat-option *ngFor="let deposito of data.depositos" [value]="deposito">
                     {{deposito.nome}}
                 </mat-option>
@@ -12,16 +12,21 @@
         </mat-form-field>
 
         <mat-form-field style="width: 31%">
-            <mat-select placeholder="Medicamento" formControlName="medicamento" [(ngModel)]="mvt.medicamento"  required>
-                <mat-option *ngFor="let medicamento of data.medicamentos" [value]="medicamento">
+            <mat-select placeholder="Medicamento" formControlName="medicamento" [(ngModel)]="medicamento"  required>
+                <mat-option *ngFor="let medicamento of medicamentos" [value]="medicamento">
                     {{medicamento.nome_generico}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
         
         <mat-form-field style="width: 31%">
-            <input matInput placeholder="Quantidade" formControlName="qtd" [(ngModel)]="mvt.quantidade" required>
+            <input matInput placeholder="Quantidade" formControlName="qtd" [(ngModel)]="medicamento.qtd_solicitada" required>
         </mat-form-field>
+
+        <!--QTD DISPONIVEL-->
+        <!--<mat-form-field style="width: 31%">
+            <input matInput placeholder="Qtd Disponivel" formControlName="qtd_disponivel" [(ngModel)]="medicamento.qtd_disponivel" required>
+        </mat-form-field>-->
 
         <button mat-icon-button (click)="addMvt()" matTooltip="Adicionar">
             <mat-icon>add_circle</mat-icon>
@@ -48,7 +53,7 @@
 
         <ng-container matColumnDef="remover">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Remover </mat-header-cell>
-            <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="removeMvt(row)" matTooltip="Remover {{row.nome}}">  
+            <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="removeMedicamento(row)" matTooltip="Remover {{row.nome}}">  
                     <mat-icon>delete</mat-icon>
             </button></mat-cell>
         </ng-container>
@@ -57,6 +62,7 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;">
         </mat-row>
     </mat-table>
+
 
 
 </div>

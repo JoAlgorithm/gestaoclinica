@@ -2,9 +2,35 @@
     <mat-card-content>
         <h5>GESTAO DE MOVIMENTOS DE ESTOQUE DE MEDICAMENTOS E ARTIGOS MEDICOS</h5>
 
-        <button mat-icon-button (click)="novoMovimento('Entrada por compra')" matTooltip="REGISTAR NOVA ENTRADA DE MEDICAMENTO">
+        <!--<button mat-icon-button (click)="novoMovimento('Entrada por compra')" matTooltip="REGISTAR NOVA ENTRADA DE MEDICAMENTO">
             <mat-icon>add_circle</mat-icon> Nova Entrada
         </button>
+
+        <button mat-icon-button cdkFocusInitial (click)="novoMovimento('Transferencia')" matTooltip="REGISTAR NOVA TRANSFERENCIA DE MEDICAMENTO">
+            <mat-icon>add_circle</mat-icon> Transferencia
+        </button>
+        <button mat-button (click)="novoEntrada('Entrada por compra')" matTooltip="REGISTAR ENTRADA DE MEDICAMENTO">Nova Entrada</button>
+        <button mat-button (click)="novoSaida('Saida')" matTooltip="REGISTAR SAIDA DE MEDICAMENTO">Nova Saida</button>-->
+        
+        <button mat-button [matMenuTriggerFor]="menu_entrada" matTooltip="REGISTAR ENTRADA DE MEDICAMENTO">
+            <!--<mat-icon>class</mat-icon>--> Nova Entrada
+        </button>
+        <mat-menu #menu_entrada="matMenu">
+            <button mat-menu-item (click)="novoEntrada('Entrada por compra')">Entrada por compra</button>
+            <button mat-menu-item (click)="novoEntrada('Entrada por transferencia')">Entrada por transferencia</button>
+            <button mat-menu-item (click)="novoEntrada('Entrada por ajuste')">Entrada por ajuste</button>
+        </mat-menu>
+
+        <button mat-button [matMenuTriggerFor]="menu_saida" matTooltip="REGISTAR SAIDA DE MEDICAMENTO">
+            <!--<mat-icon>class</mat-icon>--> Nova Saida
+        </button>
+            <mat-menu #menu_saida="matMenu">
+                <button mat-menu-item (click)="novoSaida('Saida por estorno')">Saida por estorno</button>
+                <button mat-menu-item (click)="novoSaida('Saida por transferencia')">Saida por transferencia</button>
+                <button mat-menu-item (click)="novoSaida('Saida por ajuste')">Saida por ajuste</button>
+            </mat-menu>
+        <p></p>
+        
 
         <!--<button mat-icon-button matTooltip="REGISTAR NOVO SAIDA DE MEDICAMENTO">
             <mat-icon>add_circle</mat-icon> Nova Saida
@@ -48,12 +74,12 @@
                         </button></mat-cell>
                 </ng-container>
 
-                <ng-container matColumnDef="estornar">
+                <!--<ng-container matColumnDef="estornar">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Estornar </mat-header-cell>
                     <mat-cell *matCellDef="let row"> <button mat-icon-button>
                         <mat-icon>delete</mat-icon>
                         </button></mat-cell>
-                </ng-container>
+                </ng-container>-->
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;">

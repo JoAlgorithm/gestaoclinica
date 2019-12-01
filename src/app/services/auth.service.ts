@@ -32,21 +32,6 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
     public router: Router,  
     public ngZone: NgZone // NgZone service to remove outside scope warning
   ) { 
-
-    /*this.afAuth.authState
-      .switchMap(auth => {
-        if (auth) {
-          /// signed in
-          return this.afs.doc(`users/${auth.uid}`); //this.afs.object('users/' + auth.uid)
-        } else {
-          /// not signed in
-          return Observable.of(null)
-        }
-      })
-      .subscribe(user => {
-        this.user.next(user)
-      })*/
-
     
     // Saving user data in localstorage when 
     //logged in and setting up null when logged out
