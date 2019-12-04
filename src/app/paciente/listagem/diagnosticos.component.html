@@ -5,7 +5,7 @@
  <!--<form [formGroup]="diagnosticoFormGroup">-->
 
     <!--TIPO DE DIAGNOSTICO AUX-->
-    <mat-form-field style="width: 23%">
+    <mat-form-field style="width: 30.6%">
         <mat-select placeholder="Tipo"  [(ngModel)]="tipodiagnostico" (selectionChange)="filtrarTipo(tipodiagnostico)">
                 <mat-option >
                         <ngx-mat-select-search [(ngModel)]="filtrotipodiagnostico"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTipoDiagnosticos($event.target.value)"></ngx-mat-select-search>
@@ -17,7 +17,7 @@
     </mat-form-field>
 
         <!--SUBTIPO DE DIAGNOSTICO AUX-->
-    <mat-form-field style="width: 23%">
+    <mat-form-field style="width: 30.6%">
         <mat-select placeholder="Sub-Tipo"  [(ngModel)]="subtipodiagnostico" (selectionChange)="filtrarSubTipo(subtipodiagnostico)">
                 <mat-option >
                         <ngx-mat-select-search [(ngModel)]="filtrosubtipodiagnostico" placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarSubtipoDiagnostico($event.target.value)"></ngx-mat-select-search>
@@ -28,7 +28,7 @@
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field style="width: 23%">
+    <mat-form-field style="width: 30.6%">
         <mat-select placeholder="Diagnostico Auxiliar" [(ngModel)]="diagnostico" required>
                 <mat-option >
                         <ngx-mat-select-search   [(ngModel)]="filtrodiagnostico"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarDiagnosticos($event.target.value)"></ngx-mat-select-search>
@@ -39,8 +39,16 @@
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field style="width: 23%">
-        <input matInput placeholder="Preco"  [(ngModel)]="diagnostico.preco" required>
+    <mat-form-field style="width: 46%">
+        <input matInput placeholder="Preco"  [(ngModel)]="diagnostico.preco" required disabled>
+    </mat-form-field>
+
+    <mat-form-field style="width: 46%">
+        <mat-select placeholder="Medico"  [(ngModel)]="medico" required>
+            <mat-option *ngFor="let medico of data.medicos" [value]="medico">
+                {{medico}}
+            </mat-option>
+        </mat-select>
     </mat-form-field>
 
     <button mat-icon-button (click)="addDiognostico(diagnostico)" matTooltip="Agendar {{diagnostico.nome}}">

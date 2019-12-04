@@ -2,21 +2,28 @@
 <div mat-dialog-content>
     <p>Selecione a categoria de consultas solicitada pelo cliente</p>
    <!--<form [formGroup]="consultasFormGroup">-->
-        <mat-form-field style="width: 49%">
-            <mat-select placeholder="Tipo consulta"  [(ngModel)]="categoria" required>
-              
-                    <mat-option >
-                            <ngx-mat-select-search [(ngModel)]="filtroconsulta"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarConsultas($event.target.value)"></ngx-mat-select-search>
-                          </mat-option>
-                <mat-option *ngFor="let categoria of data.categorias_consulta" [value]="categoria">
-                    {{categoria.nome}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+    <mat-form-field style="width: 33%">
+        <mat-select placeholder="Tipo consulta"  [(ngModel)]="categoria" required>
+            <mat-option >
+                <ngx-mat-select-search [(ngModel)]="filtroconsulta"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = "Nenhuma informacao encontrada" matInput (keyup)="filtrarConsultas($event.target.value)"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let categoria of data.categorias_consulta" [value]="categoria">
+                {{categoria.nome}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
 
-        <mat-form-field style="width: 49%">
-            <input matInput placeholder="Preco"  [(ngModel)]="categoria.preco" required>
-        </mat-form-field>
+    <mat-form-field style="width: 33%">
+        <input matInput placeholder="Preco"  [(ngModel)]="categoria.preco" required>
+    </mat-form-field>
+
+    <mat-form-field style="width: 33%">
+        <mat-select placeholder="Medico"  [(ngModel)]="medico" required>
+            <mat-option *ngFor="let medico of data.medicos" [value]="medico">
+                {{medico}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
    <!-- </form>-->
 
 </div>

@@ -27,6 +27,7 @@ import { CustomValidators } from 'ng2-validation';
 import { MovimentoEstoque } from '../../classes/movimento_estoque';
 import { NrCotacao } from '../../classes/nr_cotacao';
 import { NrFatura } from '../../classes/nr_fatura';
+import { User } from '../../classes/user';
 //import { MatProgressButtonOptions } from 'mat-progress-buttons';
 
 
@@ -113,6 +114,9 @@ export class ListagemComponent implements OnInit {
     {value: 'Zambezia', viewValue: 'Zambezia'}
   ]
  
+
+  users: User[];
+  medicos: string[] = [];
 
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
     private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router, public estoqueService: EstoqueService){ 
@@ -254,6 +258,27 @@ export class ListagemComponent implements OnInit {
         })
     })
 
+    //USERS
+    this.configServices.getUsers().snapshotChanges().subscribe(data => {
+      this.users = data.map(e => {
+        return {
+          uid: e.payload.key,
+          ...e.payload.val(),
+        } as User;
+      });
+
+      this.medicos = [];
+      this.users.forEach(element => {
+        if(element.clinica_id == this.authService.get_clinica_id && (element.perfil == "Clinica_Medico" || element.perfil == "Clinica_Admin")){
+          if(element.displayName !== undefined){
+            this.medicos.push(element.displayName);
+          }
+        }
+      });
+
+      //console.log("Medicos Total "+this.medicos.length)
+    })
+
   }
  
 
@@ -309,17 +334,10 @@ export class ListagemComponent implements OnInit {
     }
 
 
-
-
-
-
-
-
-
   marcarConsulta(paciente, tipo){
     let dialogRef = this.dialog.open(ConsultasDialog, {
-      width: '700px',
-      data: { paciente: paciente, tipo: tipo, categorias_consulta: this.categorias_consulta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura  }
+      width: '800px',
+      data: { paciente: paciente, tipo: tipo, categorias_consulta: this.categorias_consulta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, medicos: this.medicos  }
     });
     dialogRef.afterClosed().subscribe(result => {
     //console.log("result "+result);
@@ -367,7 +385,7 @@ export class ListagemComponent implements OnInit {
       width: '800px',
       data: { paciente: row, diagnosticos: this.diagnosticos,
         tipos_diagnosticos:this.tipos_diagnosticos, subtipos_diagnosticos:this.subtipos_diagnosticos
-        , clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura
+        , clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, medicos: this.medicos
       }
       });
       dialogRef.afterClosed().subscribe(result => {
@@ -389,7 +407,7 @@ export class ListagemComponent implements OnInit {
     if(this.nr_cotacao > 0 && this.nr_fatura >0){
       let dialogRef = this.dialog.open(CondutasDialog, {
       width: '800px',
-      data: { paciente: row, condutas: this.condutas, tiposconduta: this.tiposconduta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura }
+      data: { paciente: row, condutas: this.condutas, tiposconduta: this.tiposconduta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, medicos: this.medicos }
       });
       dialogRef.afterClosed().subscribe(result => {
         this.configServices.getCondutasClinica().snapshotChanges().subscribe(data => {
@@ -1120,6 +1138,8 @@ export class MedicamentosDialog {
 
   condutas_param: CondutaClinica[]; //Passadas no parametro data
   condutas_alternativas: CondutaClinica[];
+
+  medico = "";
   
   
   constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<CondutasDialog>, private router: Router,
@@ -1213,7 +1233,7 @@ export class MedicamentosDialog {
   }
 
   faturar(paciente: Paciente){
-    if(this.condutas.length>0){
+    if(this.condutas.length>0 && this.medico !== ""){
       var updatedUserData = {};
       this.desabilitar = true;
       this.texto = "AGUARDE UM INSTANTE..."
@@ -1240,6 +1260,8 @@ export class MedicamentosDialog {
       this.consulta.paciente_apelido = paciente.apelido;
       this.consulta.paciente_nid = paciente.nid;
 
+      this.consulta.medico_nome = this.medico;
+
       let key = this.pacienteService.db.list('consultas/'+this.authService.get_clinica_id +'/lista_relatorio/'+ ano).push('').key;
       this.consulta.id = key;
 
@@ -1257,6 +1279,7 @@ export class MedicamentosDialog {
       faturacao.id = this.nr_fatura+"";
       faturacao.mes = mes+"";
       faturacao.ano = ano;
+      faturacao.medico_nome = this.medico;
 
       //Gravando na tabela de faturacao "faturacao"
       updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
@@ -1294,7 +1317,7 @@ export class MedicamentosDialog {
         this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
       })*/
     }else{
-      this.openSnackBar("Adicione pelo menos uma conduta");
+      this.openSnackBar("Adicione pelo menos uma conduta e selecione o medico");
     }
   }
 
@@ -1580,6 +1603,8 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
   consulta?: Consulta;
   preco_total:Number = 0;
 
+  medico = "";
+
   constructor(  public dialogRef: MatDialogRef<ConsultasDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public configServices: ConfiguracoesService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
@@ -1662,7 +1687,7 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
   }
 
   marcarConsulta(paciente, tipo){
-    if(this.categoria.nome){ //Garantir que categoria foi selecionada
+    if(this.categoria.nome && this.medico !== ""){ //Garantir que categoria foi selecionada
       var updatedUserData = {};
       this.desabilitar = true;
       this.texto = "AGUARDE UM INSTANTE...";
@@ -1687,6 +1712,8 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
 
       this.consulta.timestamp = new Date().valueOf();
 
+      this.consulta.medico_nome = this.medico;
+
       let key = this.pacienteService.db.list('consultas/'+this.authService.get_clinica_id + '/lista_completa/').push('').key;
       this.consulta.id = key;
 
@@ -1694,12 +1721,13 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
       updatedUserData['consultas/'+this.authService.get_clinica_id + '/lista_completa/'+key] = this.consulta;
 
       let faturacao = new Faturacao();
-      faturacao.categoria = "MEDICAMENTO";
+      faturacao.categoria = "CONSULTA_MEDICA";
       faturacao.valor = this.categoria.preco;
       faturacao.data = new Date();
       faturacao.mes = mes+"";
       faturacao.ano = ano;
       faturacao.id = this.nr_fatura+"";
+      faturacao.medico_nome = this.medico;
 
       //Gravando na tabela de faturacao "faturacao"
       updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
@@ -1718,7 +1746,7 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
       })
       
     }else{
-      this.openSnackBar("Selecione uma categoria de consulta.");
+      this.openSnackBar("Selecione uma categoria de consulta e um medico.");
     }
 
   }
@@ -2188,6 +2216,8 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
   subtipos_diagnosticos: SubTipoDiagnosticoAux[];
   subtipos_diagnosticos_aux: SubTipoDiagnosticoAux[];
 
+  medico = "";
+
   constructor(  public dialogRef: MatDialogRef<DiagnosticosDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, 
@@ -2348,7 +2378,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
 
 
   faturarDiagnostico(paciente:Paciente){
-    if(this.diagnosticos.length>0){
+    if(this.diagnosticos.length>0 && this.medico !== ""){
 
       //Abrir uma consulta DIAGNOSTICO AUXILIAR --------------------
       let dia = new Date().getDate();
@@ -2368,6 +2398,8 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
       this.consulta.paciente_apelido = paciente.apelido;
       this.consulta.paciente_nid = paciente.nid;
 
+      this.consulta.medico_nome = this.medico;
+
       //Criar uma faturacao da consulta do tipo CONDUTA CLINICA --------------------
       let faturacao = new Faturacao();
       faturacao.categoria = "DIAGNOSTICO_AUX";
@@ -2379,6 +2411,8 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
       faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
       faturacao.ano = new Date().getFullYear();
       faturacao.id = this.nr_fatura+"";
+
+      faturacao.medico_nome = this.medico;
 
       //Persistir informacao na base de dados ----------------------------
       let data = Object.assign({}, faturacao);
@@ -2401,7 +2435,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
       })
 
     }else{
-      this.openSnackBar("Adicione pelo menos um diagnostico");
+      this.openSnackBar("Adicione pelo menos um diagnostico e selecione o medico");
     }
 
   }

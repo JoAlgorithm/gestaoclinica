@@ -3,7 +3,7 @@
   <p>Selecione as condutas clinicas solicitadas pelo cliente</p>
 <!--(change)="onSelect($event.target.value)"-->
  <!-- <form [formGroup]="condutaFormGroup">-->
-    <mat-form-field style="width: 31%">
+    <mat-form-field style="width: 46%">
         <mat-select placeholder="Tipo conduta"  [(ngModel)]="tipoconduta" (selectionChange)="onSelect(tipoconduta)" required>
             <mat-option >
                 <ngx-mat-select-search [(ngModel)]="filtroTipoconduta"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTiposcondutas($event.target.value)"></ngx-mat-select-search>
@@ -14,7 +14,7 @@
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field style="width: 31%">
+    <mat-form-field style="width: 46%">
         <mat-select placeholder="Conduta clinica" [(ngModel)]="conduta" required>
             <mat-option >
                 <ngx-mat-select-search [(ngModel)]="filtroconduta"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarCondutas($event.target.value)"></ngx-mat-select-search>
@@ -25,12 +25,20 @@
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field style="width: 31%">
-        <input matInput placeholder="Preco"  [(ngModel)]="conduta.preco" required>
+    <mat-form-field style="width: 46%">
+        <input matInput placeholder="Preco"  [(ngModel)]="conduta.preco" required disabled>
+    </mat-form-field>
+
+    <mat-form-field style="width: 46%">
+        <mat-select placeholder="Medico"  [(ngModel)]="medico" required>
+            <mat-option *ngFor="let medico of data.medicos" [value]="medico">
+                {{medico}}
+            </mat-option>
+        </mat-select>
     </mat-form-field>
 
     <button mat-icon-button (click)="addConduta(conduta)" matTooltip="Agendar {{conduta.nome}}">
-            <mat-icon>add_circle</mat-icon>
+        <mat-icon>add_circle</mat-icon>
     </button>
    <!--</form>-->
 

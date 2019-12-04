@@ -37,4 +37,6 @@ export class Faturacao {
     //movimentosestoque?: MovimentoEstoque[];//Dentro de movimento tem medicamentos, deposito e qtd
 
     faturador?:String; //User que faturou
+
+    medico_nome?: string; //Variavel usada para fazer estatisticas de faturacao por medico
 }

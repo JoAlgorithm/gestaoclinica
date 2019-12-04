@@ -4,6 +4,7 @@ import { CategoriaConsulta } from "./categoria_consulta";
 import { CondutaClinica } from "./conduta_clinica";
 import { Medicamento } from "./medicamento";
 import { MovimentoEstoque } from "./movimento_estoque";
+import { StringLike } from "@firebase/util";
 
 export class Consulta { 
     id?:String;
@@ -93,5 +94,7 @@ export class Consulta {
 
     //Uma consulta pode ter uma categoria se for do tipo Consulta medica ex: Medicina geral, Cirurgia, etc
     categoria?: CategoriaConsulta; 
+
+    medico_nome?: string; //Variavel usada para fazer estatisticas de faturacao por medico
 
 }

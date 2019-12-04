@@ -1,7 +1,7 @@
 <div class="example-header" *ngIf='acesso_indicadores'>
 
   <mat-form-field style="width: 33%">
-    <mat-select placeholder="Ano de analise" [(ngModel)]="ano" [(value)]="ano"  (selectionChange)="onSelect(ano, mes)" > 
+    <mat-select placeholder="Ano de analise" [(ngModel)]="ano" [(value)]="ano"  (selectionChange)="onSelect(ano, mes, medico)" > 
         <mat-option *ngFor="let ano of anos" [value]="ano.id">
           {{ano.id}}
         </mat-option>
@@ -9,12 +9,20 @@
   </mat-form-field>
 
   <mat-form-field style="width: 33%">
-      <mat-select placeholder="Mes de analise" [(ngModel)]="mes" [(value)]="mes" (selectionChange)="onSelect(ano, mes)"> 
-          <mat-option *ngFor="let mes of meses" [value]="mes">
-            {{mes}}
-          </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <mat-select placeholder="Mes de analise" [(ngModel)]="mes" [(value)]="mes" (selectionChange)="onSelect(ano, mes, medico)"> 
+        <mat-option *ngFor="let mes of meses" [value]="mes">
+          {{mes}}
+        </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field style="width: 33%">
+    <mat-select placeholder="Medico" [(ngModel)]="medico" [(value)]="medico" (selectionChange)="onSelect(ano, mes, medico)"> 
+        <mat-option *ngFor="let medico of medicos" [value]="medico">
+          {{medico}}
+        </mat-option>
+    </mat-select>
+  </mat-form-field>
 
 </div>
 
@@ -23,6 +31,7 @@
     <!-- CARTAO COM TOTAL DE PACIENTES CADASTRADOS NA CLINICA -->
     <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">
       <mat-card class="card-widget mat-teal" mat-icon-button (click)="Lista_pacientes(row)">
+      <!--<mat-card class="card-widget mat-teal" mat-icon-button>-->
         <div mat-card-widget>
           <div mat-card-float-icon>
             <mat-icon>person</mat-icon>
@@ -37,7 +46,8 @@
 
     <!-- CARTAO COM TOTAL DE DIAGNOSTICOS AUX CADASTRADOS -->
     <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">
-        <mat-card class="card-widget mat-indigo"  mat-icon-button (click)="Lista_consulta(row)" >
+        <!--<mat-card class="card-widget mat-indigo"  mat-icon-button (click)="Lista_consulta(row)" >-->
+        <mat-card class="card-widget mat-indigo"  mat-icon-button>
           <div mat-card-widget>
             <div mat-card-float-icon>
               <mat-icon>airline_seat_recline_extra</mat-icon>
@@ -52,7 +62,8 @@
 
       <!-- CARTAO COM TOTAL DE CONSULTAS MEDICAS ATENDIDAS -->
       <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100">
-        <mat-card class="card-widget mat-red"   mat-icon-button (click)="Lista_dialogo(row)" >
+        <!--<mat-card class="card-widget mat-red"   mat-icon-button (click)="Lista_dialogo(row)" >-->
+        <mat-card class="card-widget mat-red"   mat-icon-button >
           <div mat-card-widget>
             <div mat-card-float-icon>
               <mat-icon>enhanced_encryption</mat-icon>
@@ -67,7 +78,8 @@
 
       <!-- CARTAO COM TOTAL DE CONSULTAS MEDICAS ATENDIDAS -->
       <div fxFlex.gt-sm="25" fxFlex.gt-xs="50" fxFlex="100" style="width: 80%">
-        <mat-card class="card-widget mat-purple"   mat-icon-button (click)="Lista_conduta(row)">
+        <!--<mat-card class="card-widget mat-purple"   mat-icon-button (click)="Lista_conduta(row)">-->
+        <mat-card class="card-widget mat-purple"   mat-icon-button>
           <div mat-card-widget>
             <div mat-card-float-icon>
               <mat-icon>local_hospital</mat-icon>
@@ -124,7 +136,7 @@
         <div fxFlex.gt-sm="50%" fxFlex="100">
             <mat-card>
                 <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
-                  RECEITA DIARIA DO {{mes | uppercase}} DE {{ano}}
+                  RECEITA DIARIA DE {{mes | uppercase}} DE {{ano}}
                   <span fxFlex></span>
                 </mat-card-subtitle>
                 <mat-menu #card2="matMenu" x-position="before">
@@ -193,6 +205,44 @@
         </div>-->
 
 </div>
+
+
+<!--<div class="example-container mat-elevation-z8" *ngIf='acesso_indicadores'>
+    <mat-table [dataSource]="dataSourse" matSort>
+      
+    <ng-container matColumnDef="Medico">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Medico </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.medico}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Categoria">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Categoria </mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.categoria}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Ano">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Ano </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.ano}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Mes">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Mes </mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.mes}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Valor">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Valor </mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.valor}}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;">
+    </mat-row>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+</div>-->
+
 
 <mat-card class="card-widget" *ngIf='!acesso_indicadores'>
   <div mat-card-widget>
