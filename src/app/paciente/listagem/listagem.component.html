@@ -83,9 +83,9 @@
             <mat-icon>class</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="marcarConsulta(row, 'Consulta Medica')">Consulta Medica</button>
-              <button mat-menu-item (click)="openDiagnostico(row)">Diagnostico auxiliar</button>
-              <button mat-menu-item (click)="openConduta(row)">Conduta clinica</button>
+              <button mat-menu-item (click)="marcarConsulta(row, 'Consulta Medica')" *ngIf='acesso_faturar_all'>Consulta Medica</button>
+              <button mat-menu-item (click)="openDiagnostico(row)"  *ngIf='acesso_faturar_all'>Diagnostico auxiliar</button>
+              <button mat-menu-item (click)="openConduta(row)"  *ngIf='acesso_faturar_all'>Conduta clinica</button>
               <button mat-menu-item (click)="openMedicamento(row)">Medicamento</button>
           </mat-menu>
         </mat-cell>

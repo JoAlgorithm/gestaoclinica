@@ -1,12 +1,20 @@
 <div class="example-header" *ngIf='acesso_indicadores'>
 
   <mat-form-field style="width: 33%">
-    <mat-select placeholder="Ano de analise" [(ngModel)]="ano" [(value)]="ano"> 
+    <mat-select placeholder="Ano de analise" [(ngModel)]="ano" [(value)]="ano"  (selectionChange)="onSelect(ano, mes)" > 
         <mat-option *ngFor="let ano of anos" [value]="ano.id">
           {{ano.id}}
         </mat-option>
     </mat-select>
   </mat-form-field>
+
+  <mat-form-field style="width: 33%">
+      <mat-select placeholder="Mes de analise" [(ngModel)]="mes" [(value)]="mes" (selectionChange)="onSelect(ano, mes)"> 
+          <mat-option *ngFor="let mes of meses" [value]="mes">
+            {{mes}}
+          </mat-option>
+      </mat-select>
+    </mat-form-field>
 
 </div>
 
@@ -113,6 +121,41 @@
           </mat-card>
         </div>
 
+        <div fxFlex.gt-sm="50%" fxFlex="100">
+            <mat-card>
+                <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
+                  RECEITA DIARIA DO {{mes | uppercase}} DE {{ano}}
+                  <span fxFlex></span>
+                </mat-card-subtitle>
+                <mat-menu #card2="matMenu" x-position="before">
+                  <button mat-menu-item>
+                    <mat-icon>settings</mat-icon>
+                    Settings
+                  </button>
+                  <button mat-menu-item>
+                    <mat-icon>more</mat-icon>
+                    View More
+                  </button>
+                  <button mat-menu-item>
+                    <mat-icon>notifications_off</mat-icon>
+                    Disable notifications
+                  </button>
+                  <button mat-menu-item>
+                    <mat-icon>exit_to_app</mat-icon>
+                    Remove Panel
+                  </button>
+                </mat-menu>
+                <mat-card-content>
+                  <canvas height="200" baseChart class="chart"
+                    [datasets]="ComboChartData2"
+                    [labels]="comboChartLabels2"
+                    [options]="ComboChartOptions2"
+                    [colors]="chartColors2"
+                    [legend]="comboChartLegend2"
+                    [chartType]="barChartType"></canvas>
+                </mat-card-content>
+              </mat-card>
+        </div>
 
         <!--<div fxFlex.gt-sm="50%" fxFlex="100">
           <mat-card>

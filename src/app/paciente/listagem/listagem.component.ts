@@ -39,6 +39,7 @@ export class ListagemComponent implements OnInit {
 
   perfil = "";
   acesso_remover = true;
+  acesso_faturar_all = true;
   clinica: Clinica = new Clinica();
   nrscotacao: NrCotacao[]; //PDF
   nr_cotacao = 0; //PDF
@@ -122,6 +123,10 @@ export class ListagemComponent implements OnInit {
     this.perfil = this.authService.get_perfil;
     if(this.perfil == 'Clinica_Admin'){
       this.acesso_remover = false;
+    }
+
+    if(this.perfil == 'Farmacia_Admnistrativo'){
+      this.acesso_faturar_all = false;
     }
 
     //PDF
@@ -659,7 +664,7 @@ export class MedicamentosDialog {
 
       //Abrir uma CONSULTA CLINICA --------------------
       let dia = new Date().getDate();
-      let mes = +(new Date().getMonth()) + +1;
+      let mes = this.getMes(+(new Date().getMonth()) + +1);
       let ano = new Date().getFullYear();  
       this.consulta = new Consulta();
       this.consulta.data = dia +"/"+mes+"/"+ano;
@@ -760,6 +765,7 @@ export class MedicamentosDialog {
       this.openSnackBar("Adicione pelo menos um medicamento.");
     }
   }
+  
 
 
   //AO FATURAR PRECISA ATUALIZAR A QTD DISPONIVEL DO ITEM NO DEPOSITO
@@ -1214,7 +1220,7 @@ export class MedicamentosDialog {
 
       //Abrir uma consulta CONDUTA CLINICA --------------------
       let dia = new Date().getDate();
-      let mes = +(new Date().getMonth()) + +1;
+      let mes = this.getMes( +(new Date().getMonth()) + +1);
       let ano = new Date().getFullYear();
 
       this.consulta = new Consulta();
@@ -1609,6 +1615,52 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
     }
   }
 
+  getMes(number): String{
+    console.log("Get mes "+number)
+    switch(number) { 
+      case 1: { 
+         return "Janeiro";
+      } 
+      case 2: { 
+         return "Fevereiro"; 
+      } 
+      case 3: { 
+         return "Marco"; 
+      }
+      case 4: { 
+        return "Abril"; 
+      }
+      case 5: { 
+        return "Maio"; 
+      }
+      case 6: { 
+        return "Junho"; 
+      }
+      case 7: { 
+        return "Julho"; 
+      }
+      case 8: { 
+        return "Agosto"; 
+      }  
+      case 9: { 
+        return "Setembro"; 
+      }
+      case 10: { 
+        return "Outubro"; 
+      }
+      case 11: { 
+        return "Novembro"; 
+      }
+      case 12: { 
+        return "Dezembro"; 
+      }
+      default: { 
+         //statements; 
+         break; 
+      } 
+   } 
+  }
+
   marcarConsulta(paciente, tipo){
     if(this.categoria.nome){ //Garantir que categoria foi selecionada
       var updatedUserData = {};
@@ -1616,7 +1668,7 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
       this.texto = "AGUARDE UM INSTANTE...";
 
       let dia = new Date().getDate();
-      let mes = +(new Date().getMonth()) + +1;
+      let mes = this.getMes( +(new Date().getMonth()) + +1);
       let ano = new Date().getFullYear();
       this.consulta.data = dia +"/"+mes+"/"+ano;
       this.consulta.ano = ano;
@@ -2300,7 +2352,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
 
       //Abrir uma consulta DIAGNOSTICO AUXILIAR --------------------
       let dia = new Date().getDate();
-      let mes = +(new Date().getMonth()) + +1;
+      let mes = this.getMes(+(new Date().getMonth()) + +1);
       let ano = new Date().getFullYear();
 
       this.consulta = new Consulta();

@@ -81,8 +81,43 @@ export class DashboardComponent {
   nov_diagnostico = 0;
   dez_diagnostico = 0;
 
+  um_valor = 0
+  dois_valor = 0
+  tres_valor = 0
+  quatro_valor = 0
+  cinco_valor = 0
+  seis_valor = 0
+  sete_valor = 0
+  oito_valor = 0
+  nove_valor = 0
+  dez_valor = 0
+  onze_valor = 0
+  doze_valor = 0
+  treze_valor = 0
+  catorze_valor = 0
+  quinze_valor = 0
+  dezasseis_valor = 0
+  dezassete_valor = 0
+  dezoito_valor = 0
+  dezanove_valor = 0
+  vinte_valor = 0
+  vinteum_valor = 0
+  vintedois_valor = 0
+  vintetrez_valor = 0
+  vintequatro_valor = 0
+  vintecinco_valor = 0
+  vinteseis_valor = 0
+  vintesete_valor = 0
+  vinteoito_valor = 0
+  vintenove_valor = 0
+  trinta_valor = 0
+  trintaum_valor = 0
+
   anos = [];
   ano:string = (new Date()).getFullYear()+"";
+  meses = ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  mes = this.meses[+(new Date().getMonth())];
+  
 
   constructor(private pacienteService: PacienteService, private configService: ConfiguracoesService,
     public authService: AuthService, public dialog: MatDialog){
@@ -93,6 +128,7 @@ export class DashboardComponent {
     setTimeout(() => {
       this.perfil = this.authService.get_perfil;
       this.username = this.authService.get_user_displayName;
+      console.log("Mes selecionado: "+this.mes);
 
       if(this.perfil == 'Clinica_Admin'){
         this.acesso_indicadores = true;
@@ -145,6 +181,9 @@ export class DashboardComponent {
         });
   
       })*/
+
+      this.zerarDados();
+
       this.pacienteService.getConsultasRelatorio(this.ano).snapshotChanges().subscribe(data => {
         this.consultas = data.map(e => {
           return {
@@ -162,16 +201,251 @@ export class DashboardComponent {
         this.faturacoes = data.map(e => {
           return {
             id: e.payload.key,
-            //data: e.payload.val()['data'] as Date,
             ...e.payload.val(),
           } as Faturacao;
         }) 
         
         this.faturacoes.forEach(element => {
-          //console.log("Mes: "+ element.mes+" Ano: "+element.ano+" Categoria: "+element.categoria) 
           this.total_valor = +this.total_valor + +element.valor;
+
+          let dia = new Date(element.data).getDay();
+          dia = +dia + +1;
+
+         if(this.mes == element.mes){
+          switch(dia) {
+
+            case 1: {
+              this.um_valor = +this.um_valor + +element.valor;
+              break;
+            }
+
+            case 2: {
+              this.dois_valor = +this.dois_valor + +element.valor;
+              break;
+            }
+
+            case 3: {
+              this.tres_valor = +this.tres_valor + +element.valor;
+              break;
+            }
+            
+            case 4: {
+              this.quatro_valor = +this.quatro_valor + +element.valor;
+              break;
+            }
+
+            case 5: {
+              this.cinco_valor = +this.cinco_valor + +element.valor;
+              break;
+            }
+
+            case 6: {
+              this.seis_valor = +this.seis_valor + +element.valor;
+              break;
+            }
+
+            case 7: {
+              this.sete_valor = +this.sete_valor + +element.valor;
+              break;
+            }
+
+            case 8: {
+              this.oito_valor = +this.oito_valor + +element.valor;
+              break;
+            }
+
+            case 9: {
+              this.nove_valor = +this.nove_valor + +element.valor;
+              break;
+            }
+
+            case 10: {
+              this.dez_valor = +this.dez_valor + +element.valor;
+              break;
+            }
+
+            case 11: {
+              this.onze_valor = +this.onze_valor + +element.valor;
+              break;
+            }
+
+            case 12: {
+              this.doze_valor = +this.doze_valor + +element.valor;
+              break;
+            }
+
+            case 13: {
+              this.treze_valor = +this.treze_valor + +element.valor;
+              break;
+            }
+
+            case 14: {
+              this.catorze_valor = +this.catorze_valor + +element.valor;
+              break;
+            }
+
+            case 15: {
+              this.quinze_valor = +this.quinze_valor + +element.valor;
+              break;
+            }
+
+            case 16: {
+              this.dezasseis_valor = +this.dezasseis_valor + +element.valor;
+              break;
+            }
+
+            case 17: {
+              this.dezassete_valor = +this.dezassete_valor + +element.valor;
+              break;
+            }
+
+            case 18: {
+              this.dezoito_valor = +this.dezoito_valor + +element.valor;
+              break;
+            }
+
+            case 19: {
+              this.dezanove_valor = +this.dezanove_valor + +element.valor;
+              break;
+            }
+
+            case 20: {
+              this.vinte_valor = +this.vinte_valor + +element.valor;
+              break;
+            }
+
+            case 21: {
+              this.vinteum_valor = +this.vinteum_valor + +element.valor;
+              break;
+            }
+
+            case 22: {
+              this.vintedois_valor = +this.vintedois_valor + +element.valor;
+              break;
+            }
+
+            case 23: {
+              this.vintetrez_valor = +this.vintetrez_valor + +element.valor;
+              break;
+            }
+
+            case 24: {
+              this.vintequatro_valor = +this.vintequatro_valor + +element.valor;
+              break;
+            }
+
+            case 25: {
+              this.vintecinco_valor = +this.vintecinco_valor + +element.valor;
+              break;
+            }
+
+            case 26: {
+              this.vinteseis_valor = +this.vinteseis_valor + +element.valor;
+              break;
+            }
+
+            case 27: {
+              this.vintesete_valor = +this.vintesete_valor + +element.valor;
+              break;
+            }
+
+            case 28: {
+              this.vinteoito_valor = +this.vinteoito_valor + +element.valor;
+              break;
+            }
+
+            case 29: {
+              this.vintenove_valor = +this.vintenove_valor + +element.valor;
+              break;
+            }
+
+            case 30: {
+              this.trinta_valor = +this.trinta_valor + +element.valor;
+              break;
+            }
+
+            case 31: {
+              this.trintaum_valor = +this.trintaum_valor + +element.valor;
+              break;
+            }
+
+            default: { 
+              //statements; 
+              break; 
+           } 
+
+          }
+         }
+
+         switch(element.mes) { 
+          case "Janeiro": { 
+            this.jan_consulta_nr = +this.jan_consulta_nr + +1;
+            this.jan_consulta_valor = +this.jan_consulta_valor+ +element.valor;
+             break;
+          } 
+          case "Fevereiro": { 
+            this.fev_consulta_nr = +this.fev_consulta_nr + +1;
+            this.fev_consulta_valor = +this.fev_consulta_valor+ +element.valor;
+            break;
+          } 
+          case "Marco": { 
+            this.marc_consulta_nr = +this.marc_consulta_nr + +1;
+            this.marc_consulta_valor = +this.marc_consulta_valor+ +element.valor;
+            break ; 
+          }
+          case "Abril": { 
+            this.abril_consulta_nr = +this.abril_consulta_nr + +1;
+            this.abril_consulta_valor = +this.abril_consulta_valor+ +element.valor;
+            break ; 
+          }
+          case "Maio": { 
+            this.maio_consulta_nr = +this.maio_consulta_nr + +1;
+            this.maio_consulta_valor = +this.maio_consulta_valor+ +element.valor;
+            break ; 
+          }
+          case "Junho": { 
+            this.junho_consulta_nr = +this.junho_consulta_nr + +1;
+            this.junho_consulta_valor = +this.junho_consulta_valor+ +element.valor;
+            break ; 
+          }
+          case "Julho": { 
+            this.julh_consulta_nr = +this.julh_consulta_nr + +1;
+            this.julh_consulta_valor = +this.julh_consulta_valor+ +element.valor;
+            break; 
+          }
+          case "Agosto": { 
+            this.agos_consulta_nr = +this.agos_consulta_nr + +1;
+            this.agos_consulta_valor = +this.agos_consulta_valor+ +element.valor;
+            break; 
+          }  
+          case "Setembro": { 
+            this.set_consulta_nr = +this.set_consulta_nr + +1;
+            this.set_consulta_valor = +this.set_consulta_valor+ +element.valor;
+            break; 
+          }
+          case "Outubro": { 
+            this.out_consulta_nr = +this.out_consulta_nr + +1;
+            this.out_consulta_valor = +this.out_consulta_valor+ +element.valor;
+            break; 
+          }
+          case "Novembro": { 
+            this.nov_consulta_nr = +this.nov_consulta_nr + +1;
+            this.nov_consulta_valor = +this.nov_consulta_valor+ +element.valor;
+            break; 
+          }
+          case "Dezembro": { 
+            this.dez_consulta_nr = +this.dez_consulta_nr + +1;
+            this.dez_consulta_valor = +this.dez_consulta_valor+ +element.valor;
+            break; 
+          }
+          default: { 
+             //statements; 
+             break; 
+          } 
+       }//Fim switch case 
+
   
-          if(element.categoria == "DIAGNOSTICO_AUX"){
+          /*if(element.categoria == "DIAGNOSTICO_AUX"){
   
             switch(element.mes) { 
               case "Janeiro": { 
@@ -240,78 +514,59 @@ export class DashboardComponent {
               } 
            }//Fim switch case 
   
-          }else if(element.categoria == "CONSULTA_MEDICA"){
+          //}else if(element.categoria == "CONSULTA_MEDICA"){
+          }else{
   
-            switch(element.mes) { 
-              case "Janeiro": { 
-                this.jan_consulta_nr = +this.jan_consulta_nr + +1;
-                this.jan_consulta_valor = +this.jan_consulta_valor+ +element.valor;
-                 break;
-              } 
-              case "Fevereiro": { 
-                this.fev_consulta_nr = +this.fev_consulta_nr + +1;
-                this.fev_consulta_valor = +this.fev_consulta_valor+ +element.valor;
-                break;
-              } 
-              case "Marco": { 
-                this.marc_consulta_nr = +this.marc_consulta_nr + +1;
-                this.marc_consulta_valor = +this.marc_consulta_valor+ +element.valor;
-                break ; 
-              }
-              case "Abril": { 
-                this.abril_consulta_nr = +this.abril_consulta_nr + +1;
-                this.abril_consulta_valor = +this.abril_consulta_valor+ +element.valor;
-                break ; 
-              }
-              case "Maio": { 
-                this.maio_consulta_nr = +this.maio_consulta_nr + +1;
-                this.maio_consulta_valor = +this.maio_consulta_valor+ +element.valor;
-                break ; 
-              }
-              case "Junho": { 
-                this.junho_consulta_nr = +this.junho_consulta_nr + +1;
-                this.junho_consulta_valor = +this.junho_consulta_valor+ +element.valor;
-                break ; 
-              }
-              case "Julho": { 
-                this.julh_consulta_nr = +this.julh_consulta_nr + +1;
-                this.julh_consulta_valor = +this.julh_consulta_valor+ +element.valor;
-                break; 
-              }
-              case "Agosto": { 
-                this.agos_consulta_nr = +this.agos_consulta_nr + +1;
-                this.agos_consulta_valor = +this.agos_consulta_valor+ +element.valor;
-                break; 
-              }  
-              case "Setembro": { 
-                this.set_consulta_nr = +this.set_consulta_nr + +1;
-                this.set_consulta_valor = +this.set_consulta_valor+ +element.valor;
-                break; 
-              }
-              case "Outubro": { 
-                this.out_consulta_nr = +this.out_consulta_nr + +1;
-                this.out_consulta_valor = +this.out_consulta_valor+ +element.valor;
-                break; 
-              }
-              case "Novembro": { 
-                this.nov_consulta_nr = +this.nov_consulta_nr + +1;
-                this.nov_consulta_valor = +this.nov_consulta_valor+ +element.valor;
-                break; 
-              }
-              case "Dezembro": { 
-                this.dez_consulta_nr = +this.dez_consulta_nr + +1;
-                this.dez_consulta_valor = +this.dez_consulta_valor+ +element.valor;
-                break; 
-              }
-              default: { 
-                 //statements; 
-                 break; 
-              } 
-           }//Fim switch case 
+            
               
-          }//Fim if consulta medica
+          }//Fim if consulta medica*/
           
         });//Fim do loop
+
+        /*let dia = new Date().getDay();
+        dia = +dia + +1;
+        this.comboChartLabels2[dia] = "HOJE";*/
+
+        //FATURACAO POR DIA 
+        this.ComboChartData2 = [{
+          data: [
+            this.um_valor, 
+            this.dois_valor, 
+            this.tres_valor, 
+            this.quatro_valor,
+            this.cinco_valor,
+            this.seis_valor,
+            this.sete_valor,
+            this.oito_valor,
+            this.nove_valor,
+            this.dez_valor,
+            this.onze_valor,
+            this.doze_valor,
+            this.treze_valor,
+            this.catorze_valor,
+            this.quinze_valor,
+            this.dezasseis_valor,
+            this.dezassete_valor,
+            this.dezoito_valor,
+            this.dezanove_valor,
+            this.vinte_valor,
+            this.vinteum_valor,
+            this.vintedois_valor,
+            this.vintetrez_valor,
+            this.vintequatro_valor,
+            this.vintecinco_valor,
+            this.vinteseis_valor,
+            this.vintesete_valor,
+            this.vinteoito_valor,
+            this.vintenove_valor,
+            this.trinta_valor,
+            this.trintaum_valor
+          ],
+          label: 'Receita',
+          borderWidth: 1,
+          type: 'line',
+          fill: false
+        }];
   
         //Info do grafico de linhas com valores faturados
         this.ComboChartData= [{
@@ -333,7 +588,7 @@ export class DashboardComponent {
           borderWidth: 1,
           type: 'line',
           fill: false
-        }, {
+        }/*, {
           data: [
             this.jan_consulta_nr, 
             this.fev_consulta_nr, 
@@ -351,7 +606,7 @@ export class DashboardComponent {
           label: 'Consultas',
           borderWidth: 1,
           type: 'bar',
-        }];
+        }*/];
   
   
         //Info do grafico de barras
@@ -394,13 +649,559 @@ export class DashboardComponent {
         
       })
 
-    });
-
-
-    
+    });//Fim timeOut
 
   } //Fim ngOnInt
+  
 
+
+
+
+  // QUANDO ALTERAMOS ANO ---------------------------------------------------------
+  onSelect(ano, mes){
+    this.ano = ano;
+    this.mes = mes;
+
+    this.pacienteService.getConsultasRelatorio(this.ano).snapshotChanges().subscribe(data => {
+      this.consultas = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as Consulta;
+      })
+      this.consultas_encerradas_medicas = this.consultas.filter( c => c.tipo == "Consulta Medica").length;
+      this.consultas_encerradas_diagnosticos = this.consultas.filter( c => c.tipo == "DIAGNOSTICO AUX").length;
+      this.consultas_encerradas_condutas = this.consultas.filter( c => c.tipo == "CONDUTA CLINICA").length;
+    })
+
+    this.zerarDados();
+
+    this.pacienteService.getFaturacoes(this.ano).snapshotChanges().subscribe(data => {
+      this.faturacoes = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as Faturacao;
+      }) 
+
+      
+
+      
+      this.faturacoes.forEach(element => {
+        this.total_valor = +this.total_valor + +element.valor;
+
+        let dia = new Date(element.data).getDay();
+          dia = +dia + +1;
+
+         if(this.mes == element.mes){
+          switch(dia) {
+
+            case 1: {
+              this.um_valor = +this.um_valor + +element.valor;
+              break;
+            }
+
+            case 2: {
+              this.dois_valor = +this.dois_valor + +element.valor;
+              break;
+            }
+
+            case 3: {
+              this.tres_valor = +this.tres_valor + +element.valor;
+              break;
+            }
+            
+            case 4: {
+              this.quatro_valor = +this.quatro_valor + +element.valor;
+              break;
+            }
+
+            case 5: {
+              this.cinco_valor = +this.cinco_valor + +element.valor;
+              break;
+            }
+
+            case 6: {
+              this.seis_valor = +this.seis_valor + +element.valor;
+              break;
+            }
+
+            case 7: {
+              this.sete_valor = +this.sete_valor + +element.valor;
+              break;
+            }
+
+            case 8: {
+              this.oito_valor = +this.oito_valor + +element.valor;
+              break;
+            }
+
+            case 9: {
+              this.nove_valor = +this.nove_valor + +element.valor;
+              break;
+            }
+
+            case 10: {
+              this.dez_valor = +this.dez_valor + +element.valor;
+              break;
+            }
+
+            case 11: {
+              this.onze_valor = +this.onze_valor + +element.valor;
+              break;
+            }
+
+            case 12: {
+              this.doze_valor = +this.doze_valor + +element.valor;
+              break;
+            }
+
+            case 13: {
+              this.treze_valor = +this.treze_valor + +element.valor;
+              break;
+            }
+
+            case 14: {
+              this.catorze_valor = +this.catorze_valor + +element.valor;
+              break;
+            }
+
+            case 15: {
+              this.quinze_valor = +this.quinze_valor + +element.valor;
+              break;
+            }
+
+            case 16: {
+              this.dezasseis_valor = +this.dezasseis_valor + +element.valor;
+              break;
+            }
+
+            case 17: {
+              this.dezassete_valor = +this.dezassete_valor + +element.valor;
+              break;
+            }
+
+            case 18: {
+              this.dezoito_valor = +this.dezoito_valor + +element.valor;
+              break;
+            }
+
+            case 19: {
+              this.dezanove_valor = +this.dezanove_valor + +element.valor;
+              break;
+            }
+
+            case 20: {
+              this.vinte_valor = +this.vinte_valor + +element.valor;
+              break;
+            }
+
+            case 21: {
+              this.vinteum_valor = +this.vinteum_valor + +element.valor;
+              break;
+            }
+
+            case 22: {
+              this.vintedois_valor = +this.vintedois_valor + +element.valor;
+              break;
+            }
+
+            case 23: {
+              this.vintetrez_valor = +this.vintetrez_valor + +element.valor;
+              break;
+            }
+
+            case 24: {
+              this.vintequatro_valor = +this.vintequatro_valor + +element.valor;
+              break;
+            }
+
+            case 25: {
+              this.vintecinco_valor = +this.vintecinco_valor + +element.valor;
+              break;
+            }
+
+            case 26: {
+              this.vinteseis_valor = +this.vinteseis_valor + +element.valor;
+              break;
+            }
+
+            case 27: {
+              this.vintesete_valor = +this.vintesete_valor + +element.valor;
+              break;
+            }
+
+            case 28: {
+              this.vinteoito_valor = +this.vinteoito_valor + +element.valor;
+              break;
+            }
+
+            case 29: {
+              this.vintenove_valor = +this.vintenove_valor + +element.valor;
+              break;
+            }
+
+            case 30: {
+              this.trinta_valor = +this.trinta_valor + +element.valor;
+              break;
+            }
+
+            case 31: {
+              this.trintaum_valor = +this.trintaum_valor + +element.valor;
+              break;
+            }
+
+            default: { 
+              //statements; 
+              break; 
+           } 
+
+          }
+         }
+         
+         switch(element.mes) { 
+          case "Janeiro": { 
+            this.jan_consulta_nr = +this.jan_consulta_nr + +1;
+            this.jan_consulta_valor = +this.jan_consulta_valor+ +element.valor;
+             break;
+          } 
+          case "Fevereiro": { 
+            this.fev_consulta_nr = +this.fev_consulta_nr + +1;
+            this.fev_consulta_valor = +this.fev_consulta_valor+ +element.valor;
+            break;
+          } 
+          case "Marco": { 
+            this.marc_consulta_nr = +this.marc_consulta_nr + +1;
+            this.marc_consulta_valor = +this.marc_consulta_valor+ +element.valor;
+            break ; 
+          }
+          case "Abril": { 
+            this.abril_consulta_nr = +this.abril_consulta_nr + +1;
+            this.abril_consulta_valor = +this.abril_consulta_valor+ +element.valor;
+            break ; 
+          }
+          case "Maio": { 
+            this.maio_consulta_nr = +this.maio_consulta_nr + +1;
+            this.maio_consulta_valor = +this.maio_consulta_valor+ +element.valor;
+            break ; 
+          }
+          case "Junho": { 
+            this.junho_consulta_nr = +this.junho_consulta_nr + +1;
+            this.junho_consulta_valor = +this.junho_consulta_valor+ +element.valor;
+            break ; 
+          }
+          case "Julho": { 
+            this.julh_consulta_nr = +this.julh_consulta_nr + +1;
+            this.julh_consulta_valor = +this.julh_consulta_valor+ +element.valor;
+            break; 
+          }
+          case "Agosto": { 
+            this.agos_consulta_nr = +this.agos_consulta_nr + +1;
+            this.agos_consulta_valor = +this.agos_consulta_valor+ +element.valor;
+            break; 
+          }  
+          case "Setembro": { 
+            this.set_consulta_nr = +this.set_consulta_nr + +1;
+            this.set_consulta_valor = +this.set_consulta_valor+ +element.valor;
+            break; 
+          }
+          case "Outubro": { 
+            this.out_consulta_nr = +this.out_consulta_nr + +1;
+            this.out_consulta_valor = +this.out_consulta_valor+ +element.valor;
+            break; 
+          }
+          case "Novembro": { 
+            this.nov_consulta_nr = +this.nov_consulta_nr + +1;
+            this.nov_consulta_valor = +this.nov_consulta_valor+ +element.valor;
+            break; 
+          }
+          case "Dezembro": { 
+            this.dez_consulta_nr = +this.dez_consulta_nr + +1;
+            this.dez_consulta_valor = +this.dez_consulta_valor+ +element.valor;
+            break; 
+          }
+          default: { 
+             //statements; 
+             break; 
+          } 
+       }//Fim switch case 
+
+        /*if(element.categoria == "DIAGNOSTICO_AUX"){
+
+          switch(element.mes) { 
+            case "Janeiro": { 
+              this.jan_diagnostico = +this.jan_diagnostico + +1;
+              this.jan_consulta_valor = +this.jan_consulta_valor+ +element.valor;
+               break;
+            } 
+            case "Fevereiro": { 
+              this.fev_diagnostico = +this.fev_diagnostico + +1;
+              this.fev_consulta_valor = +this.fev_consulta_valor+ +element.valor;
+              break;
+            } 
+            case "Marco": { 
+              this.marc_diagnostico = +this.marc_diagnostico + +1;
+              this.marc_consulta_valor = +this.marc_consulta_valor+ +element.valor;
+              break ; 
+            }
+            case "Abril": { 
+              this.abril_diagnostico = +this.abril_diagnostico + +1;
+              this.abril_consulta_valor = +this.abril_consulta_valor+ +element.valor;
+              break ; 
+            }
+            case "Maio": { 
+              this.maio_diagnostico = +this.maio_diagnostico + +1;
+              this.maio_consulta_valor = +this.maio_consulta_valor+ +element.valor;
+              break ; 
+            }
+            case "Junho": { 
+              this.junho_diagnostico = +this.junho_diagnostico + +1;
+              this.junho_consulta_valor = +this.junho_consulta_valor+ +element.valor;
+              break ; 
+            }
+            case "Julho": { 
+              this.julh_diagnostico = +this.julh_diagnostico + +1;
+              this.julh_consulta_valor = +this.julh_consulta_valor+ +element.valor;
+              break; 
+            }
+            case "Agosto": { 
+              this.agos_diagnostico = +this.agos_diagnostico + +1;
+              this.agos_consulta_valor = +this.agos_consulta_valor+ +element.valor;
+              break; 
+            }  
+            case "Setembro": { 
+              this.set_diagnostico = +this.set_diagnostico + +1;
+              this.set_consulta_valor = +this.set_consulta_valor+ +element.valor;
+              break; 
+            }
+            case "Outubro": { 
+              this.out_diagnostico = +this.out_diagnostico + +1;
+              this.out_consulta_valor = +this.out_consulta_valor+ +element.valor;
+              break; 
+            }
+            case "Novembro": { 
+              this.nov_diagnostico = +this.nov_diagnostico + +1;
+              this.nov_consulta_valor = +this.nov_consulta_valor+ +element.valor;
+              break; 
+            }
+            case "Dezembro": { 
+              this.dez_diagnostico = +this.dez_diagnostico + +1;
+              this.dez_consulta_valor = +this.dez_consulta_valor+ +element.valor;
+              break; 
+            }
+            default: { 
+               //statements; 
+               break; 
+            } 
+         }//Fim switch case 
+
+        }else if(element.categoria == "CONSULTA_MEDICA"){
+
+          
+            
+        }//Fim if consulta medica*/
+        
+      });//Fim do loop
+
+      //Info do grafico de linhas com valores faturados
+      this.ComboChartData= [{
+        data: [
+          this.jan_consulta_valor, 
+          this.fev_consulta_valor, 
+          this.marc_consulta_valor, 
+          this.abril_consulta_valor, 
+          this.maio_consulta_valor, 
+          this.junho_consulta_valor, 
+          this.julh_consulta_valor, 
+          this.agos_consulta_valor, 
+          this.set_consulta_valor, 
+          this.out_consulta_valor, 
+          this.nov_consulta_valor, 
+          this.dez_consulta_valor
+        ],
+        label: 'Receita',
+        borderWidth: 1,
+        type: 'line',
+        fill: false
+      }/*, {
+        data: [
+          this.jan_consulta_nr, 
+          this.fev_consulta_nr, 
+          this.marc_consulta_nr, 
+          this.abril_consulta_nr, 
+          this.maio_consulta_nr, 
+          this.junho_consulta_nr, 
+          this.julh_consulta_nr, 
+          this.agos_consulta_nr, 
+          this.set_consulta_nr, 
+          this.out_consulta_nr, 
+          this.nov_consulta_nr, 
+          this.dez_consulta_nr
+        ],
+        label: 'Consultas',
+        borderWidth: 1,
+        type: 'bar',
+      }*/];
+
+      /*let dia = new Date().getDay();
+        dia = +dia + +1;
+        this.comboChartLabels2[dia] = "HOJE";*/
+
+        //FATURACAO POR DIA 
+        this.ComboChartData2 = [{
+          data: [
+            this.um_valor, 
+            this.dois_valor, 
+            this.tres_valor, 
+            this.quatro_valor,
+            this.cinco_valor,
+            this.seis_valor,
+            this.sete_valor,
+            this.oito_valor,
+            this.nove_valor,
+            this.dez_valor,
+            this.onze_valor,
+            this.doze_valor,
+            this.treze_valor,
+            this.catorze_valor,
+            this.quinze_valor,
+            this.dezasseis_valor,
+            this.dezassete_valor,
+            this.dezoito_valor,
+            this.dezanove_valor,
+            this.vinte_valor,
+            this.vinteum_valor,
+            this.vintedois_valor,
+            this.vintetrez_valor,
+            this.vintequatro_valor,
+            this.vintecinco_valor,
+            this.vinteseis_valor,
+            this.vintesete_valor,
+            this.vinteoito_valor,
+            this.vintenove_valor,
+            this.trinta_valor,
+            this.trintaum_valor
+          ],
+          label: 'Receita',
+          borderWidth: 1,
+          type: 'line',
+          fill: false
+        }];
+
+
+      //Info do grafico de barras
+      this.barChartData = [{
+        data: [
+          this.jan_consulta_nr, 
+          this.fev_consulta_nr, 
+          this.marc_consulta_nr, 
+          this.abril_consulta_nr, 
+          this.maio_consulta_nr, 
+          this.junho_consulta_nr, 
+          this.julh_consulta_nr, 
+          this.agos_consulta_nr, 
+          this.set_consulta_nr, 
+          this.out_consulta_nr, 
+          this.nov_consulta_nr, 
+          this.dez_consulta_nr
+        ],
+        label: 'Consulta medica',
+        borderWidth: 0
+      }, {
+        data: [
+          this.jan_diagnostico, 
+          this.fev_diagnostico, 
+          this.marc_diagnostico, 
+          this.abril_diagnostico, 
+          this.maio_diagnostico, 
+          this.junho_diagnostico, 
+          this.julh_diagnostico, 
+          this.agos_diagnostico, 
+          this.set_diagnostico, 
+          this.out_diagnostico, 
+          this.nov_diagnostico, 
+          this.dez_diagnostico
+        ],
+        label: 'Diagnostico Auxiliar',
+        borderWidth: 0
+      }];
+      
+      
+    })
+  }
+
+  zerarDados(){
+    this.total_valor = 0;
+    this.jan_consulta_nr = 0;
+    this.jan_consulta_valor = 0;
+    this.fev_consulta_nr = 0;
+    this.fev_consulta_valor = 0;
+    this.marc_consulta_nr = 0;
+    this.marc_consulta_valor = 0;
+    this.abril_consulta_nr = 0;
+    this.abril_consulta_valor = 0;
+    this.maio_consulta_nr = 0;
+    this.maio_consulta_valor = 0;
+    this.junho_consulta_nr = 0;
+    this.junho_consulta_valor = 0;
+    this.julh_consulta_nr = 0;
+    this.julh_consulta_valor = 0;
+    this.agos_consulta_nr = 0;
+    this.agos_consulta_valor = 0;
+    this.set_consulta_nr = 0;
+    this.set_consulta_valor = 0;
+    this.out_consulta_nr = 0;
+    this.out_consulta_valor = 0;
+    this.nov_consulta_nr = 0;
+    this.nov_consulta_valor = 0;
+    this.dez_consulta_nr = 0;
+    this.dez_consulta_valor = 0;
+
+    this.jan_diagnostico = 0;
+    this.fev_diagnostico = 0;
+    this.marc_diagnostico = 0;
+    this.abril_diagnostico = 0;
+    this.maio_diagnostico = 0;
+    this.junho_diagnostico = 0;
+    this.julh_diagnostico = 0;
+    this.agos_diagnostico = 0;
+    this.set_diagnostico = 0;
+    this.out_diagnostico = 0;
+    this.nov_diagnostico = 0;
+    this.dez_diagnostico = 0;
+
+    this.um_valor = 0
+    this.dois_valor = 0
+    this.tres_valor = 0
+    this.quatro_valor = 0
+    this.cinco_valor = 0
+    this.seis_valor = 0
+    this.sete_valor = 0
+    this.oito_valor = 0
+    this.nove_valor = 0
+    this.dez_valor = 0
+    this.onze_valor = 0
+    this.doze_valor = 0
+    this.treze_valor = 0
+    this.catorze_valor = 0
+    this.quinze_valor = 0
+    this.dezasseis_valor = 0
+    this.dezassete_valor = 0
+    this.dezoito_valor = 0
+    this.dezanove_valor = 0
+    this.vinte_valor = 0
+    this.vinteum_valor = 0
+    this.vintedois_valor = 0
+    this.vintetrez_valor = 0
+    this.vintequatro_valor = 0
+    this.vintecinco_valor = 0
+    this.vinteseis_valor = 0
+    this.vintesete_valor = 0
+    this.vinteoito_valor = 0
+    this.vintenove_valor = 0
+    this.trinta_valor = 0
+    this.trintaum_valor = 0
+  }
 
   Lista_pacientes(paciente){
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
@@ -425,7 +1226,7 @@ export class DashboardComponent {
     });
    
    dialogRef.afterClosed().subscribe(result => {
-    console.log('The dialog was closed');
+    //console.log('The dialog was closed');
     // this.animal = result;
     
    });
@@ -440,7 +1241,7 @@ export class DashboardComponent {
     });
    
    dialogRef.afterClosed().subscribe(result => {
-    console.log('The dialog was closed');
+    //console.log('The dialog was closed');
     // this.animal = result;
     
    });
@@ -456,7 +1257,7 @@ export class DashboardComponent {
     });
    
    dialogRef.afterClosed().subscribe(result => {
-    console.log('The dialog was closed');
+    //console.log('The dialog was closed');
     // this.animal = result;
     
    });
@@ -490,6 +1291,7 @@ export class DashboardComponent {
         position: 'bottom'
       }
     };
+
     // combo chart
     comboChartLabels: Array <any> = ['Jan', 'Fev', 'Marc', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Sete', 'Out', 'Nov', 'Dez'];
     chartColors: Array <any> = [{ // grey
@@ -499,7 +1301,7 @@ export class DashboardComponent {
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    }, { // dark grey
+    }/*, { // dark grey
       backgroundColor: '#eeeeee',
       borderColor: '#e0e0e0',
       pointBackgroundColor: '#e0e0e0',
@@ -513,7 +1315,7 @@ export class DashboardComponent {
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    }];
+    }*/];
     comboChartLegend = true;
     ComboChartData: Array <any> = [{
       data: [
@@ -534,7 +1336,7 @@ export class DashboardComponent {
       borderWidth: 1,
       type: 'line',
       fill: false
-    }, {
+    }/*, {
       data: [
         this.jan_consulta_nr, 
         this.fev_consulta_nr, 
@@ -552,7 +1354,7 @@ export class DashboardComponent {
       label: 'Consultas',
       borderWidth: 1,
       type: 'bar',
-    }];
+    }*/];
     ComboChartOptions: any = Object.assign({
       animation: false,
       scales: {
@@ -645,6 +1447,100 @@ export class DashboardComponent {
     }
   }, this.globalChartOptions);
     
+
+
+
+
+  // combo chart FATURACAO DIARIA
+  comboChartLabels2: Array <any> = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'];
+  
+  //this.comboChartLabels2[4] = 'HOJE';
+
+  chartColors2: Array <any> = [{ // grey
+    backgroundColor: '#7986cb',
+    borderColor: '#3f51b5',
+    pointBackgroundColor: '#3f51b5',
+    pointBorderColor: '#fff',
+    pointHoverBackgroundColor: '#fff',
+    pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+  }/*, { // dark grey
+    backgroundColor: '#eeeeee',
+    borderColor: '#e0e0e0',
+    pointBackgroundColor: '#e0e0e0',
+    pointBorderColor: '#fff',
+    pointHoverBackgroundColor: '#fff',
+    pointHoverBorderColor: 'rgba(77,83,96,1)'
+  }, { // grey
+    backgroundColor: 'rgba(148,159,177,0.2)',
+    borderColor: 'rgba(148,159,177,1)',
+    pointBackgroundColor: 'rgba(148,159,177,1)',
+    pointBorderColor: '#fff',
+    pointHoverBackgroundColor: '#fff',
+    pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+  }*/];
+  comboChartLegend2 = true;
+  ComboChartData2: Array <any> = [{
+    data: [
+      this.um_valor, 
+      this.dois_valor, 
+      this.tres_valor, 
+      this.quatro_valor,
+      this.cinco_valor,
+      this.seis_valor,
+      this.sete_valor,
+      this.oito_valor,
+      this.nove_valor,
+      this.dez_valor,
+      this.onze_valor,
+      this.doze_valor,
+      this.treze_valor,
+      this.catorze_valor,
+      this.quinze_valor,
+      this.dezasseis_valor,
+      this.dezassete_valor,
+      this.dezoito_valor,
+      this.dezanove_valor,
+      this.vinte_valor,
+      this.vinteum_valor,
+      this.vintedois_valor,
+      this.vintetrez_valor,
+      this.vintequatro_valor,
+      this.vintecinco_valor,
+      this.vinteseis_valor,
+      this.vintesete_valor,
+      this.vinteoito_valor,
+      this.vintenove_valor,
+      this.trinta_valor,
+      this.trintaum_valor
+    ],
+    label: 'Receita',
+    borderWidth: 1,
+    type: 'line',
+    fill: false
+  }];
+  ComboChartOptions2: any = Object.assign({
+    animation: false,
+    scales: {
+      xAxes: [{
+        gridLines: {
+          color: 'rgba(0,0,0,0.02)',
+          zeroLineColor: 'rgba(0,0,0,0.02)'
+        }
+      }]/*,
+      yAxes: [{
+        gridLines: {
+          color: 'rgba(0,0,0,0.02)',
+          zeroLineColor: 'rgba(0,0,0,0.02)'
+        },
+        ticks: {
+          beginAtZero: true,
+          suggestedMax: 9,
+        }
+      }]*/
+    }
+  }, this.globalChartOptions);
+
+
 
 
  //Fusion plugin: em avaliacao
@@ -859,6 +1755,10 @@ export class DialogOverviewExampleDialog {
     this.dialogRef.close();
   }
 
+  zerarDados(){
+
+
+  }
   
   
 }

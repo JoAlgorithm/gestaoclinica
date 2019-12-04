@@ -35,9 +35,9 @@ export class SignInComponent implements OnInit {
           ...e.payload.val(),
         } as User;
       }) 
-      this.users.forEach(element => {
+      /*this.users.forEach(element => {
         console.log("Cidade "+element.cidade);
-      });
+      });*/
     })
     
     
