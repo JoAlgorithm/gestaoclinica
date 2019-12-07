@@ -171,8 +171,12 @@ export class ConfiguracoesService {
     return this.db.list('seguradoras/'+this.authService.get_clinica_id + '/').update(seguradora.id, seguradora);
   }
 
-  removeSeguradoraa(id){
+  removeSeguradora(id){
     return this.db.list('seguradoras/'+this.authService.get_clinica_id + '/').remove(id+"");
+  }
+
+  getSeguradoras(){
+    return this.db.list('seguradoras/'+this.authService.get_clinica_id + '/');
   }
 
   

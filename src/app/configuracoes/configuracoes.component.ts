@@ -30,19 +30,21 @@ export class ConfiguracoesComponent implements OnInit {
   editar_conduta = false;
   editar_diagnostico = false;
   editar_consultas = false;
+  editar_seguradora = false;
 
-    /*
-    * VARIAVEIS DA TAB SEGURADORAS
-    */
+  /*
+  * VARIAVEIS DA TAB SEGURADORAS
+  */
   seguradora: Seguradora;
   seguradoras: Seguradora[];
 
+
   //ATRIBUTOS DO FORLMULARIO
-  cadastro_seguradoraFormGroup: FormGroup;
+  seguradoraFormGroup: FormGroup;
 
   //ATRIBUTOS DA TABELA
   dataSourseSeguradora: MatTableDataSource<Seguradora>;
-  displayedColumnsSeguradora = ['nome','telefone','endereco','pais', 'editar', 'remover'];
+  displayedColumnsSeguradora = ['nome', 'nuit', 'telefone','email','endereco', 'editar', 'remover'];
   @ViewChild('paginatorDSeguradora', { read: MatPaginator }) paginatorSeguradora: MatPaginator;
   @ViewChild(MatSort) sortSeguradora: MatSort;
 
@@ -114,6 +116,7 @@ export class ConfiguracoesComponent implements OnInit {
     this.diagnostico = new DiagnosticoAuxiliar();
     this.categoria_consulta = new CategoriaConsulta();
     this.conduta_clinica = new CondutaClinica();
+    this.seguradora = new Seguradora();
   }
 
   /*
@@ -188,8 +191,8 @@ export class ConfiguracoesComponent implements OnInit {
     .subscribe(c => {
       this.clinica = c;
     })
-    console.log("teste");
-    console.log("clinica nome "+this.clinica.nome)
+    //console.log("teste");
+    //console.log("clinica nome "+this.clinica.nome)
     this.dados_geraisFormGroup = this._formBuilder.group({
       clinica_nome: ['', Validators.required],
       clinica_endereco: ['', Validators.required],
@@ -284,7 +287,60 @@ export class ConfiguracoesComponent implements OnInit {
       setTimeout(()=> this.dataSourseCondutaC.paginator = this.paginatorCondutaC);
     })
 
+    //TAB SEGURADORA
+    this.seguradoraFormGroup = this._formBuilder.group({
+      s_nome: ['', Validators.required],
+      s_telefone: [''],
+      s_endereco: [''],
+      s_pais: [''],
+      s_email: ['']
+    });
+
+    this.configServices.getSeguradoras().snapshotChanges().subscribe(data => {
+      this.seguradoras = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as Seguradora;
+      });
+      this.dataSourseSeguradora =new MatTableDataSource(
+        this.seguradoras.sort((a, b) => a.nome > b.nome ? 1 : -1)
+      );
+      setTimeout(()=> this.dataSourseSeguradora.paginator = this.paginatorSeguradora);
+    })
+
   }//FIM ngOnInit
+
+  registarSeguradora(){
+    this.editar_seguradora = false;
+    let data = Object.assign({}, this.seguradora);
+
+    if(data.id){ 
+      //Ja tem ID ja Conduta entao deve atualizar
+      this.configServices.updateSeguradora(data)
+      .then( res => {
+        this.seguradora = new Seguradora();
+        this.seguradoraFormGroup.reset;
+        this.openSnackBar("Seguradora atualizada com sucesso");
+      }, err=>{
+        this.openSnackBar("Ocorreu um erro ao atualizar. Contacte o admnistrador do sistema");
+      })
+    }else{
+      this.configServices.createSeguradora(data)
+      .then( res => {
+        this.seguradora = new Seguradora();
+        this.seguradoraFormGroup.reset;
+        this.openSnackBar("Seguradora registada com sucesso");
+      }, err=>{
+        this.openSnackBar("Ocorreu um erro ao atualizar. Contacte o admnistrador do sistema");
+      })
+    }
+  }
+
+  editarSeguradora(seguradora: Seguradora){
+    this.editar_seguradora = true;
+    this.seguradora = seguradora;
+  }
 
   registarDiagnostico(){
     this.editar_diagnostico = false;
@@ -517,7 +573,7 @@ export class ConfiguracoesComponent implements OnInit {
   }
 
   filtrarTipoDiagnostico(tipo: TipoDiagnosticoAux){
-    console.log(tipo.nome);
+    //console.log(tipo.nome);
     this.subtipos_diagnosticos = null;
     this.subtipos_diagnosticos = this.subtipos_diagnosticos_aux.filter(item => item.tipo.nome == tipo.nome);
   }
@@ -611,6 +667,14 @@ export class ConfirmacaoDialog {
       }
       case "Consulta": { 
         this.configServices.removeCategoriaConsulta(id).then( r=> {
+          this.dialogRef.close();
+          this.openSnackBar(item +" removida com sucesso.")
+        }).catch(err => {
+          this.openSnackBar("Ocorreu algum erro ao remover. Tente novamente ou contacte a equipe de suporte.")
+        })
+      }
+      case "Seguradora": { 
+        this.configServices.removeSeguradora(id).then( r=> {
           this.dialogRef.close();
           this.openSnackBar(item +" removida com sucesso.")
         }).catch(err => {

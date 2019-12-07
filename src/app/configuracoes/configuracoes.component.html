@@ -320,12 +320,99 @@
   </mat-tab>
 
 
-  <!--<mat-tab label = "SEGURADORAS" *ngIf='acesso_users'>
+  <mat-tab label = "SEGURADORAS" *ngIf='acesso_users'>
     <mat-card class="example-card">
         <mat-card-content>
+            <h5>FORMULARIO DE CADASTRO DE SEGURADORAS</h5>
+
+            <!--NOME SEGURADORA-->
+            <mat-form-field style="width: 31%">
+                <input matInput placeholder="Nome" [(ngModel)]="seguradora.nome" required>
+            </mat-form-field>
+
+            <!--NUIT SEGURADORA-->
+            <mat-form-field style="width: 31%">
+                <input matInput placeholder="Nuit" [(ngModel)]="seguradora.nuit">
+            </mat-form-field>
+
+            <!--TELEFONE SEGURADORA-->
+            <mat-form-field style="width: 31%">
+                <input matInput placeholder="Telefone" [(ngModel)]="seguradora.telefone">
+            </mat-form-field>
+
+            <!--EMAIL SEGURADORA-->
+            <mat-form-field style="width: 31%">
+                <input matInput placeholder="Email" [(ngModel)]="seguradora.email">
+            </mat-form-field>
+
+            <!--ENDERECO SEGURADORA-->
+            <mat-form-field style="width: 62%">
+                <input matInput placeholder="Endereco" [(ngModel)]="seguradora.endereco">
+            </mat-form-field>
+
+            <button mat-icon-button (click)="registarSeguradora()" matTooltip="REGISTAR {{seguradora.nome}}" *ngIf='!editar_seguradora'>
+                <mat-icon>add_circle</mat-icon>
+            </button>
+            <button mat-icon-button (click)="registarSeguradora()" matTooltip="EDITAR {{seguradora.nome}}" *ngIf='editar_seguradora'>
+                <mat-icon>create</mat-icon>
+            </button>
+
+            <h5>LISTA DE SEGURADORAS</h5>
+            <div class="example-container mat-elevation-z8">
+                <mat-table [dataSource]="dataSourseSeguradora">
+
+                <ng-container matColumnDef="nome">
+                    <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.nome}}</mat-cell>
+                </ng-container>
+                
+                <ng-container matColumnDef="nuit">
+                    <mat-header-cell *matHeaderCellDef> Nuit </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.nuit}}</mat-cell>
+                </ng-container>
+        
+                <ng-container matColumnDef="telefone">
+                    <mat-header-cell *matHeaderCellDef> Telefone </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.telefone}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="email">
+                    <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.email}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="endereco">
+                    <mat-header-cell *matHeaderCellDef> Endereco </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.endereco}}</mat-cell>
+                </ng-container>
+            
+                <ng-container matColumnDef="editar">
+                    <mat-header-cell *matHeaderCellDef> Editar </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Editar" (click)="editarSeguradora(row)">  
+                        <mat-icon>create</mat-icon>
+                    </button></mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="remover">
+                    <mat-header-cell *matHeaderCellDef> Remover </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> <button mat-icon-button  matTooltip="Remover" (click)="removeItem('Seguradora', row.nome ,row.id)">  
+                        <mat-icon>delete</mat-icon>
+                    </button></mat-cell>
+                </ng-container>
+
+                
+        
+                <mat-header-row *matHeaderRowDef="displayedColumnsSeguradora"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumnsSeguradora;">
+                </mat-row>
+                </mat-table>
+                <mat-paginator #paginatorSeguradora [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        
+            </div>
+
         </mat-card-content>
     </mat-card>
-  </mat-tab>-->
+  </mat-tab>
 
   <mat-tab label = "GESTAO DE USUARIOS" *ngIf='acesso_users'>
     <mat-card class="example-card">
