@@ -50,6 +50,8 @@ export class Medicamento {
 
     preco_venda?: number;
 
+    preco_seguradora?: Number;
+
     valor_medio_entrada?:number; //Valor de estoque calculado com base na media dos valores de entrada
 
     //movimentos:Movimentos[];

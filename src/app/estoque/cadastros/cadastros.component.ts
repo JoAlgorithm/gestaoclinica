@@ -33,7 +33,7 @@ export class CadastrosComponent implements OnInit {
   medicamentoFormGroup: FormGroup; //Fomulario
 
   dataSourseMedicamento: MatTableDataSource<Medicamento>;
-  displayedColumnsMedicamento = ['codigo', 'tipo' ,'categoria', 'nome_g', 'nome_c', 'un', 'preco_venda', 'min', 'composicao', 'editar', 'remover'];
+  displayedColumnsMedicamento = ['codigo', 'tipo' ,'categoria', 'nome_g', 'nome_c', 'un', 'preco_venda', 'preco_seguradora', 'min', 'composicao', 'editar', 'remover'];
   @ViewChild('paginatorMedicamento', { read: MatPaginator }) paginatorMedicamento: MatPaginator;
 
   /*
@@ -81,6 +81,7 @@ export class CadastrosComponent implements OnInit {
       m_nome_composicao: [''],
       m_un: ['', Validators.required],
       m_preco_venda: ['', Validators.required],
+      preco_seguradora: ['', Validators.required],
       m_min: [''],
     });
 

@@ -94,7 +94,7 @@ export class ConfiguracoesService {
   //Atualizar dados da CLINICA
   updateClinica(clinica: Clinica){
     //return this.firestore.doc('clinicas/'+this.authService.get_clinica_id).update(clinica);
-    return this.db.list('clinicas/').update(clinica.id+"", clinica);
+    return this.db.list('clinicas/').update(this.authService.get_clinica_id+"", clinica);
   }
 
   getClinica(){

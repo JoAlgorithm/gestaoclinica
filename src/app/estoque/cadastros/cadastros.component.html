@@ -53,7 +53,11 @@
 
             <!--MIN-->
             <mat-form-field style="width: 31%">
-              <input matInput placeholder="Preco de venda" type="number"  [(ngModel)]="medicamento.preco_venda" required> 
+              <input matInput placeholder="Preco de venda (singulares)" type="number"  [(ngModel)]="medicamento.preco_venda" required> 
+            </mat-form-field>
+
+            <mat-form-field style="width: 31%">
+              <input matInput placeholder="Preco de venda (empresas)" type="number"  [(ngModel)]="medicamento.preco_seguradora" required> 
             </mat-form-field>
 
             <!--MIN-->
@@ -62,7 +66,7 @@
             </mat-form-field>
 
             <!--COMPOSICAO-->
-            <mat-form-field style="width: 62%">
+            <mat-form-field style="width: 31%">
               <input matInput placeholder="Composicao"  [(ngModel)]="medicamento.composicao"> 
             </mat-form-field>
 
@@ -105,9 +109,15 @@
             </ng-container>
 
             <ng-container matColumnDef="preco_venda">
-              <mat-header-cell *matHeaderCellDef> Preco de venda (MZN) </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef> Preco singulares (MZN) </mat-header-cell>
               <mat-cell *matCellDef="let row"> {{row.preco_venda| currency:' ':'symbol':'1.2-2'}}</mat-cell>
             </ng-container>
+
+            <ng-container matColumnDef="preco_seguradora">
+              <mat-header-cell *matHeaderCellDef> Preco empresas (MZN) </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.preco_seguradora| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+            </ng-container>
+            
 
             <ng-container matColumnDef="min">
               <mat-header-cell *matHeaderCellDef> Min </mat-header-cell>

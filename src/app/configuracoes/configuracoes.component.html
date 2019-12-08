@@ -30,14 +30,21 @@
                       <input matInput placeholder="Cidade" formControlName="clinica_cidade" [(ngModel)]="clinica.cidade" required> 
                   </mat-form-field>
 
-                  <!--ENDERECEO DA CLINICA-->
-                  <mat-form-field style="width: 66%">
-                      <input matInput placeholder="Endereco" formControlName="clinica_endereco" [(ngModel)]="clinica.endereco" required> 
-                  </mat-form-field>
-
                   <!--PRECO CONSULTA DA CLINICA-->
                   <mat-form-field style="width: 33%">
-                      <input matInput placeholder="Preco de consulta" formControlName="clinica_preco_consulta" [(ngModel)]="clinica.preco_consulta" required> 
+                      <input matInput placeholder="Telefone" formControlName="clinica_telefone" [(ngModel)]="clinica.telefone" required> 
+                  </mat-form-field>
+
+                  <mat-form-field style="width: 33%">
+                    <input matInput placeholder="Email" formControlName="clinica_email" [(ngModel)]="clinica.email" required> 
+                  </mat-form-field>
+
+                  <mat-form-field style="width: 33%">
+                    <input matInput placeholder="Nuit" formControlName="clinica_nuit" [(ngModel)]="clinica.nuit" required> 
+                  </mat-form-field>
+
+                  <mat-form-field style="width: 98%">
+                    <input matInput placeholder="Endereco" formControlName="clinica_endereco" [(ngModel)]="clinica.endereco" required> 
                   </mat-form-field>
 
             </form>
@@ -63,13 +70,18 @@
                     <form [formGroup]="categorias_consultaFormGroup">
                     
                             <!--NOME DO CONSULTA-->
-                            <mat-form-field style="width: 45%">
+                            <mat-form-field style="width: 31%">
                                 <input matInput placeholder="Consulta" formControlName="cs_nome" [(ngModel)]="categoria_consulta.nome" required>
                             </mat-form-field>
             
                             <!--PRECO DO CONSULTA-->
-                            <mat-form-field style="width: 45%">
-                                <input matInput placeholder="Preco" formControlName="cs_preco" [(ngModel)]="categoria_consulta.preco" required>
+                            <mat-form-field style="width: 31%">
+                                <input matInput placeholder="Preco (singulares)" formControlName="cs_preco" [(ngModel)]="categoria_consulta.preco" required>
+                            </mat-form-field>
+
+                            <!--PRECO DE CONVENIO-->
+                            <mat-form-field style="width: 31%">
+                                <input matInput placeholder="Preco (empresas)" formControlName="cs_preco_seguradora" [(ngModel)]="categoria_consulta.preco_seguradora" required>
                             </mat-form-field>
                             
                             <button mat-icon-button (click)="registarCategoriaConsulta()" matTooltip="REGISTAR CONSULTA MEDICA {{categoria_consulta.nome}}" *ngIf='!editar_consultas'>
@@ -91,8 +103,13 @@
                         </ng-container>
                 
                         <ng-container matColumnDef="preco">
-                            <mat-header-cell *matHeaderCellDef> Preco (MZN) </mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef> Preco singulares (MZN) </mat-header-cell>
                             <mat-cell *matCellDef="let row"> {{row.preco| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="preco_seguradora">
+                            <mat-header-cell *matHeaderCellDef> Preco empresas (MZN) </mat-header-cell>
+                            <mat-cell *matCellDef="let row"> {{row.preco_seguradora| currency:' ':'symbol':'1.2-2'}}</mat-cell>
                         </ng-container>
                     
                         <ng-container matColumnDef="editar">
@@ -133,7 +150,7 @@
           <!--<form [formGroup]="cadastro_diagnosticoFormGroup">-->
               <!--<ng-template matStepLabel>DADOS DO PACIENTE</ng-template>-->
               <!--TIPO DE DIAGNOSTICO AUX--> 
-              <mat-form-field style="width: 23%">
+              <mat-form-field style="width: 31%">
                     <mat-select placeholder="Tipo" [(ngModel)]="diagnostico.tipo" (selectionChange)="filtrarTipoDiagnostico(diagnostico.tipo)" [(value)]="diagnostico.tipo">
                         <mat-option >
                             <ngx-mat-select-search  [(ngModel)]="filtratipodiagnostico" placeholderLabel="Pesquisar"  noEntriesFoundLabel="Nenhuma informacao encontrada" matInput (keyup)="filtrarTipoDiagnosticos($event.target.value)"></ngx-mat-select-search>
@@ -145,7 +162,7 @@
                 </mat-form-field>
 
                 <!--SUBTIPO DE DIAGNOSTICO AUX-->
-              <mat-form-field style="width: 23%">
+              <mat-form-field style="width: 31%">
                     <mat-select placeholder="Sub-Tipo"  [(ngModel)]="diagnostico.subtipo" [(value)]="diagnostico.subtipo">
                             <mat-option >
                                     <ngx-mat-select-search  [(ngModel)]="filtrarsubtipoDiagnosticos" placeholderLabel="Pesquisar" noEntriesFoundLabel="Nenhuma informacao encontrada" matInput (keyup)="filtrarSubtipoDiagnosticos($event.target.value)"></ngx-mat-select-search>
@@ -157,13 +174,18 @@
                 </mat-form-field>
                 
                 <!--NOME DO DIAGNOSITOC-->
-                <mat-form-field style="width: 23%">
+                <mat-form-field style="width: 31%">
                     <input matInput placeholder="Nome"  [(ngModel)]="diagnostico.nome" required>
                 </mat-form-field>
 
                  <!--PRECO DO DIAGNOSITOC-->
-                 <mat-form-field style="width: 23%">
-                    <input matInput placeholder="Preco"  [(ngModel)]="diagnostico.preco" required>
+                 <mat-form-field style="width: 46.5%">
+                    <input matInput placeholder="Preco (singulares)"  [(ngModel)]="diagnostico.preco" required>
+                </mat-form-field>
+
+                <!--PRECO DO DIAGNOSITOC-->
+                <mat-form-field style="width: 46.5%">
+                    <input matInput placeholder="Preco (empresas)"  [(ngModel)]="diagnostico.preco_seguradora" required>
                 </mat-form-field>
                 
                 <button mat-icon-button (click)="registarDiagnostico()" matTooltip="REGISTAR NOVO DIAGNOSTICO {{diagnostico.nome}}" *ngIf='!editar_diagnostico'>
@@ -196,9 +218,14 @@
                 </ng-container>
       
                 <ng-container matColumnDef="preco">
-                  <mat-header-cell *matHeaderCellDef> Preco (MZN) </mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef> Preco singulares (MZN) </mat-header-cell>
                   <mat-cell *matCellDef="let row"> {{row.preco| currency:' ':'symbol':'1.2-2'}}</mat-cell>
                 </ng-container>
+
+                <ng-container matColumnDef="preco_seguradora">
+                    <mat-header-cell *matHeaderCellDef> Preco empresas (MZN) </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.preco_seguradora| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+                  </ng-container>
           
                 <ng-container matColumnDef="editar">
                     <mat-header-cell *matHeaderCellDef> Editar </mat-header-cell>
@@ -241,7 +268,7 @@
                     <!--<ng-template matStepLabel>DADOS DO PACIENTE</ng-template>-->
                 
                         <!--TIPO DE CONDUTA CLINICA-->
-                        <mat-form-field style="width: 31%">
+                        <mat-form-field style="width: 21%">
                             <mat-select placeholder="Tipo" [(ngModel)]="conduta_clinica.tipo" required [(value)]="conduta_clinica.tipo">
                                 <mat-option>
                                     <ngx-mat-select-search [(ngModel)]="filtrartipocondut" placeholderLabel="Pesquisar" noEntriesFoundLabel="Nenhuma informacao encontrada" matInput (keyup)="filtrarTiposCondutas($event.target.value)"></ngx-mat-select-search>
@@ -253,13 +280,18 @@
                         </mat-form-field>
 
                         <!--NOME DA CONDUTA CLINICA-->
-                        <mat-form-field style="width: 31%">
+                        <mat-form-field style="width: 21%">
                             <input matInput placeholder="Nome"  [(ngModel)]="conduta_clinica.nome" required>
                         </mat-form-field>
 
                         <!--PRECO DA CONDUTA CLINICA-->
-                        <mat-form-field style="width: 31%">
-                            <input matInput placeholder="Preco"  [(ngModel)]="conduta_clinica.preco" required>
+                        <mat-form-field style="width: 21%">
+                            <input matInput placeholder="Preco (singulares)"  [(ngModel)]="conduta_clinica.preco" required>
+                        </mat-form-field>
+
+                        <!--PRECO DA CONDUTA CLINICA-->
+                        <mat-form-field style="width: 21%">
+                            <input matInput placeholder="Preco (empresas)"  [(ngModel)]="conduta_clinica.preco_seguradora" required>
                         </mat-form-field>
                         
                         <button mat-icon-button (click)="registarCondutaClinica()" matTooltip="REGISTAR {{conduta_clinica.nome}}" *ngIf='!editar_conduta'>
@@ -287,9 +319,15 @@
                         </ng-container>
                 
                         <ng-container matColumnDef="preco">
-                            <mat-header-cell *matHeaderCellDef> Preco (MZN) </mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef> Preco singulares (MZN) </mat-header-cell>
                             <mat-cell *matCellDef="let row"> {{row.preco| currency:' ':'symbol':'1.2-2'}}</mat-cell>
                         </ng-container>
+
+                        <ng-container matColumnDef="preco_seguradora">
+                            <mat-header-cell *matHeaderCellDef> Preco empresas (MZN) </mat-header-cell>
+                            <mat-cell *matCellDef="let row"> {{row.preco_seguradora| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+                        </ng-container>
+                        
                     
                         <ng-container matColumnDef="editar">
                             <mat-header-cell *matHeaderCellDef> Editar </mat-header-cell>

@@ -3,4 +3,6 @@ export class CategoriaConsulta {
 
     nome?: string;
     preco?: Number;
+    
+    preco_seguradora?: Number;
 }

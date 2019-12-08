@@ -65,7 +65,7 @@ export class ConfiguracoesComponent implements OnInit {
   
   //ATRIBUTOS DA TABELA
   dataSourseDiagnostico: MatTableDataSource<DiagnosticoAuxiliar>;
-  displayedColumnsDiagnostico = ['tipo','subtipo','nome','preco', 'editar', 'remover'];
+  displayedColumnsDiagnostico = ['tipo','subtipo','nome','preco', 'preco_seguradora', 'editar', 'remover'];
   @ViewChild('paginatorDiagnostico', { read: MatPaginator }) paginatorDiagnostico: MatPaginator;
   @ViewChild(MatSort) sortDiagnostico: MatSort;
 
@@ -107,7 +107,7 @@ export class ConfiguracoesComponent implements OnInit {
   
   //ATRIBUTOS DA TABELA
   dataSourseCategoriaC: MatTableDataSource<CategoriaConsulta>;
-  displayedColumnsCategoriaC = ['nome','preco', 'editar', 'remover'];
+  displayedColumnsCategoriaC = ['nome','preco', 'preco_seguradora', 'editar', 'remover'];
   @ViewChild('paginatorCategoriaC', { read: MatPaginator }) paginatorCategoriaC: MatPaginator;
   @ViewChild(MatSort) sortCategoriaC: MatSort;
 
@@ -130,7 +130,7 @@ export class ConfiguracoesComponent implements OnInit {
 
   //ATRIBUTOS DA TABELA
   dataSourseCondutaC: MatTableDataSource<CondutaClinica>;
-  displayedColumnsCondutaC = ['tipo','nome','preco', 'editar', 'remover'];
+  displayedColumnsCondutaC = ['tipo','nome','preco', 'preco_seguradora', 'editar', 'remover'];
   @ViewChild('paginatorCondutaC', { read: MatPaginator }) paginatorCondutaC: MatPaginator;
   @ViewChild(MatSort) sortCondutaC: MatSort;
 
@@ -199,7 +199,9 @@ export class ConfiguracoesComponent implements OnInit {
       clinica_cidade: ['', Validators.required],
       clinica_provincia: ['', Validators.required],
       clinica_pais: ['', Validators.required],
-      clinica_preco_consulta: ['', Validators.required],
+      clinica_telefone: ['', Validators.required],
+      clinica_email: ['', Validators.required],
+      clinica_nuit: ['', Validators.required],
     });
     this.dados_geraisFormGroup.controls['clinica_pais'].disable();
     this.dados_geraisFormGroup.controls['clinica_provincia'].disable();
@@ -239,7 +241,8 @@ export class ConfiguracoesComponent implements OnInit {
     //TAB CONSULTAS MEDICAS (CATEGORIACONSULTA)
     this.categorias_consultaFormGroup = this._formBuilder.group({
       cs_nome: ['', Validators.required],
-      cs_preco: ['', Validators.required]
+      cs_preco: ['', Validators.required],
+      cs_preco_seguradora: ['', Validators.required]
     });
 
     this.configServices.getCategoriasConsulta().snapshotChanges().subscribe(data => {

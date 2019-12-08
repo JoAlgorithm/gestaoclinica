@@ -17,5 +17,6 @@ export class CondutaClinica {
     
     nome?: string;
     preco?: Number;
+    preco_seguradora?: Number;
     
 }
