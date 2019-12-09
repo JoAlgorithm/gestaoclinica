@@ -2501,7 +2501,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     if(categoria == 'Cotacao'){
       nome = "COTAÇÃO";
     }else{
-      nome = "RECIBO";
+      nome = "FATURA";
     }
   
     if(this.clinica.endereco){

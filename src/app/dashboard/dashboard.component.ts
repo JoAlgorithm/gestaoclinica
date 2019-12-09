@@ -229,8 +229,9 @@ export class DashboardComponent {
         this.faturacoes.forEach(element => {
           this.total_valor = +this.total_valor + +element.valor;
 
-          let dia = new Date(element.data).getDay();
-          dia = +dia + +1;
+          //let dia = new Date(element.data).getDay();
+          //dia = +dia + +1;
+          let dia = new Date(element.data).toISOString().substr(8,2);
 
          if(this.mes == element.mes){
 
@@ -244,157 +245,157 @@ export class DashboardComponent {
 
           switch(dia) {
 
-            case 1: {
+            case "01": {
               this.um_valor = +this.um_valor + +element.valor;
               break;
             }
 
-            case 2: {
+            case "02": {
               this.dois_valor = +this.dois_valor + +element.valor;
               break;
             }
 
-            case 3: {
+            case "03": {
               this.tres_valor = +this.tres_valor + +element.valor;
               break;
             }
             
-            case 4: {
+            case "04": {
               this.quatro_valor = +this.quatro_valor + +element.valor;
               break;
             }
 
-            case 5: {
+            case "05": {
               this.cinco_valor = +this.cinco_valor + +element.valor;
               break;
             }
 
-            case 6: {
+            case "06": {
               this.seis_valor = +this.seis_valor + +element.valor;
               break;
             }
 
-            case 7: {
+            case "07": {
               this.sete_valor = +this.sete_valor + +element.valor;
               break;
             }
 
-            case 8: {
+            case "08": {
               this.oito_valor = +this.oito_valor + +element.valor;
               break;
             }
 
-            case 9: {
+            case "09": {
               this.nove_valor = +this.nove_valor + +element.valor;
               break;
             }
 
-            case 10: {
+            case "10": {
               this.dez_valor = +this.dez_valor + +element.valor;
               break;
             }
 
-            case 11: {
+            case "11": {
               this.onze_valor = +this.onze_valor + +element.valor;
               break;
             }
 
-            case 12: {
+            case "12": {
               this.doze_valor = +this.doze_valor + +element.valor;
               break;
             }
 
-            case 13: {
+            case "13": {
               this.treze_valor = +this.treze_valor + +element.valor;
               break;
             }
 
-            case 14: {
+            case "14": {
               this.catorze_valor = +this.catorze_valor + +element.valor;
               break;
             }
 
-            case 15: {
+            case "15": {
               this.quinze_valor = +this.quinze_valor + +element.valor;
               break;
             }
 
-            case 16: {
+            case "16": {
               this.dezasseis_valor = +this.dezasseis_valor + +element.valor;
               break;
             }
 
-            case 17: {
+            case "17": {
               this.dezassete_valor = +this.dezassete_valor + +element.valor;
               break;
             }
 
-            case 18: {
+            case "18": {
               this.dezoito_valor = +this.dezoito_valor + +element.valor;
               break;
             }
 
-            case 19: {
+            case "19": {
               this.dezanove_valor = +this.dezanove_valor + +element.valor;
               break;
             }
 
-            case 20: {
+            case "20": {
               this.vinte_valor = +this.vinte_valor + +element.valor;
               break;
             }
 
-            case 21: {
+            case "21": {
               this.vinteum_valor = +this.vinteum_valor + +element.valor;
               break;
             }
 
-            case 22: {
+            case "22": {
               this.vintedois_valor = +this.vintedois_valor + +element.valor;
               break;
             }
 
-            case 23: {
+            case "23": {
               this.vintetrez_valor = +this.vintetrez_valor + +element.valor;
               break;
             }
 
-            case 24: {
+            case "24": {
               this.vintequatro_valor = +this.vintequatro_valor + +element.valor;
               break;
             }
 
-            case 25: {
+            case "25": {
               this.vintecinco_valor = +this.vintecinco_valor + +element.valor;
               break;
             }
 
-            case 26: {
+            case "26": {
               this.vinteseis_valor = +this.vinteseis_valor + +element.valor;
               break;
             }
 
-            case 27: {
+            case "27": {
               this.vintesete_valor = +this.vintesete_valor + +element.valor;
               break;
             }
 
-            case 28: {
+            case "28": {
               this.vinteoito_valor = +this.vinteoito_valor + +element.valor;
               break;
             }
 
-            case 29: {
+            case "29": {
               this.vintenove_valor = +this.vintenove_valor + +element.valor;
               break;
             }
 
-            case 30: {
+            case "30": {
               this.trinta_valor = +this.trinta_valor + +element.valor;
               break;
             }
 
-            case 31: {
+            case "31": {
               this.trintaum_valor = +this.trintaum_valor + +element.valor;
               break;
             }
@@ -757,163 +758,164 @@ export class DashboardComponent {
         if(this.medico == "Todos"){
           this.total_valor = +this.total_valor + +element.valor;
 
-          let dia = new Date(element.data).getDay();
-          dia = +dia + +1;
+          //let dia = new Date(element.data).getDay();
+          //dia = +dia + +1;
+          let dia = new Date(element.data).toISOString().substr(8,2);          
 
          if(this.mes == element.mes){
           switch(dia) {
 
-            case 1: {
+            case "01": {
               this.um_valor = +this.um_valor + +element.valor;
               break;
             }
 
-            case 2: {
+            case "02": {
               this.dois_valor = +this.dois_valor + +element.valor;
               break;
             }
 
-            case 3: {
+            case "03": {
               this.tres_valor = +this.tres_valor + +element.valor;
               break;
             }
             
-            case 4: {
+            case "04": {
               this.quatro_valor = +this.quatro_valor + +element.valor;
               break;
             }
 
-            case 5: {
+            case "05": {
               this.cinco_valor = +this.cinco_valor + +element.valor;
               break;
             }
 
-            case 6: {
+            case "06": {
               this.seis_valor = +this.seis_valor + +element.valor;
               break;
             }
 
-            case 7: {
+            case "07": {
               this.sete_valor = +this.sete_valor + +element.valor;
               break;
             }
 
-            case 8: {
+            case "08": {
               this.oito_valor = +this.oito_valor + +element.valor;
               break;
             }
 
-            case 9: {
+            case "09": {
               this.nove_valor = +this.nove_valor + +element.valor;
               break;
             }
 
-            case 10: {
+            case "10": {
               this.dez_valor = +this.dez_valor + +element.valor;
               break;
             }
 
-            case 11: {
+            case "11": {
               this.onze_valor = +this.onze_valor + +element.valor;
               break;
             }
 
-            case 12: {
+            case "12": {
               this.doze_valor = +this.doze_valor + +element.valor;
               break;
             }
 
-            case 13: {
+            case "13": {
               this.treze_valor = +this.treze_valor + +element.valor;
               break;
             }
 
-            case 14: {
+            case "14": {
               this.catorze_valor = +this.catorze_valor + +element.valor;
               break;
             }
 
-            case 15: {
+            case "15": {
               this.quinze_valor = +this.quinze_valor + +element.valor;
               break;
             }
 
-            case 16: {
+            case "16": {
               this.dezasseis_valor = +this.dezasseis_valor + +element.valor;
               break;
             }
 
-            case 17: {
+            case "17": {
               this.dezassete_valor = +this.dezassete_valor + +element.valor;
               break;
             }
 
-            case 18: {
+            case "18": {
               this.dezoito_valor = +this.dezoito_valor + +element.valor;
               break;
             }
 
-            case 19: {
+            case "19": {
               this.dezanove_valor = +this.dezanove_valor + +element.valor;
               break;
             }
 
-            case 20: {
+            case "20": {
               this.vinte_valor = +this.vinte_valor + +element.valor;
               break;
             }
 
-            case 21: {
+            case "21": {
               this.vinteum_valor = +this.vinteum_valor + +element.valor;
               break;
             }
 
-            case 22: {
+            case "22": {
               this.vintedois_valor = +this.vintedois_valor + +element.valor;
               break;
             }
 
-            case 23: {
+            case "23": {
               this.vintetrez_valor = +this.vintetrez_valor + +element.valor;
               break;
             }
 
-            case 24: {
+            case "24": {
               this.vintequatro_valor = +this.vintequatro_valor + +element.valor;
               break;
             }
 
-            case 25: {
+            case "25": {
               this.vintecinco_valor = +this.vintecinco_valor + +element.valor;
               break;
             }
 
-            case 26: {
+            case "26": {
               this.vinteseis_valor = +this.vinteseis_valor + +element.valor;
               break;
             }
 
-            case 27: {
+            case "27": {
               this.vintesete_valor = +this.vintesete_valor + +element.valor;
               break;
             }
 
-            case 28: {
+            case "28": {
               this.vinteoito_valor = +this.vinteoito_valor + +element.valor;
               break;
             }
 
-            case 29: {
+            case "29": {
               this.vintenove_valor = +this.vintenove_valor + +element.valor;
               break;
             }
 
-            case 30: {
+            case "30": {
               this.trinta_valor = +this.trinta_valor + +element.valor;
               break;
             }
 
-            case 31: {
+            case "31": {
               this.trintaum_valor = +this.trintaum_valor + +element.valor;
               break;
             }
@@ -998,163 +1000,164 @@ export class DashboardComponent {
 
           this.total_valor = +this.total_valor + +element.valor;
 
-          let dia = new Date(element.data).getDay();
-          dia = +dia + +1;
+          //let dia = new Date(element.data).getDay();
+          //dia = +dia + +1;
+          let dia = new Date(element.data).toISOString().substr(8,2);
 
          if(this.mes == element.mes){
           switch(dia) {
 
-            case 1: {
+            case "01": {
               this.um_valor = +this.um_valor + +element.valor;
               break;
             }
 
-            case 2: {
+            case "02": {
               this.dois_valor = +this.dois_valor + +element.valor;
               break;
             }
 
-            case 3: {
+            case "03": {
               this.tres_valor = +this.tres_valor + +element.valor;
               break;
             }
             
-            case 4: {
+            case "04": {
               this.quatro_valor = +this.quatro_valor + +element.valor;
               break;
             }
 
-            case 5: {
+            case "05": {
               this.cinco_valor = +this.cinco_valor + +element.valor;
               break;
             }
 
-            case 6: {
+            case "06": {
               this.seis_valor = +this.seis_valor + +element.valor;
               break;
             }
 
-            case 7: {
+            case "07": {
               this.sete_valor = +this.sete_valor + +element.valor;
               break;
             }
 
-            case 8: {
+            case "08": {
               this.oito_valor = +this.oito_valor + +element.valor;
               break;
             }
 
-            case 9: {
+            case "09": {
               this.nove_valor = +this.nove_valor + +element.valor;
               break;
             }
 
-            case 10: {
+            case "10": {
               this.dez_valor = +this.dez_valor + +element.valor;
               break;
             }
 
-            case 11: {
+            case "11": {
               this.onze_valor = +this.onze_valor + +element.valor;
               break;
             }
 
-            case 12: {
+            case "12": {
               this.doze_valor = +this.doze_valor + +element.valor;
               break;
             }
 
-            case 13: {
+            case "13": {
               this.treze_valor = +this.treze_valor + +element.valor;
               break;
             }
 
-            case 14: {
+            case "14": {
               this.catorze_valor = +this.catorze_valor + +element.valor;
               break;
             }
 
-            case 15: {
+            case "15": {
               this.quinze_valor = +this.quinze_valor + +element.valor;
               break;
             }
 
-            case 16: {
+            case "16": {
               this.dezasseis_valor = +this.dezasseis_valor + +element.valor;
               break;
             }
 
-            case 17: {
+            case "17": {
               this.dezassete_valor = +this.dezassete_valor + +element.valor;
               break;
             }
 
-            case 18: {
+            case "18": {
               this.dezoito_valor = +this.dezoito_valor + +element.valor;
               break;
             }
 
-            case 19: {
+            case "19": {
               this.dezanove_valor = +this.dezanove_valor + +element.valor;
               break;
             }
 
-            case 20: {
+            case "20": {
               this.vinte_valor = +this.vinte_valor + +element.valor;
               break;
             }
 
-            case 21: {
+            case "21": {
               this.vinteum_valor = +this.vinteum_valor + +element.valor;
               break;
             }
 
-            case 22: {
+            case "22": {
               this.vintedois_valor = +this.vintedois_valor + +element.valor;
               break;
             }
 
-            case 23: {
+            case "23": {
               this.vintetrez_valor = +this.vintetrez_valor + +element.valor;
               break;
             }
 
-            case 24: {
+            case "24": {
               this.vintequatro_valor = +this.vintequatro_valor + +element.valor;
               break;
             }
 
-            case 25: {
+            case "25": {
               this.vintecinco_valor = +this.vintecinco_valor + +element.valor;
               break;
             }
 
-            case 26: {
+            case "26": {
               this.vinteseis_valor = +this.vinteseis_valor + +element.valor;
               break;
             }
 
-            case 27: {
+            case "27": {
               this.vintesete_valor = +this.vintesete_valor + +element.valor;
               break;
             }
 
-            case 28: {
+            case "28": {
               this.vinteoito_valor = +this.vinteoito_valor + +element.valor;
               break;
             }
 
-            case 29: {
+            case "29": {
               this.vintenove_valor = +this.vintenove_valor + +element.valor;
               break;
             }
 
-            case 30: {
+            case "30": {
               this.trinta_valor = +this.trinta_valor + +element.valor;
               break;
             }
 
-            case 31: {
+            case "31": {
               this.trintaum_valor = +this.trintaum_valor + +element.valor;
               break;
             }
