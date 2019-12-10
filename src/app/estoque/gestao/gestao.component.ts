@@ -54,10 +54,14 @@ export class GestaoComponent implements OnInit {
             }else if(element.qtd_disponivel >= element.min){
               element.nivel = "> Min";
               element.sugestao = "Estoque aceitavel";
-            }else{
+            }else if(element.min > 0){
               element.nivel = "< Min";
               element.sugestao = "Repor";
+            }else{
+              element.sugestao = "Definir min";
             }
+          }else{
+            element.sugestao = "Definir min";
           }
         });
 
@@ -95,10 +99,14 @@ export class GestaoComponent implements OnInit {
           }else if(element.qtd_disponivel >= element.min){
             element.nivel = "> Min";
             element.sugestao = "Estoque aceitavel";
-          }else{
+          }else if(element.min > 0){
             element.nivel = "< Min";
             element.sugestao = "Repor";
+          }else{
+            element.sugestao = "Definir min";
           }
+        }else{
+          element.sugestao = "Definir min";
         }
       });
 
