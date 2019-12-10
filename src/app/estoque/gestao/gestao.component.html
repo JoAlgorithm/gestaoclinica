@@ -1,0 +1,55 @@
+<mat-card class="example-card">
+    <mat-card-content>
+        <h5>GESTAO DE ESTOQUES:</h5> <h6>ANALISE DE NIVEL MINIMO, QTD DISPONIVEL, NIVEIS DE ESTOQUE E NECESSIDADE DE REPOSICAO</h6>
+
+        <mat-form-field style="width: 33%">
+            <mat-select placeholder="Filtrar por deposito" [(ngModel)]="deposito" [(value)]="deposito"  (selectionChange)="onSelect(deposito)" > 
+                <mat-option *ngFor="let deposito of depositos" [value]="deposito">
+                  {{deposito.nome}}
+                </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        <div class="example-container mat-elevation-z8">
+            <mat-table [dataSource]="dataSourse" matSort>
+                <ng-container matColumnDef="codigo">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Codigo </mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{row.codigo}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="nome">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{row.nome_generico}}</mat-cell>
+                </ng-container>
+                
+                <ng-container matColumnDef="min">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Min </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.min}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="qtd_disponivel">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Qtd disponivel </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.qtd_disponivel}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="nivel">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Nivel </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.nivel}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="sugestao">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Sugestao </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.sugestao}}</mat-cell>
+                </ng-container>
+                
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;">
+                </mat-row>
+            </mat-table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+
+    </mat-card-content>
+</mat-card>
+

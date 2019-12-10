@@ -53,7 +53,8 @@ const MENUITEMS:Menu[] = [
     icon: 'local_pharmacy',
     children: [
       {state: 'estoque_movimentos', name: 'Movimentos'},
-      {state: 'estoque_cadastros', name: 'Cadastros'}
+      {state: 'estoque_cadastros', name: 'Cadastros'},
+      {state: 'estoque_gestao', name: 'Gestao'},
     ]
   },
   {
@@ -122,7 +123,8 @@ const MENUITEMS_ADMNISTRATIVO:Menu[] = [
     icon: 'local_pharmacy',
     children: [
       {state: 'estoque_movimentos', name: 'Movimentos'},
-      {state: 'estoque_cadastros', name: 'Cadastros'}
+      {state: 'estoque_cadastros', name: 'Cadastros'},
+      {state: 'estoque_gestao', name: 'Gestao'},
     ]
   },
   {
@@ -158,7 +160,8 @@ const MENUITEMS_FARMACIA_ADMNISTRATIVO:Menu[] = [
     icon: 'local_pharmacy',
     children: [
       {state: 'estoque_movimentos', name: 'Movimentos'},
-      {state: 'estoque_cadastros', name: 'Cadastros'}
+      {state: 'estoque_cadastros', name: 'Cadastros'},
+      {state: 'estoque_gestao', name: 'Gestao'},
     ]
   }
 ];

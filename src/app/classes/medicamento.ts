@@ -46,6 +46,11 @@ export class Medicamento {
     // Acima do maximo
     nivel?: string;
 
+    //Repor
+    //Nao repor
+    // etc
+    sugestao?: string;
+
     qtd_disponivel?: number;
 
     preco_venda?: number;
@@ -59,6 +64,8 @@ export class Medicamento {
     //Variaveis usadas para manipular a venda nas farmacias
     qtd_solicitada?: number;
     preco_venda_total?: number;
+
+
 
  }
  

@@ -64,6 +64,7 @@ import { MovimentosComponent, RegistoDialog, SaidaDialog } from './movimentos/mo
 import { CadastrosComponent, ConfirmacaoDialog } from './cadastros/cadastros.component';
 import { EstoqueService } from '../services/estoque.service';
 import { AuthService } from '../services/auth.service';
+import { GestaoComponent } from './gestao/gestao.component';
 
 
 
@@ -135,7 +136,8 @@ import { AuthService } from '../services/auth.service';
     CadastrosComponent,
     RegistoDialog,
     ConfirmacaoDialog,
-    SaidaDialog
+    SaidaDialog,
+    GestaoComponent
   ],
   entryComponents: [
     RegistoDialog,
