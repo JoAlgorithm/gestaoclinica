@@ -117,6 +117,8 @@ export class SaidaDialog {
 
   //motivoSaida = ['Estorno', 'Ajuste']
   
+  medicamentos_aux: Medicamento[];
+
   constructor(public dialogRef: MatDialogRef<SaidaDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public estoqueService: EstoqueService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder)
@@ -133,10 +135,25 @@ export class SaidaDialog {
     });
 
     this.depositos = this.data.depositos;
+
+    this.medicamentos_aux = this.data.medicamentos;
   }//Fim do Constructor
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  filtrartipomedic="";
+  filtrarMedicamento(filtrartipomedic) {
+    if(filtrartipomedic){
+      filtrartipomedic = filtrartipomedic.trim(); // Remove whitespace
+      filtrartipomedic = filtrartipomedic.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.data.medicamentos = null;
+      this.data.medicamentos = this.medicamentos_aux.filter(item => item.nome_generico.toLocaleLowerCase().indexOf(filtrartipomedic) > -1);     
+    }else{
+      this.data.medicamentos = this.medicamentos_aux;
+    }
   }
 
   saveMvt(){
@@ -162,7 +179,7 @@ export class SaidaDialog {
         //eliminar redundancia de dados para dar agilidade e perfomance a base de dados
         mvt.deposito_nome = mvt.deposito.nome;
         mvt.deposito = null;
-        mvt.medicamento_nome = mvt.medicamento.nome_comercial;
+        mvt.medicamento_nome = mvt.medicamento.nome_generico;
         mvt.medicamento = null;
         updatedUserData['/estoquesmovimentos/'+this.authService.get_clinica_id+"/"+key] = mvt;
       });
@@ -275,6 +292,8 @@ export class RegistoDialog {
 
   depositos:Deposito[];
 
+  medicamentos_aux: Medicamento[];
+
   constructor(public dialogRef: MatDialogRef<RegistoDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public estoqueService: EstoqueService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder)
@@ -289,10 +308,24 @@ export class RegistoDialog {
 
     this.depositos = this.data.depositos;
 
+    this.medicamentos_aux = this.data.medicamentos;
   }//Fim do Constructor
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  filtrartipomedic="";
+  filtrarMedicamento(filtrartipomedic) {
+    if(filtrartipomedic){
+      filtrartipomedic = filtrartipomedic.trim(); // Remove whitespace
+      filtrartipomedic = filtrartipomedic.toLowerCase(); // Datasource defaults to lowercase matches
+     
+    this.data.medicamentos = null;
+      this.data.medicamentos = this.medicamentos_aux.filter(item => item.nome_generico.toLocaleLowerCase().indexOf(filtrartipomedic) > -1);     
+    }else{
+      this.data.medicamentos = this.medicamentos_aux;
+    }
   }
   
   addMvt(){
@@ -442,6 +475,8 @@ export class RegistoDialog {
     }
 
   }
+
+  
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{

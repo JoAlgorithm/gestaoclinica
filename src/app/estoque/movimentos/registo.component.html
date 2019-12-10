@@ -2,31 +2,42 @@
 <div mat-dialog-content>
     <p>Preencha os campos para registo de {{data.tipoMovimento}}</p>
 
-    <form [formGroup]="mvtFormGroup">
+    <!--<form [formGroup]="mvtFormGroup">-->
         <mat-form-field style="width: 31%">
-            <mat-select placeholder="Deposito" formControlName="deposito" [(ngModel)]="mvt.deposito"  required>
+            <mat-select placeholder="Deposito"  [(ngModel)]="mvt.deposito"  required>
                 <mat-option *ngFor="let deposito of data.depositos" [value]="deposito">
                     {{deposito.nome}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field style="width: 31%">
+        <!--<mat-form-field style="width: 31%">
             <mat-select placeholder="Medicamento" formControlName="medicamento" [(ngModel)]="mvt.medicamento"  required>
                 <mat-option *ngFor="let medicamento of data.medicamentos" [value]="medicamento">
                     {{medicamento.nome_generico}}
                 </mat-option>
             </mat-select>
+        </mat-form-field>-->
+
+        <mat-form-field style="width: 31%">
+                <mat-select placeholder="Medicamento" [(ngModel)]="mvt.medicamento"  required>
+                <mat-option >
+                    <ngx-mat-select-search [(ngModel)]="filtrartipomedic" placeholderLabel="Pesquisar" noEntriesFoundLabel="Nenhuma informacao encontrada" matInput (keyup)="filtrarMedicamento($event.target.value)"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let medicamento of data.medicamentos" [value]="medicamento">
+                    {{medicamento.nome_generico}}
+                </mat-option>           
+            </mat-select>
         </mat-form-field>
         
         <mat-form-field style="width: 31%">
-            <input matInput placeholder="Quantidade" formControlName="qtd" [(ngModel)]="mvt.quantidade" required>
+            <input matInput placeholder="Quantidade" [(ngModel)]="mvt.quantidade" required>
         </mat-form-field>
 
         <button mat-icon-button (click)="addMvt()" matTooltip="Adicionar">
             <mat-icon>add_circle</mat-icon>
         </button>
-    </form>
+    <!--</form>-->
 
     <mat-table [dataSource]="dataSourse" matSort>
   

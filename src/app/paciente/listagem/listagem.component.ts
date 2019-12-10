@@ -701,7 +701,7 @@ export class MedicamentosDialog {
         mvt.deposito_id = mvt.deposito.id;
         //mvt.deposito = null;
 
-        mvt.medicamento_nome = mvt.medicamento.nome_comercial;
+        mvt.medicamento_nome = mvt.medicamento.nome_generico;
         mvt.medicamento_id = mvt.medicamento.id;
         //mvt.medicamento = null;  
         
