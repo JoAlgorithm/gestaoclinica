@@ -29,7 +29,7 @@
       <!--DATA DE NASCIMENTO-->
       <mat-form-field style="width: 33%">
           
-          <input matInput [matDatepicker]="picker1" placeholder="Data de nascimento" formControlName="paciente_data_nascimento" [(ngModel)]="paciente.datanascimento"  required>
+          <input matInput  [matDatepickerFilter]="myFilter" [matDatepicker]="picker1" placeholder="Data de nascimento" formControlName="paciente_data_nascimento" [(ngModel)]="paciente.datanascimento"  required>
           <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
           <mat-datepicker #picker1></mat-datepicker>
       </mat-form-field>
