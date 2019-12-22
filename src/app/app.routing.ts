@@ -40,6 +40,10 @@ export const AppRoutes: Routes = [{
   {
     path: 'estoque',
     loadChildren: './estoque/estoque.module#EstoqueComponentsModule'
+  },
+  {
+    path: 'financas',
+    loadChildren: './financas/financas.module#FinancasComponentsModule'
   }],
 
 }, {

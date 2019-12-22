@@ -1,0 +1,67 @@
+<mat-card class="example-card">
+  <mat-card-content>
+      <h5>MONITORE AQUI AS CONTAS A RECEBER</h5>
+
+      <mat-form-field style="width: 33%">
+          <mat-select placeholder="Filtrar por ano" [(ngModel)]="ano" [(value)]="ano" (selectionChange)="onSelect(ano)"> 
+              <mat-option *ngFor="let ano of anos" [value]="ano.id">
+                {{ano.id}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      <div class="example-container mat-elevation-z8">
+          <mat-table [dataSource]="dataSourse" matSort>
+              <ng-container matColumnDef="fatura">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Fatura </mat-header-cell>
+                  <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="data">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Data </mat-header-cell>
+                  <mat-cell *matCellDef="let row">{{row.data}}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="valor_total">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Valor total </mat-header-cell>
+                <mat-cell *matCellDef="let row">{{row.valor_total}}</mat-cell>
+              </ng-container>
+        
+              <ng-container matColumnDef="seguradora">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Seguradora </mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{row.seguradora_nome}}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="apolice">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Apolice </mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{row.nr_apolice}}</mat-cell>
+              </ng-container>   
+
+              <ng-container matColumnDef="paciente">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Paciente </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.cliente_nome}} {{row.cliente_apelido}}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="servico">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Servico </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.consulta}}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="confirmar">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Confirmar recebimento </mat-header-cell>
+                <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="confirmar(row)">
+                    <mat-icon>done</mat-icon>
+                  </button></mat-cell>
+              </ng-container>
+              
+
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;">
+              </mat-row>
+          </mat-table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      </div>
+
+  </mat-card-content>
+</mat-card>
+

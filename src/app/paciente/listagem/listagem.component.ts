@@ -1675,7 +1675,7 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
   }
 
   getMes(number): String{
-    console.log("Get mes "+number)
+    //console.log("Get mes "+number)
     switch(number) { 
       case 1: { 
          return "Janeiro";
@@ -1783,11 +1783,13 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
       let conta = new Conta();
       conta.ano = ano;
       conta.mes = mes;
-      conta.data = new Date();
-      conta.cliente_apelido = this.consulta.paciente.nome;
-      conta.cliente_nome = this.consulta.paciente.apelido;
+      conta.dia = dia;
+      conta.data = dia +"/"+mes+"/"+ano;
+      conta.cliente_apelido = this.consulta.paciente.apelido;
+      conta.cliente_nome = this.consulta.paciente.nome;
       conta.cliente_nid = this.consulta.paciente.nid;
       conta.forma_pagamento = this.forma_pagamento;
+      conta.consulta = "Consulta medica: "+this.consulta.categoria.nome;
       if(conta.forma_pagamento == "Convênio"){
         conta.categoria = "A receber";
         conta.nr_apolice = this.nr_apolice;
@@ -1799,7 +1801,12 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
         conta.data_recebimento = new Date();
       }
 
-      updatedUserData['contas/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = conta;
+      if( conta.categoria == "A receber"){
+        updatedUserData['contas/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/receber/'+this.nr_fatura] = conta;
+      }else{
+        updatedUserData['contas/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/recebidas/'+this.nr_fatura] = conta;
+      }
+      
       
 
       //GRAVAR SIMULTANEAMENTE TODOS OS DADOS E NAO HAVER INCONSISTENCIA

@@ -58,6 +58,16 @@ const MENUITEMS:Menu[] = [
     ]
   },
   {
+    state: 'financas',
+    name: 'FINANCAS',
+    type: 'sub',
+    icon: 'money',
+    children: [
+      {state: 'contas_recibida', name: 'Contas recebidas'},
+      {state: 'contas_receber', name: 'Contas a receber'}
+    ]
+  },
+  {
     state: 'configuracoes',
     name: 'CONFIGURACOES',
     type: 'link',

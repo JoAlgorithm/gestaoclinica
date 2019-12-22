@@ -1,0 +1,19 @@
+<div mat-dialog-content>
+    <p>Deseja realmente confirmar recebimento do valor da fatura {{data.conta.id}} ?</p>
+    <p><b>Valor total:</b> {{data.conta.valor_total| currency:' ':'symbol':'1.2-2'}} MZN</p>
+    <p><b>Servico:</b> {{data.conta.consulta}}</p>
+    <p><b>Provedor:</b> {{data.conta.seguradora_nome}}</p>
+    <p><b>Apolice:</b> {{data.conta.nr_apolice}}</p>
+
+    <!--<mat-form-field style="width: 99%">
+        <mat-select placeholder="Forma de pagamento" [(ngModel)]="forma_pagamento" required>
+            <mat-option *ngFor="let f of formas_pagamento" [value]="f.value">
+                {{f.value}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>-->
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancelar</button>
+    <button mat-button (click)="confirmar(data.conta)">Confirmar</button>
+</div> 

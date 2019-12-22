@@ -156,6 +156,14 @@ export class PacienteService {
     return this.db.object('/').update(updatedUserData);
   }
 
+  getContasReceber(ano){
+    return this.db.list('contas/'+this.authService.get_clinica_id + '/'+ ano+'/receber/');
+  }
+
+  getContasRecebidas(ano){
+    return this.db.list('contas/'+this.authService.get_clinica_id + '/'+ ano+'/recebidas/');
+  }
+
   //ENVIAR CONSULTAS DE UM COMPONENT PARA O OUTRO
   /*private subject = new Subject<Consulta>();
 

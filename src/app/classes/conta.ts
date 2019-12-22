@@ -2,7 +2,8 @@ export class Conta {
     id?: string; //vai ser nr da fatura referente
     ano?: number;
     mes?: String;
-    data?: Date;
+    dia?: number;
+    data?: string;
 
     //Categorias de contas
     // "A receber"
