@@ -54,11 +54,6 @@ export class ListagemComponent implements OnInit {
     this.isLoading = !this.isLoading;
   }
 
-
-
- 
-
-
   datanascimento: Date;
   data_nascimento: Date;
   pacientes: Paciente[];
@@ -69,8 +64,6 @@ export class ListagemComponent implements OnInit {
 
   consulta: Consulta;
  
-
-
   diagnosticos:DiagnosticoAuxiliar[];
 
   condutas:CondutaClinica[];
@@ -112,6 +105,12 @@ export class ListagemComponent implements OnInit {
     {value: 'Cabo Delgado', viewValue: 'Cabo Delgado'},
     {value: 'Niassa', viewValue: 'Niassa'},
     {value: 'Zambezia', viewValue: 'Zambezia'}
+  ]
+
+  formas_pagamento = [
+    {value: 'Cartão de crédito', viewValue: 'Cartão de crédito'},
+    {value: 'Convênio', viewValue: 'Convênio'},
+    {value: 'Numerário', viewValue: 'Numerário'},
   ]
  
 
@@ -337,7 +336,7 @@ export class ListagemComponent implements OnInit {
   marcarConsulta(paciente, tipo){
     let dialogRef = this.dialog.open(ConsultasDialog, {
       width: '800px',
-      data: { paciente: paciente, tipo: tipo, categorias_consulta: this.categorias_consulta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, medicos: this.medicos  }
+      data: { paciente: paciente, tipo: tipo, categorias_consulta: this.categorias_consulta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, medicos: this.medicos, formas_pagamento: this.formas_pagamento  }
     });
     dialogRef.afterClosed().subscribe(result => {
     //console.log("result "+result);
@@ -1605,6 +1604,8 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
 
   medico = "";
 
+  forma_pagamento = "";
+
   constructor(  public dialogRef: MatDialogRef<ConsultasDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public configServices: ConfiguracoesService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
@@ -1626,6 +1627,18 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
   onNoClick(): void {
     this.dialogRef.close();
   }
+
+  precoSegurado = false;
+  mudarFPagamento(){
+    if(this.categoria.preco){
+      if(this.forma_pagamento == "Convênio"){
+        this.precoSegurado = true;
+      }else{
+        this.precoSegurado = false;
+      }
+    }
+  }
+
   filtroconsulta="";
   filtrarConsultas(filtroconsulta) {
     if(filtroconsulta){
@@ -1703,7 +1716,13 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
       this.consulta.paciente = paciente;
       this.consulta.status = "Aberta";
       this.consulta.tipo = tipo;
-      this.consulta.preco_consulta_medica = this.categoria.preco;
+
+      if(this.forma_pagamento == "Convênio"){
+        this.consulta.preco_consulta_medica = this.categoria.preco_seguradora;
+      }else{
+        this.consulta.preco_consulta_medica = this.categoria.preco;
+      }
+
       this.consulta.categoria = this.categoria;
 
       this.consulta.paciente_nome = this.consulta.paciente.nome;
@@ -1920,9 +1939,15 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
   }
 
   
-  
-  doc.text(categoriaConsulta.preco+"", 294, linha)
-  doc.text(categoriaConsulta.preco+"", 354, linha)
+  if(this.forma_pagamento == "Convênio"){
+    doc.text(categoriaConsulta.preco_seguradora+"", 294, linha)
+    doc.text(categoriaConsulta.preco_seguradora+"", 354, linha)
+    preco_total = +categoriaConsulta.preco_seguradora;
+  }else{
+    doc.text(categoriaConsulta.preco+"", 294, linha)
+    doc.text(categoriaConsulta.preco+"", 354, linha)
+    preco_total = +categoriaConsulta.preco;
+  }
 
   preco_total = +categoriaConsulta.preco;
   item = +item + +1;

@@ -20,13 +20,13 @@ import { NrFatura } from '../../classes/nr_fatura';
 })
 export class PendentesComponent implements OnInit {
  
-
+  perfil = "";
+  acesso_remover = true;
 
   consultas: Consulta[];
 
-
   dataSourse: MatTableDataSource<Consulta>;
-  displayedColumns = ['nid','apelido', 'nome', 'diagnosticos_aux', 'valor_pagar' ,'status','imprimir', 'faturar'];
+  displayedColumns = ['nid','apelido', 'nome', 'diagnosticos_aux', 'valor_pagar' ,'status','imprimir', 'faturar', 'remover'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   clinica: Clinica = new Clinica();
@@ -41,6 +41,12 @@ export class PendentesComponent implements OnInit {
     private pacienteService: PacienteService,public snackBar: MatSnackBar) { }
 
     ngOnInit() {
+
+      this.perfil = this.authService.get_perfil;
+      if(this.perfil == 'Clinica_Admin'){
+        this.acesso_remover = false;
+      }
+
       this.configServices.getNrsCotacao().snapshotChanges().subscribe(data => {
         this.nrscotacao = data.map(e => {
           return {
@@ -158,7 +164,15 @@ export class PendentesComponent implements OnInit {
     })
   }
   
-
+  remover(consulta: Consulta){
+    let dialogRef = this.dialog.open(RemoverPendentesDialog, {
+      width: '500px',
+      data: { consulta: consulta}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log("result "+result);
+    });
+  }
   
 
 
@@ -489,6 +503,61 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
 
 }
 
+
+//DIALOG CONFIRMAR REMOCAO -----------------------------------------------------
+@Component({
+  selector: 'remover-dialog',
+  templateUrl: 'remover-diagnostico.html',
+})
+export class RemoverPendentesDialog {
+
+  consulta?: Consulta;
+
+  constructor(public dialogRef: MatDialogRef<RemoverPendentesDialog>, public configServices: ConfiguracoesService,
+  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
+  public pacienteService: PacienteService,  public snackBar: MatSnackBar) {
+    setTimeout(() => {
+      this.consulta = data.consulta;
+    })
+  }
+
+  remover(){
+    this.consulta.diagnosticos_aux.forEach(element => {
+      if(!element.faturado){
+        this.consulta.diagnosticos_aux = this.consulta.diagnosticos_aux.filter(obj => obj !== element); //Remover obejto do array
+      }
+    });
+
+    this.consulta.status = "Em andamento";
+
+    let d = Object.assign({}, this.consulta);
+
+    this.pacienteService.updateConsulta(d)
+    .then(r => {
+      this.dialogRef.close();
+      this.openSnackBar("Diagnosticos removidos com sucesso");
+    })
+    .catch(er => {
+      this.openSnackBar("Ocorreu um erro ao remover os diagnosticos");
+      console.log("ERRO: " + er.message)
+    })
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  openSnackBar(mensagem) {
+    this.snackBar.open(mensagem, null,{
+      duration: 2000
+    })
+  }
+
+}
+
+
+
+
 //DIALOG FATURAR MAIS DE UM DIAGNOSTICO AUX -----------------------------------------------------
 @Component({
   selector: 'faturar-consulta-dialog',
@@ -518,7 +587,6 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
         //Adicionar diagnosticos nao faturados ao array de diagnosticos
         this.consulta.diagnosticos_aux.forEach(element => {
           if(element.faturado != true){
-            console.log(element.nome);
             this.diagnosticos_aux.push(element);  
           }
         });
@@ -544,7 +612,6 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
     }
 
     getMes(number): String{
-      console.log("Get mes "+number)
       switch(number) { 
         case 1: { 
            return "Janeiro";
@@ -582,9 +649,8 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
         case 12: { 
           return "Dezembro"; 
         }
-        default: { 
-           //statements; 
-           break; 
+        default: {  
+          break; 
         } 
      } 
     }

@@ -63,7 +63,7 @@ import { from } from 'rxjs';
 import { PacienteService } from '../services/paciente.service';
 import { ListagemComponent, DiagnosticosDialog, CondutasDialog, ConsultasDialog } from './listagem/listagem.component';
 import { ConfiguracoesService } from '../services/configuracoes.service';
-import { PendentesComponent, FaturarDialog } from './pendentes/pendentes.component';
+import { PendentesComponent, FaturarDialog, RemoverPendentesDialog } from './pendentes/pendentes.component';
 //import { MatProgressButtonsModule } from 'mat-progress-buttons';
 //import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 //import { LaddaModule } from 'angular2-ladda';
@@ -151,7 +151,8 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     DialogDetalhes,
     DialogEditar,
     MedicamentosDialog,
-    RemoverDialog
+    RemoverDialog,
+    RemoverPendentesDialog
   ],
   entryComponents: [
     DiagnosticosDialog,
@@ -161,7 +162,8 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     DialogDetalhes,
     MedicamentosDialog,
     DialogEditar,
-    RemoverDialog
+    RemoverDialog,
+    RemoverPendentesDialog
   ],
 })
 
