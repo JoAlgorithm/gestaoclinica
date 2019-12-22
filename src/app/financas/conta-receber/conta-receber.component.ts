@@ -29,7 +29,6 @@ export class ContaReceberComponent implements OnInit {
 
   ngOnInit() {
     setTimeout(() => {
-      console.log("Ano "+this.ano)
 
       //ANOS
       this.configService.getAnos().snapshotChanges().subscribe(data => {
@@ -54,7 +53,7 @@ export class ContaReceberComponent implements OnInit {
         this.dataSourse.sort = this.sort      
 
         if(this.contas.length <= 0){
-          this.openSnackBar("Nao existe nenhuma conta a pagar");
+          this.openSnackBar("Nao existe nenhuma conta a pagar de "+this.ano);
         }
       })
 
@@ -76,7 +75,7 @@ export class ContaReceberComponent implements OnInit {
       this.dataSourse.sort = this.sort      
 
       if(this.contas.length <= 0){
-        this.openSnackBar("Nao existe nenhuma conta a pagar");
+        this.openSnackBar("Nao existe nenhuma conta a pagar de "+this.ano);
       }
     })
   }
@@ -131,12 +130,12 @@ export class ConfirmacaoDialog {
     let d = Object.assign({}, updatedUserData);
 
     this.pacienteService.multiSave(d) 
-      .then(r =>{
-        this.dialogRef.close();
-        this.openSnackBar("Conta recebida com sucesso.");
-      }, err =>{
-        this.openSnackBar("Ocorreu um erro ao atualizar. Tente novamente ou contacte a equipe de suporte.");
-      })
+    .then(r =>{
+      this.dialogRef.close();
+      this.openSnackBar("Conta recebida com sucesso.");
+    }, err =>{
+      this.openSnackBar("Ocorreu um erro ao atualizar. Tente novamente ou contacte a equipe de suporte.");
+    })
   }
 
   onNoClick(): void {
