@@ -1,32 +1,14 @@
-<div class="example-header">
+<mat-card class="example-card">
+  <mat-card-content>
+      <h5>ENCONTRE AQUI LISTA DE PACITENS E FAÇA MARCAÇÃO DE CONSULTAS</h5>
 
-
-    <mat-form-field>
-      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Pesquisar">
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
-</div>
-
-
-
-
-<!--
-  <mat-spinner-button 
-  [options]="spinnerButtonOptions"
-  (btnClick)="someFunc()">
-</mat-spinner-button>
-&nbsp;
-<mat-bar-button 
-  [options]="barButtonOptions" 
-  (btnClick)="someFunc2()">
-</mat-bar-button>
-&nbsp;
-<mat-spinner-button 
-  [options]="fabSpinnerButtonOptions"
-  (btnClick)="someFunc3()">
-</mat-spinner-button>
--->
-
+  
+  <div class="example-header">
+      <mat-form-field style="width: 50%">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Pesquisar">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+  </div>
 
   <div class="example-container mat-elevation-z8">
       <mat-table [dataSource]="dataSourse" matSort>
@@ -107,6 +89,9 @@
       <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 
   </div>
+
+  </mat-card-content>
+</mat-card>
 
     <!--<button (click)="toggleLoading()" mat-raised-button [ladda]="isLoading" color="primary">Save</button>
     <button  [ladda]="isLoading" class="btn btn-success btn-ladda" data-style="zoom-out"></button>

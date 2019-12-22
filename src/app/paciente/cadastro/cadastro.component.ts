@@ -190,13 +190,13 @@ tel: string[];
   registarPaciente(){
 
     
-    let verificar_existe = false;
+    /*let verificar_existe = false;
     this.pacientes.forEach(p => {
     if(p.telefone == this.paciente.telefone ||p.documento_identificacao==this.paciente.documento_identificacao && p.nr_documento_identificacao==this.paciente.nr_documento_identificacao){
     verificar_existe = true;
    
     }
-    });
+    });*/
 
 
     this.clicou = true;
@@ -210,21 +210,21 @@ tel: string[];
     this.paciente.status_historia_clinica = false;
 
     let data = Object.assign({}, this.paciente);
- if(verificar_existe==false ){ 
+    //if(verificar_existe==false ){ 
     this.pacienteService.createPaciente(data)
-    .then( res => {
-      this.router.navigateByUrl("/paciente/listagem_paciente")
-      this.openSnackBar("Paciente cadastrado com sucesso");
-    }, err=> {
-      console.log("ERRO: " + err.message)          
-      this.clicou = false;
-      this.texto = "FINALIZAR CADASTRO";
-    })}
-    else{
-      this.openSnackBar("Documento ou Telefone Existente"); 
-      console.log("") ;
+      .then( res => {
+        this.router.navigateByUrl("/paciente/listagem_paciente")
+        this.openSnackBar("Paciente cadastrado com sucesso");
+      }, err=> {
+        console.log("ERRO: " + err.message)          
+        this.clicou = false;
+        this.texto = "FINALIZAR CADASTRO";
+      })
+    //}else{
+    //  this.openSnackBar("Documento ou Telefone Existente"); 
+    //  console.log("") ;
 
-    }
+    //}
 
      
 
