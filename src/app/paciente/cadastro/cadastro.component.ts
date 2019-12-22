@@ -13,17 +13,21 @@ import { Inject} from '@angular/core';
 import {Md5} from "md5-typescript";
 
 
+
 @Component({
   selector: 'app-cadastro',
   templateUrl: './cadastro.component.html',
   styleUrls: ['./cadastro.component.scss']
 })
 export class CadastroComponent implements OnInit {
+  
+  
 
   clicou = false;
   texto = "FINALIZAR CADASTRO";
   isLinear = true;
   paciente:  Paciente;
+tel: string[];
 
   generos = [
     {value: 'Feminino', viewValue: 'Feminino'},
@@ -62,8 +66,9 @@ export class CadastroComponent implements OnInit {
 
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
-
+    
   pacientes: Paciente[];
+  tele:Paciente[];
 
   constructor(private _formBuilder: FormBuilder,
     private pacienteService: PacienteService,
@@ -103,7 +108,7 @@ export class CadastroComponent implements OnInit {
     this.paciente.referencia_nome = "Siza";
     this.paciente.referencia_apelido = "Jo";
     this.paciente.referencia_telefone = "828498183";*/
-
+  
    }
    
   ngOnInit() {
@@ -158,36 +163,73 @@ export class CadastroComponent implements OnInit {
         this.paciente.nid =  +(new Date().getFullYear()+'001');
       }
     })
-
   }
+
+ 
 
   //pacientes: Paciente[];
   getNID(){
 
   }
+ 
+  myFilter = (d: Date): boolean => {
+    let dia = new Date().getDate();
+    let ano= new Date().getFullYear();
+    let mes=new Date().getMonth();
+    let semana=new Date().getDay();
+    const day = d.getDate();
+    const year =d.getFullYear();
+    const meses=d.getMonth();
+    const sem=d.getDay();
+   
+    // Prevent Saturday and Sunday from being selected.
+    return  year<=ano && meses<=mes;
+  }
+
 
   registarPaciente(){
+
+    
+    let verificar_existe = false;
+    this.pacientes.forEach(p => {
+    if(p.telefone == this.paciente.telefone ||p.documento_identificacao==this.paciente.documento_identificacao && p.nr_documento_identificacao==this.paciente.nr_documento_identificacao){
+    verificar_existe = true;
+   
+    }
+    });
+
+
     this.clicou = true;
     this.texto = "AGUARDE...";
+
 
     //this.paciente.id = "123456"
 
     //this.paciente.nome = Md5.init(this.paciente.nome);
     //this.paciente.apelido = Md5.init(this.paciente.apelido);
     this.paciente.status_historia_clinica = false;
-    let data = Object.assign({}, this.paciente);
 
+    let data = Object.assign({}, this.paciente);
+ if(verificar_existe==false ){ 
     this.pacienteService.createPaciente(data)
     .then( res => {
       this.router.navigateByUrl("/paciente/listagem_paciente")
       this.openSnackBar("Paciente cadastrado com sucesso");
     }, err=> {
-      console.log("ERRO: " + err.message)
+      console.log("ERRO: " + err.message)          
       this.clicou = false;
       this.texto = "FINALIZAR CADASTRO";
-    })
+    })}
+    else{
+      this.openSnackBar("Documento ou Telefone Existente"); 
+      console.log("") ;
+
+    }
+
+     
 
   }
+  
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{
