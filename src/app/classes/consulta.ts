@@ -97,4 +97,6 @@ export class Consulta {
 
     medico_nome?: string; //Variavel usada para fazer estatisticas de faturacao por medico
 
+    seguradora_nome?: string;
+    nr_apolice?: string;
 }

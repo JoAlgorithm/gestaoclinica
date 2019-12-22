@@ -28,6 +28,8 @@ import { MovimentoEstoque } from '../../classes/movimento_estoque';
 import { NrCotacao } from '../../classes/nr_cotacao';
 import { NrFatura } from '../../classes/nr_fatura';
 import { User } from '../../classes/user';
+import { Seguradora } from '../../classes/seguradora';
+import { Conta } from '../../classes/conta';
 //import { MatProgressButtonOptions } from 'mat-progress-buttons';
 
 
@@ -116,6 +118,8 @@ export class ListagemComponent implements OnInit {
 
   users: User[];
   medicos: string[] = [];
+
+  seguradoras: Seguradora[];
 
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
     private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router, public estoqueService: EstoqueService){ 
@@ -278,6 +282,16 @@ export class ListagemComponent implements OnInit {
       //console.log("Medicos Total "+this.medicos.length)
     })
 
+    //SEGURADORAS
+    this.configServices.getSeguradoras().snapshotChanges().subscribe(data => {
+      this.seguradoras = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as Seguradora;
+      })
+    }) 
+
   }
  
 
@@ -336,7 +350,7 @@ export class ListagemComponent implements OnInit {
   marcarConsulta(paciente, tipo){
     let dialogRef = this.dialog.open(ConsultasDialog, {
       width: '800px',
-      data: { paciente: paciente, tipo: tipo, categorias_consulta: this.categorias_consulta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, medicos: this.medicos, formas_pagamento: this.formas_pagamento  }
+      data: { paciente: paciente, tipo: tipo, categorias_consulta: this.categorias_consulta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, medicos: this.medicos, formas_pagamento: this.formas_pagamento, seguradoras: this.seguradoras  }
     });
     dialogRef.afterClosed().subscribe(result => {
     //console.log("result "+result);
@@ -1606,6 +1620,10 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
 
   forma_pagamento = "";
 
+  seguradora: Seguradora;
+
+  nr_apolice = "";
+
   constructor(  public dialogRef: MatDialogRef<ConsultasDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public configServices: ConfiguracoesService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
@@ -1621,7 +1639,8 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
     this.clinica = this.data.clinica; //PDF
     this.nr_cotacao = this.data.nr_cotacao; //PDF
     this.nr_fatura = this.data.nr_fatura; //PDF
-    console.log("dialog nr fatura: "+this.nr_fatura);
+
+    this.seguradora = new Seguradora();
   }
  
   onNoClick(): void {
@@ -1630,6 +1649,8 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
 
   precoSegurado = false;
   mudarFPagamento(){
+    this.nr_apolice = "";
+    this.seguradora = new Seguradora();
     if(this.categoria.preco){
       if(this.forma_pagamento == "Convênio"){
         this.precoSegurado = true;
@@ -1719,6 +1740,8 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
 
       if(this.forma_pagamento == "Convênio"){
         this.consulta.preco_consulta_medica = this.categoria.preco_seguradora;
+        this.consulta.seguradora_nome = this.seguradora.nome;
+        this.consulta.nr_apolice = this.nr_apolice;
       }else{
         this.consulta.preco_consulta_medica = this.categoria.preco;
       }
@@ -1741,7 +1764,13 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
 
       let faturacao = new Faturacao();
       faturacao.categoria = "CONSULTA_MEDICA";
-      faturacao.valor = this.categoria.preco;
+
+      if(this.forma_pagamento == "Convênio"){
+        faturacao.valor = this.categoria.preco_seguradora;
+      }else{
+        faturacao.valor = this.categoria.preco;
+      }    
+
       faturacao.data = new Date();
       faturacao.mes = mes+"";
       faturacao.ano = ano;
@@ -1750,6 +1779,28 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
 
       //Gravando na tabela de faturacao "faturacao"
       updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
+
+      let conta = new Conta();
+      conta.ano = ano;
+      conta.mes = mes;
+      conta.data = new Date();
+      conta.cliente_apelido = this.consulta.paciente.nome;
+      conta.cliente_nome = this.consulta.paciente.apelido;
+      conta.cliente_nid = this.consulta.paciente.nid;
+      conta.forma_pagamento = this.forma_pagamento;
+      if(conta.forma_pagamento == "Convênio"){
+        conta.categoria = "A receber";
+        conta.nr_apolice = this.nr_apolice;
+        conta.seguradora_nome = this.seguradora.nome;
+        conta.valor_total = this.categoria.preco_seguradora;
+      }else{
+        conta.categoria = "Recebida";
+        conta.valor_total = this.categoria.preco;
+        conta.data_recebimento = new Date();
+      }
+
+      updatedUserData['contas/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = conta;
+      
 
       //GRAVAR SIMULTANEAMENTE TODOS OS DADOS E NAO HAVER INCONSISTENCIA
       let d = Object.assign({}, updatedUserData);
@@ -1764,8 +1815,9 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
         this.openSnackBar("Ocorreu um erro ao cadastrar. Tente novamente ou contacte a equipe de suporte.");
       })
       
+      
     }else{
-      this.openSnackBar("Selecione uma categoria de consulta e um medico.");
+      this.openSnackBar("Preencha todos os campos habilitados.");
     }
 
   }

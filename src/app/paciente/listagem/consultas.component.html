@@ -2,7 +2,7 @@
 <div mat-dialog-content>
     <p>Selecione a categoria de consultas solicitada pelo cliente</p>
    <!--<form [formGroup]="consultasFormGroup">-->
-    <mat-form-field style="width: 49%">
+    <mat-form-field style="width: 33%">
         <mat-select placeholder="Tipo consulta"  [(ngModel)]="categoria" required>
             <mat-option >
                 <ngx-mat-select-search [(ngModel)]="filtroconsulta"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = "Nenhuma informacao encontrada" matInput (keyup)="filtrarConsultas($event.target.value)"></ngx-mat-select-search>
@@ -13,15 +13,7 @@
         </mat-select>
     </mat-form-field>  
 
-    <mat-form-field style="width: 49%">
-        <mat-select placeholder="Medico"  [(ngModel)]="medico" required>
-            <mat-option *ngFor="let medico of data.medicos" [value]="medico">
-                {{medico}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-
-    <mat-form-field style="width: 49%">
+    <mat-form-field style="width: 33%">
         <mat-select placeholder="Forma de pagamento" [(ngModel)]="forma_pagamento" required (selectionChange)="mudarFPagamento()">
             <mat-option *ngFor="let f of data.formas_pagamento" [value]="f.value">
                 {{f.value}}
@@ -29,9 +21,29 @@
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field style="width: 49%">
+    <mat-form-field style="width: 33%">
         <input matInput placeholder="Preco" [(ngModel)]="categoria.preco" required disabled *ngIf='!precoSegurado'>
         <input matInput placeholder="Preco" [(ngModel)]="categoria.preco_seguradora" required disabled *ngIf='precoSegurado'>
+    </mat-form-field>
+
+    <mat-form-field style="width: 33%">
+        <mat-select placeholder="Seguradora" [(ngModel)]="seguradora" [disabled]="!precoSegurado">
+            <mat-option *ngFor="let s of data.seguradoras" [value]="s">
+                {{s.nome}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field style="width: 33%">
+        <input matInput placeholder="Nr de apolice" [(ngModel)]="nr_apolice" [disabled]="!precoSegurado">
+    </mat-form-field>
+
+    <mat-form-field style="width: 33%">
+        <mat-select placeholder="Medico"  [(ngModel)]="medico" required >
+            <mat-option *ngFor="let medico of data.medicos" [value]="medico">
+                {{medico}}
+            </mat-option>
+        </mat-select>
     </mat-form-field>
    <!-- </form>-->
 
