@@ -398,7 +398,8 @@ export class ListagemComponent implements OnInit {
       width: '800px',
       data: { paciente: row, diagnosticos: this.diagnosticos,
         tipos_diagnosticos:this.tipos_diagnosticos, subtipos_diagnosticos:this.subtipos_diagnosticos
-        , clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, medicos: this.medicos
+        , clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, medicos: this.medicos,
+        formas_pagamento: this.formas_pagamento, seguradoras: this.seguradoras
       }
       });
       dialogRef.afterClosed().subscribe(result => {
@@ -419,8 +420,8 @@ export class ListagemComponent implements OnInit {
   openConduta(row: Paciente): void {
     if(this.nr_cotacao > 0 && this.nr_fatura >0){
       let dialogRef = this.dialog.open(CondutasDialog, {
-      width: '800px',
-      data: { paciente: row, condutas: this.condutas, tiposconduta: this.tiposconduta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, medicos: this.medicos }
+      width: '900px',
+      data: { paciente: row, condutas: this.condutas, tiposconduta: this.tiposconduta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, medicos: this.medicos, formas_pagamento: this.formas_pagamento, seguradoras: this.seguradoras }
       });
       dialogRef.afterClosed().subscribe(result => {
         this.configServices.getCondutasClinica().snapshotChanges().subscribe(data => {
@@ -442,7 +443,7 @@ export class ListagemComponent implements OnInit {
     if(this.nr_cotacao > 0 && this.nr_fatura >0){
       let dialogRef = this.dialog.open(MedicamentosDialog, {
         width: '800px',
-        data: { paciente: row, depositos: this.depositos, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura }
+        data: { paciente: row, depositos: this.depositos, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, formas_pagamento: this.formas_pagamento, seguradoras: this.seguradoras }
       });
       dialogRef.afterClosed().subscribe(result => {
         //console.log("result "+result);
@@ -1153,6 +1154,12 @@ export class MedicamentosDialog {
   condutas_alternativas: CondutaClinica[];
 
   medico = "";
+
+  forma_pagamento = "";
+
+  seguradora: Seguradora;
+
+  nr_apolice = "";
   
   
   constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<CondutasDialog>, private router: Router,
@@ -1180,7 +1187,8 @@ export class MedicamentosDialog {
     this.clinica = this.data.clinica; //PDF
     this.nr_cotacao = this.data.nr_cotacao; //PDF
     this.nr_fatura = this.data.nr_fatura; //PDF
-    console.log("dialog nr fatura: "+this.nr_fatura);
+    
+    this.seguradora = new Seguradora();
   }
   
 
@@ -1212,13 +1220,37 @@ export class MedicamentosDialog {
     }
   }
 
+  precoSegurado = false;
+  mudarFPagamento(){
+    this.nr_apolice = "";
+    this.seguradora = new Seguradora();
+    if(this.conduta.preco){
+      if(this.forma_pagamento == "Convênio"){
+        this.precoSegurado = true;
+      }else{
+        this.precoSegurado = false;
+      }
+    }
+  }
 
   addConduta(conduta:CondutaClinica){
     if(conduta.nome){
       this.condutas.push(conduta);
 
-      this.preco_total = +this.preco_total + +conduta.preco;
+      if(this.forma_pagamento == "Convênio"){
+        //doc.text(categoriaConsulta.preco_seguradora+"", 294, linha)
+        //doc.text(categoriaConsulta.preco_seguradora+"", 354, linha)
+        //preco_total = +categoriaConsulta.preco_seguradora;
+        this.preco_total = +this.preco_total + +conduta.preco_seguradora;
+      }else{
+        //doc.text(categoriaConsulta.preco+"", 294, linha)
+        //doc.text(categoriaConsulta.preco+"", 354, linha)
+        //preco_total = +categoriaConsulta.preco;
+        this.preco_total = +this.preco_total + +conduta.preco;
+      }
+      
       this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
+
   
       this.dataSourse=new MatTableDataSource(this.condutas);
       this.conduta = new CondutaClinica();
@@ -1251,6 +1283,8 @@ export class MedicamentosDialog {
       this.desabilitar = true;
       this.texto = "AGUARDE UM INSTANTE..."
 
+      let servico = "Condutas clinicas: ";
+
       //Abrir uma consulta CONDUTA CLINICA --------------------
       let dia = new Date().getDate();
       let mes = this.getMes( +(new Date().getMonth()) + +1);
@@ -1265,6 +1299,7 @@ export class MedicamentosDialog {
       //let cd = this.condutas;
       this.consulta.condutas_clinicas.forEach(element => {
         element.tipo = null;
+        servico = servico+" "+element.nome+" ; ";
       });
       this.consulta.status = "Encerrada";
       this.consulta.tipo = "CONDUTA CLINICA";
@@ -1296,6 +1331,33 @@ export class MedicamentosDialog {
 
       //Gravando na tabela de faturacao "faturacao"
       updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
+
+      let conta = new Conta();
+      conta.ano = ano;
+      conta.mes = mes;
+      conta.dia = dia;
+      conta.data = dia +"/"+mes+"/"+ano;
+      conta.cliente_apelido = this.consulta.paciente_nome;
+      conta.cliente_nome = this.consulta.paciente_apelido;
+      conta.cliente_nid = this.consulta.paciente_nid;
+      conta.forma_pagamento = this.forma_pagamento;    
+      conta.consulta = servico;
+      if(conta.forma_pagamento == "Convênio"){
+        conta.categoria = "A receber";
+        conta.nr_apolice = this.nr_apolice;
+        conta.seguradora_nome = this.seguradora.nome;
+        conta.valor_total = this.preco_total;
+      }else{
+        conta.categoria = "Recebida";
+        conta.valor_total = this.preco_total;
+        conta.data_recebimento = new Date();
+      }
+
+      if( conta.categoria == "A receber"){
+        updatedUserData['contas/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/receber/'+this.nr_fatura] = conta;
+      }else{
+        updatedUserData['contas/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/recebidas/'+this.nr_fatura] = conta;
+      }
 
       //GRAVAR SIMULTANEAMENTE TODOS OS DADOS E NAO HAVER INCONSISTENCIA
       let d = Object.assign({}, updatedUserData);
