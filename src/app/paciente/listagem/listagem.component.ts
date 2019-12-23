@@ -2364,11 +2364,19 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
 
   medico = "";
 
+  forma_pagamento = "";
+
+  seguradora: Seguradora;
+
+  nr_apolice = "";
+
   constructor(  public dialogRef: MatDialogRef<DiagnosticosDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, 
   private _formBuilder: FormBuilder, public configServices: ConfiguracoesService) {
     this.diagnostico = new DiagnosticoAuxiliar();
+
+    this.seguradora = new Seguradora();
     
     this.diagnosticos_aux = this.data.diagnosticos;
     this.tipos_diagnosticos_aux = this.data.tipos_diagnosticos;
@@ -2421,8 +2429,23 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     this.clinica = this.data.clinica; //PDF
     this.nr_cotacao = this.data.nr_cotacao; //PDF
     this.nr_fatura = this.data.nr_fatura; //PDF
-    console.log("dialog nr fatura: "+this.nr_fatura);
+
   }
+
+  precoSegurado = false;
+  mudarFPagamento(){
+    this.nr_apolice = "";
+    this.seguradora = new Seguradora();
+    if(this.diagnostico.preco){
+      if(this.forma_pagamento == "Convênio"){
+        this.precoSegurado = true;
+      }else{
+        this.precoSegurado = false;
+      }
+    }
+  }
+
+  
 
   filtrodiagnostico="";
   filtrarDiagnosticos(filtrodiagnostico) {
@@ -2492,7 +2515,13 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     if(diagnostico.nome){
       this.diagnosticos.push(diagnostico);
 
-      this.preco_total = +this.preco_total + +diagnostico.preco;
+      if(this.forma_pagamento == "Convênio"){
+        
+        this.preco_total = +this.preco_total + +diagnostico.preco_seguradora;
+      }else{
+        this.preco_total = +this.preco_total + +diagnostico.preco;
+      }
+     
       this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
   
       this.dataSourse=new MatTableDataSource(this.diagnosticos);
@@ -2516,15 +2545,11 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     this.dialogRef.close();
   }
 
-  
-
-
-
-
-
 
   faturarDiagnostico(paciente:Paciente){
     if(this.diagnosticos.length>0 && this.medico !== ""){
+
+      let servico = "Condutas clinicas: ";
 
       //Abrir uma consulta DIAGNOSTICO AUXILIAR --------------------
       let dia = new Date().getDate();
@@ -2563,6 +2588,8 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
       //Persistir informacao na base de dados ----------------------------
       let data = Object.assign({}, faturacao);
       let d = Object.assign({}, this.consulta); 
+
+      /************************************ AJUSTAR PARA MULTIPUSH ***********************************/
 
       this.pacienteService.faturar(data)
       .then( res => {
