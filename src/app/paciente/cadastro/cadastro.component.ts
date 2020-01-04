@@ -20,14 +20,12 @@ import {Md5} from "md5-typescript";
   styleUrls: ['./cadastro.component.scss']
 })
 export class CadastroComponent implements OnInit {
-  
-  
 
   clicou = false;
   texto = "FINALIZAR CADASTRO";
   isLinear = true;
   paciente:  Paciente;
-tel: string[];
+  tel: string[];
 
   generos = [
     {value: 'Feminino', viewValue: 'Feminino'},
@@ -157,8 +155,16 @@ tel: string[];
       });
 
       if(typeof this.pacientes !== 'undefined' && this.pacientes.length > 0){
+
         this.paciente.nid = Math.max.apply(Math, this.pacientes.map(function(o) { return o.nid; }));
-        this.paciente.nid = this.paciente.nid+1;
+        
+        if(this.paciente.nid.toString().substr(0,4) == new Date().getFullYear().toString()){
+          //Se nao bater significa que mudamos de ano e precisamos recomecar a contagem
+          this.paciente.nid = this.paciente.nid+1;
+        }else{
+          this.paciente.nid =  +(new Date().getFullYear()+'001');
+        }
+
       }else{
         this.paciente.nid =  +(new Date().getFullYear()+'001');
       }
