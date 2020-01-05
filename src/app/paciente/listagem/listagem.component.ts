@@ -673,7 +673,7 @@ export class MedicamentosDialog {
     
           if(this.forma_pagamento == "Convênio"){
             this.movimento.medicamento.preco_venda_total = this.medicamento.preco_seguradora*this.medicamento.qtd_solicitada;
-          this.preco_total = +this.preco_total + +(this.medicamento.preco_seguradora*this.medicamento.qtd_solicitada); 
+            this.preco_total = +this.preco_total + +(this.medicamento.preco_seguradora*this.medicamento.qtd_solicitada); 
           }else{
             this.movimento.medicamento.preco_venda_total = this.medicamento.preco_venda*this.medicamento.qtd_solicitada;
             this.preco_total = +this.preco_total + +(this.medicamento.preco_venda*this.medicamento.qtd_solicitada); 
@@ -725,6 +725,18 @@ export class MedicamentosDialog {
   faturar(paciente: Paciente){
     if(this.movimentos.length>0){ //Verificar se tem informacao no array
       var updatedUserData = {};
+
+      if(this.forma_pagamento == "Convênio"){  
+        if(this.nr_apolice == "" || this.nr_apolice == null){
+          this.openSnackBar("Preencha o nr da apolice");
+          return;
+        }
+
+        if(this.seguradora.nome == "" || this.seguradora.nome == null){
+          this.openSnackBar("Selecione a seguradora");
+          return;
+        }
+      }
 
       this.desabilitar = true;
       this.texto = "AGUARDE UM INSTANTE...";
@@ -1346,6 +1358,19 @@ export class MedicamentosDialog {
   faturar(paciente: Paciente){
     if(this.condutas.length>0 && this.medico !== ""){
       var updatedUserData = {};
+
+      if(this.forma_pagamento == "Convênio"){  
+        if(this.nr_apolice == "" || this.nr_apolice == null){
+          this.openSnackBar("Preencha o nr da apolice");
+          return;
+        }
+
+        if(this.seguradora.nome == "" || this.seguradora.nome == null){
+          this.openSnackBar("Selecione a seguradora");
+          return;
+        }
+      }
+
       this.desabilitar = true;
       this.texto = "AGUARDE UM INSTANTE..."
 
@@ -1851,6 +1876,19 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
   marcarConsulta(paciente, tipo){
     if(this.categoria.nome && this.medico !== ""){ //Garantir que categoria foi selecionada
       var updatedUserData = {};
+
+      if(this.forma_pagamento == "Convênio"){  
+        if(this.nr_apolice == "" || this.nr_apolice == null){
+          this.openSnackBar("Preencha o nr da apolice");
+          return;
+        }
+
+        if(this.seguradora.nome == "" || this.seguradora.nome == null){
+          this.openSnackBar("Selecione a seguradora");
+          return;
+        }
+      }
+
       this.desabilitar = true;
       this.texto = "AGUARDE UM INSTANTE...";
 
@@ -2616,6 +2654,18 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     if(this.diagnosticos.length>0 && this.medico !== ""){
 
       var updatedUserData = {};
+
+      if(this.forma_pagamento == "Convênio"){  
+        if(this.nr_apolice == "" || this.nr_apolice == null){
+          this.openSnackBar("Preencha o nr da apolice");
+          return;
+        }
+
+        if(this.seguradora.nome == "" || this.seguradora.nome == null){
+          this.openSnackBar("Selecione a seguradora");
+          return;
+        }
+      }
 
       let servico = "Diagnosticos: ";
 
