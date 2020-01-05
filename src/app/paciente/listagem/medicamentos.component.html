@@ -37,12 +37,33 @@
 
         <!--PRECO-->
         <mat-form-field style="width: 31%">
-            <input matInput placeholder="Prec. Unit." [(ngModel)]="medicamento.preco_venda" required>
+            <input matInput placeholder="Prec. Unit." [(ngModel)]="medicamento.preco_venda" required disabled *ngIf='!precoSegurado'>
+            <input matInput placeholder="Prec. Unit." [(ngModel)]="medicamento.preco_seguradora" required disabled *ngIf='precoSegurado'>
         </mat-form-field>
 
         <!--PRECO TOTAL-->
         <mat-form-field style="width: 31%">
-            <input matInput placeholder="Prec Tot."  [(ngModel)]="medicamento.preco_venda_total" required>
+            <input matInput placeholder="Prec Tot." [(ngModel)]="medicamento.preco_venda_total" required disabled>
+        </mat-form-field>
+
+        <mat-form-field style="width: 31%">
+            <mat-select placeholder="Forma de pagamento" [(ngModel)]="forma_pagamento" required (selectionChange)="mudarFPagamento()">
+                <mat-option *ngFor="let f of data.formas_pagamento" [value]="f.value">
+                    {{f.value}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field style="width: 31%">
+            <mat-select placeholder="Seguradora" [(ngModel)]="seguradora" [disabled]="!precoSegurado">
+                <mat-option *ngFor="let s of data.seguradoras" [value]="s">
+                    {{s.nome}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    
+        <mat-form-field style="width: 31%">
+            <input matInput placeholder="Nr de apolice" [(ngModel)]="nr_apolice" [disabled]="!precoSegurado">
         </mat-form-field>
 
         <button mat-icon-button (click)="addMedicamento()" matTooltip="Adicionar {{medicamento.nome_generico}}">
@@ -62,9 +83,14 @@
             <mat-cell *matCellDef="let row">{{row.medicamento?.qtd_solicitada}}</mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="preco_unit">
+        <ng-container matColumnDef="preco_unit" *ngIf='!precoSegurado'>
             <mat-header-cell *matHeaderCellDef mat-sort-header>Prec Unit. (MZN)</mat-header-cell>
             <mat-cell *matCellDef="let row">{{row.medicamento?.preco_venda | currency:' ':'symbol':'1.2-2'}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="preco_unit" *ngIf='precoSegurado'>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Prec Unit. (MZN)</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.medicamento?.preco_seguradora | currency:' ':'symbol':'1.2-2'}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="preco_venda_total">

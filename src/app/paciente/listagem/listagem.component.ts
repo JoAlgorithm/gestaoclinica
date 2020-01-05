@@ -555,10 +555,18 @@ export class MedicamentosDialog {
 
   consulta?: Consulta;
 
+  forma_pagamento = "";
+
+  seguradora: Seguradora;
+
+  nr_apolice = "";
+
   constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<MedicamentosDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public estoqueService: EstoqueService, 
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder,
   public configServices: ConfiguracoesService) {
+
+    this.seguradora = new Seguradora();
     
     this.deposito = new Deposito();
     this.medicamento = new Medicamento();
@@ -595,6 +603,20 @@ export class MedicamentosDialog {
     }
   }
 
+  precoSegurado = false;
+  mudarFPagamento(){
+    this.nr_apolice = "";
+    this.seguradora = new Seguradora();
+    if(this.medicamento.preco_venda){
+      if(this.forma_pagamento == "Convênio"){
+        this.precoSegurado = true;
+      }else{
+        this.precoSegurado = false;
+      }
+    }
+    this.validarQtd(this.medicamento.qtd_solicitada);
+  }
+
 
   getMedicamentos(deposito: Deposito){
     this.medicamentos = [];
@@ -619,7 +641,14 @@ export class MedicamentosDialog {
 
   validarQtd(qtd_solicitada){
     if(qtd_solicitada){
-      this.medicamento.preco_venda_total = qtd_solicitada*this.medicamento.preco_venda;
+
+      if(this.forma_pagamento == "Convênio"){
+        this.medicamento.preco_venda_total = qtd_solicitada*this.medicamento.preco_seguradora;
+      }else{
+        this.medicamento.preco_venda_total = qtd_solicitada*this.medicamento.preco_venda;
+      }
+      
+    
     }else{
       this.medicamento.preco_venda_total = 0;
     }
@@ -642,8 +671,14 @@ export class MedicamentosDialog {
           this.movimento.deposito = this.deposito;
           this.movimento.quantidade = this.medicamento.qtd_solicitada;  
     
-          this.movimento.medicamento.preco_venda_total = this.medicamento.preco_venda*this.medicamento.qtd_solicitada;
-          this.preco_total = +this.preco_total + +(this.medicamento.preco_venda*this.medicamento.qtd_solicitada); 
+          if(this.forma_pagamento == "Convênio"){
+            this.movimento.medicamento.preco_venda_total = this.medicamento.preco_seguradora*this.medicamento.qtd_solicitada;
+          this.preco_total = +this.preco_total + +(this.medicamento.preco_seguradora*this.medicamento.qtd_solicitada); 
+          }else{
+            this.movimento.medicamento.preco_venda_total = this.medicamento.preco_venda*this.medicamento.qtd_solicitada;
+            this.preco_total = +this.preco_total + +(this.medicamento.preco_venda*this.medicamento.qtd_solicitada); 
+          }
+          
           this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
           this.medicamento.qtd_disponivel = +this.medicamento.qtd_disponivel - +this.medicamento.qtd_solicitada;
 
@@ -707,6 +742,8 @@ export class MedicamentosDialog {
       this.consulta.paciente_apelido = paciente.apelido;
       this.consulta.paciente_nid = paciente.nid;
       this.consulta.movimentosestoque = this.movimentos;
+
+      let servico = "Medicamentos: ";
       this.consulta.movimentosestoque.forEach(mvt => {
         //console.log("mvt.medicamento.qtd_solicitada: "+mvt.medicamento.qtd_solicitada);
         mvt.medicamento.qtd_solicitada = null;
@@ -717,6 +754,7 @@ export class MedicamentosDialog {
 
         mvt.medicamento_nome = mvt.medicamento.nome_generico;
         mvt.medicamento_id = mvt.medicamento.id;
+        servico = servico+" "+mvt.medicamento.nome_generico+" ; ";
         //mvt.medicamento = null;  
         
         mvt.data_movimento = dia +"/"+mes+"/"+ano;
@@ -736,6 +774,8 @@ export class MedicamentosDialog {
         key = this.estoqueService.db.list('/estoquesmovimentos/'+this.authService.get_clinica_id).push('').key;
         updatedUserData['/estoquesmovimentos/'+this.authService.get_clinica_id+"/"+key] = mvt;
         mvt.medicamento = md;
+
+        
         //console.log("PEGOU MEDICAMENTO: "+mvt.medicamento.nome_comercial)
       });
       this.consulta.status = "Encerrada";
@@ -761,6 +801,32 @@ export class MedicamentosDialog {
       //updatedUserData['consultas/'+this.authService.get_clinica_id+'/lista_completa/'+key] = this.consulta;
       updatedUserData['consultas/'+this.authService.get_clinica_id+'/lista_relatorio/'+ this.consulta.ano + '/'+key] = this.consulta;
 
+      let conta = new Conta();
+      conta.ano = ano;
+      conta.mes = mes;
+      conta.dia = dia;
+      conta.data = dia +"/"+mes+"/"+ano;
+      conta.cliente_apelido = this.consulta.paciente_nome;
+      conta.cliente_nome = this.consulta.paciente_apelido;
+      conta.cliente_nid = this.consulta.paciente_nid;
+      conta.forma_pagamento = this.forma_pagamento;    
+      conta.consulta = servico;
+      if(conta.forma_pagamento == "Convênio"){
+        conta.categoria = "A receber";
+        conta.nr_apolice = this.nr_apolice;
+        conta.seguradora_nome = this.seguradora.nome;
+        conta.valor_total = this.preco_total;
+      }else{
+        conta.categoria = "Recebida";
+        conta.valor_total = this.preco_total;
+        conta.data_recebimento = new Date();
+      }
+
+      if(conta.categoria == "A receber"){
+        updatedUserData['contas/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/receber/'+this.nr_fatura] = conta;
+      }else{
+        updatedUserData['contas/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/recebidas/'+this.nr_fatura] = conta;
+      }
       
      /* this.movimentos_aux.forEach(mvt => {
         //mvt.medicamento.qtd_solicitada = null;
@@ -2549,7 +2615,9 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
   faturarDiagnostico(paciente:Paciente){
     if(this.diagnosticos.length>0 && this.medico !== ""){
 
-      let servico = "Condutas clinicas: ";
+      var updatedUserData = {};
+
+      let servico = "Diagnosticos: ";
 
       //Abrir uma consulta DIAGNOSTICO AUXILIAR --------------------
       let dia = new Date().getDate();
@@ -2562,6 +2630,12 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
       this.consulta.marcador = this.authService.get_perfil + ' - ' + this.authService.get_user_displayName;
       this.consulta.paciente = paciente;
       this.consulta.diagnosticos_aux = this.diagnosticos;
+
+      this.consulta.diagnosticos_aux.forEach(element => {
+        element.tipo = null;
+        servico = servico+" "+element.nome+" ; ";
+      });
+
       this.consulta.status = "Encerrada";
       this.consulta.tipo = "DIAGNOSTICO AUX";
 
@@ -2571,7 +2645,12 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
 
       this.consulta.medico_nome = this.medico;
 
-      //Criar uma faturacao da consulta do tipo CONDUTA CLINICA --------------------
+      let key = this.pacienteService.db.list('consultas/'+this.authService.get_clinica_id +'/lista_relatorio/'+ ano).push('').key;
+      this.consulta.id = key;
+
+      updatedUserData['consultas/'+this.authService.get_clinica_id +'/lista_relatorio/'+ ano + '/'+key] = this.consulta;
+
+
       let faturacao = new Faturacao();
       faturacao.categoria = "DIAGNOSTICO_AUX";
       faturacao.valor = this.preco_total;
@@ -2585,13 +2664,56 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
 
       faturacao.medico_nome = this.medico;
 
+      updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
+
+      let conta = new Conta();
+      conta.ano = ano;
+      conta.mes = mes;
+      conta.dia = dia;
+      conta.data = dia +"/"+mes+"/"+ano;
+      conta.cliente_apelido = this.consulta.paciente_nome;
+      conta.cliente_nome = this.consulta.paciente_apelido;
+      conta.cliente_nid = this.consulta.paciente_nid;
+      conta.forma_pagamento = this.forma_pagamento;    
+      conta.consulta = servico;
+      if(conta.forma_pagamento == "Convênio"){
+        conta.categoria = "A receber";
+        conta.nr_apolice = this.nr_apolice;
+        conta.seguradora_nome = this.seguradora.nome;
+        conta.valor_total = this.preco_total;
+      }else{
+        conta.categoria = "Recebida";
+        conta.valor_total = this.preco_total;
+        conta.data_recebimento = new Date();
+      }
+
+      if(conta.categoria == "A receber"){
+        updatedUserData['contas/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/receber/'+this.nr_fatura] = conta;
+      }else{
+        updatedUserData['contas/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/recebidas/'+this.nr_fatura] = conta;
+      }
+
+      //GRAVAR SIMULTANEAMENTE TODOS OS DADOS E NAO HAVER INCONSISTENCIA
+      let d = Object.assign({}, updatedUserData);
+      this.pacienteService.multiSave(d) 
+      .then(r =>{
+        this.downloadPDF(this.diagnosticos, paciente, "Faturacao");
+        this.dialogRef.close();
+        this.openSnackBar("Faturado com sucesso");
+      }, err =>{
+        this.desabilitar = false;
+        this.texto = "Faturar";
+        this.openSnackBar("Ocorreu um erro ao cadastrar. Tente novamente ou contacte a equipe de suporte.");
+      })
+      
+
       //Persistir informacao na base de dados ----------------------------
-      let data = Object.assign({}, faturacao);
-      let d = Object.assign({}, this.consulta); 
+      //let data = Object.assign({}, faturacao);
+      //let d = Object.assign({}, this.consulta);
 
       /************************************ AJUSTAR PARA MULTIPUSH ***********************************/
 
-      this.pacienteService.faturar(data)
+      /*this.pacienteService.faturar(data)
       .then( res => {
         this.pacienteService.marcarConsulta(d)
         .then(r => {
@@ -2605,7 +2727,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
       }, err=>{
         console.log("ERRO: " + err.message)
         this.openSnackBar("Ocorreu um erro. Contacte o Admin do sistema.");
-      })
+      })*/
 
     }else{
       this.openSnackBar("Adicione pelo menos um diagnostico e selecione o medico");
