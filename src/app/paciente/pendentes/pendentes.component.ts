@@ -12,6 +12,8 @@ import * as jsPDF from 'jspdf';
 import { Clinica } from '../../classes/clinica';
 import { NrCotacao } from '../../classes/nr_cotacao';
 import { NrFatura } from '../../classes/nr_fatura';
+import { Seguradora } from '../../classes/seguradora';
+import { Conta } from '../../classes/conta';
 
 @Component({
   selector: 'app-pendentes',
@@ -36,6 +38,14 @@ export class PendentesComponent implements OnInit {
   nr_cotacao = 0;
   nrsfaturcao: NrFatura[];
   nr_fatura = 0;
+
+  formas_pagamento = [
+    {value: 'Cartão de crédito', viewValue: 'Cartão de crédito'},
+    {value: 'Convênio', viewValue: 'Convênio'},
+    {value: 'Numerário', viewValue: 'Numerário'},
+  ]
+
+  seguradoras: Seguradora[];
 
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
     private pacienteService: PacienteService,public snackBar: MatSnackBar) { }
@@ -162,6 +172,16 @@ export class PendentesComponent implements OnInit {
       this.dataSourse.sort = this.sort;
       
     })
+
+    //SEGURADORAS
+    this.configServices.getSeguradoras().snapshotChanges().subscribe(data => {
+      this.seguradoras = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as Seguradora;
+      })
+    })
   }
   
   remover(consulta: Consulta){
@@ -273,7 +293,9 @@ export class PendentesComponent implements OnInit {
           }
         });
 
-        if(total>1){
+        this.openDialog(consulta);
+
+        /*if(total>1){
           //Mais de um diagnostico para rececionista poder selecionar apenas que os clientes querem
           this.openDialog(consulta);
           
@@ -312,7 +334,7 @@ export class PendentesComponent implements OnInit {
             }
           });
           
-        }
+        }*/
 
       }else{
         this.openSnackBar("Ocorreu um erro ao gerar a cotacao. Tente novamente.");
@@ -325,8 +347,8 @@ export class PendentesComponent implements OnInit {
 
   openDialog(consulta: Consulta): void {
     let dialogRef = this.dialog.open(FaturarDialog, {
-      width: '700px',
-      data: { consulta: consulta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura }
+      width: '800px',
+      data: { consulta: consulta, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, formas_pagamento: this.formas_pagamento, seguradoras: this.seguradoras }
     });
     dialogRef.afterClosed().subscribe(result => {
       //console.log("result "+result);
@@ -572,10 +594,20 @@ export class RemoverPendentesDialog {
     consulta: Consulta;
     diagnosticos_aux: DiagnosticoAuxiliar[] = [];
     dataSource: MatTableDataSource<DiagnosticoAuxiliar>;
-    displayedColumns = ['select', 'nome', 'preco'];
+    displayedColumns = ['select', 'nome', 'preco_singular', 'preco_empresa'];
     @ViewChild(MatPaginator) paginator: MatPaginator;
   
     selection = new SelectionModel<DiagnosticoAuxiliar>(true, []);
+
+    forma_pagamento = "";
+
+    seguradora: Seguradora;
+
+    nr_apolice = "";
+
+    preco_total:Number = 0;
+
+    tot_diagnosticos = 0;
     
     constructor(  public dialogRef: MatDialogRef<FaturarDialog>, public configServices: ConfiguracoesService,
     @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
@@ -588,6 +620,8 @@ export class RemoverPendentesDialog {
         this.consulta.diagnosticos_aux.forEach(element => {
           if(element.faturado != true){
             this.diagnosticos_aux.push(element);  
+            this.tot_diagnosticos = +this.tot_diagnosticos + +1;
+            this.preco_total = +this.preco_total + +element.preco;
           }
         });
   
@@ -595,12 +629,43 @@ export class RemoverPendentesDialog {
         this.nr_cotacao = this.data.nr_cotacao;
         this.nr_fatura = this.data.nr_fatura;
 
+        this.seguradora = new Seguradora();
+
         this.dataSource = new MatTableDataSource(this.diagnosticos_aux);
         setTimeout(() => this.dataSource.paginator = this.paginator);
       })
 
     }
   
+    precoSegurado = false;
+    mudarFPagamento(){
+      this.nr_apolice = "";
+      this.seguradora = new Seguradora();
+      this.preco_total = 0;
+
+      if(this.forma_pagamento == "Convênio"){
+        this.precoSegurado = true;
+
+        this.consulta.diagnosticos_aux.forEach(element => {
+          if(element.faturado != true){
+            this.diagnosticos_aux.push(element);  
+            this.preco_total = +this.preco_total + +element.preco_seguradora;
+          }
+        });
+
+      }else{
+        this.precoSegurado = false;
+
+        this.consulta.diagnosticos_aux.forEach(element => {
+          if(element.faturado != true){
+            this.diagnosticos_aux.push(element);  
+            this.preco_total = +this.preco_total + +element.preco;
+          }
+        });
+      }
+      console.log("consulta.id "+this.consulta.id)
+    }
+
     onNoClick(): void {
       this.dialogRef.close();
     }
@@ -609,6 +674,10 @@ export class RemoverPendentesDialog {
       this.snackBar.open(mensagem, null,{
         duration: 2000
       })
+    }
+
+    teste(){
+      alert(this.isAllSelected());
     }
 
     getMes(number): String{
@@ -656,10 +725,40 @@ export class RemoverPendentesDialog {
     }
 
     faturar(){ 
-      let diagnostico_aux2: DiagnosticoAuxiliar[] = [];//Usado para juntar a lista de diagnosticos a serem faturados para sairem no pdf
+      
+      //INICIO VALIDACOES ===========================================
+      //Verificar se pelo menos um item foi selecionado
+      let qtd_selecionado = 0;
+      this.dataSource.data.forEach(row => {
+        if (this.selection.isSelected(row)){
+          qtd_selecionado = 1;
+        }
+      })
 
+      if(qtd_selecionado == 0){
+        //Se for igual a zero entao nao foi selecionado nada, deve interromper o metodo
+        this.openSnackBar("Selcione pelo menos uma linha a ser faturada");
+        return;
+      }
+
+      if(this.forma_pagamento == "Convênio"){  
+        if(this.nr_apolice == "" || this.nr_apolice == null){
+          this.openSnackBar("Preencha o nr da apolice");
+          return;
+        }
+
+        if(this.seguradora.nome == "" || this.seguradora.nome == null){
+          this.openSnackBar("Selecione a seguradora");
+          return;
+        }
+      }
+
+      //FIM VALIDACOES ===========================================
+
+      let diagnostico_aux2: DiagnosticoAuxiliar[] = [];//Usado para juntar a lista de diagnosticos a serem faturados para sairem no pdf
       let faturacao = new Faturacao();
-      //faturacao.categoria = this.consulta.tipo;
+      var updatedUserData = {};
+      let servico = "Diagnosticos: ";
       
       faturacao.categoria = "DIAGNOSTICO_AUX";
       faturacao.valor = 0;
@@ -680,7 +779,9 @@ export class RemoverPendentesDialog {
       }*/
 
       //Verificar diagnosticos selecionados na tabela
+      diagnostico_aux2 = [];
       this.dataSource.data.forEach(row => {
+        //console.log("Analisando row "+row.nome);
         //console.log(row.nome+" selecionado ? "+  this.selection.isSelected(row))
 
         //Atualizar os diagnosticos selecionados para faturados
@@ -689,36 +790,92 @@ export class RemoverPendentesDialog {
           this.consulta.diagnosticos_aux.forEach(element => {
             if(row == element){
               element.faturado = true;
-              faturacao.valor = +faturacao.valor + +element.preco;
-              diagnostico_aux2.push(element);
+
+              if(this.forma_pagamento == "Convênio"){  
+                faturacao.valor = +faturacao.valor + +element.preco_seguradora;
+              }else{
+                faturacao.valor = +faturacao.valor + +element.preco;
+              }
+
+              //servico = servico+" "+element.nome+" ; ";
+              //diagnostico_aux2.push(element);
+              diagnostico_aux2.indexOf(element) === -1 ? servico = servico+" "+element.nome+" ; " : console.log("This item already exists");
+              diagnostico_aux2.indexOf(element) === -1 ? diagnostico_aux2.push(element) : console.log("This item already exists");
+              //console.log("Adicionou element: "+element.nome +" row: "+row.nome);
             }
           });
 
         } 
       });
-
-      
+      //console.log("Adicionou "+diagnostico_aux2.length)
+      updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
 
       
       //Se todos os itens tiverem sido faturados a consulta:
       // encerra se for do tipo Diagnostico
       // ou fica em andamento se for do tipo medica
-      console.log("is all selected "+this.isAllSelected())
+      //console.log("is all selected "+this.isAllSelected())
       if(this.isAllSelected()){
         if(this.consulta.tipo == "Consulta Medica"){
           this.consulta.status = "Em andamento";
+          //alert("Status da consulta: "+"Em andamento");
         }else{
           this.consulta.status = "Encerrada";
+          //alert("Status da consulta: "+"Encerrada");
         }
       }else{
         //se nao forem faturados todos os diagnosticos entao o status da consulta nao muda
         console.log("NAO ALTEROU O STATUS DA CONSULTA")
         this.consulta.status = "Diagnostico";
+        //alert("Status da consulta: "+"Diagnostico");
       }
+      //alert(this.consulta.id);
+      updatedUserData['consultas/'+this.authService.get_clinica_id + '/lista_completa/'+this.consulta.id] = this.consulta;
+
+      let dia = new Date().getDate();
+      let mes = this.getMes(+(new Date().getMonth()) + +1);
+      let ano = new Date().getFullYear();
+      let conta = new Conta();
+      conta.ano = ano;
+      conta.mes = mes;
+      conta.dia = dia;
+      conta.data = dia +"/"+mes+"/"+ano;
+      conta.cliente_apelido = this.consulta.paciente_nome;
+      conta.cliente_nome = this.consulta.paciente_apelido;
+      conta.cliente_nid = this.consulta.paciente_nid;
+      conta.forma_pagamento = this.forma_pagamento;    
+      conta.consulta = servico;
+      if(conta.forma_pagamento == "Convênio"){
+        conta.categoria = "A receber";
+        conta.nr_apolice = this.nr_apolice;
+        conta.seguradora_nome = this.seguradora.nome;
+        conta.valor_total = this.preco_total;
+      }else{
+        conta.categoria = "Recebida";
+        conta.valor_total = this.preco_total;
+        conta.data_recebimento = new Date();
+      }
+
+      if(conta.categoria == "A receber"){
+        updatedUserData['contas/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/receber/'+this.nr_fatura] = conta;
+      }else{
+        updatedUserData['contas/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/recebidas/'+this.nr_fatura] = conta;
+      }
+
+      let d = Object.assign({}, updatedUserData);
+      this.pacienteService.multiSave(d) 
+      .then(r =>{
+        this.downloadPDF(diagnostico_aux2, this.consulta.paciente, 'Fatura');
+        this.dialogRef.close();
+        this.openSnackBar("Faturado com sucesso");
+      }, err =>{
+        console.log("ERRO: " + err.message)
+        this.openSnackBar("Ocorreu um erro ao faturar. Tente novamente ou contacte a equipe de suporte.");
+      })
 
       //Guardar as informacoes na base de dados
       //faturacao
-      let data = Object.assign({},faturacao);
+      /*let data = Object.assign({},faturacao);
       let d = Object.assign({}, this.consulta); 
 
       this.pacienteService.faturar(data)
@@ -735,7 +892,7 @@ export class RemoverPendentesDialog {
         
       }, err=>{
         console.log("ERRO: " + err.message)
-      })
+      })*/
       
       
     }//FIM DO METODO FATURAR
@@ -744,9 +901,18 @@ export class RemoverPendentesDialog {
 
     /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
+    
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+    const numRows = this.tot_diagnosticos;
+
+    //console.log("numSelected: "+numSelected+" / numRows: "+numRows);
+    return numSelected == numRows;
+
+    /*
+      const numSelected = this.selection.selected.length;
+      const numRows = this.dataSource.data.length;
+      return numSelected === numRows;
+    */
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
@@ -858,10 +1024,18 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
     doc.text(item+"", 55, linha) //item
     doc.text("1", 257, linha) //quantidade
     doc.text(element.nome , 95, linha) //descricao
-    doc.text(element.preco, 294, linha)
-    doc.text(element.preco, 354, linha)
 
-    preco_total = +preco_total + +element.preco;
+    if(this.forma_pagamento == "Convênio"){  
+      doc.text(element.preco_seguradora, 294, linha)
+      doc.text(element.preco_seguradora, 354, linha)
+      preco_total = +preco_total + +element.preco_seguradora;
+    }else{
+      doc.text(element.preco, 294, linha)
+      doc.text(element.preco, 354, linha)
+      preco_total = +preco_total + +element.preco;
+    }
+
+    
     item = +item + +1;
     linha = +linha + +20;
   });     
@@ -908,6 +1082,8 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   doc.text("Quantd", 245, 180);
   doc.text("Preço Unit", 295, 180);
   doc.text("Preç Tot", 355, 180);
+
+  
   doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
   //  doc.text("FICHA DE PAGAMENTO", 165, 90);
 

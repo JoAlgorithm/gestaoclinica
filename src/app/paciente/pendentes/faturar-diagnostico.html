@@ -1,6 +1,30 @@
 <h1 mat-dialog-title>Faturar diagnosticos</h1>
+
 <div mat-dialog-content>
-  <p>Selecione os diagnosticos solicitados a faturar</p>
+
+    <p>Preencha os dados relativos a forma de pagamento</p>
+
+    <mat-form-field style="width: 31.2%">
+        <mat-select placeholder="Forma de pagamento" [(ngModel)]="forma_pagamento" required (selectionChange)="mudarFPagamento()">
+            <mat-option *ngFor="let f of data.formas_pagamento" [value]="f.value">
+                {{f.value}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field style="width: 31.2%">
+        <mat-select placeholder="Seguradora" [(ngModel)]="seguradora" [disabled]="!precoSegurado">
+            <mat-option *ngFor="let s of data.seguradoras" [value]="s">
+                {{s.nome}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field style="width: 31.2%">
+        <input matInput placeholder="Nr de apolice" [(ngModel)]="nr_apolice" [disabled]="!precoSegurado">
+    </mat-form-field>
+
+    <p>Selecione os diagnosticos solicitados a faturar</p>
 
    <mat-table [dataSource]="dataSource" matSort>
 
@@ -28,21 +52,16 @@
             <mat-cell *matCellDef="let row">{{row.nome}}</mat-cell>
         </ng-container>
 
-        <!-- Valor a pagar (preco) -->
-        <ng-container matColumnDef="preco">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Valor a pagar </mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.preco}}</mat-cell>
+        <!-- Valor a pagar-->
+        <ng-container matColumnDef="preco_singular">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Preco singular (MZN) </mat-header-cell>
+            <mat-cell *matCellDef="let row" >{{row.preco| currency:' ':'symbol':'1.2-2'}}</mat-cell>
         </ng-container>
 
-         
-        
-
-        <!--<ng-container matColumnDef="remover">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Remover </mat-header-cell>
-            <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="removeDiagostico(row)" matTooltip="Remover {{row.nome}}">  
-                    <mat-icon>delete</mat-icon>
-            </button></mat-cell>
-        </ng-container>-->
+        <ng-container matColumnDef="preco_empresa">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Preco seguradora (MZN) </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.preco_seguradora| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+        </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
@@ -53,6 +72,6 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancelar</button>
-  <button mat-button cdkFocusInitial (click)="faturar()">Faturar</button>
+  <button mat-button cdkFocusInitial (click)="faturar()">Faturar {{preco_total| currency:' ':'symbol':'1.2-2'}} MZN</button>
   <!--<button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial (click)="cancelarConsulta(data.consulta)">OK</button>-->
 </div> 

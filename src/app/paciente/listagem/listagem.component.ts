@@ -147,7 +147,14 @@ export class ListagemComponent implements OnInit {
 
       if(typeof this.nrscotacao !== 'undefined' && this.nrscotacao.length > 0){
         this.nr_cotacao = Math.max.apply(Math, this.nrscotacao.map(function(o) { return o.id; }));
-        this.nr_cotacao = this.nr_cotacao+1;
+
+        if(this.nr_cotacao.toString().substr(0,4) == new Date().getFullYear().toString()){
+          //Se nao bater significa que mudamos de ano e precisamos recomecar a contagem    
+          this.nr_cotacao = this.nr_cotacao+1;
+        }else{
+          this.nr_cotacao =  +(new Date().getFullYear()+'000001');
+        }
+        
       }else{
         this.nr_cotacao =  +(new Date().getFullYear()+'000001');
       }
@@ -165,7 +172,14 @@ export class ListagemComponent implements OnInit {
 
       if(typeof this.nrsfaturcao !== 'undefined' && this.nrsfaturcao.length > 0){
         this.nr_fatura = Math.max.apply(Math, this.nrsfaturcao.map(function(o) { return o.id; }));
-        this.nr_fatura = this.nr_fatura+1;
+        
+        if(this.nr_fatura.toString().substr(0,4) == new Date().getFullYear().toString()){
+          //Se nao bater significa que mudamos de ano e precisamos recomecar a contagem  
+          this.nr_fatura = this.nr_fatura+1;
+        }else{
+          this.nr_fatura =  +(new Date().getFullYear()+'000001');
+        }
+        
       }else{
         this.nr_fatura =  +(new Date().getFullYear()+'000001');
       }
@@ -1127,10 +1141,21 @@ export class MedicamentosDialog {
       doc.text(item+"", 55, linha) //item
       doc.text(element.quantidade+"", 257, linha) //quantidade
       doc.text(element.medicamento.nome_comercial , 95, linha) //descricao
-      doc.text(element.medicamento.preco_venda.toFixed(2).replace(".",",")+"", 294, linha)
-      doc.text((element.medicamento.preco_venda*element.quantidade).toFixed(2).replace(".",",")+"", 354, linha)
-  
-      preco_total = +preco_total + +element.medicamento.preco_venda*element.quantidade;
+
+
+      if(this.forma_pagamento == "Convênio"){
+        doc.text(element.medicamento.preco_seguradora.toFixed(2).replace(".",",")+"", 294, linha)
+        doc.text((element.medicamento.preco_seguradora*element.quantidade).toFixed(2).replace(".",",")+"", 354, linha)
+    
+        preco_total = +preco_total + +element.medicamento.preco_seguradora*element.quantidade;
+      }else{
+        doc.text(element.medicamento.preco_venda.toFixed(2).replace(".",",")+"", 294, linha)
+        doc.text((element.medicamento.preco_venda*element.quantidade).toFixed(2).replace(".",",")+"", 354, linha)
+    
+        preco_total = +preco_total + +element.medicamento.preco_venda*element.quantidade;
+      }
+
+      
       item = +item + +1;
       linha = +linha + +20;
     });   
@@ -1659,13 +1684,20 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
       doc.text(element.nome , 95, linha) //descricao
     }
     
+
+    if(this.forma_pagamento == "Convênio"){
+      doc.text(element.preco_seguradora+"", 294, linha)
+      doc.text(element.preco_seguradora+"", 354, linha)
+  
+      preco_total = +preco_total + +element.preco_seguradora;
+    }else{
+      doc.text(element.preco+"", 294, linha)
+      doc.text(element.preco+"", 354, linha)
+  
+      preco_total = +preco_total + +element.preco;
+    }
+
     
-
-
-    doc.text(element.preco+"", 294, linha)
-    doc.text(element.preco+"", 354, linha)
-
-    preco_total = +preco_total + +element.preco;
 
     if(linhaAlternativo > 0){
       linha = +linha + +40;
@@ -2941,11 +2973,19 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
     }
     //doc.text(element.nome , 95, linha) //descricao
 
+    if(this.forma_pagamento == "Convênio"){
+      doc.text(element.preco_seguradora+"", 294, linha)
+      doc.text(element.preco_seguradora+"", 354, linha)
+  
+      preco_total = +preco_total + +element.preco_seguradora;
+    }else{
+      doc.text(element.preco+"", 294, linha)
+      doc.text(element.preco+"", 354, linha)
+  
+      preco_total = +preco_total + +element.preco;
+    }
 
-    doc.text(element.preco+"", 294, linha)
-    doc.text(element.preco+"", 354, linha)
-
-    preco_total = +preco_total + +element.preco;
+    
     item = +item + +1;
 
     if(linhaAlternativo >0){
