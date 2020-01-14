@@ -52,6 +52,11 @@ export class EstoqueService {
     return this.db.list('depositos/'+this.authService.get_clinica_id + '/').remove(id);
   }
 
+  getMedicamentoDeposito(medicamento_id, deposito_id){
+    //return this.firestore.doc<Clinica>('clinicas/'+this.authService.get_clinica_id);
+    return this.db.object('depositos/'+this.authService.get_clinica_id+'/'+deposito_id+'/medicamentos/'+medicamento_id);
+  }
+
 
   //Retorna de medicamentos
   getMedicamentos() {

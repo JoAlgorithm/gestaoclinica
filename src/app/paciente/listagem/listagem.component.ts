@@ -30,6 +30,7 @@ import { NrFatura } from '../../classes/nr_fatura';
 import { User } from '../../classes/user';
 import { Seguradora } from '../../classes/seguradora';
 import { Conta } from '../../classes/conta';
+import { CategoriaMedicamento } from '../../classes/categoria_medicamento';
 //import { MatProgressButtonOptions } from 'mat-progress-buttons';
 
 
@@ -120,6 +121,8 @@ export class ListagemComponent implements OnInit {
   medicos: string[] = [];
 
   seguradoras: Seguradora[];
+
+  cats_medicamento: CategoriaMedicamento[];
 
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
     private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router, public estoqueService: EstoqueService){ 
@@ -306,6 +309,16 @@ export class ListagemComponent implements OnInit {
       })
     }) 
 
+    //FORMA FARMACEUTICA
+    this.estoqueService.getCategoriasMedicamento().snapshotChanges().subscribe(data => {
+      this.cats_medicamento = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as CategoriaMedicamento;
+      });
+    })
+
   }
  
 
@@ -457,7 +470,7 @@ export class ListagemComponent implements OnInit {
     if(this.nr_cotacao > 0 && this.nr_fatura >0){
       let dialogRef = this.dialog.open(MedicamentosDialog, {
         width: '800px',
-        data: { paciente: row, depositos: this.depositos, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, formas_pagamento: this.formas_pagamento, seguradoras: this.seguradoras }
+        data: { paciente: row, depositos: this.depositos, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, formas_pagamento: this.formas_pagamento, seguradoras: this.seguradoras, cats_medicamento: this.cats_medicamento }
       });
       dialogRef.afterClosed().subscribe(result => {
         //console.log("result "+result);
@@ -549,6 +562,7 @@ export class MedicamentosDialog {
 
   medicamentoFormGroup: FormGroup;
   medicamentos: Medicamento[] = [];
+  medicamentos_aux: Medicamento[] = [];
   //medicamentos_adicionados: Medicamento[] = [];
 
   movimentos: MovimentoEstoque[] = [];
@@ -574,6 +588,9 @@ export class MedicamentosDialog {
   seguradora: Seguradora;
 
   nr_apolice = "";
+
+  cats_medicamento: CategoriaMedicamento[];
+  cats_medicamento_aux: CategoriaMedicamento[];
 
   constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<MedicamentosDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public estoqueService: EstoqueService, 
@@ -601,21 +618,62 @@ export class MedicamentosDialog {
     this.nr_cotacao = this.data.nr_cotacao; //PDF
     this.nr_fatura = this.data.nr_fatura; //PDF
     ///console.log("dialog nr fatura: "+this.nr_fatura);
+    this.cats_medicamento = data.cats_medicamento;
+    this.cats_medicamento_aux = data.cats_medicamento;
   }
 
   filtrodeposito="";
   filtrarDepositos(filtrodeposito) {
+    this.medicamento = new Medicamento();
     if(filtrodeposito){
       filtrodeposito = filtrodeposito.trim(); // Remove whitespace
       filtrodeposito = filtrodeposito.toLowerCase(); // Datasource defaults to lowercase matches
      
-    this.depositos= null;
+      this.depositos= null;
 
-  this.data.depositos = this.depositos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtrodeposito) > -1);     
+      this.data.depositos = this.depositos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtrodeposito) > -1);     
     }else{
       this.data.depositos = this.depositos_aux;
     }
   }
+
+  filtromedicamento="";
+  filtrarMedicamentos(filtromedicamento) {
+    if(filtromedicamento){
+      filtromedicamento = filtromedicamento.trim(); // Remove whitespace
+      filtromedicamento = filtromedicamento.toLowerCase(); // Datasource defaults to lowercase matches
+     
+      this.medicamentos= null;
+      this.medicamentos = this.medicamentos_aux.filter(item => item.nome_comercial.toLocaleLowerCase().indexOf(filtromedicamento) > -1);     
+    }else{
+      this.medicamentos = this.medicamentos_aux;
+    }
+  }
+
+  filtrartipomedic="";
+  filtrarTipoMedicamento(filtrartipomedic) {
+    if(filtrartipomedic){
+      filtrartipomedic = filtrartipomedic.trim(); // Remove whitespace
+      filtrartipomedic = filtrartipomedic.toLowerCase(); // Datasource defaults to lowercase matches
+     
+      this.cats_medicamento = null;
+      this.cats_medicamento = this.cats_medicamento_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtrartipomedic) > -1);     
+    }else{
+      this.cats_medicamento = this.cats_medicamento_aux;
+    }
+  }
+
+  f_farmaceutica="";
+  filtrarmedicamento(f_farmaceutica){
+    this.medicamento = new Medicamento();
+    if(f_farmaceutica){
+      this.medicamentos= null;
+      this.medicamentos = this.medicamentos_aux.filter(item => item.categoria.nome.indexOf(f_farmaceutica) > -1);     
+    }else{
+      this.medicamentos = this.medicamentos_aux;
+    }
+  }
+
 
   precoSegurado = false;
   mudarFPagamento(){
@@ -634,6 +692,7 @@ export class MedicamentosDialog {
 
   getMedicamentos(deposito: Deposito){
     this.medicamentos = [];
+    this.medicamentos_aux = [];
     this.medicamento = new Medicamento();
     this.max = 1;
     if(deposito.medicamentos){
@@ -642,6 +701,7 @@ export class MedicamentosDialog {
         this.medicamentos.push(deposito.medicamentos[key]);
       })
 
+      this.medicamentos_aux = this.medicamentos;
     }else{
       this.openSnackBar("Deposito sem medicamentos. Contacte o Admnistrativo");
     }

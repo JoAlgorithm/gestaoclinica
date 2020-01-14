@@ -11,6 +11,8 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { FormControl } from '@angular/forms';
 import { TipoEstoque } from '../../classes/tipo_estoque';
 import { Router } from '@angular/router';
+import 'rxjs/add/operator/take';
+
 @Component({
   selector: 'app-cadastros',
   templateUrl: './cadastros.component.html',
@@ -230,19 +232,55 @@ export class CadastrosComponent implements OnInit {
       if(!this.medicamento.composicao){
         this.medicamento.composicao = "";
       }
+
+      
+
+      var updatedUserData = {};
       
       let novocodigo = this.medicamento.codigo+1;//Gerar codigo do proximo medicamento
       let data = Object.assign({}, this.medicamento);
       if(data.id){ 
-     
-        this.estoqueService.updateMedicamentos(data)
-        .then( res => {
-          this.medicamento= new Medicamento();
-          this.medicamentoFormGroup.reset;
-          this.openSnackBar("Medicamento Atualizado com sucesso");
-        }, err=>{
-          this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
-        })
+
+        updatedUserData['medicamentos/'+this.authService.get_clinica_id + '/'+this.medicamento.id+'/'] = this.medicamento;
+
+        //Ja que item existe verificar se esta cadastrado em algum deposito para atualizar
+        //setTimeout(() => {
+          this.depositos.forEach(element => {
+
+            
+
+            this.estoqueService.getMedicamentoDeposito(this.medicamento.id, element.id).valueChanges()
+            .take(1)
+            .subscribe(c => {
+              if(c){ //Se medicamento existir no deposito
+                //Atualizando medicamento no deposito
+                
+                //console.log("Medicamento existe no deposito "+element.nome);
+                //console.log("deposito id "+element.id);
+                //console.log("Medicamento id "+this.medicamento.id);
+                console.log("Path "+'depositos/'+this.authService.get_clinica_id + '/'+element.id+'/medicamentos/'+this.medicamento.id);
+                updatedUserData['depositos/'+this.authService.get_clinica_id + '/'+element.id+'/medicamentos/'+this.medicamento.id] = this.medicamento;  
+              }else{
+                console.log("Medicamento NAO existe no deposito "+element.nome);
+              }
+            })
+  
+          });
+          
+  
+          let d = Object.assign({}, updatedUserData);
+          console.log("Converteu");
+  
+          this.estoqueService.updateEstoque(d)
+          .then( res => {
+            this.medicamento= new Medicamento();
+            this.medicamentoFormGroup.reset;
+            this.openSnackBar("Medicamento Atualizado com sucesso");
+          }, err=>{
+            this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+          })
+      //  })
+        
       }else{
       this.estoqueService.createMedicamento(data)
       .then( res => {

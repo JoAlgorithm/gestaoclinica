@@ -6,21 +6,34 @@
         <!--DEPOSITOS-->
         <mat-form-field style="width: 31%">
             <mat-select placeholder="Deposito"  [(ngModel)]="deposito" (selectionChange)="getMedicamentos(deposito)" required>
-                    <mat-option >
-                            <ngx-mat-select-search [(ngModel)]="filtrodeposito"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarDepositos($event.target.value)"></ngx-mat-select-search>
-                          </mat-option>
+                <mat-option >
+                    <ngx-mat-select-search [(ngModel)]="filtrodeposito"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = "Nenhuma informacao encontrada" matInput (keyup)="filtrarDepositos($event.target.value)"></ngx-mat-select-search>
+                </mat-option>
                 <mat-option *ngFor="let deposito of data.depositos" [value]="deposito">
                     {{deposito.nome}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
 
+        <mat-form-field style="width: 62%">
+            <mat-select placeholder="Forma farmaceutica" [(ngModel)]="f_farmaceutica" required (selectionChange)="filtrarmedicamento(f_farmaceutica)">
+              <mat-option >
+                <ngx-mat-select-search [(ngModel)]="filtrartipomedic"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = "Nenhuma informacao encontrada" matInput (keyup)="filtrarTipoMedicamento($event.target.value)"></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let cat of cats_medicamento " [value]="cat.nome">
+                  {{cat.nome}}
+              </mat-option>             
+            </mat-select>
+          </mat-form-field>
+
         <!--MEDICAMENTOS-->
-        <mat-form-field style="width: 31%">
+        <mat-form-field style="width: 62%">
             <mat-select placeholder="Medicamento"  [(ngModel)]="medicamento" (selectionChange)="limitarQuantidade()"  required>
-                    
+                <mat-option >
+                    <ngx-mat-select-search [(ngModel)]="filtromedicamento"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = "Nenhuma informacao encontrada" matInput (keyup)="filtrarMedicamentos($event.target.value)"></ngx-mat-select-search>
+                </mat-option>
                 <mat-option *ngFor="let medicamento of medicamentos" [value]="medicamento">
-                    {{medicamento.nome_generico}}
+                    {{medicamento.nome_generico}} - {{medicamento.nome_comercial}} - {{medicamento.composicao}}
                 </mat-option>
             </mat-select>
         </mat-form-field>

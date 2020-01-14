@@ -7,9 +7,9 @@
     <!--TIPO DE DIAGNOSTICO AUX-->
     <mat-form-field style="width: 31.2%">
         <mat-select placeholder="Tipo"  [(ngModel)]="tipodiagnostico" (selectionChange)="filtrarTipo(tipodiagnostico)">
-                <mat-option >
-                        <ngx-mat-select-search [(ngModel)]="filtrotipodiagnostico"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTipoDiagnosticos($event.target.value)"></ngx-mat-select-search>
-                      </mat-option>
+            <mat-option >
+                <ngx-mat-select-search [(ngModel)]="filtrotipodiagnostico"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarTipoDiagnosticos($event.target.value)"></ngx-mat-select-search>
+            </mat-option>
             <mat-option *ngFor="let tipo of data.tipos_diagnosticos" [value]="tipo">
                 {{tipo.nome}}
             </mat-option>
