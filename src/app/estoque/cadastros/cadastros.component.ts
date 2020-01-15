@@ -180,8 +180,29 @@ export class CadastrosComponent implements OnInit {
     }
   }
 
+  updatedUserData = {};
+  //medicamentos_aux: Medicamento[];
+  medicamentos_aux: MedicamentoDeposito[];
   editarMedicamento(medicamento: Medicamento){
     this.medicamento = medicamento;
+    this.updatedUserData = {};
+    this.medicamentos_aux = [];
+
+    //Ja que item existe verificar se esta cadastrado em algum deposito para atualizar
+    this.depositos.forEach(element => {
+
+      this.estoqueService.getMedicamentoDeposito(this.medicamento.id, element.id).valueChanges()
+      .take(1)
+      .subscribe(c => {
+        if(c){ //Se medicamento existir no deposito
+          
+          this.medicamentos_aux.push(new MedicamentoDeposito(c, element));
+
+          this.updatedUserData['depositos/'+this.authService.get_clinica_id + '/'+element.id+'/medicamentos/'+this.medicamento.id] = new MedicamentoDeposito(this.medicamento, element);  
+        }
+      })
+
+    });
   }
 
   editarDeposito(deposito: Deposito){
@@ -233,54 +254,69 @@ export class CadastrosComponent implements OnInit {
         this.medicamento.composicao = "";
       }
 
-      
-
-      var updatedUserData = {};
-      
       let novocodigo = this.medicamento.codigo+1;//Gerar codigo do proximo medicamento
       let data = Object.assign({}, this.medicamento);
       if(data.id){ 
 
-        updatedUserData['medicamentos/'+this.authService.get_clinica_id + '/'+this.medicamento.id+'/'] = this.medicamento;
-
-        //Ja que item existe verificar se esta cadastrado em algum deposito para atualizar
-        //setTimeout(() => {
-          this.depositos.forEach(element => {
-
-            
-
-            this.estoqueService.getMedicamentoDeposito(this.medicamento.id, element.id).valueChanges()
-            .take(1)
-            .subscribe(c => {
-              if(c){ //Se medicamento existir no deposito
-                //Atualizando medicamento no deposito
-                
-                //console.log("Medicamento existe no deposito "+element.nome);
-                //console.log("deposito id "+element.id);
-                //console.log("Medicamento id "+this.medicamento.id);
-                console.log("Path "+'depositos/'+this.authService.get_clinica_id + '/'+element.id+'/medicamentos/'+this.medicamento.id);
-                updatedUserData['depositos/'+this.authService.get_clinica_id + '/'+element.id+'/medicamentos/'+this.medicamento.id] = this.medicamento;  
-              }else{
-                console.log("Medicamento NAO existe no deposito "+element.nome);
-              }
-            })
-  
-          });
-          
-  
-          let d = Object.assign({}, updatedUserData);
-          console.log("Converteu");
-  
-          this.estoqueService.updateEstoque(d)
-          .then( res => {
-            this.medicamento= new Medicamento();
-            this.medicamentoFormGroup.reset;
-            this.openSnackBar("Medicamento Atualizado com sucesso");
-          }, err=>{
-            this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
-          })
-      //  })
         
+
+        //O objetivo é atualizar o medicamento em todos os depositos sem interferir na qtd_disponivel em cada deposito
+        for (const key in this.updatedUserData) { //Percorrer o "updatedUserData" onde tem medicamentos nos depositos
+          if (this.updatedUserData.hasOwnProperty(key)) {
+
+            //console.log("== Inicio check: "+key);
+            //console.log("");
+            //console.log("Percorrer array aux");
+            //console.log("");
+
+            this.medicamentos_aux.forEach(element => {
+              //console.log("this.updatedUserData[key].deposito.id: "+this.updatedUserData[key].deposito.id);
+
+              if(this.updatedUserData[key].deposito.id == element.deposito.id && this.updatedUserData[key].medicamento.id == element.medicamento.id)
+              {
+                this.medicamento.qtd_disponivel = element.medicamento.qtd_disponivel;
+                //console.log("COLOCAR QTD DISPONIVEL "+this.medicamento.qtd_disponivel)
+              }
+
+            });
+
+            let medicamento = new Medicamento();
+            medicamento.qtd_disponivel = this.medicamento.qtd_disponivel;
+            medicamento.nome_comercial = this.medicamento.nome_comercial;
+            medicamento.categoria = this.medicamento.categoria;
+            medicamento.codigo = this.medicamento.codigo;
+            medicamento.composicao = this.medicamento.composicao;
+            medicamento.id = this.medicamento.id;
+            medicamento.nome_generico = this.medicamento.nome_generico;
+            medicamento.preco_seguradora = this.medicamento.preco_seguradora;
+            medicamento.preco_venda = this.medicamento.preco_venda;
+            medicamento.tipo = this.medicamento.tipo;
+            medicamento.un = this.medicamento.un;
+            medicamento.min = this.medicamento.min;
+
+
+            this.updatedUserData[key] = medicamento;
+            //console.log("Atualizar medicamento com qtd disponivel de" + this.medicamento.qtd_disponivel + "no endereco: "+key);
+            this.medicamento.qtd_disponivel = null;
+            //console.log("Atualizou medicamento")
+
+          }
+        }
+          
+        this.updatedUserData['medicamentos/'+this.authService.get_clinica_id + '/'+this.medicamento.id+'/'] = this.medicamento;
+        let d = Object.assign({}, this.updatedUserData);
+        //console.log("Converteu");
+
+        this.estoqueService.updateEstoque(d)
+        .then( res => {
+          this.medicamento= new Medicamento();
+          this.medicamentoFormGroup.reset;
+          this.updatedUserData = {};
+          this.openSnackBar("Medicamento Atualizado com sucesso");
+        }, err=>{
+          this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+        })
+
       }else{
       this.estoqueService.createMedicamento(data)
       .then( res => {
@@ -358,6 +394,15 @@ export class CadastrosComponent implements OnInit {
 
 }
 
+export class MedicamentoDeposito {
+  medicamento?: Medicamento;
+  deposito?: Deposito;
+
+  constructor(medicamento?: Medicamento, deposito?: Deposito) {
+    this.medicamento = medicamento;
+    this.deposito = deposito;
+  }
+}
 
 //ConfirmacaoDialog --------------------------------------------------------
 @Component({

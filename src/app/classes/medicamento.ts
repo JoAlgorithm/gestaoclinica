@@ -3,7 +3,7 @@ import { CategoriaMedicamento } from "./categoria_medicamento";
 import { TipoEstoque } from "./tipo_estoque";
 
 export class Medicamento {
-    id: string;
+    id?: string;
     codigo?: number; //gerar codigo que nem NID
     nome_generico?: string; //o mais usado
     nome_comercial?: string;
