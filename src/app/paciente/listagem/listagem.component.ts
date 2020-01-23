@@ -133,9 +133,11 @@ export class ListagemComponent implements OnInit {
     this.perfil = this.authService.get_perfil;
     if(this.perfil == 'Clinica_Admin'){
       this.acesso_remover = false;
+    }else if(this.perfil == 'Farmacia_Admin'){
+      this.acesso_remover = false;
     }
 
-    if(this.perfil == 'Farmacia_Admnistrativo'){
+    if(this.perfil == 'Farmacia_Admnistrativo' || this.perfil == 'Farmacia_Admin'){
       this.acesso_faturar_all = false;
     }
 
@@ -2938,7 +2940,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     if(categoria == 'Cotacao'){
       nome = "COTAÇÃO";
     }else{
-      nome = "FATURA";
+      nome = "RECIBO";
     }
   
     if(this.clinica.endereco){
@@ -3074,14 +3076,14 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   doc.text("Cell: "+this.clinica.telefone, 50, 95);
   doc.text("NUIT: "+this.clinica.nuit, 50, 105);
   doc.text("Nome do Paciente:"+paciente.nome, 50, 125);
-//doc.text(paciente.nome, 128, 125);
-doc.text("NID:"+paciente.nid, 250, 125);
-//doc.text(paciente.nid+"", 268, 125);
-doc.text("Apelido:"+paciente.apelido, 50, 145);
-// doc.text(paciente.apelido, 89, 145);
-doc.text("Data de emissão:"+dataemisao, 250, 145);
-//doc.text(dataemisao, 322, 145);
-doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
+  //doc.text(paciente.nome, 128, 125);
+  doc.text("NID:"+paciente.nid, 250, 125);
+  //doc.text(paciente.nid+"", 268, 125);
+  doc.text("Apelido:"+paciente.apelido, 50, 145);
+  // doc.text(paciente.apelido, 89, 145);
+  doc.text("Data de emissão:"+dataemisao, 250, 145);
+  //doc.text(dataemisao, 322, 145);
+  doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
   doc.setFillColor(50,50,50);
   doc.rect ( 50, 170 , 40 , 20 ); 
   doc.rect (  50, 190 , 40 , 320 ); 

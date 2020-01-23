@@ -183,7 +183,18 @@ const MENUITEMS_FARMACIA_ADMNISTRATIVO:Menu[] = [
       {state: 'estoque_cadastros', name: 'Cadastros'},
       {state: 'estoque_gestao', name: 'Gestao'},
     ]
+  },
+  {
+    state: 'financas',
+    name: 'FINANCAS',
+    type: 'sub',
+    icon: 'money',
+    children: [
+      {state: 'contas_recibida', name: 'Contas recebidas'},
+      {state: 'contas_receber', name: 'Contas a receber'}
+    ]
   }
+  
 ];
 
 
@@ -217,6 +228,11 @@ export class MenuService {
       case "Farmacia_Admnistrativo": { 
         //statements; 
         return MENUITEMS_FARMACIA_ADMNISTRATIVO;
+        //break; 
+      }
+      case "Farmacia_Admin": { 
+        //statements; 
+        return MENUITEMS_FARMACIA_ADMNISTRATIVO; //Esse tem acesso aos dois graficos de faturacao e filtros por periodo
         //break; 
       } 
       default: { 

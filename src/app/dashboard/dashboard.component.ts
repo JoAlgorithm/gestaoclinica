@@ -28,6 +28,7 @@ export class DashboardComponent {
 
   perfil = "";
   acesso_indicadores = false;
+  acesso_indicadores2 = false;
   username = "";
 
   pacientes: Paciente[];
@@ -143,6 +144,10 @@ export class DashboardComponent {
 
       if(this.perfil == 'Clinica_Admin'){
         this.acesso_indicadores = true;
+        this.acesso_indicadores2 = true;
+      }else if(this.perfil == 'Farmacia_Admin'){
+        this.acesso_indicadores = true;
+        this.acesso_indicadores2 = false;
       }
       this.configService.getAnos().snapshotChanges().subscribe(data => {
         this.anos = data.map(e => {
