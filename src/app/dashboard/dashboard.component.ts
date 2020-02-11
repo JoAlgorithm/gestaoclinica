@@ -122,6 +122,30 @@ export class DashboardComponent {
   
   faturacoesMedico: FaturacaoMedico[] = [];
 
+  faturacoesCategoria: FaturacaoCategoria[] = [];
+  categoria_qtd_MEDICAMENTO = 0; //Qtd de vendas de medicamento e nao qtd de medicamentos  vendidos
+  categoria_qtd_CONSULTA_MEDICA = 0; //Qtd de vendas de consultas medicas
+  categoria_qtd_DIAGNOSTICO_AUX = 0; //Qtd de vendas de diagnosticos
+  categoria_qtd_CONDUTA = 0; //Qtd de Vendas de condutas
+
+  categoria_valor_MEDICAMENTO = 0; //Valor por vendas de medicamentos
+  categoria_valor_CONSULTA_MEDICA = 0; //Valor por vendas de consulta medica
+  categoria_valor_DIAGNOSTICO_AUX = 0; //Valor por vendas de diagnosticos aux
+  categoria_valor_CONDUTA = 0; //Valor por vendas de vendas de 
+  
+  categoria_valor_MEDICAMENTO_ano = 0; //Valor por vendas de medicamentos
+  categoria_valor_CONSULTA_MEDICA_ano = 0; //Valor por vendas de consulta medica
+  categoria_valor_DIAGNOSTICO_AUX_ano = 0; //Valor por vendas de diagnosticos aux
+  categoria_valor_CONDUTA_ano = 0; //Valor por vendas de vendas de conduta
+
+  categoria_percentual_MEDICAMENTO = 0 //Percentual de valor por vendas de vendas de conduta
+  categoria_percentual_CONSULTA_MEDICA = 0 //Percentual de valor por vendas de vendas de consulta medica
+  categoria_percentual_DIAGNOSTICO_AUX = 0 //Percentual de valor por vendas de vendas de diagnosticos
+  categoria_percentual_CONDUTA = 0 //Percentual de valor por vendas de vendas de conduta
+
+
+
+
   dataSourse: MatTableDataSource<FaturacaoMedico>;
   displayedColumns = ['Medico','Categoria', 'Ano', 'Mes', 'Valor'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -222,6 +246,7 @@ export class DashboardComponent {
       })
   
       this.faturacoesMedico = [];
+      this.faturacoesCategoria = [];
 
       this.pacienteService.getFaturacoes(this.ano).snapshotChanges().subscribe(data => {
         this.faturacoes = data.map(e => {
@@ -238,7 +263,64 @@ export class DashboardComponent {
           //dia = +dia + +1;
           let dia = new Date(element.data).toISOString().substr(8,2);
 
+          switch(element.categoria){
+            case "CONDUTA CLINICA": {
+              //this.categoria_qtd_CONDUTA = +this.categoria_qtd_CONDUTA + +1;
+              this.categoria_valor_CONDUTA_ano = +this.categoria_valor_CONDUTA_ano + +element.valor;
+              break;
+            }
+
+            case "DIAGNOSTICO_AUX": {
+              //this.categoria_qtd_DIAGNOSTICO_AUX = +this.categoria_qtd_DIAGNOSTICO_AUX + +1;
+              this.categoria_valor_DIAGNOSTICO_AUX_ano = +this.categoria_valor_DIAGNOSTICO_AUX_ano + +element.valor;
+              break;
+            }
+
+            case "CONSULTA_MEDICA": {
+              //this.categoria_qtd_CONSULTA_MEDICA = +this.categoria_qtd_CONSULTA_MEDICA + +1;
+              this.categoria_valor_CONSULTA_MEDICA_ano = +this.categoria_valor_CONSULTA_MEDICA_ano + +element.valor;
+              break;
+            }
+
+            case "MEDICAMENTO": {
+              //this.categoria_qtd_MEDICAMENTO = +this.categoria_qtd_MEDICAMENTO + +1;
+              this.categoria_valor_MEDICAMENTO_ano = +this.categoria_valor_MEDICAMENTO_ano + +element.valor;
+              break;
+            }
+          }
+
          if(this.mes == element.mes){
+
+          switch(element.categoria){
+            case "CONDUTA CLINICA": {
+              this.categoria_qtd_CONDUTA = +this.categoria_qtd_CONDUTA + +1;
+              this.categoria_valor_CONDUTA = +this.categoria_valor_CONDUTA + +element.valor;
+              break;
+            }
+
+            case "DIAGNOSTICO_AUX": {
+              this.categoria_qtd_DIAGNOSTICO_AUX = +this.categoria_qtd_DIAGNOSTICO_AUX + +1;
+              this.categoria_valor_DIAGNOSTICO_AUX = +this.categoria_valor_DIAGNOSTICO_AUX + +element.valor;
+              break;
+            }
+
+            case "CONSULTA_MEDICA": {
+              this.categoria_qtd_CONSULTA_MEDICA = +this.categoria_qtd_CONSULTA_MEDICA + +1;
+              this.categoria_valor_CONSULTA_MEDICA = +this.categoria_valor_CONSULTA_MEDICA + +element.valor;
+              break;
+            }
+
+            case "MEDICAMENTO": {
+              this.categoria_qtd_MEDICAMENTO = +this.categoria_qtd_MEDICAMENTO + +1;
+              this.categoria_valor_MEDICAMENTO = +this.categoria_valor_MEDICAMENTO + +element.valor;
+              break;
+            }
+          }
+
+          //this.categoria_percentual_CONDUTA =  (this.categoria_valor_CONDUTA /this.total_valor)*100;
+          //this.categoria_percentual_DIAGNOSTICO_AUX = (this.categoria_valor_DIAGNOSTICO_AUX /this.total_valor)*100;
+          //this.categoria_percentual_MEDICAMENTO = (this.categoria_valor_MEDICAMENTO /this.total_valor)*100;
+          //this.categoria_percentual_CONSULTA_MEDICA = (this.categoria_valor_CONSULTA_MEDICA /this.total_valor)*100;
 
           /*let faturacaoMedico = new FaturacaoMedico();
           faturacaoMedico.ano = element.ano;
@@ -567,6 +649,8 @@ export class DashboardComponent {
         this.dataSourse.paginator = this.paginator;
         this.dataSourse.sort = this.sort;*/
 
+        
+
         //FATURACAO POR DIA 
         this.ComboChartData2 = [{
           data: [
@@ -685,7 +769,10 @@ export class DashboardComponent {
           label: 'Diagnostico Auxiliar',
           borderWidth: 0
         }];
-        
+
+        this.doughnutChartData= [this.categoria_valor_CONSULTA_MEDICA , this.categoria_valor_DIAGNOSTICO_AUX, this.categoria_valor_CONDUTA, this.categoria_valor_MEDICAMENTO];
+        this.doughnutChartData_ano= [this.categoria_valor_CONSULTA_MEDICA_ano , this.categoria_valor_DIAGNOSTICO_AUX_ano, this.categoria_valor_CONDUTA_ano, this.categoria_valor_MEDICAMENTO_ano];
+
         
       })
 
@@ -767,7 +854,62 @@ export class DashboardComponent {
           //dia = +dia + +1;
           let dia = new Date(element.data).toISOString().substr(8,2);          
 
+          switch(element.categoria){
+            case "CONDUTA CLINICA": {
+              //this.categoria_qtd_CONDUTA = +this.categoria_qtd_CONDUTA + +1;
+              this.categoria_valor_CONDUTA_ano = +this.categoria_valor_CONDUTA_ano + +element.valor;
+              break;
+            }
+
+            case "DIAGNOSTICO_AUX": {
+              //this.categoria_qtd_DIAGNOSTICO_AUX = +this.categoria_qtd_DIAGNOSTICO_AUX + +1;
+              this.categoria_valor_DIAGNOSTICO_AUX_ano = +this.categoria_valor_DIAGNOSTICO_AUX_ano + +element.valor;
+              break;
+            }
+
+            case "CONSULTA_MEDICA": {
+              //this.categoria_qtd_CONSULTA_MEDICA = +this.categoria_qtd_CONSULTA_MEDICA + +1;
+              this.categoria_valor_CONSULTA_MEDICA_ano = +this.categoria_valor_CONSULTA_MEDICA_ano + +element.valor;
+              break;
+            }
+
+            case "MEDICAMENTO": {
+              //this.categoria_qtd_MEDICAMENTO = +this.categoria_qtd_MEDICAMENTO + +1;
+              this.categoria_valor_MEDICAMENTO_ano = +this.categoria_valor_MEDICAMENTO_ano + +element.valor;
+              break;
+            }
+          }
+          
+
          if(this.mes == element.mes){
+
+
+          switch(element.categoria){
+            case "CONDUTA CLINICA": {
+              this.categoria_qtd_CONDUTA = +this.categoria_qtd_CONDUTA + +1;
+              this.categoria_valor_CONDUTA = +this.categoria_valor_CONDUTA + +element.valor;
+              break;
+            }
+
+            case "DIAGNOSTICO_AUX": {
+              this.categoria_qtd_DIAGNOSTICO_AUX = +this.categoria_qtd_DIAGNOSTICO_AUX + +1;
+              this.categoria_valor_DIAGNOSTICO_AUX = +this.categoria_valor_DIAGNOSTICO_AUX + +element.valor;
+              break;
+            }
+
+            case "CONSULTA_MEDICA": {
+              this.categoria_qtd_CONSULTA_MEDICA = +this.categoria_qtd_CONSULTA_MEDICA + +1;
+              this.categoria_valor_CONSULTA_MEDICA = +this.categoria_valor_CONSULTA_MEDICA + +element.valor;
+              break;
+            }
+
+            case "MEDICAMENTO": {
+              this.categoria_qtd_MEDICAMENTO = +this.categoria_qtd_MEDICAMENTO + +1;
+              this.categoria_valor_MEDICAMENTO = +this.categoria_valor_MEDICAMENTO + +element.valor;
+              break;
+            }
+          }
+
           switch(dia) {
 
             case "01": {
@@ -1005,11 +1147,64 @@ export class DashboardComponent {
 
           this.total_valor = +this.total_valor + +element.valor;
 
+          switch(element.categoria){
+            case "CONDUTA CLINICA": {
+              //this.categoria_qtd_CONDUTA = +this.categoria_qtd_CONDUTA + +1;
+              this.categoria_valor_CONDUTA_ano = +this.categoria_valor_CONDUTA_ano + +element.valor;
+              break;
+            }
+
+            case "DIAGNOSTICO_AUX": {
+              //this.categoria_qtd_DIAGNOSTICO_AUX = +this.categoria_qtd_DIAGNOSTICO_AUX + +1;
+              this.categoria_valor_DIAGNOSTICO_AUX_ano = +this.categoria_valor_DIAGNOSTICO_AUX_ano + +element.valor;
+              break;
+            }
+
+            case "CONSULTA_MEDICA": {
+              //this.categoria_qtd_CONSULTA_MEDICA = +this.categoria_qtd_CONSULTA_MEDICA + +1;
+              this.categoria_valor_CONSULTA_MEDICA_ano = +this.categoria_valor_CONSULTA_MEDICA_ano + +element.valor;
+              break;
+            }
+
+            case "MEDICAMENTO": {
+              //this.categoria_qtd_MEDICAMENTO = +this.categoria_qtd_MEDICAMENTO + +1;
+              this.categoria_valor_MEDICAMENTO_ano = +this.categoria_valor_MEDICAMENTO_ano + +element.valor;
+              break;
+            }
+          }
+
           //let dia = new Date(element.data).getDay();
           //dia = +dia + +1;
           let dia = new Date(element.data).toISOString().substr(8,2);
 
          if(this.mes == element.mes){
+
+          switch(element.categoria){
+            case "CONDUTA CLINICA": {
+              this.categoria_qtd_CONDUTA = +this.categoria_qtd_CONDUTA + +1;
+              this.categoria_valor_CONDUTA = +this.categoria_valor_CONDUTA + +element.valor;
+              break;
+            }
+
+            case "DIAGNOSTICO_AUX": {
+              this.categoria_qtd_DIAGNOSTICO_AUX = +this.categoria_qtd_DIAGNOSTICO_AUX + +1;
+              this.categoria_valor_DIAGNOSTICO_AUX = +this.categoria_valor_DIAGNOSTICO_AUX + +element.valor;
+              break;
+            }
+
+            case "CONSULTA_MEDICA": {
+              this.categoria_qtd_CONSULTA_MEDICA = +this.categoria_qtd_CONSULTA_MEDICA + +1;
+              this.categoria_valor_CONSULTA_MEDICA = +this.categoria_valor_CONSULTA_MEDICA + +element.valor;
+              break;
+            }
+
+            case "MEDICAMENTO": {
+              this.categoria_qtd_MEDICAMENTO = +this.categoria_qtd_MEDICAMENTO + +1;
+              this.categoria_valor_MEDICAMENTO = +this.categoria_valor_MEDICAMENTO + +element.valor;
+              break;
+            }
+          }
+
           switch(dia) {
 
             case "01": {
@@ -1348,6 +1543,10 @@ export class DashboardComponent {
         borderWidth: 0
       }];
       
+      this.doughnutChartData= [this.categoria_valor_CONSULTA_MEDICA , this.categoria_valor_DIAGNOSTICO_AUX, this.categoria_valor_CONDUTA, this.categoria_valor_MEDICAMENTO];
+      this.doughnutChartData_ano= [this.categoria_valor_CONSULTA_MEDICA_ano , this.categoria_valor_DIAGNOSTICO_AUX_ano, this.categoria_valor_CONDUTA_ano, this.categoria_valor_MEDICAMENTO_ano];
+
+      
       
     })
   }
@@ -1423,6 +1622,16 @@ export class DashboardComponent {
     this.vintenove_valor = 0
     this.trinta_valor = 0
     this.trintaum_valor = 0
+
+    this.categoria_valor_CONSULTA_MEDICA = 0;
+    this.categoria_valor_DIAGNOSTICO_AUX = 0;
+    this.categoria_valor_MEDICAMENTO = 0;
+    this.categoria_valor_CONDUTA = 0;
+
+    this.categoria_valor_CONSULTA_MEDICA_ano = 0;
+    this.categoria_valor_DIAGNOSTICO_AUX_ano = 0;
+    this.categoria_valor_MEDICAMENTO_ano = 0;
+    this.categoria_valor_CONDUTA_ano = 0;
   }
 
   Lista_pacientes(paciente){
@@ -1762,6 +1971,38 @@ export class DashboardComponent {
     }
   }, this.globalChartOptions);
 
+    // Doughnut MES
+    doughnutChartColors: any[] = [{
+      //backgroundColor: ['#f44336', '#3f51b5', '#ffeb3b', '#4caf50', '#2196f']
+      backgroundColor: ['#008080', '#6495ED', '#4b0082', '#4caf50', '#2196f']
+    }];
+    doughnutChartLabels: string[] = ['Cons. Medicas', 'Diagnostico Aux', 'Condutas', 'Medicamentos'];
+    doughnutChartData: number[] = [this.categoria_valor_CONSULTA_MEDICA , this.categoria_valor_DIAGNOSTICO_AUX, this.categoria_valor_CONDUTA, this.categoria_valor_MEDICAMENTO];
+    doughnutChartType = 'doughnut';
+    doughnutOptions: any = Object.assign({
+      elements: {
+        arc: {
+          borderWidth: 0
+        }
+      }
+    }, this.globalChartOptions);
+
+    // Doughnut ANO
+    doughnutChartColors_ano: any[] = [{
+      //backgroundColor: ['#f44336', '#3f51b5', '#ffeb3b', '#4caf50', '#2196f']
+      backgroundColor: ['#008080', '#6495ED', '#4b0082', '#4caf50', '#2196f']
+    }];
+    doughnutChartLabels_ano: string[] = ['Cons. Medicas', 'Diagnostico Aux', 'Condutas', 'Medicamentos'];
+    doughnutChartData_ano: number[] = [this.categoria_valor_CONSULTA_MEDICA_ano , this.categoria_valor_DIAGNOSTICO_AUX_ano, this.categoria_valor_CONDUTA_ano, this.categoria_valor_MEDICAMENTO_ano];
+    doughnutChartType_ano = 'doughnut';
+    doughnutOptions_ano: any = Object.assign({
+      elements: {
+        arc: {
+          borderWidth: 0
+        }
+      }
+    }, this.globalChartOptions);
+
 
 
 
@@ -1942,6 +2183,14 @@ export class FaturacaoMedico {
   valor?: Number;
 }
 
+export class FaturacaoCategoria {
+  ano?: Number;
+  mes?: String;
+  //dia?: number;
+  categoria?: String; //nome da categoria
+  quantidade?: number;
+  valor?: Number;
+}
 
 
 

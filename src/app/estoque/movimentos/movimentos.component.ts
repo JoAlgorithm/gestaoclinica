@@ -66,7 +66,7 @@ export class MovimentosComponent implements OnInit {
 
   novoEntrada(tipoMovimento){
     let dialogRef = this.dialog.open(RegistoDialog, {
-      width: '800px',
+      width: '1000px',
       data: {tipoMovimento: tipoMovimento, depositos:this.depositos,  medicamentos:this.medicamentos}
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -76,7 +76,7 @@ export class MovimentosComponent implements OnInit {
 
   novoSaida(tipoMovimento){
     let dialogRef = this.dialog.open(SaidaDialog, {
-      width: '800px',
+      width: '1000px',
       data: {tipoMovimento: tipoMovimento, depositos:this.depositos,  medicamentos:this.medicamentos}
     });
     dialogRef.afterClosed().subscribe(result => {

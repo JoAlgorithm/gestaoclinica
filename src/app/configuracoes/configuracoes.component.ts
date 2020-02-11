@@ -26,6 +26,7 @@ export class ConfiguracoesComponent implements OnInit {
 
   perfil = "";
   acesso_users = false;
+  acesso_farmacia = true;
   
   editar_conduta = false;
   editar_diagnostico = false;
@@ -141,6 +142,11 @@ export class ConfiguracoesComponent implements OnInit {
       this.acesso_users = true;
     }else{
       this.acesso_users = false;
+    }
+
+    if(this.perfil == 'Farmacia_Admin'){
+      this.acesso_farmacia = false;
+      this.acesso_users = true;
     }
 
     //TAB DIAGNOSTICO AUXILIAR

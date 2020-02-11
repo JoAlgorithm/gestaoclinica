@@ -193,6 +193,12 @@ const MENUITEMS_FARMACIA_ADMNISTRATIVO:Menu[] = [
       {state: 'contas_recibida', name: 'Contas recebidas'},
       {state: 'contas_receber', name: 'Contas a receber'}
     ]
+  },
+  {
+    state: 'configuracoes',
+    name: 'CONFIGURACOES',
+    type: 'link',
+    icon: 'settings',
   }
   
 ];

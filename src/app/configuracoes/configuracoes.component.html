@@ -61,7 +61,7 @@
   </mat-tab>
 
   <!--TAB CONSULTAS MEDICAS (CRIACAO DE CATEGORIAS DE CONSULTAS MEDICAS)-->
-  <mat-tab label = "CONSULTAS MEDICAS">
+  <mat-tab label = "CONSULTAS MEDICAS" *ngIf='acesso_farmacia'>
         <mat-card class="example-card">
                 <mat-card-content>
                 
@@ -140,7 +140,7 @@
   </mat-tab>
 
   <!--CADASTRO DE PRECOS DE CONSULTA MEDICA E DIAGNOSTICO AUXILIAR-->
-  <mat-tab label = "DIAGNOSTICO AUXILIAR"> 
+  <mat-tab label = "DIAGNOSTICO AUXILIAR" *ngIf='acesso_farmacia'> 
     
     <mat-card class="example-card">
         <mat-card-content>
@@ -258,7 +258,7 @@
   </mat-tab>
 
   <!--TAB CONDUTAS CLINICAS-->
-  <mat-tab label = "CONDUTAS CLINICAS">
+  <mat-tab label = "CONDUTAS CLINICAS" *ngIf='acesso_farmacia'>
         <mat-card class="example-card">
             <mat-card-content>
 

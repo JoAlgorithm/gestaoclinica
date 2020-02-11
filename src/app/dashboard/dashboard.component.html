@@ -204,6 +204,63 @@
           </mat-card>
         </div>-->
 
+        <!--<mat-card>
+          <table style="width:100%">
+            <tr>
+              <th>CATEGORIA</th>
+              <th>QTD SOLICITACOES</th>
+              <th>RECEITA TOTAL</th>
+              <th>PERCENTUAL SOBRE RECEITA TOTAL</th>
+            </tr>
+            <tr>
+              <td>Consulta Médica</td>
+              <td>{{categoria_qtd_CONSULTA_MEDICA}}</td>
+              <td>{{categoria_valor_CONSULTA_MEDICA | currency:' ':'symbol':'1.2-2'}}</td>
+              <td><mat-progress-bar mode="determinate" value="{{categoria_percentual_CONSULTA_MEDICA}}" color="primary"></mat-progress-bar></td>
+            </tr>
+            <tr>
+              <td>Diagnóstico Auxiliar</td>
+              <td>{{categoria_qtd_DIAGNOSTICO_AUX}}</td>
+              <td>{{categoria_valor_DIAGNOSTICO_AUX | currency:' ':'symbol':'1.2-2'}}</td>
+              <td><mat-progress-bar mode="determinate" value="{{categoria_percentual_DIAGNOSTICO_AUX}}" color="primary"></mat-progress-bar></td>
+            </tr>
+          </table>
+        </mat-card>-->
+
+        <div fxFlex.gt-sm="50%" fxFlex="100">
+          <mat-card>
+            <!--<mat-card-title>Receita por categoria</mat-card-title>-->
+            <mat-card-subtitle>RECEITA POR CATEGORIA NO ANO DE {{ano}}</mat-card-subtitle>
+            <mat-card-subtitle>Entenda quais categorias estão trazendo maior retorno financeiro</mat-card-subtitle>
+            <mat-card-content>
+              <canvas height="200" baseChart class="chart"
+                [data]="doughnutChartData_ano"
+                [labels]="doughnutChartLabels_ano"
+                [options]="doughnutOptions_ano"
+                [colors]="doughnutChartColors_ano"
+                [chartType]="doughnutChartType_ano"></canvas>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        
+
+        <div fxFlex.gt-sm="50%" fxFlex="100">
+          <mat-card>
+            <!--<mat-card-title>Receita por categoria</mat-card-title>-->
+            <mat-card-subtitle>RECEITA POR CATEGORIA NO MÊS DE {{mes | uppercase}}</mat-card-subtitle>
+            <mat-card-subtitle>Entenda quais categorias estão trazendo maior retorno financeiro</mat-card-subtitle>
+            <mat-card-content>
+              <canvas height="200" baseChart class="chart"
+                [data]="doughnutChartData"
+                [labels]="doughnutChartLabels"
+                [options]="doughnutOptions"
+                [colors]="doughnutChartColors"
+                [chartType]="doughnutChartType"></canvas>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        
+
 </div>
 
 

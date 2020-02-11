@@ -24,7 +24,7 @@
 
               <ng-container matColumnDef="valor_total">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Valor total </mat-header-cell>
-                <mat-cell *matCellDef="let row">{{row.valor_total}}</mat-cell>
+                <mat-cell *matCellDef="let row">{{row.valor_total | currency:' ':'symbol':'1.2-2'}}</mat-cell>
               </ng-container>
         
               <ng-container matColumnDef="seguradora">

@@ -45,12 +45,7 @@
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
                     <mat-cell *matCellDef="let row"> {{row.paciente_nome}}</mat-cell>
                   </ng-container>
-
-                  <ng-container matColumnDef="preco">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header> Preco </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.preco_consulta_medica}}</mat-cell>
-                 </ng-container> 
-            
+                  
                   <ng-container matColumnDef="cancelar">
                       <mat-header-cell *matHeaderCellDef mat-sort-header> Cancelar </mat-header-cell>
                       <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="openDialog(row)" matTooltip="Cancelar consulta"  [disabled]="!acesso_cancelar">  
