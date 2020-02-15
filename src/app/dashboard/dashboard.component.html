@@ -227,7 +227,7 @@
           </table>
         </mat-card>-->
 
-        <div fxFlex.gt-sm="50%" fxFlex="100">
+        <div fxFlex.gt-sm="50%" fxFlex="100" *ngIf='acesso_indicadores2'>
           <mat-card>
             <!--<mat-card-title>Receita por categoria</mat-card-title>-->
             <mat-card-subtitle>RECEITA POR CATEGORIA NO ANO DE {{ano}}</mat-card-subtitle>
@@ -244,7 +244,7 @@
         </div>
         
 
-        <div fxFlex.gt-sm="50%" fxFlex="100">
+        <div fxFlex.gt-sm="50%" fxFlex="100" *ngIf='acesso_indicadores2'>
           <mat-card>
             <!--<mat-card-title>Receita por categoria</mat-card-title>-->
             <mat-card-subtitle>RECEITA POR CATEGORIA NO MÊS DE {{mes | uppercase}}</mat-card-subtitle>

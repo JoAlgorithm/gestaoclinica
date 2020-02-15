@@ -32,6 +32,10 @@ fonte: https://www.positronx.io/full-angular-7-firebase-authentication-system/
     public router: Router,  
     public ngZone: NgZone // NgZone service to remove outside scope warning
   ) { 
+
+    //localStorage.removeItem('myclinica_user');
+    //this.SignOut();
+    //localStorage.clear();
     
     // Saving user data in localstorage when 
     //logged in and setting up null when logged out

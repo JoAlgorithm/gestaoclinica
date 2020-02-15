@@ -1210,11 +1210,14 @@ export class MedicamentosDialog {
         doc.text((element.medicamento.preco_seguradora*element.quantidade).toFixed(2).replace(".",",")+"", 354, linha)
     
         preco_total = +preco_total + +element.medicamento.preco_seguradora*element.quantidade;
+
+        console.log("Pagou convenio");
       }else{
         doc.text(element.medicamento.preco_venda.toFixed(2).replace(".",",")+"", 294, linha)
         doc.text((element.medicamento.preco_venda*element.quantidade).toFixed(2).replace(".",",")+"", 354, linha)
     
         preco_total = +preco_total + +element.medicamento.preco_venda*element.quantidade;
+        console.log("Pagou normal");
       }
 
       
@@ -2262,13 +2265,18 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     doc.text(categoriaConsulta.preco_seguradora+"", 294, linha)
     doc.text(categoriaConsulta.preco_seguradora+"", 354, linha)
     preco_total = +categoriaConsulta.preco_seguradora;
+
+    console.log("Preco categoriaConsulta.preco_seguradora "+ categoriaConsulta.preco_seguradora)
+    console.log("Pagou convenio "+preco_total);
   }else{
     doc.text(categoriaConsulta.preco+"", 294, linha)
     doc.text(categoriaConsulta.preco+"", 354, linha)
     preco_total = +categoriaConsulta.preco;
+
+    console.log("Pagou normal");
   }
 
-  preco_total = +categoriaConsulta.preco;
+  //preco_total = +categoriaConsulta.preco;
   item = +item + +1;
 
   if(linhaAlternativo > 0){

@@ -28,6 +28,10 @@ export class SignInComponent implements OnInit {
   users:User[];
   ngOnInit() {
 
+    console.log("abriu aqui");
+    this.authService.SignOut();
+    localStorage.clear();
+
     this.authService.getAll().snapshotChanges().subscribe(data => {
       this.users = data.map(e => {
         return {
