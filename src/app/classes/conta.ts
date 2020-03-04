@@ -26,4 +26,28 @@ export class Conta {
     seguradora_nome?: string;
 
     data_recebimento?: Date;
+
+    //Como inicialmente nao existia emissao de segunda via / ao desenvolver essa funcionalidade tiveram que ser acrescentadas variaveis na
+    // tabela, porem as faturas antigas dariam erro ao tentar imprimir entao essa variavel vem para desabilitar as faturas antigas que nao
+    // estavam preparadas para serem impressas
+    segunda_via?: boolean; 
+
+    //Essa variavel linhas foi criada depois para poder listar os itens da fatura linha a linha
+    linhas?: Linha[];
+}
+
+export class Linha{
+    descricao_servico?: string;
+    preco_unitario?: number;
+    qtd_solicitada?: number;
+    preco_total?: number;
+
+    
+
+    /*constructor(descricao_servico?: string, preco_unitario?: number, qtd_solicitada?: number, preco_total?: number){
+        this.descricao_servico = descricao_servico;
+        this.preco_unitario = preco_unitario;
+        this.qtd_solicitada = qtd_solicitada;
+        this.preco_total = preco_total;
+    }*/
 }

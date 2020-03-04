@@ -17,7 +17,7 @@ export class ContaRecebidaComponent implements OnInit {
   contas: Conta[] = [];
 
   dataSourse: MatTableDataSource<Conta>;
-  displayedColumns = ['fatura','data', 'valor_total', 'seguradora', 'paciente', 'servico', 'fpagamento'];
+  displayedColumns = ['fatura','data', 'valor_total', 'seguradora', 'paciente', 'servico', 'fpagamento', 'imprimir'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -53,7 +53,7 @@ export class ContaRecebidaComponent implements OnInit {
           } as Conta;
         })
 
-        this.dataSourse=new MatTableDataSource(this.contas);
+        this.dataSourse=new MatTableDataSource(this.contas.sort((a, b) => +b.id - +a.id));
         this.dataSourse.paginator = this.paginator;
         this.dataSourse.sort = this.sort      
 
@@ -101,6 +101,10 @@ export class ContaRecebidaComponent implements OnInit {
       this.dataSourse.paginator = this.paginator;
       this.dataSourse.sort = this.sort   
     })
+  }
+
+  imprimir(conta: Conta){
+    
   }
 
   openSnackBar(mensagem) {

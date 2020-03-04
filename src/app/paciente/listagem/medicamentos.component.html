@@ -15,13 +15,24 @@
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field style="width: 62%">
-            <mat-select placeholder="Forma farmaceutica" [(ngModel)]="f_farmaceutica" required (selectionChange)="filtrarmedicamento(f_farmaceutica)">
+        <mat-form-field style="width: 31%">
+            <mat-select placeholder="Categoria" [(ngModel)]="tipoEstoque" (selectionChange)="filtrarCategorias(tipoEstoque)" required>
+                <mat-option >
+                    <ngx-mat-select-search [(ngModel)]="filtrocategoria"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = "Nenhuma informacao encontrada" matInput (keyup)="filtrarDepositos($event.target.value)"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let tipoEstoque of data.tipos_estoque" [value]="tipoEstoque">
+                    {{tipoEstoque.nome}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field style="width: 31%">
+            <mat-select placeholder="Forma farmaceutica" [(ngModel)]="categoria" required (selectionChange)="filtrarmedicamento(categoria)" [disabled]="desabilitar_fm">
               <mat-option >
                 <ngx-mat-select-search [(ngModel)]="filtrartipomedic"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = "Nenhuma informacao encontrada" matInput (keyup)="filtrarTipoMedicamento($event.target.value)"></ngx-mat-select-search>
               </mat-option>
-              <mat-option *ngFor="let cat of cats_medicamento " [value]="cat.nome">
-                  {{cat.nome}}
+              <mat-option *ngFor="let categoria of cats_medicamento " [value]="categoria">
+                  {{categoria.nome}}
               </mat-option>             
             </mat-select>
           </mat-form-field>

@@ -29,8 +29,9 @@ import { NrCotacao } from '../../classes/nr_cotacao';
 import { NrFatura } from '../../classes/nr_fatura';
 import { User } from '../../classes/user';
 import { Seguradora } from '../../classes/seguradora';
-import { Conta } from '../../classes/conta';
+import { Conta, Linha } from '../../classes/conta';
 import { CategoriaMedicamento } from '../../classes/categoria_medicamento';
+import { TipoEstoque } from '../../classes/tipo_estoque';
 //import { MatProgressButtonOptions } from 'mat-progress-buttons';
 
 
@@ -123,6 +124,7 @@ export class ListagemComponent implements OnInit {
   seguradoras: Seguradora[];
 
   cats_medicamento: CategoriaMedicamento[];
+  tipos_estoque: TipoEstoque[];
 
   constructor(public dialog: MatDialog, public authService: AuthService, public configServices:ConfiguracoesService,
     private pacienteService: PacienteService,public snackBar: MatSnackBar, private router: Router, public estoqueService: EstoqueService){ 
@@ -321,6 +323,16 @@ export class ListagemComponent implements OnInit {
       });
     })
 
+    //CATEGORIA MEDICAMENTO
+    this.estoqueService.getTiposEstoque().snapshotChanges().subscribe(data => {
+      this.tipos_estoque = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as TipoEstoque;
+      });
+    })
+
   }
  
 
@@ -472,7 +484,7 @@ export class ListagemComponent implements OnInit {
     if(this.nr_cotacao > 0 && this.nr_fatura >0){
       let dialogRef = this.dialog.open(MedicamentosDialog, {
         width: '800px',
-        data: { paciente: row, depositos: this.depositos, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, formas_pagamento: this.formas_pagamento, seguradoras: this.seguradoras, cats_medicamento: this.cats_medicamento }
+        data: { paciente: row, depositos: this.depositos, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, formas_pagamento: this.formas_pagamento, seguradoras: this.seguradoras, cats_medicamento: this.cats_medicamento, tipos_estoque: this.tipos_estoque }
       });
       dialogRef.afterClosed().subscribe(result => {
         //console.log("result "+result);
@@ -594,14 +606,26 @@ export class MedicamentosDialog {
   cats_medicamento: CategoriaMedicamento[];
   cats_medicamento_aux: CategoriaMedicamento[];
 
+  categoria: CategoriaMedicamento;
+  categorias: CategoriaMedicamento[];
+  categorias_aux: CategoriaMedicamento[];
+
+  linhas: Linha[] = [];
+
+  tipoEstoque: TipoEstoque;
+
   constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<MedicamentosDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public estoqueService: EstoqueService, 
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder,
   public configServices: ConfiguracoesService) {
 
-    this.seguradora = new Seguradora();
-    
     this.deposito = new Deposito();
+    this.seguradora = new Seguradora();
+    this.tipoEstoque = new TipoEstoque();
+    
+    
+    this.categoria = new CategoriaMedicamento();
+
     this.medicamento = new Medicamento();
     this.depositos_aux=this.data.depositos;
     this.medicamentoFormGroup = this._formBuilder.group({
@@ -622,9 +646,13 @@ export class MedicamentosDialog {
     ///console.log("dialog nr fatura: "+this.nr_fatura);
     this.cats_medicamento = data.cats_medicamento;
     this.cats_medicamento_aux = data.cats_medicamento;
+
+    //this.categorias = data.tipos_estoque;
+    //this.categorias_aux = data.tipos_estoque;
+    
   }
 
-  filtrodeposito="";
+  filtrodeposito;
   filtrarDepositos(filtrodeposito) {
     this.medicamento = new Medicamento();
     if(filtrodeposito){
@@ -636,6 +664,32 @@ export class MedicamentosDialog {
       this.data.depositos = this.depositos_aux.filter(item => item.nome.toLocaleLowerCase().indexOf(filtrodeposito) > -1);     
     }else{
       this.data.depositos = this.depositos_aux;
+    }
+  }
+
+  filtrocategoria="";
+  desabilitar_fm = true;
+  filtrarCategorias(filtrocategoria: TipoEstoque) {
+    console.log("filtrocategoria "+this.tipoEstoque.nome);
+    if(filtrocategoria.nome == "Medicamento"){
+      this.desabilitar_fm = false;
+    }else{
+      this.desabilitar_fm = true;
+      this.categoria = null;
+      //this.medicamento.categoria = null;
+    }
+
+    //this.filtrocategoria = filtrocategoria;
+
+    if(filtrocategoria){
+      //console.log("categoria: "+filtrocategoria);
+      //filtrocategoria = filtrocategoria.nome.trim()+; // Remove whitespace
+      //filtrocategoria = filtrocategoria.nome.toLowerCase(); // Datasource defaults to lowercase matches
+     
+      this.medicamentos= null;
+      this.medicamentos = this.medicamentos_aux.filter(item => item.tipo.nome.indexOf(filtrocategoria.nome+"") > -1);     
+    }else{
+     // this.medicamentos = this.medicamentos_aux;
     }
   }
 
@@ -668,9 +722,20 @@ export class MedicamentosDialog {
   f_farmaceutica="";
   filtrarmedicamento(f_farmaceutica){
     this.medicamento = new Medicamento();
-    if(f_farmaceutica){
+    if(f_farmaceutica && f_farmaceutica !== ""){
+      //this.medicamentos= null;
+
+      //this.medicamentos = this.medicamentos_aux.filter(item => item.nome_comercial.toLocaleLowerCase().indexOf(this.filtromedicamento) > -1);     
+      
+      /*this.filtrocategoria.trim(); // Remove whitespace
+      this.filtrocategoria.toLowerCase(); // Datasource defaults to lowercase matches
+     
       this.medicamentos= null;
-      this.medicamentos = this.medicamentos_aux.filter(item => item.categoria.nome.indexOf(f_farmaceutica) > -1);     
+      this.medicamentos = this.medicamentos_aux.filter(item => item.tipo.nome.toLocaleLowerCase().indexOf(this.filtrocategoria) > -1);  */   
+
+      this.filtrarCategorias(this.tipoEstoque);
+
+      this.medicamentos = this.medicamentos.filter(item => item.categoria.nome.indexOf(f_farmaceutica.nome) > -1);     
     }else{
       this.medicamentos = this.medicamentos_aux;
     }
@@ -745,16 +810,26 @@ export class MedicamentosDialog {
         if( Number(this.medicamento.qtd_solicitada) <= Number(this.medicamento.qtd_disponivel)){
           this.movimento.medicamento = this.medicamento;
           this.movimento.deposito = this.deposito;
-          this.movimento.quantidade = this.medicamento.qtd_solicitada;  
+          this.movimento.quantidade = this.medicamento.qtd_solicitada; 
+          
+          let linha = new Linha();
+          linha.descricao_servico = this.medicamento.nome_generico;
+          linha.qtd_solicitada = this.medicamento.qtd_solicitada;
     
           if(this.forma_pagamento == "Convênio"){
             this.movimento.medicamento.preco_venda_total = this.medicamento.preco_seguradora*this.medicamento.qtd_solicitada;
             this.preco_total = +this.preco_total + +(this.medicamento.preco_seguradora*this.medicamento.qtd_solicitada); 
+            linha.preco_unitario = this.medicamento.preco_seguradora;
+            linha.preco_total = this.medicamento.preco_seguradora*this.medicamento.qtd_solicitada;
           }else{
             this.movimento.medicamento.preco_venda_total = this.medicamento.preco_venda*this.medicamento.qtd_solicitada;
             this.preco_total = +this.preco_total + +(this.medicamento.preco_venda*this.medicamento.qtd_solicitada); 
+            linha.preco_unitario = this.medicamento.preco_seguradora;
+            linha.preco_total = this.medicamento.preco_seguradora*this.medicamento.qtd_solicitada;
           }
           
+          this.linhas.push(linha);
+          this.listarLinhas();
           this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
           this.medicamento.qtd_disponivel = +this.medicamento.qtd_disponivel - +this.medicamento.qtd_solicitada;
 
@@ -777,12 +852,22 @@ export class MedicamentosDialog {
   }
 
   removeMedicamento(mv: MovimentoEstoque){
+    let linha = new Linha();
+    linha.descricao_servico = mv.medicamento.nome_generico;
+    linha.qtd_solicitada = mv.medicamento.qtd_solicitada;
+    linha.preco_total = mv.medicamento.preco_venda;
+    linha.preco_unitario = mv.medicamento.preco_venda / mv.medicamento.qtd_solicitada;
+
     mv.medicamento.qtd_disponivel = +mv.medicamento.qtd_disponivel + +mv.medicamento.qtd_solicitada;
     this.preco_total = +this.preco_total - (mv.medicamento.qtd_solicitada*mv.medicamento.preco_venda);
     this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
     this.movimentos.splice(this.movimentos.indexOf(mv), 1);
     this.movimentos_aux = this.movimentos;
     this.dataSourse=new MatTableDataSource(this.movimentos);
+
+    this.linhas.splice(this.linhas.indexOf(linha), 1);
+
+    this.listarLinhas();
   }
 
   cotar(paciente: Paciente){
@@ -796,6 +881,13 @@ export class MedicamentosDialog {
     }else{
       this.openSnackBar("Adicione pelo menos um medicamento.");
     }
+  }
+
+  listarLinhas(){
+    this.linhas.forEach(element => {
+      console.log("LISTAGEM DE LINHAS: ");
+      console.log(element.descricao_servico )
+    });
   }
 
   faturar(paciente: Paciente){
@@ -832,6 +924,7 @@ export class MedicamentosDialog {
       this.consulta.movimentosestoque = this.movimentos;
 
       let servico = "Medicamentos: ";
+
       this.consulta.movimentosestoque.forEach(mvt => {
         //console.log("mvt.medicamento.qtd_solicitada: "+mvt.medicamento.qtd_solicitada);
         mvt.medicamento.qtd_solicitada = null;
@@ -843,6 +936,7 @@ export class MedicamentosDialog {
         mvt.medicamento_nome = mvt.medicamento.nome_generico;
         mvt.medicamento_id = mvt.medicamento.id;
         servico = servico+" "+mvt.medicamento.nome_generico+" ; ";
+        
         //mvt.medicamento = null;  
         
         mvt.data_movimento = dia +"/"+mes+"/"+ano;
@@ -899,6 +993,8 @@ export class MedicamentosDialog {
       conta.cliente_nid = this.consulta.paciente_nid;
       conta.forma_pagamento = this.forma_pagamento;    
       conta.consulta = servico;
+      conta.linhas = this.linhas;
+      conta.segunda_via = true;
       if(conta.forma_pagamento == "Convênio"){
         conta.categoria = "A receber";
         conta.nr_apolice = this.nr_apolice;
