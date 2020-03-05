@@ -3,6 +3,8 @@ import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog } fro
 import { Conta } from '../../classes/conta';
 import { PacienteService } from '../../services/paciente.service';
 import { ConfiguracoesService } from '../../services/configuracoes.service';
+import * as jsPDF from 'jspdf';
+import { Clinica } from '../../classes/clinica';
 
 @Component({
   selector: 'app-conta-recebida',
@@ -15,6 +17,8 @@ export class ContaRecebidaComponent implements OnInit {
   ano:string = (new Date()).getFullYear()+"";
 
   contas: Conta[] = [];
+
+  clinica: Clinica = new Clinica();
 
   dataSourse: MatTableDataSource<Conta>;
   displayedColumns = ['fatura','data', 'valor_total', 'seguradora', 'paciente', 'servico', 'fpagamento', 'imprimir'];
@@ -31,7 +35,7 @@ export class ContaRecebidaComponent implements OnInit {
   forma_pagamento = this.formas_pagamento[0].value;
   
   constructor(private pacienteService: PacienteService, private configService: ConfiguracoesService, public snackBar: MatSnackBar,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog, public configServices:ConfiguracoesService) { }
 
   ngOnInit() {
     setTimeout(() => {
@@ -60,6 +64,12 @@ export class ContaRecebidaComponent implements OnInit {
         if(this.contas.length <= 0){
           this.openSnackBar("Nao existe nenhuma conta recebida em "+this.ano);
         }
+      })
+
+      this.configServices.getClinica().valueChanges()
+      .take(1)
+      .subscribe(c => {
+        this.clinica = c;
       })
 
     })//Fim do timeOut
@@ -97,20 +107,118 @@ export class ContaRecebidaComponent implements OnInit {
         }
       }
 
-      this.dataSourse=new MatTableDataSource(this.contas);
+      this.dataSourse=new MatTableDataSource(this.contas.sort((a, b) => +b.id - +a.id));
       this.dataSourse.paginator = this.paginator;
       this.dataSourse.sort = this.sort   
     })
-  }
-
-  imprimir(conta: Conta){
-    
   }
 
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{
       duration: 2000
     })
+  }
+
+  imprimir(conta: Conta, nome){
+
+    this.openSnackBar("Processando segunda via do recibo: "+conta.id);
+
+    let doc = new jsPDF({
+      orientation: 'p',
+      unit: 'px',
+      format: 'a4',
+      putOnlyUsedFonts:true,
+    });
+  
+    let specialElementHandlers ={
+      '#editor': function(element,renderer){return true;} 
+    }
+    //let dia = new Date().getDate();
+    //let mes = +(new Date().getMonth()) + +1;
+    //let ano = new Date().getFullYear();
+    //let dataemisao = dia +"/"+mes+"/"+ano;  
+  
+    var img = new Image();
+    img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+    doc.addImage(img,"PNG", 300, 40,90, 90);
+  
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontSize(12);
+    doc.text(conta.id+"", 225, 40);
+    let item = 1;
+    let preco_total = 0;
+    let linha = 200;                      
+    conta.linhas.forEach(element => {
+      doc.text(item+"", 55, linha) //item
+      doc.text(element.qtd_solicitada+"", 257, linha) //quantidade
+      doc.text(element.descricao_servico , 95, linha) //descricao
+
+      doc.text(element.preco_unitario.toFixed(2).replace(".",",")+"", 294, linha)
+      doc.text((element.preco_unitario*element.qtd_solicitada).toFixed(2).replace(".",",")+"", 354, linha)
+    
+      preco_total = +preco_total + +element.preco_unitario*element.qtd_solicitada;
+
+      item = +item + +1;
+      linha = +linha + +20;
+    });   
+     
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontStyle("bold");
+    doc.setFontSize(15);
+  
+    doc.text(nome+":", 170, 40);  
+  
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontSize(10);
+  
+    doc.text("(2ª Via)", 210, 560);
+    doc.text("Processado pelo computador", 170, 580);
+    doc.text(this.clinica.endereco+"", 50, 75);
+    doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
+    doc.text("Email: "+this.clinica.email, 50, 95);
+    doc.text("Cell: "+this.clinica.telefone, 50, 105);
+    
+    doc.text("Nome do Paciente:", 50, 125);
+    doc.text(conta.cliente_nome, 128, 125);
+    doc.text("NID:", 250, 125);
+    doc.text(conta.cliente_nid+"", 268, 125);
+    doc.text("Apelido:", 50, 145);
+    doc.text(conta.cliente_apelido, 89, 145);
+    doc.text("Data de emissão: ", 250, 145);
+    doc.text(conta.data, 322, 145);
+    doc.setFillColor(50,50,50);
+    doc.rect ( 50, 170 , 40 , 20 ); 
+    doc.rect (  50, 190 , 40 , 320 ); 
+  
+    doc.rect (  90, 170 , 150 , 20 ); 
+    doc.rect (  90, 190 , 150 , 320 );
+  
+    doc.rect (  240, 170 , 50 , 20 ); 
+    doc.rect (  240, 190 , 50 , 320 );
+  
+    doc.rect (  290, 170 , 60 , 20 ); 
+    doc.rect (  290, 190 , 60 , 320 );
+  
+    doc.rect (  350, 170 , 50 , 20 ); 
+    doc.rect (  350, 190 , 50 , 320);
+  
+    doc.rect ( 290, 510 , 110 , 20 );
+  
+    doc.setFontStyle("bold");
+    doc.text("Item", 60, 180);
+    doc.text("Descrição", 120, 180);
+    doc.text("Quantd", 245, 180);
+    doc.text("Preço Unit", 295, 180);
+    doc.text("Preç Tot", 355, 180);
+    doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
+  
+    doc.rect (  290, 170 , 60 , 20 ); 
+    doc.rect (  290, 190 , 60 , 320 );
+  
+    doc.save(nome+ conta.id +'.pdf'); 
   }
 
 }

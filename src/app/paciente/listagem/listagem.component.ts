@@ -813,8 +813,9 @@ export class MedicamentosDialog {
           this.movimento.quantidade = this.medicamento.qtd_solicitada; 
           
           let linha = new Linha();
-          linha.descricao_servico = this.medicamento.nome_generico;
+          linha.descricao_servico = this.medicamento.nome_comercial;
           linha.qtd_solicitada = this.medicamento.qtd_solicitada;
+          linha.id_servico = this.medicamento.id;
     
           if(this.forma_pagamento == "Convênio"){
             this.movimento.medicamento.preco_venda_total = this.medicamento.preco_seguradora*this.medicamento.qtd_solicitada;
@@ -824,12 +825,12 @@ export class MedicamentosDialog {
           }else{
             this.movimento.medicamento.preco_venda_total = this.medicamento.preco_venda*this.medicamento.qtd_solicitada;
             this.preco_total = +this.preco_total + +(this.medicamento.preco_venda*this.medicamento.qtd_solicitada); 
-            linha.preco_unitario = this.medicamento.preco_seguradora;
+            linha.preco_unitario = this.medicamento.preco_venda;
             linha.preco_total = this.medicamento.preco_seguradora*this.medicamento.qtd_solicitada;
           }
           
           this.linhas.push(linha);
-          this.listarLinhas();
+          //this.listarLinhas();
           this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
           this.medicamento.qtd_disponivel = +this.medicamento.qtd_disponivel - +this.medicamento.qtd_solicitada;
 
@@ -865,9 +866,13 @@ export class MedicamentosDialog {
     this.movimentos_aux = this.movimentos;
     this.dataSourse=new MatTableDataSource(this.movimentos);
 
-    this.linhas.splice(this.linhas.indexOf(linha), 1);
+    this.linhas.forEach(element => {
+      if(element.id_servico == mv.medicamento.id){
+        this.linhas.splice(this.linhas.indexOf(element), 1);
+      }
+    });
 
-    this.listarLinhas();
+    //this.listarLinhas();
   }
 
   cotar(paciente: Paciente){
@@ -884,9 +889,10 @@ export class MedicamentosDialog {
   }
 
   listarLinhas(){
+    console.log("LISTAGEM DE LINHAS: ");
     this.linhas.forEach(element => {
-      console.log("LISTAGEM DE LINHAS: ");
-      console.log(element.descricao_servico )
+      console.log(element.descricao_servico + ' /precounit ' +element.preco_unitario + ' /qtd '+element.qtd_solicitada);
+      console.log("");
     });
   }
 

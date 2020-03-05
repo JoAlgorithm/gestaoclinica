@@ -41,7 +41,7 @@ export class Linha{
     preco_unitario?: number;
     qtd_solicitada?: number;
     preco_total?: number;
-
+    id_servico?: string;
     
 
     /*constructor(descricao_servico?: string, preco_unitario?: number, qtd_solicitada?: number, preco_total?: number){
