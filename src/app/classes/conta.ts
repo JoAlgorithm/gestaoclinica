@@ -17,6 +17,7 @@ export class Conta {
     cliente_apelido?: string;
     cliente_nid?: number;
     nr_apolice?: string; //Nr de apolice do cliente referente a seguradora
+    cliente_nuit?: string;
 
     valor_total?: Number;
 

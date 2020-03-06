@@ -994,8 +994,8 @@ export class MedicamentosDialog {
       conta.mes = mes;
       conta.dia = dia;
       conta.data = dia +"/"+mes+"/"+ano;
-      conta.cliente_apelido = this.consulta.paciente_nome;
-      conta.cliente_nome = this.consulta.paciente_apelido;
+      conta.cliente_apelido = this.consulta.paciente_apelido;
+      conta.cliente_nome = this.consulta.paciente_nome;
       conta.cliente_nid = this.consulta.paciente_nid;
       conta.forma_pagamento = this.forma_pagamento;    
       conta.consulta = servico;
@@ -1431,6 +1431,7 @@ export class MedicamentosDialog {
 
   nr_apolice = "";
   
+  linhas: Linha[] = [];
   
   constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<CondutasDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public configServices: ConfiguracoesService,
@@ -1507,17 +1508,28 @@ export class MedicamentosDialog {
     if(conduta.nome){
       this.condutas.push(conduta);
 
+      let linha = new Linha();
+      linha.descricao_servico = conduta.nome;
+      linha.qtd_solicitada = 1;
+      linha.id_servico = conduta.id;
+
       if(this.forma_pagamento == "Convênio"){
         //doc.text(categoriaConsulta.preco_seguradora+"", 294, linha)
         //doc.text(categoriaConsulta.preco_seguradora+"", 354, linha)
         //preco_total = +categoriaConsulta.preco_seguradora;
+        linha.preco_unitario = +conduta.preco_seguradora;
         this.preco_total = +this.preco_total + +conduta.preco_seguradora;
       }else{
         //doc.text(categoriaConsulta.preco+"", 294, linha)
         //doc.text(categoriaConsulta.preco+"", 354, linha)
         //preco_total = +categoriaConsulta.preco;
+
+        linha.preco_unitario = +conduta.preco;
         this.preco_total = +this.preco_total + +conduta.preco;
       }
+
+      linha.preco_total = 1*linha.preco_unitario;
+      this.linhas.push(linha);
       
       this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
 
@@ -1535,6 +1547,12 @@ export class MedicamentosDialog {
     this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
     this.condutas.splice(this.condutas.indexOf(conduta), 1);
     this.dataSourse=new MatTableDataSource(this.condutas);
+
+    this.linhas.forEach(element => {
+      if(element.id_servico == conduta.id){
+      this.linhas.splice(this.linhas.indexOf(element), 1);
+      }
+    });
   }
 
   onSelect(tipo_conduta_clinica: TipoCondutaClinica) {
@@ -1620,11 +1638,20 @@ export class MedicamentosDialog {
       conta.mes = mes;
       conta.dia = dia;
       conta.data = dia +"/"+mes+"/"+ano;
-      conta.cliente_apelido = this.consulta.paciente_nome;
-      conta.cliente_nome = this.consulta.paciente_apelido;
+      conta.cliente_apelido = this.consulta.paciente_apelido;
+      conta.cliente_nome = this.consulta.paciente_nome;
       conta.cliente_nid = this.consulta.paciente_nid;
+
+      /*if(this.consulta.paciente.nuit == undefined){
+        conta.cliente_nuit = "";
+      }else{        
+        conta.cliente_nuit = this.consulta.paciente.nuit;
+      }  */
+
       conta.forma_pagamento = this.forma_pagamento;    
       conta.consulta = servico;
+      conta.linhas = this.linhas;
+      conta.segunda_via = true;
       if(conta.forma_pagamento == "Convênio"){
         conta.categoria = "A receber";
         conta.nr_apolice = this.nr_apolice;
@@ -1853,13 +1880,13 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
     
 
     if(this.forma_pagamento == "Convênio"){
-      doc.text(element.preco_seguradora+"", 294, linha)
-      doc.text(element.preco_seguradora+"", 354, linha)
+      doc.text(element.preco_seguradora.toFixed(2).replace(".",",")+"", 294, linha)
+      doc.text(element.preco_seguradora.toFixed(2).replace(".",",")+"", 354, linha)
   
       preco_total = +preco_total + +element.preco_seguradora;
     }else{
-      doc.text(element.preco+"", 294, linha)
-      doc.text(element.preco+"", 354, linha)
+      doc.text(element.preco.toFixed(2).replace(".",",")+"", 294, linha)
+      doc.text(element.preco.toFixed(2).replace(".",",")+"", 354, linha)
   
       preco_total = +preco_total + +element.preco;
     }
@@ -1894,14 +1921,14 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
   doc.text("Cell: "+this.clinica.telefone, 50, 95);
   doc.text("NUIT: "+this.clinica.nuit, 50, 105);
   doc.text("Nome do Paciente:"+paciente.nome, 50, 125);
-//doc.text(paciente.nome, 128, 125);
-doc.text("NID:"+paciente.nid, 250, 125);
-//doc.text(paciente.nid+"", 268, 125);
-doc.text("Apelido:"+paciente.apelido, 50, 145);
-// doc.text(paciente.apelido, 89, 145);
-doc.text("Data de emissão:"+dataemisao, 250, 145);
-//doc.text(dataemisao, 322, 145);
-doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
+  //doc.text(paciente.nome, 128, 125);
+  doc.text("NID: "+paciente.nid, 250, 125);
+  //doc.text(paciente.nid+"", 268, 125);
+  doc.text("Apelido: "+paciente.apelido, 50, 145);
+  // doc.text(paciente.apelido, 89, 145);
+  doc.text("Data de emissão: "+dataemisao, 250, 145);
+  //doc.text(dataemisao, 322, 145);
+  doc.text("NUIT do paciente: "+paciente.nuit, 50, 165);
   doc.setFillColor(50,50,50);
   doc.rect ( 50, 170 , 40 , 20 ); 
   doc.rect (  50, 190 , 40 , 320 ); 
@@ -1959,22 +1986,24 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
     texto: string = "Marcar consulta"; //Fatura
     texto2: string = "Cotar"; //Cotacao
 
-  consultasFormGroup: FormGroup;
-  categorias: CategoriaConsulta[] = [];
-  categorias_aux: CategoriaConsulta[];
-  categorias_consulta: CategoriaConsulta[];
-  categoria:CategoriaConsulta;
+    consultasFormGroup: FormGroup;
+    categorias: CategoriaConsulta[] = [];
+    categorias_aux: CategoriaConsulta[];
+    categorias_consulta: CategoriaConsulta[];
+    categoria:CategoriaConsulta;
 
-  consulta?: Consulta;
-  preco_total:Number = 0;
+    consulta?: Consulta;
+    preco_total:Number = 0;
 
-  medico = "";
+    medico = "";
 
-  forma_pagamento = "";
+    forma_pagamento = "";
 
-  seguradora: Seguradora;
+    seguradora: Seguradora;
 
-  nr_apolice = "";
+    nr_apolice = "";
+
+    linhas: Linha[] = [];
 
   constructor(  public dialogRef: MatDialogRef<ConsultasDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public configServices: ConfiguracoesService,
@@ -2103,13 +2132,25 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
       this.consulta.status = "Aberta";
       this.consulta.tipo = tipo;
 
+      let linha = new Linha();
+      linha.descricao_servico = this.categoria.nome;
+      linha.qtd_solicitada = 1;
+      linha.id_servico = this.categoria.id;
+      
+      
+
       if(this.forma_pagamento == "Convênio"){
+        linha.preco_unitario = +this.categoria.preco_seguradora;
         this.consulta.preco_consulta_medica = this.categoria.preco_seguradora;
         this.consulta.seguradora_nome = this.seguradora.nome;
         this.consulta.nr_apolice = this.nr_apolice;
       }else{
         this.consulta.preco_consulta_medica = this.categoria.preco;
+        linha.preco_unitario = +this.categoria.preco;
       }
+
+      linha.preco_total = linha.preco_unitario*1;
+      this.linhas.push(linha);
 
       this.consulta.categoria = this.categoria;
 
@@ -2120,6 +2161,8 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
       this.consulta.timestamp = new Date().valueOf();
 
       this.consulta.medico_nome = this.medico;
+
+      
 
       let key = this.pacienteService.db.list('consultas/'+this.authService.get_clinica_id + '/lista_completa/').push('').key;
       this.consulta.id = key;
@@ -2155,6 +2198,8 @@ doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
       conta.cliente_nid = this.consulta.paciente.nid;
       conta.forma_pagamento = this.forma_pagamento;
       conta.consulta = "Consulta medica: "+this.consulta.categoria.nome;
+      conta.linhas = this.linhas;
+      conta.segunda_via = true;
       if(conta.forma_pagamento == "Convênio"){
         conta.categoria = "A receber";
         conta.nr_apolice = this.nr_apolice;
@@ -2678,6 +2723,8 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
 
   nr_apolice = "";
 
+  linhas: Linha[] = [];
+
   constructor(  public dialogRef: MatDialogRef<DiagnosticosDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, 
@@ -2823,13 +2870,25 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     if(diagnostico.nome){
       this.diagnosticos.push(diagnostico);
 
+
+      let linha = new Linha();
+      linha.descricao_servico = diagnostico.nome+"";
+      linha.qtd_solicitada = 1;
+      linha.id_servico = diagnostico.id+"";
+      
+      
+
       if(this.forma_pagamento == "Convênio"){
-        
+        linha.preco_unitario = +diagnostico.preco_seguradora;
         this.preco_total = +this.preco_total + +diagnostico.preco_seguradora;
       }else{
+        linha.preco_unitario = +diagnostico.preco;
         this.preco_total = +this.preco_total + +diagnostico.preco;
       }
      
+      linha.preco_total = linha.preco_unitario*1;
+      this.linhas.push(linha);
+
       this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
   
       this.dataSourse=new MatTableDataSource(this.diagnosticos);
@@ -2847,6 +2906,12 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
     this.diagnosticos.splice(this.diagnosticos.indexOf(diagnostico), 1);
     this.dataSourse=new MatTableDataSource(this.diagnosticos);
+
+    this.linhas.forEach(element => {
+      if(element.id_servico == diagnostico.id){
+      this.linhas.splice(this.linhas.indexOf(element), 1);
+      }
+    });
   }
 
   onNoClick(): void {
@@ -2930,6 +2995,8 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
       conta.cliente_nid = this.consulta.paciente_nid;
       conta.forma_pagamento = this.forma_pagamento;    
       conta.consulta = servico;
+      conta.linhas = this.linhas;
+      conta.segunda_via = true;
       if(conta.forma_pagamento == "Convênio"){
         conta.categoria = "A receber";
         conta.nr_apolice = this.nr_apolice;

@@ -152,7 +152,27 @@ export class ContaRecebidaComponent implements OnInit {
     conta.linhas.forEach(element => {
       doc.text(item+"", 55, linha) //item
       doc.text(element.qtd_solicitada+"", 257, linha) //quantidade
-      doc.text(element.descricao_servico , 95, linha) //descricao
+
+
+      let string1 = "";
+      let string2 = "";
+      let linhaAlternativo = 0;
+      if(element.descricao_servico.length > 26){
+        string1 = element.descricao_servico.substr(0,26);
+        let q = +element.descricao_servico.length - +26;
+        string2 = element.descricao_servico.substr(q).toString().trim();
+
+        linhaAlternativo = +linha+ +20;
+
+        doc.text(string1 , 95, linha) //descricao
+        doc.text(string2 , 95, linhaAlternativo) //descricao
+
+      }else{
+        doc.text(element.descricao_servico , 95, linha) //descricao
+      }
+
+      //doc.text(element.descricao_servico , 95, linha) //descricao
+
 
       doc.text(element.preco_unitario.toFixed(2).replace(".",",")+"", 294, linha)
       doc.text((element.preco_unitario*element.qtd_solicitada).toFixed(2).replace(".",",")+"", 354, linha)
@@ -160,7 +180,12 @@ export class ContaRecebidaComponent implements OnInit {
       preco_total = +preco_total + +element.preco_unitario*element.qtd_solicitada;
 
       item = +item + +1;
-      linha = +linha + +20;
+
+      if(linhaAlternativo > 0){
+        linha = +linha + +40;
+      }else{
+        linha = +linha + +20;
+      }
     });   
      
     doc.setFont("Courier");
@@ -176,12 +201,23 @@ export class ContaRecebidaComponent implements OnInit {
   
     doc.text("(2ª Via)", 210, 560);
     doc.text("Processado pelo computador", 170, 580);
-    doc.text(this.clinica.endereco+"", 50, 75);
+    /*doc.text(this.clinica.endereco+"", 50, 75);
     doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
     doc.text("Email: "+this.clinica.email, 50, 95);
-    doc.text("Cell: "+this.clinica.telefone, 50, 105);
+    doc.text("Cell: "+this.clinica.telefone, 50, 105);*/
+    doc.text(this.clinica.endereco, 50, 65);
+    doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,75);
+    doc.text("Email: "+this.clinica.email, 50, 85);
+    doc.text("Cell: "+this.clinica.telefone, 50, 95);
+    doc.text("NUIT: "+this.clinica.nuit, 50, 105);
     
-    doc.text("Nome do Paciente:", 50, 125);
+    doc.text("Nome do Paciente:"+conta.cliente_nome, 50, 125);
+    doc.text("NID: "+conta.cliente_nid, 250, 125);
+    doc.text("Apelido: "+conta.cliente_apelido, 50, 145);
+    doc.text("Data de emissão: "+conta.data, 250, 145);
+    //doc.text("NUIT do paciente: "+conta.cliente_nuit, 50, 165);
+    
+    /*doc.text("Nome do Paciente:", 50, 125);
     doc.text(conta.cliente_nome, 128, 125);
     doc.text("NID:", 250, 125);
     doc.text(conta.cliente_nid+"", 268, 125);
@@ -189,6 +225,7 @@ export class ContaRecebidaComponent implements OnInit {
     doc.text(conta.cliente_apelido, 89, 145);
     doc.text("Data de emissão: ", 250, 145);
     doc.text(conta.data, 322, 145);
+    doc.text("NUIT do paciente:"+conta.cliente_nuit, 50, 165);*/
     doc.setFillColor(50,50,50);
     doc.rect ( 50, 170 , 40 , 20 ); 
     doc.rect (  50, 190 , 40 , 320 ); 
