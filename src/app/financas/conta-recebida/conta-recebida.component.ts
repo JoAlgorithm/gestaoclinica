@@ -5,6 +5,7 @@ import { PacienteService } from '../../services/paciente.service';
 import { ConfiguracoesService } from '../../services/configuracoes.service';
 import * as jsPDF from 'jspdf';
 import { Clinica } from '../../classes/clinica';
+import 'rxjs/add/operator/take';
 
 @Component({
   selector: 'app-conta-recebida',
@@ -18,7 +19,7 @@ export class ContaRecebidaComponent implements OnInit {
 
   contas: Conta[] = [];
 
-  clinica: Clinica = new Clinica();
+  clinica?: Clinica = new Clinica(); 
 
   dataSourse: MatTableDataSource<Conta>;
   displayedColumns = ['fatura','data', 'valor_total', 'seguradora', 'paciente', 'servico', 'fpagamento', 'imprimir'];
@@ -35,9 +36,11 @@ export class ContaRecebidaComponent implements OnInit {
   forma_pagamento = this.formas_pagamento[0].value;
   
   constructor(private pacienteService: PacienteService, private configService: ConfiguracoesService, public snackBar: MatSnackBar,
-    public dialog: MatDialog, public configServices:ConfiguracoesService) { }
+    public dialog: MatDialog) { }
 
   ngOnInit() {
+
+
     setTimeout(() => {
       //ANOS
       this.configService.getAnos().snapshotChanges().subscribe(data => {
@@ -66,13 +69,14 @@ export class ContaRecebidaComponent implements OnInit {
         }
       })
 
-      this.configServices.getClinica().valueChanges()
-      .take(1)
-      .subscribe(c => {
-        this.clinica = c;
+      this.configService.getClinica().valueChanges()
+        .take(1)
+        .subscribe(c => {
+          this.clinica = c;
       })
 
     })//Fim do timeOut
+    
   }
 
   mudarFPagamento(){
@@ -199,23 +203,21 @@ export class ContaRecebidaComponent implements OnInit {
     doc.setFontStyle("normal"); 
     doc.setFontSize(10);
   
-    doc.text("(2ª Via)", 210, 560);
     doc.text("Processado pelo computador", 170, 580);
-    /*doc.text(this.clinica.endereco+"", 50, 75);
-    doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
-    doc.text("Email: "+this.clinica.email, 50, 95);
-    doc.text("Cell: "+this.clinica.telefone, 50, 105);*/
-    doc.text(this.clinica.endereco, 50, 65);
+    doc.text(this.clinica.endereco+"", 50, 65);
     doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,75);
     doc.text("Email: "+this.clinica.email, 50, 85);
     doc.text("Cell: "+this.clinica.telefone, 50, 95);
     doc.text("NUIT: "+this.clinica.nuit, 50, 105);
     
-    doc.text("Nome do Paciente:"+conta.cliente_nome, 50, 125);
+    doc.text("Nome do Paciente: "+conta.cliente_nome, 50, 125);
     doc.text("NID: "+conta.cliente_nid, 250, 125);
     doc.text("Apelido: "+conta.cliente_apelido, 50, 145);
     doc.text("Data de emissão: "+conta.data, 250, 145);
-    //doc.text("NUIT do paciente: "+conta.cliente_nuit, 50, 165);
+    let n = conta.cliente_nuit ? conta.cliente_nuit : "";
+    doc.text("NUIT do paciente: "+n, 50, 165);
+  
+    doc.setFillColor(50,50,50);
     
     /*doc.text("Nome do Paciente:", 50, 125);
     doc.text(conta.cliente_nome, 128, 125);

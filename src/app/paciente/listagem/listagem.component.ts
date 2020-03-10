@@ -993,7 +993,10 @@ export class MedicamentosDialog {
       conta.ano = ano;
       conta.mes = mes;
       conta.dia = dia;
-      conta.data = dia +"/"+mes+"/"+ano;
+      
+      conta.data = dia +"/"+(+new Date().getMonth()+ +1)+"/"+ano;
+      conta.cliente_nuit = paciente.nuit ? paciente.nuit : "";
+      
       conta.cliente_apelido = this.consulta.paciente_apelido;
       conta.cliente_nome = this.consulta.paciente_nome;
       conta.cliente_nid = this.consulta.paciente_nid;
@@ -1313,13 +1316,13 @@ export class MedicamentosDialog {
     
         preco_total = +preco_total + +element.medicamento.preco_seguradora*element.quantidade;
 
-        console.log("Pagou convenio");
+        //console.log("Pagou convenio");
       }else{
         doc.text(element.medicamento.preco_venda.toFixed(2).replace(".",",")+"", 294, linha)
         doc.text((element.medicamento.preco_venda*element.quantidade).toFixed(2).replace(".",",")+"", 354, linha)
     
         preco_total = +preco_total + +element.medicamento.preco_venda*element.quantidade;
-        console.log("Pagou normal");
+        //console.log("Pagou normal");
       }
 
       
@@ -1339,7 +1342,21 @@ export class MedicamentosDialog {
     doc.setFontSize(10);
   
     doc.text("Processado pelo computador", 170, 580);
-    doc.text(this.clinica.endereco, 50, 75);
+
+    doc.text(this.clinica.endereco, 50, 65);
+    doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,75);
+    doc.text("Email: "+this.clinica.email, 50, 85);
+    doc.text("Cell: "+this.clinica.telefone, 50, 95);
+    doc.text("NUIT: "+this.clinica.nuit, 50, 105);
+    
+    doc.text("Nome do Paciente: "+paciente.nome, 50, 125);
+    doc.text("NID: "+paciente.nid, 250, 125);
+    doc.text("Apelido: "+paciente.apelido, 50, 145);
+    doc.text("Data de emissão: "+dataemisao, 250, 145);
+    let n = paciente.nuit ? paciente.nuit : ""; //Trabalhando o NUIT por nao ser campo obrigatorio pode estar nulo
+    doc.text("NUIT do paciente: "+n, 50, 165);
+
+    /*doc.text(this.clinica.endereco, 50, 75);
     doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
     doc.text("Email: "+this.clinica.email, 50, 95);
     doc.text("Cell: "+this.clinica.telefone, 50, 105);
@@ -1351,7 +1368,7 @@ export class MedicamentosDialog {
     doc.text("Apelido:", 50, 145);
     doc.text(paciente.apelido, 89, 145);
     doc.text("Data de emissão: ", 250, 145);
-    doc.text(dataemisao, 322, 145);
+    doc.text(dataemisao, 322, 145);*/
     doc.setFillColor(50,50,50);
     doc.rect ( 50, 170 , 40 , 20 ); 
     doc.rect (  50, 190 , 40 , 320 ); 
@@ -1637,7 +1654,10 @@ export class MedicamentosDialog {
       conta.ano = ano;
       conta.mes = mes;
       conta.dia = dia;
-      conta.data = dia +"/"+mes+"/"+ano;
+      //conta.data = dia +"/"+mes+"/"+ano;
+      conta.data = dia +"/"+(+new Date().getMonth()+ +1)+"/"+ano;
+      conta.cliente_nuit = paciente.nuit ? paciente.nuit : "";
+      
       conta.cliente_apelido = this.consulta.paciente_apelido;
       conta.cliente_nome = this.consulta.paciente_nome;
       conta.cliente_nid = this.consulta.paciente_nid;
@@ -1880,13 +1900,13 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
     
 
     if(this.forma_pagamento == "Convênio"){
-      doc.text(element.preco_seguradora.toFixed(2).replace(".",",")+"", 294, linha)
-      doc.text(element.preco_seguradora.toFixed(2).replace(".",",")+"", 354, linha)
+      doc.text(element.preco_seguradora+"", 294, linha)
+      doc.text(element.preco_seguradora+"", 354, linha)
   
       preco_total = +preco_total + +element.preco_seguradora;
     }else{
-      doc.text(element.preco.toFixed(2).replace(".",",")+"", 294, linha)
-      doc.text(element.preco.toFixed(2).replace(".",",")+"", 354, linha)
+      doc.text(element.preco+"", 294, linha)
+      doc.text(element.preco+"", 354, linha)
   
       preco_total = +preco_total + +element.preco;
     }
@@ -1915,7 +1935,21 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
   doc.setFontSize(10);
 
   doc.text("Processado pelo computador", 170, 580);
+
   doc.text(this.clinica.endereco, 50, 65);
+  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,75);
+  doc.text("Email: "+this.clinica.email, 50, 85);
+  doc.text("Cell: "+this.clinica.telefone, 50, 95);
+  doc.text("NUIT: "+this.clinica.nuit, 50, 105);
+  
+  doc.text("Nome do Paciente: "+paciente.nome, 50, 125);
+  doc.text("NID: "+paciente.nid, 250, 125);
+  doc.text("Apelido: "+paciente.apelido, 50, 145);
+  doc.text("Data de emissão: "+dataemisao, 250, 145);
+  let n = paciente.nuit ? paciente.nuit : ""; //Trabalhando o NUIT por nao ser campo obrigatorio pode estar nulo
+  doc.text("NUIT do paciente: "+n, 50, 165);
+
+  /*doc.text(this.clinica.endereco, 50, 65);
   doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,75);
   doc.text("Email: "+this.clinica.email, 50, 85);
   doc.text("Cell: "+this.clinica.telefone, 50, 95);
@@ -1928,7 +1962,7 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
   // doc.text(paciente.apelido, 89, 145);
   doc.text("Data de emissão: "+dataemisao, 250, 145);
   //doc.text(dataemisao, 322, 145);
-  doc.text("NUIT do paciente: "+paciente.nuit, 50, 165);
+  doc.text("NUIT do paciente: "+paciente.nuit, 50, 165);*/
   doc.setFillColor(50,50,50);
   doc.rect ( 50, 170 , 40 , 20 ); 
   doc.rect (  50, 190 , 40 , 320 ); 
@@ -2192,12 +2226,13 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
       conta.ano = ano;
       conta.mes = mes;
       conta.dia = dia;
-      conta.data = dia +"/"+mes+"/"+ano;
+      conta.data = dia +"/"+(+(new Date().getMonth()) + +1) +"/"+ano;
       conta.cliente_apelido = this.consulta.paciente.apelido;
       conta.cliente_nome = this.consulta.paciente.nome;
       conta.cliente_nid = this.consulta.paciente.nid;
       conta.forma_pagamento = this.forma_pagamento;
       conta.consulta = "Consulta medica: "+this.consulta.categoria.nome;
+      conta.cliente_nuit = this.consulta.paciente.nuit ? this.consulta.paciente.nuit : "";
       conta.linhas = this.linhas;
       conta.segunda_via = true;
       if(conta.forma_pagamento == "Convênio"){
@@ -2406,21 +2441,17 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
   }else{
     doc.text(categoriaConsulta.nome , 95, linha) //descricao
   }
-
   
   if(this.forma_pagamento == "Convênio"){
     doc.text(categoriaConsulta.preco_seguradora+"", 294, linha)
     doc.text(categoriaConsulta.preco_seguradora+"", 354, linha)
     preco_total = +categoriaConsulta.preco_seguradora;
 
-    console.log("Preco categoriaConsulta.preco_seguradora "+ categoriaConsulta.preco_seguradora)
-    console.log("Pagou convenio "+preco_total);
   }else{
     doc.text(categoriaConsulta.preco+"", 294, linha)
     doc.text(categoriaConsulta.preco+"", 354, linha)
     preco_total = +categoriaConsulta.preco;
 
-    console.log("Pagou normal");
   }
 
   //preco_total = +categoriaConsulta.preco;
@@ -2451,15 +2482,14 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
   doc.text("Email: "+this.clinica.email, 50, 85);
   doc.text("Cell: "+this.clinica.telefone, 50, 95);
   doc.text("NUIT: "+this.clinica.nuit, 50, 105);
-  doc.text("Nome do Paciente:"+paciente.nome, 50, 125);
-  //doc.text(paciente.nome, 128, 125);
-  doc.text("NID:"+paciente.nid, 250, 125);
-  //doc.text(paciente.nid+"", 268, 125);
-  doc.text("Apelido:"+paciente.apelido, 50, 145);
- // doc.text(paciente.apelido, 89, 145);
- doc.text("Data de emissão:"+dataemisao, 250, 145);
-  //doc.text(dataemisao, 322, 145);
-  doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
+  
+  doc.text("Nome do Paciente: "+paciente.nome, 50, 125);
+  doc.text("NID: "+paciente.nid, 250, 125);
+  doc.text("Apelido: "+paciente.apelido, 50, 145);
+  doc.text("Data de emissão: "+dataemisao, 250, 145);
+  let n = paciente.nuit ? paciente.nuit : ""; //Trabalhando o NUIT por nao ser campo obrigatorio pode estar nulo
+  doc.text("NUIT do paciente: "+n, 50, 165);
+ 
   doc.setFillColor(50,50,50);
   doc.rect ( 50, 170 , 40 , 20 ); 
   doc.rect (  50, 190 , 40 , 320 ); 
@@ -2989,9 +3019,10 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
       conta.ano = ano;
       conta.mes = mes;
       conta.dia = dia;
-      conta.data = dia +"/"+mes+"/"+ano;
-      conta.cliente_apelido = this.consulta.paciente_nome;
-      conta.cliente_nome = this.consulta.paciente_apelido;
+      conta.data = dia +"/"+(+new Date().getMonth()+ +1)+"/"+ano;
+      conta.cliente_nuit = this.consulta.paciente.nuit ? this.consulta.paciente.nuit : "";
+      conta.cliente_apelido = this.consulta.paciente_apelido;
+      conta.cliente_nome = this.consulta.paciente_nome;
       conta.cliente_nid = this.consulta.paciente_nid;
       conta.forma_pagamento = this.forma_pagamento;    
       conta.consulta = servico;
@@ -3252,6 +3283,19 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   doc.text("Email: "+this.clinica.email, 50, 85);
   doc.text("Cell: "+this.clinica.telefone, 50, 95);
   doc.text("NUIT: "+this.clinica.nuit, 50, 105);
+  
+  doc.text("Nome do Paciente: "+paciente.nome, 50, 125);
+  doc.text("NID: "+paciente.nid, 250, 125);
+  doc.text("Apelido: "+paciente.apelido, 50, 145);
+  doc.text("Data de emissão: "+dataemisao, 250, 145);
+  let n = paciente.nuit ? paciente.nuit : ""; //Trabalhando o NUIT por nao ser campo obrigatorio pode estar nulo
+  doc.text("NUIT do paciente: "+n, 50, 165);
+
+  /*doc.text(this.clinica.endereco, 50, 65);
+  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,75);
+  doc.text("Email: "+this.clinica.email, 50, 85);
+  doc.text("Cell: "+this.clinica.telefone, 50, 95);
+  doc.text("NUIT: "+this.clinica.nuit, 50, 105);
   doc.text("Nome do Paciente:"+paciente.nome, 50, 125);
   //doc.text(paciente.nome, 128, 125);
   doc.text("NID:"+paciente.nid, 250, 125);
@@ -3260,7 +3304,8 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   // doc.text(paciente.apelido, 89, 145);
   doc.text("Data de emissão:"+dataemisao, 250, 145);
   //doc.text(dataemisao, 322, 145);
-  doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);
+  doc.text("NUIT do paciente:"+paciente.nuit, 50, 165);*/
+
   doc.setFillColor(50,50,50);
   doc.rect ( 50, 170 , 40 , 20 ); 
   doc.rect (  50, 190 , 40 , 320 ); 

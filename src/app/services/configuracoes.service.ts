@@ -99,6 +99,7 @@ export class ConfiguracoesService {
 
   getClinica(){
     //return this.firestore.doc<Clinica>('clinicas/'+this.authService.get_clinica_id);
+    console.log("this.authService.get_clinica_id: "+this.authService.get_clinica_id);
     return this.db.object('clinicas/'+this.authService.get_clinica_id);
   }
 

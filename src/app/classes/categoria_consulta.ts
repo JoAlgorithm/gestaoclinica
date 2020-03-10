@@ -2,7 +2,7 @@ export class CategoriaConsulta {
     id?: string;
 
     nome?: string;
-    preco?: Number;
+    preco?: number;
     
     preco_seguradora?: Number;
 }
