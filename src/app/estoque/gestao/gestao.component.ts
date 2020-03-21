@@ -16,7 +16,7 @@ export class GestaoComponent implements OnInit {
   medicamentos: Medicamento[] = [];
 
   dataSourse: MatTableDataSource<Medicamento>;
-  displayedColumns = ['codigo','nome', 'min',  'qtd_disponivel', 'nivel', 'sugestao'];
+  displayedColumns = ['codigo','nome', 'min',  'qtd_disponivel', 'valor_unitario', 'valor_total', 'nivel', 'sugestao'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 

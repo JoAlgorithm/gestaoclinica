@@ -329,7 +329,7 @@ export class RegistoDialog {
   }
   
   addMvt(){
-    if(this.mvt.deposito != undefined && this.mvt.medicamento != undefined && this.mvt.quantidade != undefined ){
+    if(this.mvt.deposito != undefined && this.mvt.medicamento != undefined && this.mvt.quantidade != undefined && this.mvt.valor_unitario != undefined){
       
       let dia = new Date().getDate();
       let mes = +(new Date().getMonth()) + +1;
@@ -346,6 +346,17 @@ export class RegistoDialog {
           if(this.mvt.medicamento.id == key){
             if(this.mvt.deposito.medicamentos[key].qtd_disponivel){
               this.mvt.medicamento.qtd_disponivel = +this.mvt.deposito.medicamentos[key].qtd_disponivel + +this.mvt.quantidade;
+              
+              let valor_medio_anterior = +this.mvt.deposito.medicamentos[key].valor_medio_entrada ? +this.mvt.deposito.medicamentos[key].valor_medio_entrada : 0;
+              console.log(valor_medio_anterior);
+              let valor_anterior = +this.mvt.deposito.medicamentos[key].qtd_disponivel * +valor_medio_anterior;
+              let valor_novo = +this.mvt.quantidade * +this.mvt.valor_unitario;
+              this.mvt.medicamento.valor_medio_entrada = +((+valor_novo + +valor_anterior)/(+this.mvt.deposito.medicamentos[key].qtd_disponivel + +this.mvt.quantidade)).toFixed(2);
+              this.mvt.medicamento.valor_tota_entrada = +(+this.mvt.medicamento.valor_medio_entrada * (+this.mvt.deposito.medicamentos[key].qtd_disponivel + +this.mvt.quantidade)).toFixed(2);
+              console.log("Valor de unitario: "+this.mvt.medicamento.valor_medio_entrada);
+              console.log("Valor total: "+this.mvt.medicamento.valor_tota_entrada);
+
+
               update_qtd = true;
             }else{
               update_qtd = true;

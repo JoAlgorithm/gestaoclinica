@@ -3,7 +3,7 @@
     <p>Preencha os campos para registo de {{data.tipoMovimento}}</p>
 
     <!--<form [formGroup]="mvtFormGroup">-->
-        <mat-form-field style="width: 17%">
+        <mat-form-field style="width: 33%">
             <mat-select placeholder="Deposito"  [(ngModel)]="mvt.deposito"  required>
                 <mat-option *ngFor="let deposito of data.depositos" [value]="deposito">
                     {{deposito.nome}}
@@ -19,7 +19,7 @@
             </mat-select>
         </mat-form-field>-->
 
-        <mat-form-field style="width: 60%">
+        <mat-form-field style="width: 62%">
                 <mat-select placeholder="Medicamento" [(ngModel)]="mvt.medicamento"  required>
                 <mat-option >
                     <ngx-mat-select-search [(ngModel)]="filtrartipomedic" placeholderLabel="Pesquisar" noEntriesFoundLabel="Nenhuma informacao encontrada" matInput (keyup)="filtrarMedicamento($event.target.value)"></ngx-mat-select-search>
@@ -30,8 +30,12 @@
             </mat-select>
         </mat-form-field>
         
-        <mat-form-field style="width: 17%">
+        <mat-form-field style="width: 47%">
             <input matInput placeholder="Quantidade" [(ngModel)]="mvt.quantidade" required>
+        </mat-form-field>
+
+        <mat-form-field style="width: 47%">
+            <input matInput placeholder="Valor unitario" [(ngModel)]="mvt.valor_unitario" required>
         </mat-form-field>
 
         <button mat-icon-button (click)="addMvt()" matTooltip="Adicionar">

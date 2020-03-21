@@ -57,7 +57,8 @@ export class Medicamento {
 
     preco_seguradora?: number;
 
-    valor_medio_entrada?:number; //Valor de estoque calculado com base na media dos valores de entrada
+    valor_medio_entrada?:number; //Valor de estoque calculado com base na media dos valores de entrada (valor unitario)
+    valor_tota_entrada?:number; //Valor de estoque calculado com base na media dos valores de entrada (valor total do item em estoque)
 
     //movimentos:Movimentos[];
 

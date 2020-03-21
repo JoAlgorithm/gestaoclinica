@@ -829,6 +829,14 @@ export class MedicamentosDialog {
             linha.preco_total = this.medicamento.preco_seguradora*this.medicamento.qtd_solicitada;
           }
           
+          let valor_tota_entrada = this.medicamento.valor_tota_entrada ? this.medicamento.valor_tota_entrada : 0;
+          let valor_medio_entrada = this.medicamento.valor_medio_entrada ? this.medicamento.valor_medio_entrada : 0;
+          if(this.medicamento.qtd_disponivel - this.medicamento.qtd_solicitada == 0){
+            console.log("Valor de estoque unitario e toal vai alterar para zero");
+          }else{
+            console.log("Valor de estoque total vai alterar de "+valor_tota_entrada+" para "+valor_medio_entrada*(this.medicamento.qtd_disponivel - this.medicamento.qtd_solicitada))
+          }
+
           this.linhas.push(linha);
           //this.listarLinhas();
           this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
@@ -934,6 +942,18 @@ export class MedicamentosDialog {
       this.consulta.movimentosestoque.forEach(mvt => {
         //console.log("mvt.medicamento.qtd_solicitada: "+mvt.medicamento.qtd_solicitada);
         mvt.medicamento.qtd_solicitada = null;
+
+
+        let valor_tota_entrada = mvt.medicamento.valor_tota_entrada ? mvt.medicamento.valor_tota_entrada : 0;
+        let valor_medio_entrada = mvt.medicamento.valor_medio_entrada ? mvt.medicamento.valor_medio_entrada : 0;
+        if(mvt.medicamento.qtd_disponivel - mvt.medicamento.qtd_solicitada == 0){
+          console.log("Valor de estoque unitario e toal vai alterar para zero");
+          mvt.medicamento.valor_medio_entrada = 0;
+          mvt.medicamento.valor_tota_entrada = 0;
+        }else{
+          console.log("Valor de estoque total vai alterar de "+valor_tota_entrada+" para "+valor_medio_entrada*(mvt.medicamento.qtd_disponivel - mvt.medicamento.qtd_solicitada))
+          mvt.medicamento.valor_tota_entrada = valor_medio_entrada*(mvt.medicamento.qtd_disponivel - mvt.medicamento.qtd_solicitada);
+        }
 
         mvt.deposito_nome = mvt.deposito.nome;
         mvt.deposito_id = mvt.deposito.id;

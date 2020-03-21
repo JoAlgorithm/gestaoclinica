@@ -32,10 +32,22 @@
                     <mat-cell *matCellDef="let row"> {{row.qtd_disponivel}}</mat-cell>
                 </ng-container>
 
+                <ng-container matColumnDef="valor_unitario">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Valor unitario </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.valor_medio_entrada}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="valor_total">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Valor total </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.valor_tota_entrada}}</mat-cell>
+                </ng-container>
+                
+
                 <ng-container matColumnDef="nivel">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Nivel </mat-header-cell>
                     <mat-cell *matCellDef="let row"> {{row.nivel}}</mat-cell>
                 </ng-container>
+  
 
                 <ng-container matColumnDef="sugestao">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Sugestao </mat-header-cell>

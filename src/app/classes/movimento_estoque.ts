@@ -22,6 +22,8 @@ export class MovimentoEstoque {
 
     quantidade?: number;
 
+    valor_unitario?: number; //usado para calcular o valor de estoque
+
     data_movimento?: string;
 
     justificativa?: string;
