@@ -13,7 +13,7 @@ import { Clinica } from '../../classes/clinica';
 import { NrCotacao } from '../../classes/nr_cotacao';
 import { NrFatura } from '../../classes/nr_fatura';
 import { Seguradora } from '../../classes/seguradora';
-import { Conta } from '../../classes/conta';
+import { Conta, Linha } from '../../classes/conta';
 
 @Component({
   selector: 'app-pendentes',
@@ -608,6 +608,8 @@ export class RemoverPendentesDialog {
     preco_total:Number = 0;
 
     tot_diagnosticos = 0;
+
+    linhas: Linha[] = [];
     
     constructor(  public dialogRef: MatDialogRef<FaturarDialog>, public configServices: ConfiguracoesService,
     @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
@@ -621,7 +623,7 @@ export class RemoverPendentesDialog {
           if(element.faturado != true){
             this.diagnosticos_aux.push(element);  
             this.tot_diagnosticos = +this.tot_diagnosticos + +1;
-            this.preco_total = +this.preco_total + +element.preco;
+            //this.preco_total = +this.preco_total + +element.preco;
           }
         });
   
@@ -649,7 +651,8 @@ export class RemoverPendentesDialog {
         this.consulta.diagnosticos_aux.forEach(element => {
           if(element.faturado != true){
             this.diagnosticos_aux.push(element);  
-            this.preco_total = +this.preco_total + +element.preco_seguradora;
+            //this.preco_total = +this.preco_total + +element.preco_seguradora;
+            //this.selecionarLinha(element);
           }
         });
 
@@ -659,10 +662,12 @@ export class RemoverPendentesDialog {
         this.consulta.diagnosticos_aux.forEach(element => {
           if(element.faturado != true){
             this.diagnosticos_aux.push(element);  
-            this.preco_total = +this.preco_total + +element.preco;
+            //this.preco_total = +this.preco_total + +element.preco;
+            //this.selecionarLinha(element);
           }
         });
       }
+      this.calcularPreco();
       console.log("consulta.id "+this.consulta.id)
     }
 
@@ -772,6 +777,9 @@ export class RemoverPendentesDialog {
       faturacao.ano = new Date().getFullYear();
       faturacao.id = this.nr_fatura+"";
 
+      console.log("Medico consulta: "+this.consulta.medico_nome);
+      faturacao.medico_nome = this.consulta.medico_nome; //Acrescentado 24.03.2020
+
       /*if(this.consulta.tipo == "Consulta Medica"){
         this.consulta.status = "Em andamento";
       }else{
@@ -791,12 +799,12 @@ export class RemoverPendentesDialog {
             if(row == element){
               element.faturado = true;
 
+
               if(this.forma_pagamento == "Convênio"){  
                 faturacao.valor = +faturacao.valor + +element.preco_seguradora;
               }else{
                 faturacao.valor = +faturacao.valor + +element.preco;
               }
-
               //servico = servico+" "+element.nome+" ; ";
               //diagnostico_aux2.push(element);
               diagnostico_aux2.indexOf(element) === -1 ? servico = servico+" "+element.nome+" ; " : console.log("This item already exists");
@@ -840,11 +848,13 @@ export class RemoverPendentesDialog {
       conta.mes = mes;
       conta.dia = dia;
       conta.data = dia +"/"+mes+"/"+ano;
-      conta.cliente_apelido = this.consulta.paciente_nome;
-      conta.cliente_nome = this.consulta.paciente_apelido;
+      conta.cliente_apelido = this.consulta.paciente_apelido;
+      conta.cliente_nome = this.consulta.paciente_nome;
       conta.cliente_nid = this.consulta.paciente_nid;
       conta.forma_pagamento = this.forma_pagamento;    
       conta.consulta = servico;
+      conta.linhas = this.linhas;
+      conta.segunda_via = true;
       if(conta.forma_pagamento == "Convênio"){
         conta.categoria = "A receber";
         conta.nr_apolice = this.nr_apolice;
@@ -932,6 +942,82 @@ export class RemoverPendentesDialog {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id}`;
   }
 
+  calcularPreco(){
+    this.preco_total = 0;
+    this.linhas = [];
+
+    if(this.forma_pagamento == "Convênio"){
+
+      this.consulta.diagnosticos_aux.forEach(element => {
+        if(element.faturado != true){
+          if (this.selection.isSelected(element)){
+            this.preco_total = +this.preco_total + +element.preco_seguradora;
+
+            let linha = new Linha();
+            linha.descricao_servico = element.nome+"";
+            linha.qtd_solicitada = 1;
+            linha.id_servico = element.id+"";
+            linha.preco_unitario = +element.preco_seguradora;
+            linha.preco_total = linha.preco_unitario*1;
+            this.linhas.push(linha);
+          }
+        }
+      });
+
+    }else{
+
+      this.consulta.diagnosticos_aux.forEach(element => {
+        if(element.faturado != true){
+          if (this.selection.isSelected(element)){
+            this.preco_total = +this.preco_total + +element.preco;
+
+            let linha = new Linha();
+            linha.descricao_servico = element.nome+"";
+            linha.qtd_solicitada = 1;
+            linha.id_servico = element.id+"";
+            linha.preco_unitario = +element.preco;
+            linha.preco_total = linha.preco_unitario*1;
+            this.linhas.push(linha);
+          }
+        }
+      });
+    }
+
+    
+  }
+
+  /*selecionarLinha(row: DiagnosticoAuxiliar){
+
+    if (this.isAllSelected()){
+
+      this.selecionarTudo();
+
+    }else{
+
+      if(this.forma_pagamento == "Convênio"){  
+        if (this.selection.isSelected(row)){
+          this.preco_total = +this.preco_total + +row.preco_seguradora;
+          console.log("Selecionada "+row.nome+" somou "+row.preco_seguradora);
+        }else{
+          if(this.preco_total > 0)
+            this.preco_total = +this.preco_total + -row.preco_seguradora;
+          console.log("Nao Selecionada "+row.nome+" retirou "+ row.preco_seguradora);
+        }
+      }else{
+        if (this.selection.isSelected(row)){
+          this.preco_total = +this.preco_total + +row.preco;
+          console.log("Nao Selecionada "+row.nome+" retirou "+ row.preco);
+        }else{
+          if(this.preco_total > 0)
+            this.preco_total = +this.preco_total + -row.preco;
+            console.log("Nao Selecionada "+row.nome+" retirou "+ row.preco_seguradora);
+        }
+      }
+
+    }
+    
+  }*/
+
   openSnackBarr(mensagem) {
     this.snackBar.open(mensagem, null,{
       duration: 2000
@@ -945,9 +1031,9 @@ export class RemoverPendentesDialog {
 
     let nome = "";
     if(categoria == 'Cotacao'){
-      nome = "COT";
+      nome = "COTAÇÃO";
     }else{
-      nome = "REC";
+      nome = "RECIBO";
     }
 
     if(this.clinica.endereco){
@@ -1017,6 +1103,7 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   doc.setFont("Courier");
   doc.setFontStyle("normal"); 
   doc.setFontSize(12);
+  doc.text(id+"", 225, 40);
   let item = 1;
   let preco_total = 0;
   let linha = 200;                      
@@ -1039,13 +1126,35 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
     item = +item + +1;
     linha = +linha + +20;
   });     
+
+  doc.setFont("Courier");
+  doc.setFontStyle("normal"); 
+  doc.setFontStyle("bold");
+  doc.setFontSize(15);
+
+  doc.text(nome+":", 170, 40);  
+
+
   doc.setFont("Courier");
   doc.setFontStyle("normal"); 
   doc.setFontSize(10);
 
   doc.text("Processado pelo computador", 170, 580);
   // doc.text("CENTRO MEDICO VITALLE", 165, 75);
-  doc.text(this.clinica.endereco, 50, 75);
+
+  doc.text(this.clinica.endereco, 50, 65);
+  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,75);
+  doc.text("Email: "+this.clinica.email, 50, 85);
+  doc.text("Cell: "+this.clinica.telefone, 50, 95);
+  doc.text("NUIT: "+this.clinica.nuit, 50, 105);
+  
+  doc.text("Nome do Paciente: "+paciente.nome, 50, 125);
+  doc.text("NID: "+paciente.nid, 250, 125);
+  doc.text("Apelido: "+paciente.apelido, 50, 145);
+  doc.text("Data de emissão: "+dataemisao, 250, 145);
+  let n = paciente.nuit ? paciente.nuit : ""; //Trabalhando o NUIT por nao ser campo obrigatorio pode estar nulo
+  doc.text("NUIT do paciente: "+n, 50, 165);
+  /*doc.text(this.clinica.endereco, 50, 75);
   doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
   doc.text("Email: "+this.clinica.email, 50, 95);
   doc.text("Cell: "+this.clinica.telefone, 50, 105);
@@ -1057,7 +1166,8 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   doc.text("Apelido:", 50, 145);
   doc.text(paciente.apelido, 89, 145);
   doc.text("Data de emissão: ", 250, 145);
-  doc.text(dataemisao, 322, 145);
+  doc.text(dataemisao, 322, 145);*/
+
   doc.setFillColor(50,50,50);
   doc.rect ( 50, 170 , 40 , 20 ); 
   doc.rect (  50, 190 , 40 , 320 ); 
