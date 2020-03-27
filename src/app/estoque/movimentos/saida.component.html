@@ -3,7 +3,7 @@
     <p>Preencha os campos para {{data.tipoMovimento}}</p>
 
     <!--<form [formGroup]="mvtFormGroup">-->
-        <mat-form-field style="width: 17%">
+        <mat-form-field style="width: 33%">
             <mat-select placeholder="Deposito" [(ngModel)]="deposito" (selectionChange)="getMedicamentos(deposito)" required>
                 <mat-option *ngFor="let deposito of data.depositos" [value]="deposito">
                     {{deposito.nome}}
@@ -19,19 +19,24 @@
             </mat-select>
         </mat-form-field>-->
 
-        <mat-form-field style="width: 60%">
-                <mat-select placeholder="Medicamento" [(ngModel)]="mvt.medicamento"  required>
+        <mat-form-field style="width: 62%">
+                <mat-select placeholder="Medicamento" [(ngModel)]="medicamento" (selectionChange)="getMedicamento(medicamento)" required>
                 <mat-option >
                     <ngx-mat-select-search [(ngModel)]="filtrartipomedic" placeholderLabel="Pesquisar" noEntriesFoundLabel="Nenhuma informacao encontrada" matInput (keyup)="filtrarMedicamento($event.target.value)"></ngx-mat-select-search>
                 </mat-option>
-                <mat-option *ngFor="let medicamento of data.medicamentos" [value]="medicamento">
+                <mat-option *ngFor="let medicamento of medicamentos" [value]="medicamento">
                     {{medicamento.nome_generico}} - {{medicamento.nome_comercial}} - {{medicamento.composicao}}
                 </mat-option>           
             </mat-select>
         </mat-form-field>
         
-        <mat-form-field style="width: 17%">
-            <input matInput placeholder="Quantidade" [(ngModel)]="medicamento.qtd_solicitada" required>
+
+        <mat-form-field style="width: 47%">
+            <input matInput placeholder="Quantidade disponivel" [(ngModel)]="medicamento.qtd_disponivel" required disabled="true">
+        </mat-form-field>
+
+        <mat-form-field style="width: 47%">
+            <input matInput placeholder="Quantidade a retirar" [(ngModel)]="medicamento.qtd_solicitada" required>
         </mat-form-field>
 
         <!--QTD DISPONIVEL-->

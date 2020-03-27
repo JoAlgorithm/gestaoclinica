@@ -172,6 +172,19 @@ export class SaidaDialog {
         let key = this.estoqueService.db.list('estoquesmovimentos/'+this.authService.get_clinica_id).push('').key;
         
         mvt.medicamento.qtd_solicitada = null;
+
+        let valor_tota_entrada = mvt.medicamento.valor_tota_entrada ? mvt.medicamento.valor_tota_entrada : 0;
+        let valor_medio_entrada = mvt.medicamento.valor_medio_entrada ? mvt.medicamento.valor_medio_entrada : 0;
+        if(mvt.medicamento.qtd_disponivel == 0){
+          console.log("Valor de estoque unitario e toal vai alterar para zero");
+          mvt.medicamento.valor_medio_entrada = 0;
+          mvt.medicamento.valor_tota_entrada = 0;
+        }else{
+          console.log("Valor de estoque total vai alterar de "+valor_tota_entrada+" para "+valor_medio_entrada*(mvt.medicamento.qtd_disponivel - mvt.medicamento.qtd_solicitada))
+          mvt.medicamento.valor_tota_entrada = +valor_medio_entrada * +mvt.medicamento.qtd_disponivel;
+        }
+
+
         //Gravando na tabela de depositos "depositos"
         updatedUserData['/depositos/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/medicamentos/'+mvt.medicamento.id] = mvt.medicamento;
 
@@ -213,6 +226,14 @@ export class SaidaDialog {
     }
   }
 
+  getMedicamento(medicamento: Medicamento){
+    Object.keys(this.medicamentos).forEach(key=>{
+      if(this.medicamentos[key] == medicamento.id){
+        this.medicamento = this.medicamentos[key];
+      }
+    })
+  }
+
   addMvt(){
     if(this.medicamento.qtd_solicitada){
 
@@ -234,6 +255,15 @@ export class SaidaDialog {
           //this.preco_total = +this.preco_total + +(this.medicamento.preco_venda*this.medicamento.qtd_solicitada); 
           //this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
           this.medicamento.qtd_disponivel = +this.medicamento.qtd_disponivel - +this.medicamento.qtd_solicitada;
+
+
+          let valor_tota_entrada = this.medicamento.valor_tota_entrada ? this.medicamento.valor_tota_entrada : 0;
+          let valor_medio_entrada = this.medicamento.valor_medio_entrada ? this.medicamento.valor_medio_entrada : 0;
+          if(this.medicamento.qtd_disponivel - this.medicamento.qtd_solicitada == 0){
+            console.log("Valor de estoque unitario e toal vai alterar para zero");
+          }else{
+            console.log("Valor de estoque total vai alterar de "+valor_tota_entrada+" para "+ +this.medicamento.qtd_disponivel * valor_medio_entrada);
+          }
 
           this.mvts.push(this.mvt);
           //this.movimentos_aux = this.mvts;
@@ -339,6 +369,7 @@ export class RegistoDialog {
       this.mvt.tipo_movimento = this.data.tipoMovimento;
 
       let update_qtd = false;
+
       //Antes de adicionar calcular a quantidade disponivel se essa adicao for efetuada
       if(this.mvt.deposito.medicamentos){
         //console.log("entrou 1");
@@ -347,28 +378,54 @@ export class RegistoDialog {
             if(this.mvt.deposito.medicamentos[key].qtd_disponivel){
               this.mvt.medicamento.qtd_disponivel = +this.mvt.deposito.medicamentos[key].qtd_disponivel + +this.mvt.quantidade;
               
-              let valor_medio_anterior = +this.mvt.deposito.medicamentos[key].valor_medio_entrada ? +this.mvt.deposito.medicamentos[key].valor_medio_entrada : 0;
-              console.log(valor_medio_anterior);
-              let valor_anterior = +this.mvt.deposito.medicamentos[key].qtd_disponivel * +valor_medio_anterior;
-              let valor_novo = +this.mvt.quantidade * +this.mvt.valor_unitario;
-              this.mvt.medicamento.valor_medio_entrada = +((+valor_novo + +valor_anterior)/(+this.mvt.deposito.medicamentos[key].qtd_disponivel + +this.mvt.quantidade)).toFixed(2);
-              this.mvt.medicamento.valor_tota_entrada = +(+this.mvt.medicamento.valor_medio_entrada * (+this.mvt.deposito.medicamentos[key].qtd_disponivel + +this.mvt.quantidade)).toFixed(2);
-              console.log("Valor de unitario: "+this.mvt.medicamento.valor_medio_entrada);
-              console.log("Valor total: "+this.mvt.medicamento.valor_tota_entrada);
+              //console.log("ENTROU AQUI ");
+              //console.log("this.mvt.deposito.medicamentos[key].qtd_disponivel "+this.mvt.deposito.medicamentos[key].qtd_disponivel);
+              let qtd_disponivel = this.mvt.deposito.medicamentos[key].qtd_disponivel ? this.mvt.deposito.medicamentos[key].qtd_disponivel : 0;
+              //console.log("qtd_disponivel "+qtd_disponivel);
+              //console.log("this.mvt.deposito.medicamentos[key].qtd_disponivel "+this.mvt.deposito.medicamentos[key].qtd_disponivel);
+              
+              if(qtd_disponivel > 0){
+                console.log("Secao 1");
 
-
+                let valor_medio_anterior = +this.mvt.deposito.medicamentos[key].valor_medio_entrada ? +this.mvt.deposito.medicamentos[key].valor_medio_entrada : 0;
+                //console.log("valor_medio_anterior" +valor_medio_anterior);
+                let valor_anterior = +this.mvt.deposito.medicamentos[key].qtd_disponivel * +valor_medio_anterior;
+                let valor_novo = +this.mvt.quantidade * +this.mvt.valor_unitario;
+                this.mvt.medicamento.valor_medio_entrada = +((+valor_novo + +valor_anterior)/(+this.mvt.deposito.medicamentos[key].qtd_disponivel + +this.mvt.quantidade)).toFixed(2);
+                this.mvt.medicamento.valor_tota_entrada = +(+this.mvt.medicamento.valor_medio_entrada * (+this.mvt.deposito.medicamentos[key].qtd_disponivel + +this.mvt.quantidade)).toFixed(2);
+                console.log("Valor de unitario: "+this.mvt.medicamento.valor_medio_entrada);
+                console.log("Valor total: "+this.mvt.medicamento.valor_tota_entrada);
+              }else{
+                console.log("Secao 2");
+                this.mvt.medicamento.valor_medio_entrada = +this.mvt.valor_unitario;
+                this.mvt.medicamento.valor_tota_entrada = +this.mvt.quantidade * +this.mvt.valor_unitario;
+                console.log("Valor de unitario: "+this.mvt.medicamento.valor_medio_entrada);
+                console.log("Valor total: "+this.mvt.medicamento.valor_tota_entrada);
+              }
+              
               update_qtd = true;
             }else{
               update_qtd = true;
               this.mvt.medicamento.qtd_disponivel = this.mvt.quantidade;
+
+              this.mvt.medicamento.valor_medio_entrada = +this.mvt.valor_unitario;
+              this.mvt.medicamento.valor_tota_entrada = +this.mvt.quantidade * +this.mvt.valor_unitario;
+              console.log("Valor de unitario: "+this.mvt.medicamento.valor_medio_entrada);
+              console.log("Valor total: "+this.mvt.medicamento.valor_tota_entrada);
             }
             //console.log("qtd disponivel INICIAL: "+this.mvt.medicamento.qtd_disponivel);
           }
         })
       }else{
-       // console.log("entrou 2");
         update_qtd = true;
         this.mvt.medicamento.qtd_disponivel = this.mvt.quantidade;
+
+        console.log("Secao 3");
+        this.mvt.medicamento.valor_medio_entrada = +this.mvt.valor_unitario;
+        this.mvt.medicamento.valor_tota_entrada = +this.mvt.quantidade * +this.mvt.valor_unitario;
+        console.log("Valor de unitario: "+this.mvt.medicamento.valor_medio_entrada);
+        console.log("Valor total: "+this.mvt.medicamento.valor_tota_entrada);
+       
         //console.log("qtd disponivel INICIAL2: "+this.mvt.medicamento.qtd_disponivel);
       }
       
@@ -376,7 +433,13 @@ export class RegistoDialog {
       if(!update_qtd){
         this.mvt.medicamento.qtd_disponivel = this.mvt.quantidade;
         //console.log("atulizado no final");
+        console.log("Secao 4");
+        this.mvt.medicamento.valor_medio_entrada = +this.mvt.valor_unitario;
+        this.mvt.medicamento.valor_tota_entrada = +this.mvt.quantidade * +this.mvt.valor_unitario;
+        console.log("Valor de unitario: "+this.mvt.medicamento.valor_medio_entrada);
+        console.log("Valor total: "+this.mvt.medicamento.valor_tota_entrada);
       }
+
       this.mvts.push(this.mvt);
   
       this.dataSourse=new MatTableDataSource(this.mvts);
