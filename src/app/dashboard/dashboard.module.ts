@@ -18,6 +18,7 @@ import {  DialogOverviewExampleDialog,dialogconsultas,dialogdiagnostico,dialogco
 import { NgxPaginationModule } from 'ngx-pagination';
 import {MatDialogModule} from '@angular/material/dialog';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { EstoqueService } from '../services/estoque.service';
 @NgModule({
   imports: [
     CommonModule,
@@ -49,7 +50,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     DialogOverviewExampleDialog,
     dialogconsultas,
     dialogdiagnostico,
-    dialogconduta
+    dialogconduta,
+    EstoqueService
     
   ],
   declarations: [ DashboardComponent,

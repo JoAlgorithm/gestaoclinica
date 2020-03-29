@@ -1,7 +1,7 @@
-<div class="example-header" *ngIf='acesso_indicadores'>
+<div class="example-header" *ngIf='acesso_indicadores3'>
 
   <mat-form-field style="width: 33%">
-    <mat-select placeholder="Ano de analise" [(ngModel)]="ano" [(value)]="ano"  (selectionChange)="onSelect(ano, mes, medico)" > 
+    <mat-select placeholder="Ano de analise" [(ngModel)]="ano" [(value)]="ano"  (selectionChange)="onSelect(ano, mes, medico, deposito)" > 
         <mat-option *ngFor="let ano of anos" [value]="ano.id">
           {{ano.id}}
         </mat-option>
@@ -9,7 +9,7 @@
   </mat-form-field>
 
   <mat-form-field style="width: 33%">
-    <mat-select placeholder="Mes de analise" [(ngModel)]="mes" [(value)]="mes" (selectionChange)="onSelect(ano, mes, medico)"> 
+    <mat-select placeholder="Mes de analise" [(ngModel)]="mes" [(value)]="mes" (selectionChange)="onSelect(ano, mes, medico, deposito)"> 
         <mat-option *ngFor="let mes of meses" [value]="mes">
           {{mes}}
         </mat-option>
@@ -17,9 +17,45 @@
   </mat-form-field>
 
   <mat-form-field style="width: 33%">
-    <mat-select placeholder="Medico" [(ngModel)]="medico" [(value)]="medico" (selectionChange)="onSelect(ano, mes, medico)"> 
+    <mat-select placeholder="Deposito" [(ngModel)]="deposito" [(value)]="deposito"  (selectionChange)="onSelect(ano, mes, medico, deposito)"> 
+        <mat-option *ngFor="let deposito of depositos" [value]="deposito">
+          {{deposito.nome}}
+        </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</div>
+
+<div class="example-header" *ngIf='acesso_indicadores4'>
+
+  <mat-form-field style="width: 24.5%">
+    <mat-select placeholder="Ano de analise" [(ngModel)]="ano" [(value)]="ano"  (selectionChange)="onSelect(ano, mes, medico, deposito)" > 
+        <mat-option *ngFor="let ano of anos" [value]="ano.id">
+          {{ano.id}}
+        </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field style="width: 24.5%">
+    <mat-select placeholder="Mes de analise" [(ngModel)]="mes" [(value)]="mes" (selectionChange)="onSelect(ano, mes, medico, deposito)"> 
+        <mat-option *ngFor="let mes of meses" [value]="mes">
+          {{mes}}
+        </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field style="width: 24.5%">
+    <mat-select placeholder="Medico" [(ngModel)]="medico" [(value)]="medico" (selectionChange)="onSelect(ano, mes, medico, deposito)"> 
         <mat-option *ngFor="let medico of medicos" [value]="medico">
           {{medico}}
+        </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field style="width: 24.5%">
+    <mat-select placeholder="Deposito" [(ngModel)]="deposito" [(value)]="deposito"  (selectionChange)="onSelect(ano, mes, medico, deposito)"> 
+        <mat-option *ngFor="let deposito of depositos" [value]="deposito">
+          {{deposito.nome}}
         </mat-option>
     </mat-select>
   </mat-form-field>
@@ -259,6 +295,78 @@
             </mat-card-content>
           </mat-card>
         </div>
+
+        <div fxFlex.gt-sm="50%" fxFlex="100">
+          <mat-card>
+            <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
+              FECHAMENTO DE VALOR DE ESTOQUE
+            </mat-card-subtitle>
+            <mat-menu #card1="matMenu" x-position="before">
+              <button mat-menu-item>
+                <mat-icon>settings</mat-icon>
+                Settings
+              </button>
+              <button mat-menu-item>
+                <mat-icon>more</mat-icon>
+                View More
+              </button>
+              <button mat-menu-item>
+                <mat-icon>notifications_off</mat-icon>
+                Disable notifications
+              </button>
+              <button mat-menu-item>
+                <mat-icon>exit_to_app</mat-icon>
+                Remove Panel
+              </button>
+            </mat-menu>
+            <mat-card-content>
+              <canvas height="200" baseChart class="chart"
+                [datasets]="barChartData_FechamentoEstoque"
+                [labels]="barChartLabels_FechamentoEstoque"
+                [options]="barChartOptions_FechamentoEstoque"
+                [colors]="chartColors"
+                [legend]="barChartLegend_FechamentoEstoque"
+                [chartType]="barChartType_FechamentoEstoque"></canvas>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        
+        <div fxFlex.gt-sm="50%" fxFlex="100">
+          <mat-card>
+            <mat-card-subtitle fxLayout="row" fxLayoutAlign="start center">
+              COMPARAÇÃO DE VALORES DE ENTRADA E SAIDA
+            </mat-card-subtitle>
+            <mat-menu #card1="matMenu" x-position="before">
+              <button mat-menu-item>
+                <mat-icon>settings</mat-icon>
+                Settings
+              </button>
+              <button mat-menu-item>
+                <mat-icon>more</mat-icon>
+                View More
+              </button>
+              <button mat-menu-item>
+                <mat-icon>notifications_off</mat-icon>
+                Disable notifications
+              </button>
+              <button mat-menu-item>
+                <mat-icon>exit_to_app</mat-icon>
+                Remove Panel
+              </button>
+            </mat-menu>
+            <mat-card-content>
+              <canvas height="200" baseChart class="chart"
+                [datasets]="barChartData_MovimentosEstoque"
+                [labels]="barChartLabels_MovimentosEstoque"
+                [options]="barChartOptions_MovimentosEstoque"
+                [colors]="chartColors"
+                [legend]="barChartLegend_MovimentosEstoque"
+                [chartType]="barChartType_MovimentosEstoque"></canvas>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        
         
 
 </div>

@@ -17,6 +17,8 @@ import { format } from 'util';
 import * as FusionCharts from 'fusioncharts';
 import { AuthService } from '../services/auth.service';
 import { User } from '../classes/user';
+import { Deposito, DepositoRelatorio } from '../classes/deposito';
+import { EstoqueService } from '../services/estoque.service';
 
 @Component({
   //selector: 'app-dashboard',
@@ -29,6 +31,9 @@ export class DashboardComponent {
   perfil = "";
   acesso_indicadores = false;
   acesso_indicadores2 = false;
+
+  acesso_indicadores3 = false; //Filtros de clinica
+  acesso_indicadores4 = false; //Filtros de farmacia
   username = "";
 
   pacientes: Paciente[];
@@ -144,6 +149,43 @@ export class DashboardComponent {
   categoria_percentual_CONDUTA = 0 //Percentual de valor por vendas de vendas de conduta
 
 
+  //ESTOQUE
+  jan_estoque_acumulado = 0;
+  jan_estoque_entrada = 0;
+  jan_estoque_saida = 0;
+  fev_estoque_acumulado = 0;
+  fev_estoque_entrada = 0;
+  fev_estoque_saida = 0;
+  marc_estoque_acumulado = 0;
+  marc_estoque_entrada = 0;
+  marc_estoque_saida = 0;
+  abril_estoque_acumulado = 0;
+  abril_estoque_entrada = 0;
+  abril_estoque_saida = 0;
+  maio_estoque_acumulado = 0;
+  maio_estoque_entrada = 0;
+  maio_estoque_saida = 0;
+  jun_estoque_acumulado = 0;
+  jun_estoque_entrada = 0;
+  jun_estoque_saida = 0;
+  julho_estoque_acumulado = 0;
+  julho_estoque_entrada = 0;
+  julho_estoque_saida = 0;
+  ago_estoque_acumulado = 0;
+  ago_estoque_entrada = 0;
+  ago_estoque_saida = 0;
+  set_estoque_acumulado = 0;
+  set_estoque_entrada = 0;
+  set_estoque_saida = 0;
+  out_estoque_acumulado = 0;
+  out_estoque_entrada = 0;
+  out_estoque_saida = 0;
+  nov_estoque_acumulado = 0;
+  nov_estoque_entrada = 0;
+  nov_estoque_saida = 0;
+  dez_estoque_acumulado = 0;
+  dez_estoque_entrada = 0;
+  dez_estoque_saida = 0;
 
 
   dataSourse: MatTableDataSource<FaturacaoMedico>;
@@ -155,7 +197,13 @@ export class DashboardComponent {
   medicos = ["Todos"];
   medico = "Todos";
 
-  constructor(private pacienteService: PacienteService, private configService: ConfiguracoesService,
+  depositos: Deposito[] = []; //Pegar chaves de depositos para filtros
+  //deposito_id = "";
+  //deposito_nome = ""; 
+  deposito = new Deposito();
+  depositos_relatorio : DepositoRelatorio[] = [];
+
+  constructor(private pacienteService: PacienteService, private configService: ConfiguracoesService, private estoqueService: EstoqueService,
     public authService: AuthService, public dialog: MatDialog){
   }
 
@@ -169,9 +217,13 @@ export class DashboardComponent {
       if(this.perfil == 'Clinica_Admin'){
         this.acesso_indicadores = true;
         this.acesso_indicadores2 = true;
+        this.acesso_indicadores3 = false;
+        this.acesso_indicadores4 = true;
       }else if(this.perfil == 'Farmacia_Admin'){
         this.acesso_indicadores = true;
         this.acesso_indicadores2 = false;
+        this.acesso_indicadores3 = true;
+        this.acesso_indicadores4 = false;
       }
       this.configService.getAnos().snapshotChanges().subscribe(data => {
         this.anos = data.map(e => {
@@ -223,6 +275,132 @@ export class DashboardComponent {
       })*/
 
       this.zerarDados();
+
+      this.estoqueService.getDepositos().snapshotChanges().subscribe(data => {
+        this.depositos = data.map(e => {
+          return {
+            id: e.payload.key,
+            nome: e.payload.val()['nome'] as string,
+          } as Deposito;
+        })
+        
+        this.deposito = this.depositos[0];
+        //this.deposito_id = this.depositos[0].id+"";
+        //this.deposito_nome = this.depositos[0].nome+"";
+
+        this.estoqueService.getDepositoRelatorioSemiParcial(this.ano, this.deposito.id).snapshotChanges().subscribe(data => {
+          this.depositos_relatorio = data.map(e => {
+            return {
+              id: e.payload.key,
+              ...e.payload.val(),
+            } as DepositoRelatorio;
+          })
+
+          this.depositos_relatorio.forEach(element => {
+            
+            switch(element.id) { //id representa o MES
+              case "Janeiro": { 
+                this.jan_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+                this.jan_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+                this.jan_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+                break;
+              } 
+              case "Fevereiro": { 
+                this.fev_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+                this.fev_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+                this.fev_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+                break;
+              } 
+              case "Marco": { 
+                this.marc_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+                this.marc_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+                this.marc_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+                break ; 
+              }
+              case "Abril": { 
+                this.abril_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+                this.abril_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+                this.abril_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+                break ; 
+              }
+              case "Maio": { 
+                this.maio_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+                this.maio_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+                this.maio_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+                break ; 
+              }
+              case "Junho": { 
+                this.jun_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+                this.jun_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+                this.jun_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+                break ; 
+              }
+              case "Julho": { 
+                this.julho_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+                this.julho_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+                this.julho_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+                break; 
+              }
+              case "Agosto": { 
+                this.ago_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+                this.ago_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+                this.ago_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+                break; 
+              }  
+              case "Setembro": { 
+                this.set_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+                this.set_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+                this.set_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+                break; 
+              }
+              case "Outubro": { 
+                this.out_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+                this.out_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+                this.out_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+                break; 
+              }
+              case "Novembro": { 
+                this.nov_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+                this.nov_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+                this.nov_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+                break; 
+              }
+              case "Dezembro": { 
+                this.dez_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+                this.dez_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+                this.dez_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+                break; 
+              }
+              default: { 
+                 //statements; 
+                 break; 
+              } 
+           }//Fim switch case 
+
+          });//Fim do foreach
+
+          this.barChartData_MovimentosEstoque = [{
+            data: [this.jan_estoque_entrada.toFixed(2), this.fev_estoque_entrada.toFixed(2), this.marc_estoque_entrada.toFixed(2), this.abril_estoque_entrada.toFixed(2), this.maio_estoque_entrada.toFixed(2), this.jun_estoque_entrada.toFixed(2), this.julho_estoque_entrada.toFixed(2), this.ago_estoque_entrada.toFixed(2), this.set_estoque_entrada.toFixed(2), this.out_estoque_entrada.toFixed(2), this.nov_estoque_entrada.toFixed(2), this.dez_estoque_entrada.toFixed(2)],
+            label: 'Valor de entrada',
+            borderWidth: 0
+          }, {
+            data: [this.jan_estoque_saida.toFixed(2), this.fev_estoque_saida.toFixed(2), this.marc_estoque_saida.toFixed(2), this.abril_estoque_saida.toFixed(2), this.maio_estoque_saida.toFixed(2), this.jun_estoque_saida, this.julho_estoque_saida.toFixed(2), this.ago_estoque_saida.toFixed(2), this.set_estoque_saida.toFixed(2), this.out_estoque_saida.toFixed(2), this.nov_estoque_saida.toFixed(2), this.dez_estoque_saida.toFixed(2)],
+            label: 'Valor de saida',
+            borderWidth: 0
+          }];
+
+          this.barChartData_FechamentoEstoque = [{
+            data: [this.jan_estoque_acumulado.toFixed(2), this.fev_estoque_acumulado.toFixed(2), this.marc_estoque_acumulado.toFixed(2), this.abril_estoque_acumulado.toFixed(2), this.maio_estoque_acumulado.toFixed(2), this.jun_estoque_acumulado.toFixed(2), this.julho_estoque_acumulado.toFixed(2), this.ago_estoque_acumulado.toFixed(2), this.set_estoque_acumulado.toFixed(2), this.out_estoque_acumulado.toFixed(2), this.nov_estoque_acumulado.toFixed(2), this.dez_estoque_acumulado.toFixed(2)],
+            label: 'Valor de estoque por mês',
+            borderWidth: 0
+          }];
+
+        })
+
+      })
+      
+
+      
 
       this.pacienteService.getConsultasRelatorio(this.ano).snapshotChanges().subscribe(data => {
         this.consultas = data.map(e => {
@@ -731,6 +909,8 @@ export class DashboardComponent {
           borderWidth: 1,
           type: 'bar',
         }*/];
+
+        
   
   
         //Info do grafico de barras
@@ -807,32 +987,149 @@ export class DashboardComponent {
 
 
   // QUANDO ALTERAMOS ANO ---------------------------------------------------------
-  onSelect(ano, mes, medico){
-    //console.log("Medico selecionado: "+medico);
-    this.ano = ano;
-    this.mes = mes;
-    this.medico = medico;
-    //console.log("Alterar medico: "+this.medico)
+  onSelect(ano, mes, medico, deposito){
+  //console.log("Medico selecionado: "+medico);
+  this.ano = ano;
+  this.mes = mes;
+  this.medico = medico;
+  //console.log("Alterar medico: "+this.medico)
 
-    this.pacienteService.getConsultasRelatorio(this.ano).snapshotChanges().subscribe(data => {
-      this.consultas = data.map(e => {
+  this.pacienteService.getConsultasRelatorio(this.ano).snapshotChanges().subscribe(data => {
+    this.consultas = data.map(e => {
+      return {
+        id: e.payload.key,
+        ...e.payload.val(),
+      } as Consulta;
+    })
+    if(this.medico == "Todos"){
+      this.consultas_encerradas_medicas = this.consultas.filter( c => c.tipo == "Consulta Medica").length;
+      this.consultas_encerradas_diagnosticos = this.consultas.filter( c => c.tipo == "DIAGNOSTICO AUX").length;
+      this.consultas_encerradas_condutas = this.consultas.filter( c => c.tipo == "CONDUTA CLINICA").length;
+    }else{
+      this.consultas_encerradas_medicas = this.consultas.filter( c => c.tipo == "Consulta Medica" && c.medico_nome == this.medico).length;
+      this.consultas_encerradas_diagnosticos = this.consultas.filter( c => c.tipo == "DIAGNOSTICO AUX" && c.medico_nome == this.medico).length;
+      this.consultas_encerradas_condutas = this.consultas.filter( c => c.tipo == "CONDUTA CLINICA" && c.medico_nome == this.medico).length;
+    }
+  })
+
+  this.zerarDados();
+
+
+  //ESTOQUES
+  this.deposito = deposito;
+    //this.deposito_id = this.depositos[0].id+"";
+    //this.deposito_nome = this.depositos[0].nome+"";
+
+    this.estoqueService.getDepositoRelatorioSemiParcial(this.ano, this.deposito.id).snapshotChanges().subscribe(data => {
+      this.depositos_relatorio = data.map(e => {
         return {
           id: e.payload.key,
           ...e.payload.val(),
-        } as Consulta;
+        } as DepositoRelatorio;
       })
-      if(this.medico == "Todos"){
-        this.consultas_encerradas_medicas = this.consultas.filter( c => c.tipo == "Consulta Medica").length;
-        this.consultas_encerradas_diagnosticos = this.consultas.filter( c => c.tipo == "DIAGNOSTICO AUX").length;
-        this.consultas_encerradas_condutas = this.consultas.filter( c => c.tipo == "CONDUTA CLINICA").length;
-      }else{
-        this.consultas_encerradas_medicas = this.consultas.filter( c => c.tipo == "Consulta Medica" && c.medico_nome == this.medico).length;
-        this.consultas_encerradas_diagnosticos = this.consultas.filter( c => c.tipo == "DIAGNOSTICO AUX" && c.medico_nome == this.medico).length;
-        this.consultas_encerradas_condutas = this.consultas.filter( c => c.tipo == "CONDUTA CLINICA" && c.medico_nome == this.medico).length;
-      }
+
+      this.depositos_relatorio.forEach(element => {
+
+        switch(element.id) { //id representa o MES
+          case "Janeiro": { 
+            this.jan_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+            this.jan_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+            this.jan_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+            break;
+          } 
+          case "Fevereiro": { 
+            this.fev_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+            this.fev_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+            this.fev_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+            break;
+          } 
+          case "Marco": { 
+            this.marc_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+            this.marc_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+            this.marc_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+            break ; 
+          }
+          case "Abril": { 
+            this.abril_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+            this.abril_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+            this.abril_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+            break ; 
+          }
+          case "Maio": { 
+            this.maio_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+            this.maio_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+            this.maio_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+            break ; 
+          }
+          case "Junho": { 
+            this.jun_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+            this.jun_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+            this.jun_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+            break ; 
+          }
+          case "Julho": { 
+            this.julho_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+            this.julho_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+            this.julho_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+            break; 
+          }
+          case "Agosto": { 
+            this.ago_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+            this.ago_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+            this.ago_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+            break; 
+          }  
+          case "Setembro": { 
+            this.set_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+            this.set_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+            this.set_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+            break; 
+          }
+          case "Outubro": { 
+            this.out_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+            this.out_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+            this.out_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+            break; 
+          }
+          case "Novembro": { 
+            this.nov_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+            this.nov_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+            this.nov_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+            break; 
+          }
+          case "Dezembro": { 
+            this.dez_estoque_acumulado = element.valor_acumulado ? element.valor_acumulado : 0;
+            this.dez_estoque_entrada = element.valor_entrada ? element.valor_entrada : 0;
+            this.dez_estoque_saida = element.valor_saida ? element.valor_saida : 0;
+            break; 
+          }
+          default: { 
+              //statements; 
+              break; 
+          } 
+        }//Fim switch case 
+
+      });//Fim do foreach
+
+      this.barChartData_MovimentosEstoque = [{
+        data: [this.jan_estoque_entrada.toFixed(2), this.fev_estoque_entrada.toFixed(2), this.marc_estoque_entrada.toFixed(2), this.abril_estoque_entrada.toFixed(2), this.maio_estoque_entrada.toFixed(2), this.jun_estoque_entrada.toFixed(2), this.julho_estoque_entrada.toFixed(2), this.ago_estoque_entrada.toFixed(2), this.set_estoque_entrada.toFixed(2), this.out_estoque_entrada.toFixed(2), this.nov_estoque_entrada.toFixed(2), this.dez_estoque_entrada.toFixed(2)],
+        label: 'Valor de entrada',
+        borderWidth: 0
+      }, {
+        data: [this.jan_estoque_saida.toFixed(2), this.fev_estoque_saida.toFixed(2), this.marc_estoque_saida.toFixed(2), this.abril_estoque_saida.toFixed(2), this.maio_estoque_saida.toFixed(2), this.jun_estoque_saida, this.julho_estoque_saida.toFixed(2), this.ago_estoque_saida.toFixed(2), this.set_estoque_saida.toFixed(2), this.out_estoque_saida.toFixed(2), this.nov_estoque_saida.toFixed(2), this.dez_estoque_saida.toFixed(2)],
+        label: 'Valor de saida',
+        borderWidth: 0
+      }];
+
+      this.barChartData_FechamentoEstoque = [{
+        data: [this.jan_estoque_acumulado.toFixed(2), this.fev_estoque_acumulado.toFixed(2), this.marc_estoque_acumulado.toFixed(2), this.abril_estoque_acumulado.toFixed(2), this.maio_estoque_acumulado.toFixed(2), this.jun_estoque_acumulado.toFixed(2), this.julho_estoque_acumulado.toFixed(2), this.ago_estoque_acumulado.toFixed(2), this.set_estoque_acumulado.toFixed(2), this.out_estoque_acumulado.toFixed(2), this.nov_estoque_acumulado.toFixed(2), this.dez_estoque_acumulado.toFixed(2)],
+        label: 'Valor de estoque por mês',
+        borderWidth: 0
+      }];
+
     })
 
-    this.zerarDados();
+
 
     this.pacienteService.getFaturacoes(this.ano).snapshotChanges().subscribe(data => {
       this.faturacoes = data.map(e => {
@@ -1632,6 +1929,43 @@ export class DashboardComponent {
     this.categoria_valor_DIAGNOSTICO_AUX_ano = 0;
     this.categoria_valor_MEDICAMENTO_ano = 0;
     this.categoria_valor_CONDUTA_ano = 0;
+
+    this.jan_estoque_acumulado = 0;
+    this.jan_estoque_entrada = 0;
+    this.jan_estoque_saida = 0;
+    this.fev_estoque_acumulado = 0;
+    this.fev_estoque_entrada = 0;
+    this.fev_estoque_saida = 0;
+    this.marc_estoque_acumulado = 0;
+    this.marc_estoque_entrada = 0;
+    this.marc_estoque_saida = 0;
+    this.abril_estoque_acumulado = 0;
+    this.abril_estoque_entrada = 0;
+    this.abril_estoque_saida = 0;
+    this.maio_estoque_acumulado = 0;
+    this.maio_estoque_entrada = 0;
+    this.maio_estoque_saida = 0;
+    this.jun_estoque_acumulado = 0;
+    this.jun_estoque_entrada = 0;
+    this.jun_estoque_saida = 0;
+    this.julho_estoque_acumulado = 0;
+    this.julho_estoque_entrada = 0;
+    this.julho_estoque_saida = 0;
+    this.ago_estoque_acumulado = 0;
+    this.ago_estoque_entrada = 0;
+    this.ago_estoque_saida = 0;
+    this.set_estoque_acumulado = 0;
+    this.set_estoque_entrada = 0;
+    this.set_estoque_saida = 0;
+    this.out_estoque_acumulado = 0;
+    this.out_estoque_entrada = 0;
+    this.out_estoque_saida = 0;
+    this.nov_estoque_acumulado = 0;
+    this.nov_estoque_entrada = 0;
+    this.nov_estoque_saida = 0;
+    this.dez_estoque_acumulado = 0;
+    this.dez_estoque_entrada = 0;
+    this.dez_estoque_saida = 0;
   }
 
   Lista_pacientes(paciente){
@@ -2004,6 +2338,64 @@ export class DashboardComponent {
     }, this.globalChartOptions);
 
 
+
+    //GRAFICOS ESTOQUE
+    // Bar
+    //barChartLabels_MovimentosEstoque: string[] = ['Jan', 'Fev', 'Marc', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Sete', 'Out', 'Nov', 'Dez'];
+    barChartLabels_MovimentosEstoque: string[] = ['Jan', 'Fev', 'Marc', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Sete', 'Out', 'Nov', 'Dez'];
+    barChartType_MovimentosEstoque = 'bar';
+    barChartLegend_MovimentosEstoque = true;
+    barChartData_MovimentosEstoque: any[] = [{
+      data: [this.jan_estoque_entrada, this.fev_estoque_entrada, this.marc_estoque_entrada, this.abril_estoque_entrada, this.maio_estoque_entrada, this.jun_estoque_entrada, this.julho_estoque_entrada, this.ago_estoque_entrada, this.set_estoque_entrada, this.out_estoque_entrada, this.nov_estoque_entrada, this.dez_estoque_entrada],
+      label: 'Valor de entrada',
+      borderWidth: 0
+    }, {
+      data: [this.jan_estoque_saida, this.fev_estoque_saida, this.marc_estoque_saida, this.abril_estoque_saida, this.maio_estoque_saida, this.jun_estoque_saida, this.julho_estoque_saida, this.ago_estoque_saida, this.set_estoque_saida, this.out_estoque_saida, this.nov_estoque_saida, this.dez_estoque_saida],
+      label: 'Valor de saida',
+      borderWidth: 0
+    }];
+    barChartOptions_MovimentosEstoque: any = Object.assign({
+      scaleShowVerticalLines: false,
+      scales: {
+        xAxes: [{
+          gridLines: {
+            color: 'rgba(0,0,0,0.02)',
+            zeroLineColor: 'rgba(0,0,0,0.02)'
+          }
+        }],
+        yAxes: [{
+          gridLines: {
+            color: 'rgba(0,0,0,0.02)',
+            zeroLineColor: 'rgba(0,0,0,0.02)'
+          },
+          position: 'left',
+          ticks: {
+            beginAtZero: true,
+            suggestedMax: 9
+          }
+        }]
+      }
+    }, this.globalChartOptions);
+
+    barChartLabels_FechamentoEstoque: string[] = ['Jan', 'Fev', 'Marc', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Sete', 'Out', 'Nov', 'Dez'];
+    barChartType_FechamentoEstoque = 'bar';
+    barChartLegend_FechamentoEstoque= true;
+    barChartData_FechamentoEstoque: any[] = [{
+      data: [this.jan_estoque_acumulado, this.fev_estoque_acumulado, this.marc_estoque_acumulado, this.abril_estoque_acumulado, this.maio_estoque_acumulado, this.jun_estoque_acumulado, this.julho_estoque_acumulado, this.ago_estoque_acumulado, this.set_estoque_acumulado, this.out_estoque_acumulado, this.nov_estoque_acumulado, this.dez_estoque_acumulado],
+      label: 'Valor de estoque por mês',
+      borderWidth: 0
+    }];
+    barChartOptions_FechamentoEstoque: any = Object.assign({
+      scaleShowVerticalLines: false,
+      scales: {
+        xAxes: [{
+          gridLines: {
+            color: 'rgba(0,0,0,0.02)',
+            zeroLineColor: 'rgba(0,0,0,0.02)'
+          }
+        }]
+      }
+    }, this.globalChartOptions);
 
 
  //Fusion plugin: em avaliacao
