@@ -5,10 +5,29 @@
         <mat-form-field style="width: 33%">
             <mat-select placeholder="Filtrar por deposito" [(ngModel)]="deposito" [(value)]="deposito"  (selectionChange)="onSelect(deposito)" > 
                 <mat-option *ngFor="let deposito of depositos" [value]="deposito">
-                  {{deposito.nome}}
+                    {{deposito.nome}}
                 </mat-option>
             </mat-select>
-          </mat-form-field>
+        </mat-form-field>
+
+        <span class="mat-text-muted"></span>
+        
+        <mat-form-field style="width: 31%">
+            <input matInput placeholder="Valor de estoque total" value="{{deposito.valor_total  | currency:' ':'symbol':'1.2-2'}}"  [(ngModel)]="deposito.valor_total" disabled="true"> 
+        </mat-form-field>
+
+        <!--<div>
+            <span class="mat-text-muted">Valor de estoque total:&nbsp;</span>
+            <span>MZN {{ deposito.valor_total  | currency:' ':'symbol':'1.2-2' }}</span>
+        </div>-->
+
+        <!--<h2 class="mat-text-primary mt-1">
+            <span class="text-xs mat-text-muted">VALOR DE ESTOQUE TOTAL NO DEPOSITO: </span>
+            <span> MZN {{ deposito.valor_total  | currency:' ':'symbol':'1.2-2'}}</span> 
+        </h2>-->
+
+        
+        
 
         <div class="example-container mat-elevation-z8">
             <mat-table [dataSource]="dataSourse" matSort>

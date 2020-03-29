@@ -136,6 +136,18 @@ export class EstoqueService {
     return this.db.list('tiposestoque/'+this.authService.get_clinica_id + '/');
   }
 
+  getDepositoRelatorioParcial(ano, mes, deposito_id){
+    return this.db.list('depositos_relatorio/'+this.authService.get_clinica_id + '/'+ deposito_id + "/" +ano +"/"+mes+"/");
+  }
+
+  getDepositoRelatorioSemiParcial(ano, deposito_id){
+    return this.db.list('depositos_relatorio/'+this.authService.get_clinica_id + '/'+ deposito_id + "/" +ano +"/");
+  }
+  
+  getDepositoRelatorioCompleto(){
+    return this.db.list('depositos_relatorio/'+this.authService.get_clinica_id + '/');
+  }
+
   //Cadastra o movimento na tabela de movimentos "estoquesmovimentos"
   //Cadastra o movimento no item "medicamentos"
   //Cadastra o movimento no deposito "depositos"

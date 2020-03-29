@@ -614,6 +614,12 @@ export class MedicamentosDialog {
 
   tipoEstoque: TipoEstoque;
 
+  ano:string = (new Date()).getFullYear()+"";
+  meses = ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  mes = this.meses[+(new Date().getMonth())];
+  valor_entrada = 0;
+  valor_acumulado = 0;
+
   constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<MedicamentosDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public estoqueService: EstoqueService, 
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder,
@@ -837,6 +843,10 @@ export class MedicamentosDialog {
             console.log("Valor de estoque total vai alterar de "+valor_tota_entrada+" para "+valor_medio_entrada*(this.medicamento.qtd_disponivel - this.medicamento.qtd_solicitada))
           }
 
+          this.movimento.deposito.valor_total = this.movimento.deposito.valor_total ? this.movimento.deposito.valor_total : 0;
+          this.movimento.deposito.valor_total = +this.movimento.deposito.valor_total - +(+valor_medio_entrada * +this.medicamento.qtd_solicitada);
+          console.log("Novo Valor Deposito "+this.movimento.deposito.valor_total);
+
           this.linhas.push(linha);
           //this.listarLinhas();
           this.texto = "Faturar "+ this.preco_total.toFixed(2).replace(".",",") +" MZN";
@@ -873,6 +883,13 @@ export class MedicamentosDialog {
     this.movimentos.splice(this.movimentos.indexOf(mv), 1);
     this.movimentos_aux = this.movimentos;
     this.dataSourse=new MatTableDataSource(this.movimentos);
+
+    //Resturando valor de estoque
+    let valor_medio_entrada = mv.medicamento.valor_medio_entrada ? mv.medicamento.valor_medio_entrada : 0;
+    mv.deposito.valor_total = mv.deposito.valor_total ? mv.deposito.valor_total : 0;
+    mv.deposito.valor_total = +mv.deposito.valor_total + (+valor_medio_entrada * +mv.medicamento.qtd_solicitada);
+    console.log("Novo Valor Deposito "+mv.deposito.valor_total);
+
 
     this.linhas.forEach(element => {
       if(element.id_servico == mv.medicamento.id){
@@ -941,11 +958,14 @@ export class MedicamentosDialog {
 
       this.consulta.movimentosestoque.forEach(mvt => {
         //console.log("mvt.medicamento.qtd_solicitada: "+mvt.medicamento.qtd_solicitada);
-        mvt.medicamento.qtd_solicitada = null;
-
-
         let valor_tota_entrada = mvt.medicamento.valor_tota_entrada ? mvt.medicamento.valor_tota_entrada : 0;
         let valor_medio_entrada = mvt.medicamento.valor_medio_entrada ? mvt.medicamento.valor_medio_entrada : 0;
+        
+        let vl = +(+valor_medio_entrada * +mvt.medicamento.qtd_solicitada).toFixed(2);
+
+        mvt.medicamento.qtd_solicitada = null;
+
+        
         if(mvt.medicamento.qtd_disponivel - mvt.medicamento.qtd_solicitada == 0){
           console.log("Valor de estoque unitario e toal vai alterar para zero");
           mvt.medicamento.valor_medio_entrada = 0;
@@ -954,6 +974,26 @@ export class MedicamentosDialog {
           console.log("Valor de estoque total vai alterar de "+valor_tota_entrada+" para "+valor_medio_entrada*(mvt.medicamento.qtd_disponivel - mvt.medicamento.qtd_solicitada))
           mvt.medicamento.valor_tota_entrada = valor_medio_entrada*(mvt.medicamento.qtd_disponivel - mvt.medicamento.qtd_solicitada);
         }
+
+        //Gravando valor de estoque de depositos
+        updatedUserData['/depositos/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/valor_total'] = mvt.deposito.valor_total;
+
+         //Gravando valor de estoque de depositos relatorio
+         updatedUserData['/depositos_relatorio/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/'+ this.ano+'/'+ this.mes+'/valor_acumulado'] = mvt.deposito.valor_total;
+
+        //let vl = +valor_medio_entrada * +mvt.medicamento.qtd_solicitada;
+        this.estoqueService.db.object('/depositos_relatorio/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/'+ this.ano+'/'+ this.mes+'/valor_saida').query
+        .ref.transaction(valor_saida => {
+          if(valor_saida === null){
+            console.log("entrou no null");
+            valor_saida = vl;
+            return valor_saida;
+          }else{
+            console.log("entrou no somatorio");
+            valor_saida = +valor_saida + +vl;
+            return valor_saida;
+          }
+        })
 
         mvt.deposito_nome = mvt.deposito.nome;
         mvt.deposito_id = mvt.deposito.id;

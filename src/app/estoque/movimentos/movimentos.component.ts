@@ -25,6 +25,11 @@ export class MovimentosComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  //ano:string = (new Date()).getFullYear()+"";
+  //meses = ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  //mes = this.meses[+(new Date().getMonth())];
+  //valor_entrada = 0;
+  //valor_acumulado = 0;
 
   constructor(public dialog: MatDialog, public estoqueService: EstoqueService) { }
 
@@ -62,6 +67,7 @@ export class MovimentosComponent implements OnInit {
       this.dataSourse.paginator = this.paginator;
       this.dataSourse.sort = this.sort;
     })
+
   }
 
   novoEntrada(tipoMovimento){
@@ -119,6 +125,12 @@ export class SaidaDialog {
   
   medicamentos_aux: Medicamento[];
 
+  ano:string = (new Date()).getFullYear()+"";
+  meses = ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  mes = this.meses[+(new Date().getMonth())];
+  valor_entrada = 0;
+  valor_acumulado = 0;
+
   constructor(public dialogRef: MatDialogRef<SaidaDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public estoqueService: EstoqueService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder)
@@ -170,11 +182,45 @@ export class SaidaDialog {
       this.mvts.forEach(mvt => {
         this.dialogRef.close();
         let key = this.estoqueService.db.list('estoquesmovimentos/'+this.authService.get_clinica_id).push('').key;
-        
-        mvt.medicamento.qtd_solicitada = null;
 
         let valor_tota_entrada = mvt.medicamento.valor_tota_entrada ? mvt.medicamento.valor_tota_entrada : 0;
         let valor_medio_entrada = mvt.medicamento.valor_medio_entrada ? mvt.medicamento.valor_medio_entrada : 0;
+        
+        mvt.deposito.valor_total = mvt.deposito.valor_total ? mvt.deposito.valor_total : 0;
+
+        if(mvt.deposito.valor_total > 0)
+          mvt.deposito.valor_total = +mvt.deposito.valor_total - (+valor_medio_entrada * mvt.medicamento.qtd_solicitada);
+        
+        //Quem ja usava sistema antes dessa funcionalidade de valor de estoque pode estar com itens com estoque sem valor
+        // entao ao fazer saida pode gerar inconsistencia, assim sendo o valor de nao deve nunca ficar negativo
+        // em teoria isso nunca vai acontecer, foi colocado por contigencia
+        if(mvt.deposito.valor_total < 0)
+          mvt.deposito.valor_total = 0;
+
+        //Gravando valor de estoque de depositos
+        updatedUserData['/depositos/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/valor_total'] = mvt.deposito.valor_total;
+        //Gravando valor de estoque de depositos relatorio
+        updatedUserData['/depositos_relatorio/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/'+ this.ano+'/'+ this.mes+'/valor_acumulado'] = mvt.deposito.valor_total;
+
+        let vl = +(+valor_medio_entrada * +mvt.medicamento.qtd_solicitada).toFixed(2);
+        this.estoqueService.db.object('/depositos_relatorio/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/'+ this.ano+'/'+ this.mes+'/valor_saida').query
+        .ref.transaction(valor_saida => {
+          if(valor_saida === null){
+            console.log("entrou no null");
+            valor_saida = vl;
+            return valor_saida;
+          }else{
+            console.log("entrou no somatorio");
+            valor_saida = +valor_saida + +vl;
+            return valor_saida;
+          }
+        })
+
+
+
+        mvt.medicamento.qtd_solicitada = null;
+
+        
         if(mvt.medicamento.qtd_disponivel == 0){
           console.log("Valor de estoque unitario e toal vai alterar para zero");
           mvt.medicamento.valor_medio_entrada = 0;
@@ -184,6 +230,7 @@ export class SaidaDialog {
           mvt.medicamento.valor_tota_entrada = +valor_medio_entrada * +mvt.medicamento.qtd_disponivel;
         }
 
+       
 
         //Gravando na tabela de depositos "depositos"
         updatedUserData['/depositos/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/medicamentos/'+mvt.medicamento.id] = mvt.medicamento;
@@ -324,6 +371,13 @@ export class RegistoDialog {
 
   medicamentos_aux: Medicamento[];
 
+ 
+  ano:string = (new Date()).getFullYear()+"";
+  meses = ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  mes = this.meses[+(new Date().getMonth())];
+  valor_entrada = 0;
+  valor_acumulado = 0;
+
   constructor(public dialogRef: MatDialogRef<RegistoDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public estoqueService: EstoqueService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder)
@@ -357,7 +411,56 @@ export class RegistoDialog {
       this.data.medicamentos = this.medicamentos_aux;
     }
   }
+
   
+  getMes(number): String{
+    console.log("Get mes "+number)
+    switch(number) { 
+      case 1: { 
+         return "Janeiro";
+      } 
+      case 2: { 
+         return "Fevereiro"; 
+      } 
+      case 3: { 
+         return "Marco"; 
+      }
+      case 4: { 
+        return "Abril"; 
+      }
+      case 5: { 
+        return "Maio"; 
+      }
+      case 6: { 
+        return "Junho"; 
+      }
+      case 7: { 
+        return "Julho"; 
+      }
+      case 8: { 
+        return "Agosto"; 
+      }  
+      case 9: { 
+        return "Setembro"; 
+      }
+      case 10: { 
+        return "Outubro"; 
+      }
+      case 11: { 
+        return "Novembro"; 
+      }
+      case 12: { 
+        return "Dezembro"; 
+      }
+      default: { 
+         //statements; 
+         break; 
+      } 
+   } 
+  }
+  // faturacao.ano = new Date().getFullYear();
+  // faturacao.mes = this.getMes(+new Date().getMonth()+ +1);
+
   addMvt(){
     if(this.mvt.deposito != undefined && this.mvt.medicamento != undefined && this.mvt.quantidade != undefined && this.mvt.valor_unitario != undefined){
       
@@ -395,12 +498,21 @@ export class RegistoDialog {
                 this.mvt.medicamento.valor_tota_entrada = +(+this.mvt.medicamento.valor_medio_entrada * (+this.mvt.deposito.medicamentos[key].qtd_disponivel + +this.mvt.quantidade)).toFixed(2);
                 console.log("Valor de unitario: "+this.mvt.medicamento.valor_medio_entrada);
                 console.log("Valor total: "+this.mvt.medicamento.valor_tota_entrada);
+
+                this.mvt.deposito.valor_total = this.mvt.deposito.valor_total ? this.mvt.deposito.valor_total : 0;
+                this.mvt.deposito.valor_total = +this.mvt.deposito.valor_total + +(+this.mvt.quantidade * +this.mvt.valor_unitario);
+                console.log("Valor total deposito "+this.mvt.deposito.valor_total);
+                
               }else{
                 console.log("Secao 2");
                 this.mvt.medicamento.valor_medio_entrada = +this.mvt.valor_unitario;
                 this.mvt.medicamento.valor_tota_entrada = +this.mvt.quantidade * +this.mvt.valor_unitario;
                 console.log("Valor de unitario: "+this.mvt.medicamento.valor_medio_entrada);
                 console.log("Valor total: "+this.mvt.medicamento.valor_tota_entrada);
+
+                this.mvt.deposito.valor_total = this.mvt.deposito.valor_total ? this.mvt.deposito.valor_total : 0;
+                this.mvt.deposito.valor_total = +this.mvt.deposito.valor_total + +(+this.mvt.quantidade * +this.mvt.valor_unitario);
+                console.log("Valor total deposito "+this.mvt.deposito.valor_total);
               }
               
               update_qtd = true;
@@ -412,6 +524,10 @@ export class RegistoDialog {
               this.mvt.medicamento.valor_tota_entrada = +this.mvt.quantidade * +this.mvt.valor_unitario;
               console.log("Valor de unitario: "+this.mvt.medicamento.valor_medio_entrada);
               console.log("Valor total: "+this.mvt.medicamento.valor_tota_entrada);
+
+              this.mvt.deposito.valor_total = this.mvt.deposito.valor_total ? this.mvt.deposito.valor_total : 0;
+              this.mvt.deposito.valor_total = +this.mvt.deposito.valor_total + +(+this.mvt.quantidade * +this.mvt.valor_unitario);
+              console.log("Valor total deposito "+this.mvt.deposito.valor_total);
             }
             //console.log("qtd disponivel INICIAL: "+this.mvt.medicamento.qtd_disponivel);
           }
@@ -426,6 +542,9 @@ export class RegistoDialog {
         console.log("Valor de unitario: "+this.mvt.medicamento.valor_medio_entrada);
         console.log("Valor total: "+this.mvt.medicamento.valor_tota_entrada);
        
+        this.mvt.deposito.valor_total = this.mvt.deposito.valor_total ? this.mvt.deposito.valor_total : 0;
+        this.mvt.deposito.valor_total = +this.mvt.deposito.valor_total + +(+this.mvt.quantidade * +this.mvt.valor_unitario);
+        console.log("Valor total deposito "+this.mvt.deposito.valor_total);
         //console.log("qtd disponivel INICIAL2: "+this.mvt.medicamento.qtd_disponivel);
       }
       
@@ -438,6 +557,10 @@ export class RegistoDialog {
         this.mvt.medicamento.valor_tota_entrada = +this.mvt.quantidade * +this.mvt.valor_unitario;
         console.log("Valor de unitario: "+this.mvt.medicamento.valor_medio_entrada);
         console.log("Valor total: "+this.mvt.medicamento.valor_tota_entrada);
+
+        this.mvt.deposito.valor_total = this.mvt.deposito.valor_total ? this.mvt.deposito.valor_total : 0;
+        this.mvt.deposito.valor_total = +this.mvt.deposito.valor_total + +(+this.mvt.quantidade * +this.mvt.valor_unitario);
+        console.log("Valor total deposito "+this.mvt.deposito.valor_total);
       }
 
       this.mvts.push(this.mvt);
@@ -465,6 +588,8 @@ export class RegistoDialog {
   saveMvt(){
     if (typeof this.mvts !== 'undefined' && this.mvts.length > 0) {
 
+      let valor_entrada_total = 0;
+
       var updatedUserData = {};
       this.mvts.forEach(mvt => {
         this.dialogRef.close();
@@ -472,6 +597,28 @@ export class RegistoDialog {
         
         //Gravando na tabela de depositos "depositos"
         updatedUserData['/depositos/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/medicamentos/'+mvt.medicamento.id] = mvt.medicamento;
+
+
+        //Gravando valor de estoque de depositos
+        updatedUserData['/depositos/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/valor_total'] = mvt.deposito.valor_total;
+
+        
+        //Gravando valor de estoque de depositos relatorio
+        updatedUserData['/depositos_relatorio/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/'+ this.ano+'/'+ this.mes+'/valor_acumulado'] = mvt.deposito.valor_total;
+
+        this.estoqueService.db.object('/depositos_relatorio/'+this.authService.get_clinica_id + '/'+mvt.deposito.id+'/'+ this.ano+'/'+ this.mes+'/valor_entrada').query
+        .ref.transaction(valor_entrada => {
+          if(valor_entrada === null){
+            console.log("entrou no null");
+            valor_entrada = +(+mvt.quantidade * +mvt.valor_unitario).toFixed(2);
+            return valor_entrada;
+          }else{
+            console.log("entrou no somatorio");
+            valor_entrada = +(+valor_entrada + +(+mvt.quantidade * +mvt.valor_unitario)).toFixed(2);
+            return valor_entrada;
+          }
+        })
+      
 
         //Gravando na tabela de movimentos "estoquesmovimentos"
         //eliminar redundancia de dados para dar agilidade e perfomance a base de dados
@@ -481,6 +628,7 @@ export class RegistoDialog {
         mvt.medicamento = null;
         updatedUserData['/estoquesmovimentos/'+this.authService.get_clinica_id+"/"+key] = mvt;
       });
+
       
       //CODIGO NOVO PARA GRAVAR SIMULTANEAMENTE TODOS OS DADOS E NAO HAVER INCONSISTENCIA
       let d = Object.assign({}, updatedUserData);

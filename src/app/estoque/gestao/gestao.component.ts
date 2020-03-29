@@ -3,6 +3,7 @@ import { Deposito } from '../../classes/deposito';
 import { EstoqueService } from '../../services/estoque.service';
 import { Medicamento } from '../../classes/medicamento';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar } from '@angular/material';
+//import { CommonModule, CurrencyPipe} from '@angular/common';
 
 @Component({
   selector: 'app-gestao',
@@ -20,9 +21,12 @@ export class GestaoComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private estoqueService: EstoqueService, public snackBar: MatSnackBar) { 
+  constructor(private estoqueService: EstoqueService, public snackBar: MatSnackBar
+    //, private currencyPipe : CurrencyPipe
+    ) { 
     this.deposito = new Deposito();
   }
+
 
   ngOnInit() {
     this.estoqueService.getDepositos().snapshotChanges().subscribe(data => {
@@ -37,6 +41,15 @@ export class GestaoComponent implements OnInit {
       if(this.depositos[0]){
         this.deposito = this.depositos[0];
         this.medicamentos = this.depositos[0].medicamentos;
+
+       
+
+      //transformAmount(element){
+        //this.formattedAmount = this.currencyPipe.transform(this.deposito.valor_total, '$');
+    
+        //element.target.value = this.formattedAmount;
+      //}
+
       }
 
       this.medicamentos = [];
@@ -79,7 +92,6 @@ export class GestaoComponent implements OnInit {
       
     })
   }
-
   
   onSelect(deposito: Deposito){ //Mudar de deposito
     this.medicamentos = [];

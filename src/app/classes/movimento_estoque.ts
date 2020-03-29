@@ -1,5 +1,5 @@
 import { Medicamento } from "./medicamento";
-import { Deposito } from "./deposito";
+import { Deposito, DepositoRelatorio } from "./deposito";
 
 export class MovimentoEstoque {
     id?: string;
@@ -13,6 +13,7 @@ export class MovimentoEstoque {
     tipo_movimento?: string;
 
     deposito?: Deposito;
+    deposito_relatorio?: DepositoRelatorio;
 
     medicamento?: Medicamento;
     medicamento_nome?: string; //usado para normalizar a base de dados
