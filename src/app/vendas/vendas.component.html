@@ -1,0 +1,161 @@
+<mat-card class="example-card">
+  <mat-card-content>
+    <h5>PREENCHA OS CAMPOS E EFETUE A VENDA</h5>
+
+      <mat-form-field style="width: 31%">
+        <mat-select placeholder="Deposito" [(ngModel)]="deposito" (selectionChange)="getMedicamentos(deposito)" required>
+            <mat-option >
+                <ngx-mat-select-search [(ngModel)]="filtrodeposito" placeholderLabel="Pesquisar" noEntriesFoundLabel="Nenhuma informacao encontrada" matInput (keyup)="filtrarDepositos($event.target.value)"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let deposito of depositos" [value]="deposito">
+                {{deposito.nome}}
+            </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field style="width: 31%">
+        <mat-select placeholder="Categoria" [(ngModel)]="tipoEstoque" (selectionChange)="filtrarCategorias(tipoEstoque)" required>
+            <mat-option >
+                <ngx-mat-select-search [(ngModel)]="filtrocategoria"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = "Nenhuma informacao encontrada" matInput (keyup)="filtrarDepositos($event.target.value)"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let tipoEstoque of tipos_estoque" [value]="tipoEstoque">
+                {{tipoEstoque.nome}}
+            </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field style="width: 31%">
+        <mat-select placeholder="Forma farmaceutica" [(ngModel)]="categoria" required (selectionChange)="filtrarmedicamento(categoria)" [disabled]="desabilitar_fm">
+          <mat-option >
+            <ngx-mat-select-search [(ngModel)]="filtrartipomedic" placeholderLabel="Pesquisar" noEntriesFoundLabel="Nenhuma informacao encontrada" matInput (keyup)="filtrarTipoMedicamento($event.target.value)"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let categoria of cats_medicamento " [value]="categoria">
+            {{categoria.nome}}
+          </mat-option>             
+        </mat-select>
+      </mat-form-field>
+
+      <!--MEDICAMENTOS-->
+      <mat-form-field style="width: 62%">
+        <mat-select placeholder="Medicamento" [(ngModel)]="medicamento" (selectionChange)="limitarQuantidade()" required>
+            <mat-option >
+                <ngx-mat-select-search [(ngModel)]="filtromedicamento" placeholderLabel="Pesquisar" noEntriesFoundLabel="Nenhuma informacao encontrada" matInput (keyup)="filtrarMedicamentos($event.target.value)"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let medicamento of medicamentos" [value]="medicamento">
+                {{medicamento.nome_generico}} - {{medicamento.nome_comercial}} - {{medicamento.composicao}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <!--QTD SOLICITADA-->
+    <mat-form-field style="width: 31%">
+        <input matInput placeholder="Qtd Solicitada" [(ngModel)]="medicamento.qtd_solicitada" min="{{min}}" max="{{max}}" (keyup)="validarQtd($event.target.value)" required>
+    </mat-form-field>
+
+    <!--QTD DISPONIVEL-->
+    <mat-form-field style="width: 31%">
+        <input matInput placeholder="Qtd Disponivel" [(ngModel)]="medicamento.qtd_disponivel" required disabled>
+    </mat-form-field>
+
+    <!--PRECO-->
+    <mat-form-field style="width: 31%">
+      <input matInput placeholder="Prec. Unit." [(ngModel)]="medicamento.preco_venda" required disabled *ngIf='!precoSegurado'>
+      <input matInput placeholder="Prec. Unit." [(ngModel)]="medicamento.preco_seguradora" required disabled *ngIf='precoSegurado'>
+    </mat-form-field>
+
+    <!--PRECO TOTAL-->
+    <mat-form-field style="width: 31%">
+        <input matInput placeholder="Prec Tot." [(ngModel)]="medicamento.preco_venda_total" required disabled>
+    </mat-form-field>
+
+    <mat-form-field style="width: 31%">
+        <mat-select placeholder="Forma de pagamento" [(ngModel)]="forma_pagamento" required (selectionChange)="mudarFPagamento()">
+            <mat-option *ngFor="let f of formas_pagamento" [value]="f.value">
+                {{f.value}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <!--SEGURADORA-->
+    <mat-form-field style="width: 31%">
+        <mat-select placeholder="Seguradora" [(ngModel)]="seguradora" [disabled]="!precoSegurado">
+            <mat-option *ngFor="let s of seguradoras" [value]="s">
+                {{s.nome}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field style="width: 31%">
+        <input matInput placeholder="Nr de apolice" [(ngModel)]="nr_apolice" [disabled]="!precoSegurado">
+    </mat-form-field>
+
+    <mat-form-field style="width: 31%">
+      <input matInput placeholder="Nome do paciente" [(ngModel)]="paciente.nome">
+    </mat-form-field>
+
+    <mat-form-field style="width: 31%">
+      <input matInput placeholder="Apelido do paciente" [(ngModel)]="paciente.apelido">
+    </mat-form-field>
+
+    <mat-form-field style="width: 31%">
+      <input matInput placeholder="NUIT do paciente" [(ngModel)]="paciente.nuit">
+    </mat-form-field>
+
+    <!--<button mat-icon-button (click)="addMedicamento()" matTooltip="Adicionar {{medicamento.nome_generico}}">-->
+    <button mat-icon-button (click)="addMedicamento()" matTooltip="Adicionar">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+
+    <p></p>
+  <h5>ADICIONE NA TABELA A BAIXO OS MEDICAMENTOS SOLICITADOS PELO CLIENTE {{paciente.nome}} {{paciente.apelido}}</h5>
+  <mat-table [dataSource]="dataSourse" matSort>
+      <ng-container matColumnDef="medicamento">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Medicamento </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.medicamento?.nome_generico}}</mat-cell>
+      </ng-container> 
+
+      <ng-container matColumnDef="qtd_solicitada">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Qtd Solicitada </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.medicamento?.qtd_solicitada}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="preco_unit" *ngIf='!precoSegurado'>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Prec Unit. (MZN)</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.medicamento?.preco_venda | currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="preco_unit" *ngIf='precoSegurado'>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Prec Unit. (MZN)</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.medicamento?.preco_seguradora | currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="preco_venda_total">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Prec Tot. (MZN)</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.medicamento?.preco_venda_total | currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="remover">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Remover</mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <!--<button mat-icon-button (click)="removeMedicamento(row)" matTooltip="Remover {{row.nome_generico}}"> -->
+            <button mat-icon-button (click)="removeMedicamento(row)" matTooltip="Remover"> 
+              <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;">
+      </mat-row>
+    </mat-table>
+
+    <p></p>
+    <div mat-dialog-actions>
+      <button mat-button (click)="cancelar()">Cancelar</button>
+      <button mat-button [disabled]="desabilitar2" (click)="cotar(paciente)">{{texto2}}</button>
+      <button mat-button cdkFocusInitial [disabled]="desabilitar" (click)="faturar(paciente)">{{texto}}</button>
+    </div>
+
+  </mat-card-content>
+</mat-card>
+

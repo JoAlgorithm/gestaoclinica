@@ -53,12 +53,12 @@
 
                 <ng-container matColumnDef="valor_unitario">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Valor unitario </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.valor_medio_entrada}}</mat-cell>
+                    <mat-cell *matCellDef="let row"> {{row.valor_medio_entrada | currency:' ':'symbol':'1.2-2'}}</mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="valor_total">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Valor total </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.valor_tota_entrada}}</mat-cell>
+                    <mat-cell *matCellDef="let row"> {{row.valor_tota_entrada | currency:' ':'symbol':'1.2-2'}}</mat-cell>
                 </ng-container>
                 
 

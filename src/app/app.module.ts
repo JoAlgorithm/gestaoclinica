@@ -70,6 +70,7 @@ import * as FusionCharts from 'fusioncharts';
 
 // Load FusionCharts Individual Charts
 import * as Charts from 'fusioncharts/fusioncharts.charts';
+//import { VendasComponent } from './vendas/vendas.component';
 //import { MatProgressButtonsModule } from 'mat-progress-buttons';
 //import { UnComponent } from './estoque/un/un.component';
 
@@ -100,7 +101,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AuthLayoutComponent,
     AccordionAnchorDirective,
     AccordionLinkDirective,
-    AccordionDirective
+    AccordionDirective,
+    //VendasComponent
     
    //UnComponent,
   ],

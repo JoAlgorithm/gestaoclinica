@@ -26,6 +26,10 @@ export const AppRoutes: Routes = [{
     loadChildren: './paciente/paciente.module#PacienteComponentsModule'
   },
   {
+    path: 'vendas',
+    loadChildren: './vendas/vendas.module#VendasModule'
+  },
+  {
     path: 'consultas',
     loadChildren: './consultas/consultas.module#ConsultasModule'
   },

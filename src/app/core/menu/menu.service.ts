@@ -61,7 +61,7 @@ const MENUITEMS:Menu[] = [
     state: 'financas',
     name: 'FINANCAS',
     type: 'sub',
-    icon: 'money',
+    icon: 'monetization_on',
     children: [
       {state: 'contas_recibida', name: 'Contas recebidas'},
       {state: 'contas_receber', name: 'Contas a receber'}
@@ -141,7 +141,7 @@ const MENUITEMS_ADMNISTRATIVO:Menu[] = [
     state: 'financas',
     name: 'FINANCAS',
     type: 'sub',
-    icon: 'money',
+    icon: 'monetization_on',
     children: [
       {state: 'contas_recibida', name: 'Contas recebidas'},
       {state: 'contas_receber', name: 'Contas a receber'}
@@ -164,14 +164,10 @@ const MENUITEMS_FARMACIA_ADMNISTRATIVO:Menu[] = [
     icon: 'home'
   },
   {
-    state: 'paciente',
-    name: 'RECEPCAO',
-    type: 'sub',
-    icon: 'local_library',
-    children: [
-      {state: 'cadastro_paciente', name: 'Cadastro de paciente'},
-      {state: 'listagem_paciente', name: 'Lista de pacientes'}
-    ]
+    state: 'vendas',
+    name: 'VENDA',
+    type: 'link',
+    icon: 'shopping_cart'
   },
   {
     state: 'estoque',
@@ -188,7 +184,7 @@ const MENUITEMS_FARMACIA_ADMNISTRATIVO:Menu[] = [
     state: 'financas',
     name: 'FINANCAS',
     type: 'sub',
-    icon: 'money',
+    icon: 'monetization_on',
     children: [
       {state: 'contas_recibida', name: 'Contas recebidas'},
       {state: 'contas_receber', name: 'Contas a receber'}
