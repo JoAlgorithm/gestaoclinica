@@ -10,13 +10,42 @@ import { CondutaClinica } from '../classes/conduta_clinica';
 import { NrCotacao } from '../classes/nr_cotacao';
 import { NrFatura } from '../classes/nr_fatura';
 import { Seguradora } from '../classes/seguradora';
+import firebase = require('firebase');
 
 @Injectable()
 export class ConfiguracoesService {
 
   constructor(private db: AngularFireDatabase, private firestore: AngularFirestore, private authService: AuthService) { }
+  
+  public getImage(){
+    //this.storage = firebase.storage();
+    var storageRef = firebase.storage().ref();
 
+    // Points to 'images'
+    var imagesRef = storageRef.child('images');
+    //gs://gestaoclinica-ed2f7.appspot.com/logosclinicas/1 - Centro Medico Vitalle
+    storageRef.child('logosclinicas/1 - Centro Medico Vitalle/1 - logo - vitalle.jpg').getDownloadURL().then(function(url) {
+      // `url` is the download URL for 'images/stars.jpg'
+    
+      // This can be downloaded directly:
+      var xhr = new XMLHttpRequest();
+      xhr.responseType = 'blob';
+      xhr.onload = function(event) {
+        var blob = xhr.response;
+      };
+      xhr.open('GET', url);
+      xhr.send();
+    
+      // Or inserted into an <img> element:
+      var img = new Image();
+      img.src = url;
+      console.log("deu certo "+img.src);
+      return img;
+    }).catch(function(error) {
+      // Handle any errors
+    });
 
+  }
   //Retorna a lista de DIAGNOSTICOS AUXILIARES
   getDiagnosticos() {
     //return this.firestore.collection('clinicas/'+this.authService.get_clinica_id + '/diagnosticos').snapshotChanges();

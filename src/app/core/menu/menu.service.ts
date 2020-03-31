@@ -161,6 +161,7 @@ const MENUITEMS_FARMACIA_ADMNISTRATIVO:Menu[] = [
     //state: 'home',
     name: 'INICIO',
     type: 'link',
+    //icon: 'pie_chart'
     icon: 'home'
   },
   {

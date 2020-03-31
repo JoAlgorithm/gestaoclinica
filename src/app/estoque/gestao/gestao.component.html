@@ -1,6 +1,6 @@
 <mat-card class="example-card">
     <mat-card-content>
-        <h5>GESTAO DE ESTOQUES</h5> <h6>ANALISE DE NIVEL MINIMO, QTD DISPONIVEL, NIVEIS DE ESTOQUE E NECESSIDADE DE REPOSICAO</h6>
+        <h5>GESTAO DE ESTOQUES</h5> <h6>ANALISE DE NIVEL MINIMO, QTD DISPONIVEL, NIVEIS DE ESTOQUE E NECESSIDADE DE REPOSICAO {{!habilitar_impressao}}</h6>
 
         <mat-form-field style="width: 33%">
             <mat-select placeholder="Filtrar por deposito" [(ngModel)]="deposito" [(value)]="deposito"  (selectionChange)="onSelect(deposito)" > 
@@ -15,6 +15,11 @@
         <mat-form-field style="width: 31%">
             <input matInput placeholder="Valor de estoque total" value="{{deposito.valor_total  | currency:' ':'symbol':'1.2-2'}}"  [(ngModel)]="deposito.valor_total" disabled="true"> 
         </mat-form-field>
+
+        <button mat-icon-button (click)="imprimir()" matTooltip="Imprimir inventario" disabled="{{habilitar_impressao}}">  
+            <mat-icon>print</mat-icon>
+        </button>
+        
 
         <!--<div>
             <span class="mat-text-muted">Valor de estoque total:&nbsp;</span>
