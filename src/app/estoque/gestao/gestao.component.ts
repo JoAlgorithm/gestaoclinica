@@ -8,6 +8,8 @@ import * as jsPDF from 'jspdf';
 import 'rxjs/add/operator/take';
 import { ConfiguracoesService } from '../../services/configuracoes.service';
 import { Clinica } from '../../classes/clinica';
+import html2canvas from 'html2canvas';
+import { TipoEstoque } from '../../classes/tipo_estoque';
 
 @Component({
   selector: 'app-gestao',
@@ -30,10 +32,14 @@ export class GestaoComponent implements OnInit {
 
   habilitar_impressao: boolean = true;
 
+  tipos_estoque: TipoEstoque[];
+  tipo_estoque: TipoEstoque;
+
   constructor(private estoqueService: EstoqueService, public snackBar: MatSnackBar, public configServices: ConfiguracoesService
     //, private currencyPipe : CurrencyPipe
     ) { 
     this.deposito = new Deposito();
+    this.tipo_estoque = new TipoEstoque();
   }
 
 
@@ -92,7 +98,7 @@ export class GestaoComponent implements OnInit {
         });
 
         
-
+        this.medicamentos_aux = this.medicamentos;
         this.dataSourse=new MatTableDataSource(this.medicamentos);
         this.dataSourse.paginator = this.paginator;
         this.dataSourse.sort = this.sort;
@@ -114,11 +120,21 @@ export class GestaoComponent implements OnInit {
       this.clinica = c;
     })
 
+    this.estoqueService.getTiposEstoque().snapshotChanges().subscribe(data => {
+      this.tipos_estoque = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as TipoEstoque;
+      });
+    })
+
     //this.configServices.getImage();
   }
   
   onSelect(deposito: Deposito){ //Mudar de deposito
     this.medicamentos = [];
+    this.tipo_estoque = new TipoEstoque();
     this.habilitar_impressao = true;
     //this.medicamento = new Medicamento();
     //this.max = 1;
@@ -147,6 +163,7 @@ export class GestaoComponent implements OnInit {
         }
       });
 
+      this.medicamentos_aux = this.medicamentos;
       this.dataSourse=new MatTableDataSource(this.medicamentos);
       this.dataSourse.paginator = this.paginator;
       this.dataSourse.sort = this.sort
@@ -161,6 +178,44 @@ export class GestaoComponent implements OnInit {
     }
   }
 
+  filtrarCategoria(tipo: TipoEstoque){
+    this.habilitar_impressao = true;
+
+    if(this.medicamentos_aux.length > 0){
+      //this.medicamentos_aux = this.medicamentos;
+
+      this.medicamentos = null;
+      this.medicamentos = this.medicamentos_aux.filter(item => item.tipo.nome.indexOf(tipo.nome+"") > -1);     
+
+      this.medicamentos.forEach(element => {
+        if(element.min){
+          if(element.qtd_disponivel == 0){
+            element.nivel = "Zerado";
+            element.sugestao = "Repor urgente";
+          }else if(element.qtd_disponivel >= element.min){
+            element.nivel = ">= Min";
+            element.sugestao = "Estoque aceitavel";
+          }else if(element.min > 0){
+            element.nivel = "< Min";
+            element.sugestao = "Repor";
+          }else{
+            element.sugestao = "Definir min";
+          }
+        }else{
+          element.sugestao = "Definir min";
+        }
+      });
+
+      this.dataSourse=new MatTableDataSource(this.medicamentos);
+      this.dataSourse.paginator = this.paginator;
+      this.dataSourse.sort = this.sort
+      this.habilitar_impressao = false;
+    }else{
+      this.openSnackBar("Deposito sem medicamentos. Contacte o Admnistrativo");
+    }
+
+  }
+
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{
       duration: 3000
@@ -172,7 +227,7 @@ export class GestaoComponent implements OnInit {
   mes = this.getMes(+(new Date().getMonth()) + +1);
   ano = new Date().getFullYear();
   getMes(number): String{
-    console.log("Get mes "+number)
+    //console.log("Get mes "+number)
     switch(number) { 
       case 1: { 
          return "Janeiro";
@@ -218,7 +273,7 @@ export class GestaoComponent implements OnInit {
   }
 
   imprimir(){
-
+  //console.log("entrou no imprimir")
     
     //Tamanho maximo de itens por pagina
 
@@ -245,20 +300,24 @@ export class GestaoComponent implements OnInit {
 
     /*let logo = null;
     //var imgUrl = "https://firebasestorage.googleapis.com/v0/b/gestaoclinica-ed2f7.appspot.com/o/logosclinicas%2F1%20-%20Centro%20Medico%20Vitalle%2F1%20-%20logo%20-%20vitalle.jpg?alt=media&token=4bb93e5d-07d1-4018-903b-b16b28d570b8";
-    console.log("this.clinica.logo "+this.clinica.logo);
+    //console.log("this.clinica.logo "+this.clinica.logo);
     var imgUrl = this.clinica.logo;
 
     getDataUri(imgUrl, function(dataUri) {
+        console.log("CHEGOU 2");
         logo = dataUri;
-        console.log("logo=" + logo);
+        console.log("chegou logo=" + logo);
 
-        doc.addImage(logo, 'PNG', 300, 40,90, 90);
+        doc.addImage(logo, 'PNG', 100, 40,90, 90);
     });
 
     function getDataUri(url, cb)
     {
+      console.log("CHEGOU 1");
+      console.log("url 1 "+url);
         var image = new Image();
-        image.setAttribute('crossOrigin', 'anonymous'); //getting images from external domain
+        //image.setAttribute('crossOrigin', 'anonymous'); //getting images from external domain
+        image.crossOrigin = "Anonymous";
 
         image.onload = function () {
             var canvas = document.createElement('canvas');
@@ -275,9 +334,11 @@ export class GestaoComponent implements OnInit {
             canvas.getContext('2d').drawImage(image, 0, 0);
 
             cb(canvas.toDataURL('image/jpeg'));
+            console.log("Finalizou construcao de imagem");
         };
 
         image.src = url;
+        console.log("chegou final 1 "+url);
     }*/
   
     
@@ -288,45 +349,165 @@ export class GestaoComponent implements OnInit {
     //var img = new Image();
     //img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
     //doc.addImage(img,"PNG", 300, 40,90, 90);
-        
-  
-                   
-   /* conta.linhas.forEach(element => {
-      doc.text(item+"", 55, linha) //item
-      doc.text(element.qtd_solicitada+"", 257, linha) //quantidade
 
 
-      let string1 = "";
-      let string2 = "";
-      let linhaAlternativo = 0;
-      if(element.descricao_servico.length > 26){
-        string1 = element.descricao_servico.substr(0,26);
-        let q = +element.descricao_servico.length - +26;
-        string2 = element.descricao_servico.substr(q).toString().trim();
-
-        linhaAlternativo = +linha+ +20;
-
-        doc.text(string1 , 95, linha) //descricao
-        doc.text(string2 , 95, linhaAlternativo) //descricao
-
-      }else{
-        doc.text(element.descricao_servico , 95, linha) //descricao
-      }
 
 
-      doc.text(element.preco_unitario.toFixed(2).replace(".",",")+"", 294, linha)
-      doc.text((element.preco_unitario*element.qtd_solicitada).toFixed(2).replace(".",",")+"", 354, linha)
+   /* var tainted = false;
+    var img = new Image,
+    canvas = document.createElement("canvas"),
+    ctx = canvas.getContext("2d"),
+    src = "https://firebasestorage.googleapis.com/v0/b/gestaoclinica-ed2f7.appspot.com/o/logosclinicas%2F1%20-%20Centro%20Medico%20Vitalle%2F1%20-%20logo%20-%20vitalle.jpg?alt=media&token=4bb93e5d-07d1-4018-903b-b16b28d570b8"; // insert image url here
+
+    img.crossOrigin = "Anonymous";
+
     
-      preco_total = +preco_total + +element.preco_unitario*element.qtd_solicitada;
+    var load_handler = function() {
+      canvas.width = 200;
+      canvas.height = 200;
+      ctx.fillStyle = 'white';
+      ctx.font = '15px sans-serif';
 
-      item = +item + +1;
+      ctx.drawImage( img, 0, 0 );
+      
+      //ctx.drawImage( this, 0, 0 );
 
-      if(linhaAlternativo > 0){
-        linha = +linha + +40;
-      }else{
-        linha = +linha + +20;
+      // for browsers supporting the crossOrigin attribute
+      if (tainted) {
+      } else {
+        // for others
+        try {
+          canvas.toDataURL();
+        } catch (e) {
+        }
       }
-    }); */  
+    };
+    var error_handler = function() {
+      // remove this onerror listener to avoid an infinite loop
+      this.onerror = function() {
+        return false
+      };
+      // certainly that the canvas was tainted
+      tainted = true;
+
+      // we need to removeAttribute() since chrome doesn't like the property=undefined way...
+      this.removeAttribute('crossorigin');
+      this.src = this.src;
+    };
+
+    img.onload = load_handler;
+    img.onerror = error_handler;
+    img.src = src;
+    // make sure the load event fires for cached images too
+    if ( img.complete || img.complete === undefined ) {
+        console.log("Adicionou ")
+
+        img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+        img.src = src;
+        doc.addImage(img+"","PNG", 300, 40,90, 90);
+        
+        
+    }*/
+
+/*
+    var urls = 
+    ["http://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
+      this.clinica.logo_pdf, 
+     "http://lorempixel.com/200/200"];
+
+    var tainted = false;
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+    document.body.appendChild(canvas);
+
+    var load_handler = function() {
+      canvas.width = 200;
+      canvas.height = 200;
+      ctx.fillStyle = 'white';
+      ctx.font = '15px sans-serif';
+
+      ctx.drawImage(this, 0, 0, 200, 200*(this.height/this.width));
+      
+      //ctx.drawImage( this, 0, 0 );
+
+      // for browsers supporting the crossOrigin attribute
+      if (tainted) {
+      // ctx.strokeText('canvas tainted', 20, 100);
+      // ctx.fillText('canvas tainted', 20, 100);
+      } else {
+        // for others
+        try {
+          canvas.toDataURL();
+        } catch (e) {
+          tainted = true;
+          ctx.strokeText('canvas tainted after try catch', 20, 100);
+          ctx.fillText('canvas tainted after try catch', 20, 100);
+        }
+      }
+    };
+
+    var error_handler = function() {
+      // remove this onerror listener to avoid an infinite loop
+      this.onerror = function() {
+        return false
+      };
+      // certainly that the canvas was tainted
+      tainted = true;
+
+      // we need to removeAttribute() since chrome doesn't like the property=undefined way...
+      this.removeAttribute('crossorigin');
+      this.src = this.src;
+    };
+
+    onclick = function() {
+      img.onload = load_handler;
+      img.onerror = error_handler;
+  
+      img.src = urls[0];
+  
+    //btn.onclick = function() {
+      // reset the flag
+      tainted = false;
+  
+      // we need to create a new canvas, or it will keep its marked as tainted flag
+      // try to comment the 3 next lines and switch multiple times the src to see what I mean
+      ctx = canvas.getContext('2d');
+      canvas.parentNode.replaceChild(ctx.canvas, canvas);
+      canvas = ctx.canvas;
+  
+      // reset the attributes and error handler
+      img.crossOrigin = 'anonymous';
+      img.onerror = error_handler;
+      img.src = urls[+!urls.indexOf(img.src)];
+    }
+
+    onclick
+
+    
+
+    
+    if ( img.complete || img.complete === undefined ) {
+ 
+
+      //img.src="data:image/jpeg;base64,"+urls[+!urls.indexOf(img.src)];
+      //img.src="data:image/jpeg;base64,"+urls[+!urls.indexOf(img.src)].substring(22) 
+
+      //img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+      //img.src =  urls[+!urls.indexOf(img.src)];
+      console.log("img.complete "+img.complete)
+      console.log("img.src "+img.src)
+      doc.addImage(img,"PNG", 300, 40,90, 90);
+    } */
+
+    //var img2 = canvas.toDataURL("image/PNG");
+    //doc.addImage(img2, 'PNG', 100, 40,90, 90, undefined, 'FAST');
+    //doc.addImage(img2, 'PNG', 100, 40,90, 90);
+
+    //doc.addImage(img, 'PNG', 100, 40,90, 90);
+      
 
     //CABECALHO
     doc.setFont("Courier");

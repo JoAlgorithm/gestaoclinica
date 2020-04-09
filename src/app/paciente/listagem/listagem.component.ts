@@ -487,7 +487,15 @@ export class ListagemComponent implements OnInit {
         data: { paciente: row, depositos: this.depositos, clinica: this.clinica, nr_cotacao: this.nr_cotacao, nr_fatura: this.nr_fatura, formas_pagamento: this.formas_pagamento, seguradoras: this.seguradoras, cats_medicamento: this.cats_medicamento, tipos_estoque: this.tipos_estoque }
       });
       dialogRef.afterClosed().subscribe(result => {
-        //console.log("result "+result);
+        //DEPOSITOS
+        this.estoqueService.getDepositos().snapshotChanges().subscribe(data => {
+          this.depositos = data.map(e => {
+            return {
+              id: e.payload.key,
+              ...e.payload.val(),
+            } as Deposito;
+          })
+        })
       });
     }else{
       this.openSnackBar("Processando nr de cotacao/fatura. Tente novamente.");
@@ -655,7 +663,7 @@ export class MedicamentosDialog {
 
     //this.categorias = data.tipos_estoque;
     //this.categorias_aux = data.tipos_estoque;
-    
+     
   }
 
   filtrodeposito;
@@ -676,7 +684,7 @@ export class MedicamentosDialog {
   filtrocategoria="";
   desabilitar_fm = true;
   filtrarCategorias(filtrocategoria: TipoEstoque) {
-    console.log("filtrocategoria "+this.tipoEstoque.nome);
+    console.log("filtrocategoria "+filtrocategoria.nome);
     if(filtrocategoria.nome == "Medicamento"){
       this.desabilitar_fm = false;
     }else{
@@ -691,9 +699,17 @@ export class MedicamentosDialog {
       //console.log("categoria: "+filtrocategoria);
       //filtrocategoria = filtrocategoria.nome.trim()+; // Remove whitespace
       //filtrocategoria = filtrocategoria.nome.toLowerCase(); // Datasource defaults to lowercase matches
-     
-      this.medicamentos= null;
+      this.medicamentos= [];
+
       this.medicamentos = this.medicamentos_aux.filter(item => item.tipo.nome.indexOf(filtrocategoria.nome+"") > -1);     
+      /*this.medicamentos_aux.forEach(element => {
+        if(element.tipo !== undefined){
+          if(element.tipo.nome == filtrocategoria.nome){
+            this.medicamentos.push(element);
+          }
+        }
+      });*/
+
     }else{
      // this.medicamentos = this.medicamentos_aux;
     }

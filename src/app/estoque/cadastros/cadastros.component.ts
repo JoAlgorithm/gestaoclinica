@@ -42,6 +42,7 @@ export class CadastrosComponent implements OnInit {
   * VARIAVEIS DA TAB DEPOSITOS
   */
   deposito: Deposito;
+  deposito_destino: Deposito;
   depositos: Deposito[];
 
   depositoFormGroup: FormGroup; //Fomulario
@@ -64,13 +65,18 @@ export class CadastrosComponent implements OnInit {
   displayedColumnsUN = ['nome', 'editar', 'remover'];
   @ViewChild('paginatorUN', { read: MatPaginator }) paginatorUN: MatPaginator;
 
+  sobra = 0;
+
   constructor(private _formBuilder: FormBuilder, public estoqueService: EstoqueService,
     public snackBar: MatSnackBar, private authService: AuthService, public dialog: MatDialog) {
     this.deposito = new Deposito();
+    this.deposito_destino = new Deposito();
     this.un = new UnidadeMedida();
     this.medicamento = new Medicamento();
     this.medicamento.min = 0;
    }
+
+   processandoRegistoMedicamento = false;
 
   ngOnInit() {
      
@@ -124,6 +130,7 @@ export class CadastrosComponent implements OnInit {
         this.medicamento.codigo =  +(new Date().getFullYear()+'000001');
       }
     })
+    console.log("Codigo medicamento: "+this.medicamento.codigo);
 
     //TAB DEPOSITOS
     this.depositoFormGroup = this._formBuilder.group({
@@ -188,6 +195,29 @@ export class CadastrosComponent implements OnInit {
     this.updatedUserData = {};
     this.medicamentos_aux = [];
 
+    this.uns.forEach(element => {
+      if(element.nome == medicamento.un.nome){
+        this.medicamento.un = element;
+      }
+    });
+
+    if(medicamento.categoria !== undefined){
+      this.cats_medicamento.forEach(element => {
+        if(element.nome == medicamento.categoria.nome){
+          this.medicamento.categoria = element;
+        }
+      });
+    }
+    
+    if(medicamento.tipo !== undefined){
+      this.tipos_estoque.forEach(element => {
+        if(element.nome == medicamento.tipo.nome){
+          this.medicamento.tipo = element;
+        }
+      });
+    }
+    
+
     //Ja que item existe verificar se esta cadastrado em algum deposito para atualizar
     this.depositos.forEach(element => {
 
@@ -249,12 +279,13 @@ export class CadastrosComponent implements OnInit {
 
   registarMedicamento(){
     if(this.medicamento.nome_generico || this.medicamento.categoria || this.medicamento.un || this.medicamento.preco_venda){
+      this.processandoRegistoMedicamento = true;
       
       if(!this.medicamento.composicao){
         this.medicamento.composicao = "";
       }
 
-      let novocodigo = this.medicamento.codigo+1;//Gerar codigo do proximo medicamento
+      let novocodigo = +this.medicamento.codigo + +1;//Gerar codigo do proximo medicamento
       let data = Object.assign({}, this.medicamento);
       if(data.id){ 
 
@@ -275,6 +306,8 @@ export class CadastrosComponent implements OnInit {
               if(this.updatedUserData[key].deposito.id == element.deposito.id && this.updatedUserData[key].medicamento.id == element.medicamento.id)
               {
                 this.medicamento.qtd_disponivel = element.medicamento.qtd_disponivel;
+                this.medicamento.valor_medio_entrada = element.medicamento.valor_medio_entrada;
+                this.medicamento.valor_tota_entrada = element.medicamento.valor_tota_entrada;
                 //console.log("COLOCAR QTD DISPONIVEL "+this.medicamento.qtd_disponivel)
               }
 
@@ -283,16 +316,33 @@ export class CadastrosComponent implements OnInit {
             let medicamento = new Medicamento();
             medicamento.qtd_disponivel = this.medicamento.qtd_disponivel;
             medicamento.nome_comercial = this.medicamento.nome_comercial;
-            medicamento.categoria = this.medicamento.categoria;
+            if(!this.medicamento.categoria){
+              medicamento.categoria = new CategoriaMedicamento();
+              console.log("Sem categoria")
+            }else{
+              medicamento.categoria = this.medicamento.categoria;
+              console.log("Com categoria "+medicamento.categoria.nome)
+            }
+            medicamento.tipo = this.medicamento.tipo;
             medicamento.codigo = this.medicamento.codigo;
             medicamento.composicao = this.medicamento.composicao;
             medicamento.id = this.medicamento.id;
             medicamento.nome_generico = this.medicamento.nome_generico;
             medicamento.preco_seguradora = this.medicamento.preco_seguradora;
             medicamento.preco_venda = this.medicamento.preco_venda;
-            medicamento.tipo = this.medicamento.tipo;
             medicamento.un = this.medicamento.un;
             medicamento.min = this.medicamento.min;
+            if(!this.medicamento.valor_medio_entrada){
+              medicamento.valor_medio_entrada = 0;
+            }else{
+              medicamento.valor_medio_entrada = this.medicamento.valor_medio_entrada;
+            }
+            if(!this.medicamento.valor_tota_entrada){
+              medicamento.valor_tota_entrada = 0;
+            }else{
+              medicamento.valor_tota_entrada = this.medicamento.valor_tota_entrada;
+            }
+            
 
 
             this.updatedUserData[key] = medicamento;
@@ -309,7 +359,13 @@ export class CadastrosComponent implements OnInit {
 
         this.estoqueService.updateEstoque(d)
         .then( res => {
+          this.processandoRegistoMedicamento = false;
           this.medicamento= new Medicamento();
+          
+          this.medicamento.codigo = Math.max.apply(Math, this.medicamentos.map(function(o) { return o.codigo; }));
+          this.medicamento.codigo = this.medicamento.codigo+1;
+          console.log("novo codigo "+this.medicamento.codigo);
+
           this.medicamentoFormGroup.reset;
           this.updatedUserData = {};
           this.openSnackBar("Medicamento Atualizado com sucesso");
@@ -320,7 +376,8 @@ export class CadastrosComponent implements OnInit {
       }else{
       this.estoqueService.createMedicamento(data)
       .then( res => {
-        
+        console.log("novo codigo "+novocodigo);
+        this.processandoRegistoMedicamento = false;
         this.medicamento = new Medicamento();
         this.medicamento.min = 0;
         this.medicamento.codigo = novocodigo;

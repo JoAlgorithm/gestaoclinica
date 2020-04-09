@@ -17,18 +17,20 @@
         </button>
         <mat-menu #menu_entrada="matMenu">
             <button mat-menu-item (click)="novoEntrada('Entrada por compra')">Entrada por compra</button>
-            <button mat-menu-item (click)="novoEntrada('Entrada por transferencia')">Entrada por transferencia</button>
             <button mat-menu-item (click)="novoEntrada('Entrada por ajuste')">Entrada por ajuste</button>
+            <!--<button mat-menu-item (click)="novoEntrada('Entrada por transferencia')">Entrada por transferencia</button>-->
         </mat-menu>
 
         <button mat-button [matMenuTriggerFor]="menu_saida" matTooltip="REGISTAR SAIDA DE MEDICAMENTO">
             <!--<mat-icon>class</mat-icon>--> Nova Saida
         </button>
-            <mat-menu #menu_saida="matMenu">
-                <button mat-menu-item (click)="novoSaida('Saida por estorno')">Saida por estorno</button>
-                <button mat-menu-item (click)="novoSaida('Saida por transferencia')">Saida por transferencia</button>
-                <button mat-menu-item (click)="novoSaida('Saida por ajuste')">Saida por ajuste</button>
-            </mat-menu>
+        <mat-menu #menu_saida="matMenu">
+            <button mat-menu-item (click)="novoSaida('Saida por estorno')">Saida por estorno</button>
+            <button mat-menu-item (click)="novoSaida('Saida por ajuste')">Saida por ajuste</button>
+            <!--<button mat-menu-item (click)="novoSaida('Saida por transferencia')" disabled>Saida por transferencia</button>-->
+        </mat-menu>
+
+        <button mat-button matTooltip="TRANSFERIR ESTOQUE ENTRE DEPOSITOS" (click)="novoTransferencia('Transferencia de estoque')">Nova Transferencia</button>
         <p></p>
         
 

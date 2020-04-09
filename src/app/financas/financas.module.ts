@@ -64,6 +64,7 @@ import { AuthService } from '../services/auth.service';
 import { ContaReceberComponent, ConfirmacaoDialog } from './conta-receber/conta-receber.component';
 import { ContaRecebidaComponent } from './conta-recebida/conta-recebida.component';
 import { FinancasRoutes } from './financas.routing';
+import { PlanoContaComponent } from './plano-conta/plano-conta.component';
 
 
 
@@ -133,7 +134,8 @@ import { FinancasRoutes } from './financas.routing';
   declarations: [
     ContaReceberComponent,
     ContaRecebidaComponent,
-    ConfirmacaoDialog
+    ConfirmacaoDialog,
+    PlanoContaComponent
   ],
   entryComponents: [
     ConfirmacaoDialog

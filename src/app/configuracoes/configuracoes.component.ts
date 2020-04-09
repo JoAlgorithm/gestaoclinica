@@ -197,6 +197,7 @@ export class ConfiguracoesComponent implements OnInit {
     .subscribe(c => {
       this.clinica = c;
     })
+    
     //console.log("teste");
     //console.log("clinica nome "+this.clinica.nome)
     this.dados_geraisFormGroup = this._formBuilder.group({
@@ -527,16 +528,6 @@ export class ConfiguracoesComponent implements OnInit {
     this.configServices.updateClinica(data)
     .then( res => {
       this.openSnackBar("Dados atualizados com sucesso");
-
-      //Limpar usuario
-      /*this.user = new User();
-      this.user.clinica = this.authService.get_clinica_nome;
-      this.user.clinica_id = this.authService.get_clinica_id;
-      this.user.emailVerified = true;
-      this.user.photoURL = "";
-      this.user.provincia = this.clinica.provincia+"";
-      this.user.endereco = this.clinica.endereco+"";
-      this.user.cidade = this.clinica.cidade+"";*/
 
     }).catch( err => {
       this.openSnackBar("Ocorreu um erro ao atualizar os dados. Contacte o admnistrador do sistema");

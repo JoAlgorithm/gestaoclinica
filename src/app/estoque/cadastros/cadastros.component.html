@@ -31,7 +31,7 @@
 
             <!--NOME GENERICO-->
             <mat-form-field style="width: 31%">
-                <input matInput placeholder="Nome generico"  [(ngModel)]="medicamento.nome_generico" required> 
+                <input matInput placeholder="Nome generico" [(ngModel)]="medicamento.nome_generico" required> 
             </mat-form-field>
 
             <!--NOME COMERCIAL-->
@@ -41,9 +41,9 @@
 
             <!--UNIDADE DE MEDIDA-->
             <mat-form-field style="width: 31%">
-              <mat-select placeholder="Unidade de medida"  [(ngModel)]="medicamento.un" required>
+              <mat-select placeholder="Unidade de medida" [(ngModel)]="medicamento.un" required>
                   <mat-option >
-                      <ngx-mat-select-search   [(ngModel)]="filterunidad"  placeholderLabel="Pesquisar"  noEntriesFoundLabel  = " Nenhuma informacao encontrada " matInput (keyup)="filtrarUnidade($event.target.value)"></ngx-mat-select-search>
+                      <ngx-mat-select-search [(ngModel)]="filterunidad" placeholderLabel="Pesquisar" noEntriesFoundLabel ="Nenhuma informacao encontrada" matInput (keyup)="filtrarUnidade($event.target.value)"></ngx-mat-select-search>
                     </mat-option>
                   <mat-option *ngFor="let un of uns" [value]="un">
                     {{un.nome}}
@@ -67,10 +67,10 @@
 
             <!--COMPOSICAO-->
             <mat-form-field style="width: 31%">
-              <input matInput placeholder="Composicao"  [(ngModel)]="medicamento.composicao"> 
+              <input matInput placeholder="Composicao" [(ngModel)]="medicamento.composicao"> 
             </mat-form-field>
 
-            <button mat-icon-button (click)="registarMedicamento()" matTooltip="REGISTAR NOVO MEDICAMENTO {{medicamento.nome_generico}}">
+            <button mat-icon-button (click)="registarMedicamento()" matTooltip="REGISTAR NOVO MEDICAMENTO {{medicamento.nome_generico}}" disabled="{{processandoRegistoMedicamento}}">
                 <mat-icon>add_circle</mat-icon>
             </button>
          <!-- </form>-->

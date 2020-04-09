@@ -1,0 +1,6 @@
+{
+    "/api": {
+        "target": "http://localhost:4200/estoque/estoque_gestao",
+        "secure": false
+    }
+}

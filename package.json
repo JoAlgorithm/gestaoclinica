@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.config.js",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
@@ -42,6 +42,7 @@
     "angularfire2": "^5.2.1",
     "chart.js": "2.7.2",
     "core-js": "2.5.3",
+    "cors": "^2.8.5",
     "d3": "4.13.0",
     "dragula": "3.7.2",
     "firebase": "^5.0.3",

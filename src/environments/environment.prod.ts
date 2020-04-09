@@ -5,7 +5,7 @@ export const environment = {
     authDomain: "gestaoclinica-ed2f7.firebaseapp.com",
     databaseURL: "https://gestaoclinica-ed2f7.firebaseio.com",
     projectId: "gestaoclinica-ed2f7",
-    storageBucket: "",
+    storageBucket: "gestaoclinica-ed2f7.appspot.com",
     messagingSenderId: "442740183403",
     appId: "1:442740183403:web:c36f7bd3be5f0913"
   }

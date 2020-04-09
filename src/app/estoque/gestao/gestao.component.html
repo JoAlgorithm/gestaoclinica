@@ -1,12 +1,19 @@
 <mat-card class="example-card">
     <mat-card-content>
-        <h5>GESTAO DE ESTOQUES</h5> <h6>ANALISE DE NIVEL MINIMO, QTD DISPONIVEL, NIVEIS DE ESTOQUE E NECESSIDADE DE REPOSICAO {{!habilitar_impressao}}</h6>
-
-        <mat-form-field style="width: 33%">
-            <mat-select placeholder="Filtrar por deposito" [(ngModel)]="deposito" [(value)]="deposito"  (selectionChange)="onSelect(deposito)" > 
+        <h5>GESTAO DE ESTOQUES</h5> <h6>ANALISE DE NIVEL MINIMO, QTD DISPONIVEL, NIVEIS DE ESTOQUE E NECESSIDADE DE REPOSICAO</h6>
+        <mat-form-field style="width: 31%">
+            <mat-select placeholder="Filtrar por deposito" [(ngModel)]="deposito" [(value)]="deposito"  (selectionChange)="onSelect(deposito)"> 
                 <mat-option *ngFor="let deposito of depositos" [value]="deposito">
                     {{deposito.nome}}
                 </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field style="width: 31%">
+            <mat-select placeholder="Filtrar por Categoria" [(ngModel)]="tipo_estoque" (selectionChange)="filtrarCategoria(tipo_estoque)">
+              <mat-option *ngFor="let tipo_estoque of tipos_estoque" [value]="tipo_estoque">
+                {{tipo_estoque.nome}}
+              </mat-option>             
             </mat-select>
         </mat-form-field>
 

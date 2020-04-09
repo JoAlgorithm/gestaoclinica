@@ -1,0 +1,44 @@
+<mat-tab-group>
+
+  <mat-tab label = "PLANOS DE CONTA">
+    <mat-card class="example-card">
+      <mat-card-content>
+        <h5>FORMULARIO DE CADASTRO DE PLANOS DE CONTA</h5>
+
+
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+
+  <mat-tab label = "TIPOS DE PLANOS CONTA">
+    <mat-card class="example-card">
+      <mat-card-content>
+        <h5>FORMULARIO DE CADASTRO DE TIPOS DE PLANOS DE CONTA</h5>
+
+        <form [formGroup]="tipoPlanoFormGroup">
+
+          <!--PAIS DA CLINICA-->
+          <mat-form-field style="width: 94%">
+              <input matInput placeholder="Designacao do plano de conta" formControlName="tp_nome" [(ngModel)]="tipoPlano.nome" required> 
+          </mat-form-field>
+
+          <button mat-icon-button (click)="cadastrarTipo()">
+            <mat-icon aria-label="Example icon-button with a heart icon" matTooltip="Cadastrar plano">check_circle</mat-icon>
+          </button>
+        </form>
+                
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+
+  <mat-tab label = "SUB-TIPOS DE PLANOS DE CONTA">
+    <mat-card class="example-card">
+      <mat-card-content>
+        <h5>FORMULARIO DE CADASTRO DE SUB-TIPOS DE PLANOS DE CONTA CONTA</h5>
+
+        
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+
+</mat-tab-group>

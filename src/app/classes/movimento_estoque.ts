@@ -10,10 +10,15 @@ export class MovimentoEstoque {
     // Saida por ajuste
     // Entrada por compra
     // Entrada por ajuste
+    // Saida por Transferencia
+    // Entrada por Transferencia
     tipo_movimento?: string;
 
     deposito?: Deposito;
     deposito_relatorio?: DepositoRelatorio;
+
+    deposito_destino?: Deposito; //novo atributo usado para guardar o deposito a ser transferido quando o movimento for transferencia
+    deposito_origem?: Deposito; //novo atributo usado para guardar o deposito de origem quando o movimento for transferencia
 
     medicamento?: Medicamento;
     medicamento_nome?: string; //usado para normalizar a base de dados

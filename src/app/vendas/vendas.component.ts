@@ -831,8 +831,9 @@ export class VendasComponent implements OnInit {
     let dataemisao = dia +"/"+mes+"/"+ano;  
   
     var img = new Image();
-    img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+    img.src ="../../../assets/images/FarmaciaBEM_SAUDE.png"; 
     doc.addImage(img,"PNG", 300, 40,90, 90);
+    console.log("Fatura verio daqui");
   
     doc.setFont("Courier");
     doc.setFontStyle("normal"); 
