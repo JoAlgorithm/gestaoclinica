@@ -835,7 +835,12 @@ export class MedicamentosDialog {
           this.movimento.quantidade = this.medicamento.qtd_solicitada; 
           
           let linha = new Linha();
-          linha.descricao_servico = this.medicamento.nome_comercial;
+
+          let cp = this.medicamento.composicao ? " - "+this.medicamento.composicao : "";
+          let servico = this.medicamento.nome_generico +" - "+this.medicamento.nome_comercial+cp;
+          linha.descricao_servico = servico;
+          //linha.descricao_servico = this.medicamento.nome_comercial;
+
           linha.qtd_solicitada = this.medicamento.qtd_solicitada;
           linha.id_servico = this.medicamento.id;
     
@@ -1015,9 +1020,11 @@ export class MedicamentosDialog {
         mvt.deposito_id = mvt.deposito.id;
         //mvt.deposito = null;
 
+        let cp = mvt.medicamento.composicao ? " - "+mvt.medicamento.composicao : "";
+
         mvt.medicamento_nome = mvt.medicamento.nome_generico;
         mvt.medicamento_id = mvt.medicamento.id;
-        servico = servico+" "+mvt.medicamento.nome_generico+" ; ";
+        servico = servico+" "+mvt.medicamento.nome_generico +" - "+mvt.medicamento.nome_comercial+cp;
         
         //mvt.medicamento = null;  
         
@@ -1383,7 +1390,28 @@ export class MedicamentosDialog {
     movimentos.forEach(element => {
       doc.text(item+"", 55, linha) //item
       doc.text(element.quantidade+"", 257, linha) //quantidade
-      doc.text(element.medicamento.nome_comercial , 95, linha) //descricao
+
+      let string1 = "";
+      let string2 = "";
+      let linhaAlternativo = 0;
+      let cp = element.medicamento.composicao ? " - "+element.medicamento.composicao : "";
+      let nome = element.medicamento.nome_generico+" - "+element.medicamento.nome_comercial+cp;
+      //doc.text(element.medicamento.nome_generico+" - "+element.medicamento.nome_comercial+cp, 95, linha) //descricao
+      
+      if(nome.length > 26){
+        string1 = nome.substr(0,26);
+        //let q = +nome.length - +26;
+        string2 = nome.substr(26, +nome.length).trim();
+        //string2 = nome.substr(q).toString().trim();
+  
+        linhaAlternativo = +linha+ +20;
+  
+        doc.text(string1 , 95, linha) //descricao
+        doc.text(string2 , 95, linhaAlternativo) //descricao
+  
+      }else{
+        doc.text(nome , 95, linha) //descricao
+      }
 
 
       if(this.forma_pagamento == "Convênio"){
@@ -1403,7 +1431,11 @@ export class MedicamentosDialog {
 
       
       item = +item + +1;
-      linha = +linha + +20;
+      if(linhaAlternativo >0){
+        linha = +linha + +40;
+      }else{
+        linha = +linha + +20;
+      }
     });   
      
     doc.setFont("Courier");
@@ -1962,8 +1994,9 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
     let linhaAlternativo = 0;
     if(element.nome.length > 26){
       string1 = element.nome.substr(0,26);
-      let q = +element.nome.length - +26;
-      string2 = element.nome.substr(q).toString().trim();
+      //let q = +element.nome.length - +26;
+      //string2 = element.nome.substr(q).toString().trim();
+      string2 = element.nome.substr(26, +element.nome.length).trim();
 
       linhaAlternativo = +linha+ +20;
 
@@ -2501,20 +2534,35 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
   doc.text(item+"", 55, linha) //item
   doc.text("1", 257, linha) //quantidade
 
+  console.log("consulta dialog "+categoriaConsulta.nome.length)
+
   let string1 = "";
   let string2 = "";
+  let string3 = "";
   let linhaAlternativo = 0;
-  if(categoriaConsulta.nome.length > 26){
+  let linhaAlternativo2 = 0;
+  if(categoriaConsulta.nome.length > 26 && categoriaConsulta.nome.length > 52){
     string1 = categoriaConsulta.nome.substr(0,26);
-    let q = +categoriaConsulta.nome.length - +26;
-    string2 = categoriaConsulta.nome.substr(q).toString().trim();
+    string2 = categoriaConsulta.nome.substr(26,26).trim();
+    string3 = categoriaConsulta.nome.substr(52, +categoriaConsulta.nome.length).trim();
+
+    linhaAlternativo = +linha+ +20;
+    linhaAlternativo2 =  +linha+ +40;
+
+    doc.text(string1 , 95, linha) //descricao
+    doc.text(string2 , 95, linhaAlternativo) //descricao
+    doc.text(string3 , 95, linhaAlternativo2) //descricao
+
+  }else if(categoriaConsulta.nome.length > 26){
+    string1 = categoriaConsulta.nome.substr(0,26);
+    string2 = categoriaConsulta.nome.substr(26, +categoriaConsulta.nome.length).trim();
 
     linhaAlternativo = +linha+ +20;
 
     doc.text(string1 , 95, linha) //descricao
     doc.text(string2 , 95, linhaAlternativo) //descricao
-
-  }else{
+  }
+  else{
     doc.text(categoriaConsulta.nome , 95, linha) //descricao
   }
   
@@ -2533,7 +2581,9 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
   //preco_total = +categoriaConsulta.preco;
   item = +item + +1;
 
-  if(linhaAlternativo > 0){
+  if(linhaAlternativo > 0 && linhaAlternativo2 > 0){
+    linha = +linha + +60;
+  }else if(linhaAlternativo > 0){
     linha = +linha + +40;
   }else{
     linha = +linha + +20;
@@ -3306,8 +3356,9 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
     let linhaAlternativo = 0;
     if(element.nome.length > 26){
       string1 = element.nome.substr(0,26);
-      let q = +element.nome.length - +26;
-      string2 = element.nome.substr(q).toString().trim();
+      //let q = +element.nome.length - +26;
+      //string2 = element.nome.substr(q).toString().trim();
+      string2 = element.nome.substr(26, +element.nome.length).trim();
 
       linhaAlternativo = +linha+ +20;
 

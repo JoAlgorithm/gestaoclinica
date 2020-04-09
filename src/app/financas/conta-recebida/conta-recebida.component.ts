@@ -163,8 +163,9 @@ export class ContaRecebidaComponent implements OnInit {
       let linhaAlternativo = 0;
       if(element.descricao_servico.length > 26){
         string1 = element.descricao_servico.substr(0,26);
-        let q = +element.descricao_servico.length - +26;
-        string2 = element.descricao_servico.substr(q).toString().trim();
+        //let q = +element.descricao_servico.length - +26;
+        //string2 = element.descricao_servico.substr(q).toString().trim();
+        string2 = element.descricao_servico.substr(26, +element.descricao_servico.length).trim();
 
         linhaAlternativo = +linha+ +20;
 
