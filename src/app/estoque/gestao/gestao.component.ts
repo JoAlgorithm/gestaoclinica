@@ -42,7 +42,6 @@ export class GestaoComponent implements OnInit {
     this.tipo_estoque = new TipoEstoque();
   }
 
-
   ngOnInit() {
     this.estoqueService.getDepositos().snapshotChanges().subscribe(data => {
       this.depositos = data.map(e => {
@@ -76,8 +75,6 @@ export class GestaoComponent implements OnInit {
         })
 
         this.medicamentos.forEach(element => {
-          
-          //console.log("element.un "+element.un.nome);
 
           if(element.min){
             if(element.qtd_disponivel == 0){
@@ -96,8 +93,7 @@ export class GestaoComponent implements OnInit {
             element.sugestao = "Definir min";
           }
         });
-
-        
+      
         this.medicamentos_aux = this.medicamentos;
         this.dataSourse=new MatTableDataSource(this.medicamentos);
         this.dataSourse.paginator = this.paginator;
@@ -568,15 +564,59 @@ export class GestaoComponent implements OnInit {
 
       //console.log("element.un "+element.un.nome);
       let cat = element.categoria ? element.categoria.nome : "";
-
-      doc.text(element.nome_comercial+"" , 72, linha);
       doc.text(element.un.nome+"", 332, linha);
       doc.text(cat+"" , 262, linha);
       doc.text(element.qtd_disponivel+"", 372, linha);
       doc.text(element.id+"", 22, linha);
 
-      linha = +linha + 15;
-      contagem +=1;
+      let string1 = "";
+      let string2 = "";
+      let string3 = "";
+      let linhaAlternativo = 0;
+      let linhaAlternativo2 = 0;
+      let cp = element.composicao ? " - "+element.composicao : "";
+      let nome = element.nome_generico+" - "+element.nome_comercial+cp;
+      
+      //doc.text(element.nome_comercial+"" , 72, linha);
+      if(nome.length > 40 && nome.length > 80){
+        string1 = nome.substr(0,40);
+        string2 = nome.substr(40, 40).trim();
+        string3 = nome.substr(40, +nome.length).trim();
+  
+        linhaAlternativo = +linha+ +20;
+        linhaAlternativo2 =  +linha+ +40;
+  
+        doc.text(string1 , 72, linha) //descricao
+        doc.text(string2 , 72, linhaAlternativo) //descricao
+        doc.text(string3 , 72, linhaAlternativo2) //descricao
+
+      }if(nome.length > 40){
+        string1 = nome.substr(0,40);
+        string2 = nome.substr(40, +nome.length).trim();
+  
+        linhaAlternativo = +linha+ +20;
+  
+        doc.text(string1 , 72, linha) //descricao
+        doc.text(string2 , 72, linhaAlternativo) //descricao
+  
+      }else{
+        doc.text(nome , 72, linha) //descricao
+      }
+
+
+      //linha = +linha + 15;
+      //contagem +=1;
+
+      if(linhaAlternativo > 0 && linhaAlternativo2 > 0){
+        linha = +linha + 45;
+        contagem +=3;
+      }else if(linhaAlternativo > 0){
+        linha = +linha + 30;
+        contagem +=2;
+      }else{
+        linha = +linha + 15;
+        contagem +=1;
+      }
 
       if(contagem % 33 == 0){
         

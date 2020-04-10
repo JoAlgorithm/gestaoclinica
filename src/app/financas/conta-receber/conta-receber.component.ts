@@ -142,18 +142,29 @@ export class ContaReceberComponent implements OnInit {
 
       let string1 = "";
       let string2 = "";
+      let string3 = "";
       let linhaAlternativo = 0;
-      if(element.descricao_servico.length > 26){
+      let linhaAlternativo2 = 0;
+      if(element.descricao_servico.length > 26 && element.descricao_servico.length > 52){
         string1 = element.descricao_servico.substr(0,26);
-        //let q = +element.descricao_servico.length - +26;
-        //string2 = element.descricao_servico.substr(q).toString().trim();
+        string2 = element.descricao_servico.substr(26, 26).trim();
+        string3 = element.descricao_servico.substr(52, +element.descricao_servico.length).trim();
+
+        linhaAlternativo = +linha+ +20;
+        linhaAlternativo2 =  +linha+ +40;
+
+        doc.text(string1 , 95, linha) //descricao
+        doc.text(string2 , 95, linhaAlternativo) //descricao
+        doc.text(string3 , 95, linhaAlternativo2) //descricao
+
+      }else if(element.descricao_servico.length > 26){
+        string1 = element.descricao_servico.substr(0,26);
         string2 = element.descricao_servico.substr(26, +element.descricao_servico.length).trim();
 
         linhaAlternativo = +linha+ +20;
 
         doc.text(string1 , 95, linha) //descricao
         doc.text(string2 , 95, linhaAlternativo) //descricao
-
       }else{
         doc.text(element.descricao_servico , 95, linha) //descricao
       }
@@ -166,7 +177,9 @@ export class ContaReceberComponent implements OnInit {
 
       item = +item + +1;
 
-      if(linhaAlternativo > 0){
+      if(linhaAlternativo > 0 && linhaAlternativo2 > 0){
+        linha = +linha + +60;
+      }else if(linhaAlternativo > 0){
         linha = +linha + +40;
       }else{
         linha = +linha + +20;

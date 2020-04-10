@@ -381,7 +381,7 @@ export class PendentesComponent implements OnInit {
 
           this.configServices.addNrCotacao(d)
           .then(r =>{
-    
+
             this.gerarPDF(diagnosticos , paciente, nome, d.id);
             
           }, err=>{
@@ -446,17 +446,57 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
   doc.text(id+"", 225, 40);
   let item = 1;
   let preco_total = 0;
-  let linha = 200;                      
+  let linha = 200;      
+  let linhaAlternativo = 0;
+  let linhaAlternativo2 = 0;
+  let string1 = "";
+  let string2 = "";
+  let string3 = "";
+
   diagnosticos.forEach(element => {
     doc.text(item+"", 55, linha) //item
     doc.text("1", 257, linha) //quantidade
-    doc.text(element.nome , 95, linha) //descricao
+
+    //doc.text(element.nome , 95, linha) //descricao
+    if(element.nome.length > 26 && element.nome.length > 52){
+      string1 = element.nome.substr(0,26);
+      string2 = element.nome.substr(26,26).trim();
+      string3 = element.nome.substr(52, +element.nome.length).trim();
+
+      linhaAlternativo = +linha+ +20;
+      linhaAlternativo2 =  +linha+ +40;
+  
+      doc.text(string1 , 95, linha) //descricao
+      doc.text(string2 , 95, linhaAlternativo) //descricao
+      doc.text(string3 , 95, linhaAlternativo2) //descricao
+  
+    }else if(element.nome.length > 26){
+      string1 = element.nome.substr(0,26);
+      string2 = element.nome.substr(26, +element.nome.length).trim();
+  
+      linhaAlternativo = +linha+ +20;
+  
+      doc.text(string1 , 95, linha) //descricao
+      doc.text(string2 , 95, linhaAlternativo) //descricao
+    }
+    else{
+      doc.text(element.nome , 95, linha) //descricao
+    }
+
     doc.text(element.preco, 294, linha)
     doc.text(element.preco, 354, linha)
 
     preco_total = +preco_total + +element.preco;
+
     item = +item + +1;
-    linha = +linha + +20;
+
+    if(linhaAlternativo > 0 && linhaAlternativo2 > 0){
+      linha = +linha + +60;
+    }else if(linhaAlternativo > 0){
+      linha = +linha + +40;
+    }else{
+      linha = +linha + +20;
+    }
   });   
   
   
@@ -1081,123 +1121,141 @@ export class RemoverPendentesDialog {
 
 
 gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
-  let doc = new jsPDF({
-    orientation: 'p',
-    unit: 'px',
-    format: 'a4',
-    putOnlyUsedFonts:true,
-  });
+    let doc = new jsPDF({
+      orientation: 'p',
+      unit: 'px',
+      format: 'a4',
+      putOnlyUsedFonts:true,
+    });
 
-  let specialElementHandlers ={
-    '#editor': function(element,renderer){return true;} 
-  }
-  let dia = new Date().getDate();
-  let mes = +(new Date().getMonth()) + +1;
-  let ano = new Date().getFullYear();
- let dataemisao = dia +"/"+mes+"/"+ano;  
-
-  var img = new Image();
-  img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
-  doc.addImage(img,"PNG", 300, 40,90, 90);
-
-  doc.setFont("Courier");
-  doc.setFontStyle("normal"); 
-  doc.setFontSize(12);
-  doc.text(id+"", 225, 40);
-  let item = 1;
-  let preco_total = 0;
-  let linha = 200;                      
-  diagnosticos.forEach(element => {
-    doc.text(item+"", 55, linha) //item
-    doc.text("1", 257, linha) //quantidade
-    doc.text(element.nome , 95, linha) //descricao
-
-    if(this.forma_pagamento == "Convênio"){  
-      doc.text(element.preco_seguradora, 294, linha)
-      doc.text(element.preco_seguradora, 354, linha)
-      preco_total = +preco_total + +element.preco_seguradora;
-    }else{
-      doc.text(element.preco, 294, linha)
-      doc.text(element.preco, 354, linha)
-      preco_total = +preco_total + +element.preco;
+    let specialElementHandlers ={
+      '#editor': function(element,renderer){return true;} 
     }
+    let dia = new Date().getDate();
+    let mes = +(new Date().getMonth()) + +1;
+    let ano = new Date().getFullYear();
+    let dataemisao = dia +"/"+mes+"/"+ano;  
+
+    var img = new Image();
+    img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+    doc.addImage(img,"PNG", 300, 40,90, 90);
+
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontSize(12);
+    doc.text(id+"", 225, 40);
+    let item = 1;
+    let preco_total = 0;
+    let linha = 200;     
+    let linhaAlternativo = 0;
+    let linhaAlternativo2 = 0;    
+    let string1 = "";
+    let string2 = "";
+    let string3 = "";             
+    diagnosticos.forEach(element => {
+      doc.text(item+"", 55, linha) //item
+      doc.text("1", 257, linha) //quantidade
+
+      //doc.text(element.nome , 95, linha) //descricao
+      if(element.nome.length > 26 && element.nome.length > 52){
+        string1 = element.nome.substr(0,26);
+        string2 = element.nome.substr(26,26).trim();
+        string3 = element.nome.substr(52, +element.nome.length).trim();
+    
+        linhaAlternativo = +linha+ +20;
+        linhaAlternativo2 =  +linha+ +40;
+    
+        doc.text(string1 , 95, linha) //descricao
+        doc.text(string2 , 95, linhaAlternativo) //descricao
+        doc.text(string3 , 95, linhaAlternativo2) //descricao
+      }else if(element.nome.length > 26){
+        string1 = element.nome.substr(0,26);
+        string2 = element.nome.substr(26, +element.nome.length).trim();
+    
+        linhaAlternativo = +linha+ +20;
+    
+        doc.text(string1 , 95, linha) //descricao
+        doc.text(string2 , 95, linhaAlternativo) //descricao
+      }else{
+        doc.text(element.nome , 95, linha) //descricao
+      }
+
+
+      if(this.forma_pagamento == "Convênio"){  
+        doc.text(element.preco_seguradora, 294, linha)
+        doc.text(element.preco_seguradora, 354, linha)
+        preco_total = +preco_total + +element.preco_seguradora;
+      }else{
+        doc.text(element.preco, 294, linha)
+        doc.text(element.preco, 354, linha)
+        preco_total = +preco_total + +element.preco;
+      }
+      
+      item = +item + +1;
+      if(linhaAlternativo > 0 && linhaAlternativo2 > 0){
+        linha = +linha + +60;
+      }else if(linhaAlternativo > 0){
+        linha = +linha + +40;
+      }else{
+        linha = +linha + +20;
+      }
+    });     
+
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontStyle("bold");
+    doc.setFontSize(15);
+
+    doc.text(nome+":", 170, 40);  
+
+    doc.setFont("Courier");
+    doc.setFontStyle("normal"); 
+    doc.setFontSize(10);
+
+    doc.text("Processado pelo computador", 170, 580);
+
+    doc.text(this.clinica.endereco, 50, 65);
+    doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,75);
+    doc.text("Email: "+this.clinica.email, 50, 85);
+    doc.text("Cell: "+this.clinica.telefone, 50, 95);
+    doc.text("NUIT: "+this.clinica.nuit, 50, 105);
+    
+    doc.text("Nome do Paciente: "+paciente.nome, 50, 125);
+    doc.text("NID: "+paciente.nid, 250, 125);
+    doc.text("Apelido: "+paciente.apelido, 50, 145);
+    doc.text("Data de emissão: "+dataemisao, 250, 145);
+    let n = paciente.nuit ? paciente.nuit : ""; //Trabalhando o NUIT por nao ser campo obrigatorio pode estar nulo
+    doc.text("NUIT do paciente: "+n, 50, 165);
+
+    doc.setFillColor(50,50,50);
+    doc.rect ( 50, 170 , 40 , 20 ); 
+    doc.rect (  50, 190 , 40 , 320 ); 
+
+    doc.rect (  90, 170 , 150 , 20 ); 
+    doc.rect (  90, 190 , 150 , 320 );
+
+    doc.rect (  240, 170 , 50 , 20 ); 
+    doc.rect (  240, 190 , 50 , 320 );
+
+    doc.rect (  290, 170 , 60 , 20 ); 
+    doc.rect (  290, 190 , 60 , 320 );
+
+    doc.rect (  350, 170 , 50 , 20 ); 
+    doc.rect (  350, 190 , 50 , 320);
+
+    doc.rect ( 290, 510 , 110 , 20 );
+
+    doc.setFontStyle("bold");
+    doc.text("Item", 60, 180);
+    doc.text("Descrição", 120, 180);
+    doc.text("Quantd", 245, 180);
+    doc.text("Preço Unit", 295, 180);
+    doc.text("Preç Tot", 355, 180);
 
     
-    item = +item + +1;
-    linha = +linha + +20;
-  });     
+    doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
 
-  doc.setFont("Courier");
-  doc.setFontStyle("normal"); 
-  doc.setFontStyle("bold");
-  doc.setFontSize(15);
-
-  doc.text(nome+":", 170, 40);  
-
-
-  doc.setFont("Courier");
-  doc.setFontStyle("normal"); 
-  doc.setFontSize(10);
-
-  doc.text("Processado pelo computador", 170, 580);
-  // doc.text("CENTRO MEDICO VITALLE", 165, 75);
-
-  doc.text(this.clinica.endereco, 50, 65);
-  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,75);
-  doc.text("Email: "+this.clinica.email, 50, 85);
-  doc.text("Cell: "+this.clinica.telefone, 50, 95);
-  doc.text("NUIT: "+this.clinica.nuit, 50, 105);
-  
-  doc.text("Nome do Paciente: "+paciente.nome, 50, 125);
-  doc.text("NID: "+paciente.nid, 250, 125);
-  doc.text("Apelido: "+paciente.apelido, 50, 145);
-  doc.text("Data de emissão: "+dataemisao, 250, 145);
-  let n = paciente.nuit ? paciente.nuit : ""; //Trabalhando o NUIT por nao ser campo obrigatorio pode estar nulo
-  doc.text("NUIT do paciente: "+n, 50, 165);
-  /*doc.text(this.clinica.endereco, 50, 75);
-  doc.text(this.clinica.provincia+", "+this.clinica.cidade, 50,85);
-  doc.text("Email: "+this.clinica.email, 50, 95);
-  doc.text("Cell: "+this.clinica.telefone, 50, 105);
-  
-  doc.text("Nome do Paciente:", 50, 125);
-  doc.text(paciente.nome, 128, 125);
-  doc.text("NID:", 250, 125);
-  doc.text(paciente.nid+"", 268, 125);
-  doc.text("Apelido:", 50, 145);
-  doc.text(paciente.apelido, 89, 145);
-  doc.text("Data de emissão: ", 250, 145);
-  doc.text(dataemisao, 322, 145);*/
-
-  doc.setFillColor(50,50,50);
-  doc.rect ( 50, 170 , 40 , 20 ); 
-  doc.rect (  50, 190 , 40 , 320 ); 
-
-  doc.rect (  90, 170 , 150 , 20 ); 
-  doc.rect (  90, 190 , 150 , 320 );
-
-  doc.rect (  240, 170 , 50 , 20 ); 
-  doc.rect (  240, 190 , 50 , 320 );
-
-  doc.rect (  290, 170 , 60 , 20 ); 
-  doc.rect (  290, 190 , 60 , 320 );
-
-  doc.rect (  350, 170 , 50 , 20 ); 
-  doc.rect (  350, 190 , 50 , 320);
-
-  doc.rect ( 290, 510 , 110 , 20 );
-
-  doc.setFontStyle("bold");
-  doc.text("Item", 60, 180);
-  doc.text("Descrição", 120, 180);
-  doc.text("Quantd", 245, 180);
-  doc.text("Preço Unit", 295, 180);
-  doc.text("Preç Tot", 355, 180);
-
-  
-  doc.text("Total: "+preco_total.toFixed(2).replace(".",",")+" MZN", 293, 525);
-  //  doc.text("FICHA DE PAGAMENTO", 165, 90);
-
-  doc.save(nome+ id +'.pdf'); 
-}
-  
+    doc.save(nome+ id +'.pdf'); 
   }
+  
+}

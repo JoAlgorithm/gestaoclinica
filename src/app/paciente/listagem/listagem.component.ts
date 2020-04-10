@@ -1393,16 +1393,28 @@ export class MedicamentosDialog {
 
       let string1 = "";
       let string2 = "";
+      let string3 = "";
       let linhaAlternativo = 0;
+      let linhaAlternativo2 = 0;
       let cp = element.medicamento.composicao ? " - "+element.medicamento.composicao : "";
       let nome = element.medicamento.nome_generico+" - "+element.medicamento.nome_comercial+cp;
       //doc.text(element.medicamento.nome_generico+" - "+element.medicamento.nome_comercial+cp, 95, linha) //descricao
       
-      if(nome.length > 26){
+      if(nome.length > 26 && nome.length > 52){
         string1 = nome.substr(0,26);
-        //let q = +nome.length - +26;
+        string2 = nome.substr(26, 26).trim();
+        string3 = nome.substr(52, +nome.length).trim();
+  
+        linhaAlternativo = +linha+ +20;
+        linhaAlternativo2 =  +linha+ +40;
+  
+        doc.text(string1 , 95, linha) //descricao
+        doc.text(string2 , 95, linhaAlternativo) //descricao
+        doc.text(string3 , 95, linhaAlternativo2) //descricao
+
+      }if(nome.length > 26){
+        string1 = nome.substr(0,26);
         string2 = nome.substr(26, +nome.length).trim();
-        //string2 = nome.substr(q).toString().trim();
   
         linhaAlternativo = +linha+ +20;
   
@@ -1429,9 +1441,10 @@ export class MedicamentosDialog {
         //console.log("Pagou normal");
       }
 
-      
       item = +item + +1;
-      if(linhaAlternativo >0){
+      if(linhaAlternativo > 0 && linhaAlternativo2 > 0){
+        linha = +linha + +60;
+      }else if(linhaAlternativo > 0){
         linha = +linha + +40;
       }else{
         linha = +linha + +20;
@@ -1991,11 +2004,24 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
 
     let string1 = "";
     let string2 = "";
+    let string3 = "";
     let linhaAlternativo = 0;
-    if(element.nome.length > 26){
+    let linhaAlternativo2 = 0;
+
+    if(element.nome.length > 26  && element.nome.length > 52){
       string1 = element.nome.substr(0,26);
-      //let q = +element.nome.length - +26;
-      //string2 = element.nome.substr(q).toString().trim();
+      string2 = element.nome.substr(26, 26).trim();
+      string3 = element.nome.substr(52, +element.nome.length).trim();
+
+      linhaAlternativo = +linha+ +20;
+      linhaAlternativo2 =  +linha+ +40;
+
+      doc.text(string1 , 95, linha) //descricao
+      doc.text(string2 , 95, linhaAlternativo) //descricao
+      doc.text(string3 , 95, linhaAlternativo2) //descricao
+
+    }else if(element.nome.length > 26){
+      string1 = element.nome.substr(0,26);
       string2 = element.nome.substr(26, +element.nome.length).trim();
 
       linhaAlternativo = +linha+ +20;
@@ -2006,7 +2032,6 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
     }else{
       doc.text(element.nome , 95, linha) //descricao
     }
-    
 
     if(this.forma_pagamento == "Convênio"){
       doc.text(element.preco_seguradora+"", 294, linha)
@@ -2019,17 +2044,17 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
   
       preco_total = +preco_total + +element.preco;
     }
-
     
+    item = +item + +1;
 
-    if(linhaAlternativo > 0){
+    if(linhaAlternativo > 0 && linhaAlternativo2 > 0){
+      linha = +linha + +60;
+    }else if(linhaAlternativo > 0){
       linha = +linha + +40;
     }else{
       linha = +linha + +20;
     }
 
-    item = +item + +1;
-    //linha = +linha + +20;
   });   
    
   doc.setFont("Courier");
@@ -2534,7 +2559,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
   doc.text(item+"", 55, linha) //item
   doc.text("1", 257, linha) //quantidade
 
-  console.log("consulta dialog "+categoriaConsulta.nome.length)
+  //console.log("consulta dialog "+categoriaConsulta.nome.length)
 
   let string1 = "";
   let string2 = "";
@@ -3353,11 +3378,24 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
 
     let string1 = "";
     let string2 = "";
+    let string3 = "";
     let linhaAlternativo = 0;
-    if(element.nome.length > 26){
+    let linhaAlternativo2 = 0;
+
+    if(element.nome.length > 26 && element.nome.length > 52){
       string1 = element.nome.substr(0,26);
-      //let q = +element.nome.length - +26;
-      //string2 = element.nome.substr(q).toString().trim();
+      string2 = element.nome.substr(26, 26).trim();
+      string3 = element.nome.substr(52, +element.nome.length).trim();
+
+      linhaAlternativo = +linha+ +20;
+      linhaAlternativo2 =  +linha+ +40;
+
+      doc.text(string1 , 95, linha) //descricao
+      doc.text(string2 , 95, linhaAlternativo) //descricao
+      doc.text(string3 , 95, linhaAlternativo2) //descricao
+
+    }else if(element.nome.length > 26){
+      string1 = element.nome.substr(0,26);
       string2 = element.nome.substr(26, +element.nome.length).trim();
 
       linhaAlternativo = +linha+ +20;
@@ -3385,7 +3423,9 @@ gerarPDF(diagnosticos :DiagnosticoAuxiliar[], paciente: Paciente, nome, id){
     
     item = +item + +1;
 
-    if(linhaAlternativo >0){
+    if(linhaAlternativo > 0 && linhaAlternativo2 > 0){
+      linha = +linha + +60;
+    }else if(linhaAlternativo > 0){
       linha = +linha + +40;
     }else{
       linha = +linha + +20;

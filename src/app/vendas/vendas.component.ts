@@ -841,11 +841,41 @@ export class VendasComponent implements OnInit {
     doc.text(id+"", 225, 40);
     let item = 1;
     let preco_total = 0;
-    let linha = 200;                      
+    let linha = 200;
+    let string1 = "";
+    let string2 = "";
+    let string3 = "";
+    let linhaAlternativo = 0;
+    let linhaAlternativo2 = 0;              
     movimentos.forEach(element => {
       doc.text(item+"", 55, linha) //item
       doc.text(element.quantidade+"", 257, linha) //quantidade
-      doc.text(element.medicamento.nome_comercial , 95, linha) //descricao
+
+      //doc.text(element.medicamento.nome_comercial , 95, linha) //descricao
+      if(element.medicamento.nome_comercial.length > 26 && element.medicamento.nome_comercial.length > 52){
+        string1 = element.medicamento.nome_comercial.substr(0,26);
+        string2 = element.medicamento.nome_comercial.substr(26,26).trim();
+        string3 = element.medicamento.nome_comercial.substr(52, +element.medicamento.nome_comercial.length).trim();
+    
+        linhaAlternativo = +linha+ +20;
+        linhaAlternativo2 =  +linha+ +40;
+    
+        doc.text(string1 , 95, linha) //descricao
+        doc.text(string2 , 95, linhaAlternativo) //descricao
+        doc.text(string3 , 95, linhaAlternativo2) //descricao
+    
+      }else if(element.medicamento.nome_comercial.length > 26){
+        string1 = element.medicamento.nome_comercial.substr(0,26);
+        string2 = element.medicamento.nome_comercial.substr(26, +element.medicamento.nome_comercial.length).trim();
+    
+        linhaAlternativo = +linha+ +20;
+    
+        doc.text(string1 , 95, linha) //descricao
+        doc.text(string2 , 95, linhaAlternativo) //descricao
+      }
+      else{
+        doc.text(element.medicamento.nome_comercial , 95, linha) //descricao
+      }
 
       if(this.forma_pagamento == "Convênio"){
         doc.text(element.medicamento.preco_seguradora.toFixed(2).replace(".",",")+"", 294, linha)
@@ -864,7 +894,14 @@ export class VendasComponent implements OnInit {
 
       
       item = +item + +1;
-      linha = +linha + +20;
+
+      if(linhaAlternativo > 0 && linhaAlternativo2 > 0){
+        linha = +linha + +60;
+      }else if(linhaAlternativo > 0){
+        linha = +linha + +40;
+      }else{
+        linha = +linha + +20;
+      }
     });   
      
     doc.setFont("Courier");
