@@ -618,9 +618,10 @@ export class GestaoComponent implements OnInit {
         contagem +=1;
       }
 
-      if(contagem % 33 == 0){
+      if(contagem % 33 == 0 || contagem % 32 == 0 || contagem % 31 == 0){
         
         linha = 100;
+        contagem = 0;
 
         doc.addPage({
           orientation: 'p',
