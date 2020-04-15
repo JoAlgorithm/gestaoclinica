@@ -167,6 +167,7 @@ export class GestaoComponent implements OnInit {
       this.habilitar_impressao = false;
     }else{
       this.medicamentos = [];
+      this.medicamentos_aux = this.medicamentos;
       this.dataSourse=new MatTableDataSource(this.medicamentos);
       this.dataSourse.paginator = this.paginator;
       this.dataSourse.sort = this.sort

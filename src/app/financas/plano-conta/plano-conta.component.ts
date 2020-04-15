@@ -4,6 +4,8 @@ import { SubTipoPlanoConta } from '../../classes/subtipo_plano_conta';
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog, MatSnackBar } from '@angular/material';
 import { TipoPlanoConta } from '../../classes/tipo_plano_conta';
 import { AuthService } from '../../services/auth.service';
+import { ConfiguracoesService } from '../../services/configuracoes.service';
+import { PlanoConta } from '../../classes/plano_conta';
 
 @Component({
   selector: 'app-plano-conta',
@@ -12,45 +14,144 @@ import { AuthService } from '../../services/auth.service';
 })
 export class PlanoContaComponent implements OnInit {
 
-  /*
-  * VARIAVEIS DA TAB TIPOS PLANOS DE CONTA
-  */
- //ATRIBUTOS DO FORLMULARIO
- tipoPlano: TipoPlanoConta;
+  planoConta: PlanoConta;
+  tipoPlano: TipoPlanoConta;
+  //subTipoPlanoConta: SubTipoPlanoConta;
+  editando: Boolean = false;
 
- tipoPlanoFormGroup: FormGroup;
+  planosConta: PlanoConta[] = [];
+  tiposPlanos: TipoPlanoConta[] = [];
+  subTiposPlanos: SubTipoPlanoConta[] = [];
+  subTiposPlanos_Aux: SubTipoPlanoConta[] = [];
 
- //ATRIBUTOS DA TABELA
- dataSourseTipoPlano: MatTableDataSource<TipoPlanoConta>;
- displayedColumnsRipoPlano = ['id', 'nome', 'editar', 'remover'];
- @ViewChild('paginatorTipoPlano', { read: MatPaginator }) paginatorTipoPlano: MatPaginator;
- @ViewChild(MatSort) sortTipoPlano: MatSort;
+  cadastroFormGroup: FormGroup;
 
-  /*
-  * VARIAVEIS DA TAB SUB-TIPOS PLANOS DE CONTA
-  */
- //ATRIBUTOS DO FORLMULARIO
- subPlanoContaFormGroup: FormGroup;
+  dataSourse: MatTableDataSource<PlanoConta>;
+  displayedColumns = ['tipo','subtipo', 'nome',  'editar', 'remover'];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
- //ATRIBUTOS DA TABELA
- dataSourseSubPlanoConta: MatTableDataSource<SubTipoPlanoConta>;
- displayedColumnssubPlanoConta = ['id', 'nome', 'tipo', 'editar', 'remover'];
- @ViewChild('paginatorPlanoConta', { read: MatPaginator }) paginatorSubPlanoConta: MatPaginator;
- @ViewChild(MatSort) sortSubPlanoConta: MatSort;
+  constructor(private _formBuilder: FormBuilder, public snackBar: MatSnackBar, private authService: AuthService, public dialog: MatDialog,
+    private configService: ConfiguracoesService){
 
-  constructor(private _formBuilder: FormBuilder, public snackBar: MatSnackBar, private authService: AuthService, public dialog: MatDialog){
-    this.tipoPlano = new TipoPlanoConta();
+      this.planoConta = new PlanoConta();
+      this.tipoPlano = new TipoPlanoConta();
+
+      this.cadastroFormGroup = this._formBuilder.group({
+        tipo: ['', Validators.required],
+        subtipo: ['', Validators.required],
+        nome: ['', Validators.required],
+      });
+    
   }
 
   ngOnInit() {
-    //TAB TIPOS PLANO
-    this.tipoPlanoFormGroup = this._formBuilder.group({
-      tp_nome: ['', Validators.required],
+    this.configService.getTiposPlanosConta().snapshotChanges().subscribe(data => {
+      this.tiposPlanos = data.map(e => {
+        return {
+          id: e.payload.key,
+          //subTipos: e.payload.val()['subTipos'] as SubTipoPlanoConta[],
+          ...e.payload.val(),
+        } as TipoPlanoConta;
+      });
+    })
+
+    this.configService.getSubTiposPlanosConta().snapshotChanges().subscribe(data => {
+      this.subTiposPlanos = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as SubTipoPlanoConta;
+      });
+      this.subTiposPlanos_Aux = this.subTiposPlanos;
+    })
+
+    this.configService.getPlanosConta().snapshotChanges().subscribe(data => {
+      this.planosConta = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as PlanoConta;
+      });
+      this.dataSourse=new MatTableDataSource(this.planosConta.sort((a, b) => a.tipo.nome > b.tipo.nome ? 1 : -1));
+      setTimeout(()=> this.dataSourse.paginator = this.paginator);
+    })
+
+  }
+
+  mudarTipo(){
+    this.subTiposPlanos = [];
+
+    this.subTiposPlanos_Aux.forEach(element => {
+      if(element.tipo.nome == this.planoConta.tipo.nome){
+        this.subTiposPlanos.push(element);
+      }
     });
   }
 
-  cadastrarTipo(){
-    
+  cadastrar(){
+    if(this.cadastroFormGroup.valid){
+
+      let data = Object.assign({}, this.planoConta);
+
+      this.configService.createPlanoConta(data)
+      .then( res => {
+
+        this.planoConta = new PlanoConta();
+        this.cadastroFormGroup.reset;
+
+        this.openSnackBar("Plano de conta cadastrado com sucesso");
+      }, err=>{
+        this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+      })
+
+    }else{
+      this.openSnackBar("Preencha devidamente todos os campos")
+    }
+  }
+
+  autualizar(){
+    if(this.cadastroFormGroup.valid){
+      let data = Object.assign({}, this.planoConta);
+
+      this.configService.updatePlanoConta(data)
+      .then( res => {
+
+        this.planoConta = new PlanoConta();
+        this.cadastroFormGroup.reset;
+        this.editando = false;
+
+        this.openSnackBar("Plano de conta atualizado com sucesso");
+      }, err=>{
+        this.openSnackBar("Ocorreu um erro ao cadastrar. Contacte o admnistrador do sistema");
+      })
+
+    }else{
+      this.openSnackBar("Preencha devidamente todos os campos")
+    }
+  }
+
+  editar(planoConta: PlanoConta){
+    this.planoConta = planoConta;
+    this.editando = true;
+
+    this.tiposPlanos.forEach(element => {
+      if(element.nome == planoConta.tipo.nome){
+        this.planoConta.tipo = element;
+      }
+    });
+
+    this.subTiposPlanos.forEach(element => {
+      if(element.nome == planoConta.subtipo.nome){
+        this.planoConta.subtipo = element;
+      }
+    });
+  }
+
+  openSnackBar(mensagem) {
+    this.snackBar.open(mensagem, null,{
+      duration: 2000
+    })
   }
 
 }

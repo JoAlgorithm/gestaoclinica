@@ -112,9 +112,10 @@ export class ListagemComponent implements OnInit {
   ]
 
   formas_pagamento = [
+    {value: 'Numerário', viewValue: 'Numerário'},
     {value: 'Cartão de crédito', viewValue: 'Cartão de crédito'},
     {value: 'Convênio', viewValue: 'Convênio'},
-    {value: 'Numerário', viewValue: 'Numerário'},
+
   ]
  
 

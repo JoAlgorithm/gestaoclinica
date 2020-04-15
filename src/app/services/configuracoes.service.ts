@@ -10,6 +10,10 @@ import { CondutaClinica } from '../classes/conduta_clinica';
 import { NrCotacao } from '../classes/nr_cotacao';
 import { NrFatura } from '../classes/nr_fatura';
 import { Seguradora } from '../classes/seguradora';
+import { TipoPlanoConta } from '../classes/tipo_plano_conta';
+import { SubTipoPlanoConta } from '../classes/subtipo_plano_conta';
+import { PlanoConta } from '../classes/plano_conta';
+import { Lancamento } from '../classes/lancamentos';
 //import firebase = require('firebase');
 
 @Injectable()
@@ -215,6 +219,48 @@ export class ConfiguracoesService {
     return this.db.list('seguradoras/'+this.authService.get_clinica_id + '/');
   }
 
+
+  //Cadastrar Planos de conta
+  
+  /*createTipoPlanoConta(tipoPlanoConta: SubTipoPlanoConta){
+    return this.db.list('subTiposPlanoConta/'+this.authService.get_clinica_id + '/').push(tipoPlanoConta);
+  }*/
+
+  createPlanoConta(planoConta: PlanoConta){
+    return this.db.list('planosConta/'+this.authService.get_clinica_id + '/').push(planoConta);
+  }
+
+  getPlanosConta() {
+    return this.db.list('planosConta/'+this.authService.get_clinica_id + '/');
+  }
+
+  getTiposPlanosConta() {
+    return this.db.list('tiposPlanoConta/'+this.authService.get_clinica_id + '/');
+  }
+
+  getSubTiposPlanosConta() {
+    return this.db.list('subTiposPlanoConta/'+this.authService.get_clinica_id + '/');
+  }
+  
+  updatePlanoConta(planoConta: PlanoConta){
+    return this.db.list('planosConta/'+this.authService.get_clinica_id + '/').update(planoConta.id, planoConta);
+  }
+
+  createLancamento(lancamento: Lancamento){
+    return this.db.list('lancamentos/'+this.authService.get_clinica_id + '/'+lancamento.ano+"/"+lancamento.mes+"/").push(lancamento);
+  }
+
+  getLancamentos(ano, mes){
+    return this.db.list('lancamentos/'+this.authService.get_clinica_id + '/'+ano+"/"+mes+"/");
+  }
+
+  updateLancamento(lancamento){
+    return this.db.list('lancamentos/'+this.authService.get_clinica_id + '/'+lancamento.ano+"/"+lancamento.mes+"/").update(lancamento.id, lancamento);
+  }
+
+  /*createFormaPagamento(planoConta: PlanoConta){
+    return this.db.list('formaspagamento/'+this.authService.get_clinica_id + '/').push(planoConta);
+  }*/
   
 
 }

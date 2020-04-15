@@ -1144,10 +1144,10 @@ export class TransferenciaDialog {
       md.valor_medio_entrada = medicamento.valor_medio_entrada ? medicamento.valor_medio_entrada : 0;
       md.valor_tota_entrada =  medicamento.valor_tota_entrada ? medicamento.valor_tota_entrada : 0;
       md.qtd_disponivel = medicamento.qtd_disponivel ? medicamento.qtd_disponivel : 0;
-      md.categoria = medicamento.categoria ? medicamento.categoria : undefined;
-      md.tipo = medicamento.tipo ? medicamento.tipo : undefined;
-      md.un = medicamento.un ? medicamento.un : undefined;
-      md.composicao = medicamento.composicao ? medicamento.composicao : undefined;
+      md.categoria = medicamento.categoria ? medicamento.categoria : null;
+      md.tipo = medicamento.tipo ? medicamento.tipo : null;
+      md.un = medicamento.un ? medicamento.un : null;
+      md.composicao = medicamento.composicao ? medicamento.composicao : "";
       md.nivel = medicamento.nivel ? medicamento.nivel : "";
       md.preco_venda = medicamento.preco_venda ? medicamento.preco_venda : 0;
       //md.preco_venda_total = medicamento.preco_venda ? medicamento.preco_venda_total : 0;

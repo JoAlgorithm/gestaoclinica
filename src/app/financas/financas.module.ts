@@ -65,6 +65,7 @@ import { ContaReceberComponent, ConfirmacaoDialog } from './conta-receber/conta-
 import { ContaRecebidaComponent } from './conta-recebida/conta-recebida.component';
 import { FinancasRoutes } from './financas.routing';
 import { PlanoContaComponent } from './plano-conta/plano-conta.component';
+import { LancamentoComponent } from './lancamento/lancamento.component';
 
 
 
@@ -135,7 +136,8 @@ import { PlanoContaComponent } from './plano-conta/plano-conta.component';
     ContaReceberComponent,
     ContaRecebidaComponent,
     ConfirmacaoDialog,
-    PlanoContaComponent
+    PlanoContaComponent,
+    LancamentoComponent
   ],
   entryComponents: [
     ConfirmacaoDialog

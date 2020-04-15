@@ -1,21 +1,11 @@
 <mat-card class="example-card">
   <mat-card-content>
-    <h5>FORMULARIO DE CADASTRO DE PLANOS DE CONTA</h5>
+    <h5>FORMULARIO DE REGISTO DE SAIDAS E ENTRADAS</h5>
 
     <form [formGroup]="cadastroFormGroup">
 
-        <!--<mat-form-field style="width: 31%">
-          <mat-select placeholder="Sub-Tipo" formControlName="subtipo" [(ngModel)]="planoConta.subtipo">
-            <mat-optgroup *ngFor="let tipoPlano of tiposPlanos" [label]="tipoPlano.nome">
-              <mat-option *ngFor="let subTipo of tipoPlano.subTipos" [value]="subTipo">
-                {{subTipo?.nome}}
-              </mat-option>
-            </mat-optgroup>
-          </mat-select>
-        </mat-form-field>-->
-
       <mat-form-field style="width: 31%">
-        <mat-select placeholder="Tipo" formControlName="tipo" [(ngModel)]="planoConta.tipo" (selectionChange)="mudarTipo()" required>
+        <mat-select placeholder="Tipo" formControlName="tipo" [(ngModel)]="lancamento.tipo" (selectionChange)="mudarTipo()" required>
           <mat-option *ngFor="let tipoPlano of tiposPlanos" [value]="tipoPlano">
             {{tipoPlano.nome}}
           </mat-option>
@@ -23,7 +13,7 @@
       </mat-form-field>
 
       <mat-form-field style="width: 31%">
-        <mat-select placeholder="Sub-Tipo" formControlName="subtipo" [(ngModel)]="planoConta.subtipo" required>
+        <mat-select placeholder="Sub-Tipo" formControlName="subtipo" [(ngModel)]="lancamento.subtipo" (selectionChange)="mudarSubTipo()" required>
             <mat-option *ngFor="let subTipoPlanos of subTiposPlanos" [value]="subTipoPlanos">
               {{subTipoPlanos.nome}}
             </mat-option>
@@ -31,36 +21,63 @@
       </mat-form-field>
 
       <mat-form-field style="width: 31%">
-          <input matInput placeholder="Nome" formControlName="nome" [(ngModel)]="planoConta.nome" required> 
+        <mat-select placeholder="Sub-Tipo" formControlName="plano" [(ngModel)]="lancamento.plano" required>
+            <mat-option *ngFor="let planoConta of planosConta" [value]="planoConta">
+              {{planoConta.nome}}
+            </mat-option>
+        </mat-select>
       </mat-form-field>
 
-      <button mat-icon-button (click)="autualizar()" matTooltip="Editar plano" *ngIf='editando'>
+      <mat-form-field style="width: 31%">
+        <input matInput placeholder="Valor" type="number" min="0" formControlName="valor" [(ngModel)]="lancamento.valor" required> 
+      </mat-form-field>
+
+      <mat-form-field style="width: 62%">
+        <input matInput placeholder="Descricao" formControlName="descricao" [(ngModel)]="lancamento.descricao"> 
+      </mat-form-field>
+
+      <button mat-icon-button (click)="autualizar()" matTooltip="Editar lancamento" *ngIf='editando'>
         <mat-icon>create</mat-icon>
       </button>
 
-      <button mat-icon-button matTooltip="Cadastrar plano" (click)="cadastrar()" matTooltip="Cadastrar plano" *ngIf='!editando'>
+      <button mat-icon-button matTooltip="Cadastrar lancamento" (click)="cadastrar()" matTooltip="Cadastrar plano" *ngIf='!editando'>
         <mat-icon>add_circle</mat-icon>
       </button>
 
-      
     </form>
 
     <div class="example-container mat-elevation-z8">
       <mat-table [dataSource]="dataSourse" matSort>
+            <ng-container matColumnDef="data">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Data </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.data}}</mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="tipo">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </mat-header-cell>
-                <mat-cell *matCellDef="let row">{{row.tipo.nome}}</mat-cell>
+                <mat-cell *matCellDef="let row">{{row.tipo_nome}}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="subtipo">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Sub-Tipo </mat-header-cell>
-                <mat-cell *matCellDef="let row">{{row.subtipo.nome}}</mat-cell>
+                <mat-cell *matCellDef="let row">{{row.subtipo_nome}}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="nome">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
-              <mat-cell *matCellDef="let row">{{row.nome}}</mat-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Plano </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.plano_nome}}</mat-cell>
             </ng-container>
+
+            <ng-container matColumnDef="plano">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Plano </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.plano_nome}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="valor">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Valor </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{row.valor| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+            </ng-container>
+            
 
             <ng-container matColumnDef="editar">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Editar </mat-header-cell>
@@ -71,7 +88,6 @@
             
             <ng-container matColumnDef="remover">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Remover </mat-header-cell>
-                <!--<mat-cell *matCellDef="let row">{{row.segunda_via}}</mat-cell>-->
               <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Remover {{row.nome}}">  
                   <mat-icon>delete</mat-icon>
               </button></mat-cell>
@@ -83,7 +99,6 @@
         </mat-table>
         <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
-
 
   </mat-card-content>
 </mat-card>
