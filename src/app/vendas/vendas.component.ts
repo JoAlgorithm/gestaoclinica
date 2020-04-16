@@ -20,6 +20,7 @@ import { Faturacao } from '../classes/faturacao';
 import { Paciente } from '../classes/paciente';
 import { AuthService } from '../services/auth.service';
 import * as jsPDF from 'jspdf';
+import { Lancamento } from '../classes/lancamentos';
 
 
 @Component({
@@ -85,8 +86,10 @@ export class VendasComponent implements OnInit {
   forma_pagamento = "";
   formas_pagamento = [
     {value: 'Numerário', viewValue: 'Numerário'},
-    {value: 'Cartão de crédito', viewValue: 'Cartão de crédito'},
+    {value: 'POS', viewValue: 'POS'},
     {value: 'Convênio', viewValue: 'Convênio'},
+    {value: 'Cheque', viewValue: 'Cheque'},
+    {value: 'Mpesa', viewValue: 'Mpesa'},
   ]
 
   seguradora: Seguradora;
@@ -112,6 +115,7 @@ export class VendasComponent implements OnInit {
 
   paciente:Paciente;
 
+  lancamento: Lancamento;
 
   constructor(public estoqueService: EstoqueService,  public configServices: ConfiguracoesService, public snackBar: MatSnackBar,
     private _formBuilder: FormBuilder, public authService: AuthService) {
@@ -137,6 +141,8 @@ export class VendasComponent implements OnInit {
     this.medicamentoFormGroup.controls['qtd_disponivel'].disable();
     this.medicamentoFormGroup.controls['preco'].disable();
     this.medicamentoFormGroup.controls['preco_venda_total'].disable();
+
+    this.lancamento = new Lancamento();
   }
 
   ngOnInit() {
@@ -611,6 +617,18 @@ export class VendasComponent implements OnInit {
       faturacao.ano = new Date().getFullYear();
       faturacao.id = this.nr_fatura+"";
 
+      this.lancamento.dia = new Date().getDate();
+      this.lancamento.ano = ano;
+      this.lancamento.mes = mes+"";
+      this.lancamento.data = this.lancamento.dia+"/"+this.lancamento.mes+"/"+this.lancamento.ano;
+      this.lancamento.descricao = "";
+      this.lancamento.tipo_nome = "2.Entrada";
+      this.lancamento.subtipo_nome = "2.1.Receitas de vendas";
+      this.lancamento.plano_nome = "MEDICAMENTO";
+      this.lancamento.valor = this.preco_total;
+      this.lancamento.formaPagamento = this.forma_pagamento;
+      this.lancamento.nr_fatura = this.nr_fatura;
+
       let key = this.estoqueService.db.list('consultas/'+this.authService.get_clinica_id+'/lista_relatorio/'+ this.consulta.ano).push('').key;
       //console.log("Key faturacao e consultas:" +key);
         
@@ -620,6 +638,9 @@ export class VendasComponent implements OnInit {
       //Gravando na tabela de consultas
       //updatedUserData['consultas/'+this.authService.get_clinica_id+'/lista_completa/'+key] = this.consulta;
       updatedUserData['consultas/'+this.authService.get_clinica_id+'/lista_relatorio/'+ this.consulta.ano + '/'+key] = this.consulta;
+
+      //Gravando na tabela de "lancamentos"
+      updatedUserData['lancamentos/'+this.authService.get_clinica_id + '/'+this.lancamento.ano+"/"+this.lancamento.mes+"/"+this.nr_fatura] = this.lancamento;
 
       let conta = new Conta();
       conta.ano = ano;
@@ -710,6 +731,8 @@ export class VendasComponent implements OnInit {
     this.medicamentoFormGroup.controls['qtd_disponivel'].disable();
     this.medicamentoFormGroup.controls['preco'].disable();
     this.medicamentoFormGroup.controls['preco_venda_total'].disable();
+
+    this.lancamento = new Lancamento();
 
     this.ngOnInit();
   }

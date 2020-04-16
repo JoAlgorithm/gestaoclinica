@@ -14,6 +14,7 @@ import { NrCotacao } from '../../classes/nr_cotacao';
 import { NrFatura } from '../../classes/nr_fatura';
 import { Seguradora } from '../../classes/seguradora';
 import { Conta, Linha } from '../../classes/conta';
+import { Lancamento } from '../../classes/lancamentos';
 
 @Component({
   selector: 'app-pendentes',
@@ -40,9 +41,11 @@ export class PendentesComponent implements OnInit {
   nr_fatura = 0;
 
   formas_pagamento = [
-    {value: 'Cartão de crédito', viewValue: 'Cartão de crédito'},
-    {value: 'Convênio', viewValue: 'Convênio'},
     {value: 'Numerário', viewValue: 'Numerário'},
+    {value: 'POS', viewValue: 'POS'},
+    {value: 'Convênio', viewValue: 'Convênio'},
+    {value: 'Cheque', viewValue: 'Cheque'},
+    {value: 'Mpesa', viewValue: 'Mpesa'},
   ]
 
   seguradoras: Seguradora[];
@@ -650,6 +653,8 @@ export class RemoverPendentesDialog {
     tot_diagnosticos = 0;
 
     linhas: Linha[] = [];
+
+    lancamento: Lancamento;
     
     constructor(  public dialogRef: MatDialogRef<FaturarDialog>, public configServices: ConfiguracoesService,
     @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
@@ -672,6 +677,8 @@ export class RemoverPendentesDialog {
         this.nr_fatura = this.data.nr_fatura;
 
         this.seguradora = new Seguradora();
+
+        this.lancamento = new Lancamento();
 
         this.dataSource = new MatTableDataSource(this.diagnosticos_aux);
         setTimeout(() => this.dataSource.paginator = this.paginator);
@@ -837,14 +844,21 @@ export class RemoverPendentesDialog {
 
           this.consulta.diagnosticos_aux.forEach(element => {
             if(row == element){
+             
+
+              if(element.faturado){
+                //Se ja ter sido faturado nao conta
+              }else{
+                if(this.forma_pagamento == "Convênio"){  
+                  faturacao.valor = +faturacao.valor + +element.preco_seguradora;
+                }else{
+                  faturacao.valor = +faturacao.valor + +element.preco;
+                }
+              }
+              
+
               element.faturado = true;
 
-
-              if(this.forma_pagamento == "Convênio"){  
-                faturacao.valor = +faturacao.valor + +element.preco_seguradora;
-              }else{
-                faturacao.valor = +faturacao.valor + +element.preco;
-              }
               //servico = servico+" "+element.nome+" ; ";
               //diagnostico_aux2.push(element);
               diagnostico_aux2.indexOf(element) === -1 ? servico = servico+" "+element.nome+" ; " : console.log("This item already exists");
@@ -855,8 +869,25 @@ export class RemoverPendentesDialog {
 
         } 
       });
+
+      this.lancamento.dia = new Date().getDate();
+      this.lancamento.ano = faturacao.ano;
+      this.lancamento.mes = faturacao.mes+"";
+      this.lancamento.data = this.lancamento.dia+"/"+this.lancamento.mes+"/"+this.lancamento.ano;
+      this.lancamento.descricao = "";
+      this.lancamento.tipo_nome = "2.Entrada";
+      this.lancamento.subtipo_nome = "2.1.Receitas de vendas";
+      this.lancamento.plano_nome = "DIAGNOSTICO_AUX";
+      //console.log("Faturacao valor"+faturacao.valor)
+      this.lancamento.valor = faturacao.valor;
+      this.lancamento.formaPagamento = this.forma_pagamento;
+      this.lancamento.nr_fatura = this.nr_fatura;
+
       //console.log("Adicionou "+diagnostico_aux2.length)
       updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
+
+      //Gravando na tabela de "lancamentos"
+      updatedUserData['lancamentos/'+this.authService.get_clinica_id + '/'+this.lancamento.ano+"/"+this.lancamento.mes+"/"+this.nr_fatura] = this.lancamento;
 
       
       //Se todos os itens tiverem sido faturados a consulta:

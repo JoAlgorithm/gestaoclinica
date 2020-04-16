@@ -32,6 +32,7 @@ import { Seguradora } from '../../classes/seguradora';
 import { Conta, Linha } from '../../classes/conta';
 import { CategoriaMedicamento } from '../../classes/categoria_medicamento';
 import { TipoEstoque } from '../../classes/tipo_estoque';
+import { Lancamento } from '../../classes/lancamentos';
 //import { MatProgressButtonOptions } from 'mat-progress-buttons';
 
 
@@ -113,9 +114,10 @@ export class ListagemComponent implements OnInit {
 
   formas_pagamento = [
     {value: 'Numerário', viewValue: 'Numerário'},
-    {value: 'Cartão de crédito', viewValue: 'Cartão de crédito'},
+    {value: 'POS', viewValue: 'POS'},
     {value: 'Convênio', viewValue: 'Convênio'},
-
+    {value: 'Cheque', viewValue: 'Cheque'},
+    {value: 'Mpesa', viewValue: 'Mpesa'},
   ]
  
 
@@ -629,6 +631,8 @@ export class MedicamentosDialog {
   valor_entrada = 0;
   valor_acumulado = 0;
 
+  lancamento: Lancamento;
+
   constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<MedicamentosDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public estoqueService: EstoqueService, 
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder,
@@ -664,7 +668,7 @@ export class MedicamentosDialog {
 
     //this.categorias = data.tipos_estoque;
     //this.categorias_aux = data.tipos_estoque;
-     
+     this.lancamento = new Lancamento();
   }
 
   filtrodeposito;
@@ -976,6 +980,9 @@ export class MedicamentosDialog {
       this.consulta.paciente_nid = paciente.nid;
       this.consulta.movimentosestoque = this.movimentos;
 
+      
+
+
       let servico = "Medicamentos: ";
 
       this.consulta.movimentosestoque.forEach(mvt => {
@@ -1063,6 +1070,18 @@ export class MedicamentosDialog {
       faturacao.ano = new Date().getFullYear();
       faturacao.id = this.nr_fatura+"";
 
+      this.lancamento.dia = new Date().getDate();
+      this.lancamento.ano = ano;
+      this.lancamento.mes = mes+"";
+      this.lancamento.data = this.lancamento.dia+"/"+this.lancamento.mes+"/"+this.lancamento.ano;
+      this.lancamento.descricao = "";
+      this.lancamento.tipo_nome = "2.Entrada";
+      this.lancamento.subtipo_nome = "2.1.Receitas de vendas";
+      this.lancamento.plano_nome = "MEDICAMENTO";
+      this.lancamento.valor = this.preco_total;
+      this.lancamento.formaPagamento = this.forma_pagamento;
+      this.lancamento.nr_fatura = this.nr_fatura;
+
       let key = this.estoqueService.db.list('consultas/'+this.authService.get_clinica_id+'/lista_relatorio/'+ this.consulta.ano).push('').key;
       //console.log("Key faturacao e consultas:" +key);
         
@@ -1072,6 +1091,9 @@ export class MedicamentosDialog {
       //Gravando na tabela de consultas
       //updatedUserData['consultas/'+this.authService.get_clinica_id+'/lista_completa/'+key] = this.consulta;
       updatedUserData['consultas/'+this.authService.get_clinica_id+'/lista_relatorio/'+ this.consulta.ano + '/'+key] = this.consulta;
+
+      //Gravando na tabela de "lancamentos"
+      updatedUserData['lancamentos/'+this.authService.get_clinica_id + '/'+this.lancamento.ano+"/"+this.lancamento.mes+"/"+this.nr_fatura] = this.lancamento;
 
       let conta = new Conta();
       conta.ano = ano;
@@ -1571,6 +1593,8 @@ export class MedicamentosDialog {
   nr_apolice = "";
   
   linhas: Linha[] = [];
+
+  lancamento: Lancamento;
   
   constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<CondutasDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public configServices: ConfiguracoesService,
@@ -1599,6 +1623,8 @@ export class MedicamentosDialog {
     this.nr_fatura = this.data.nr_fatura; //PDF
     
     this.seguradora = new Seguradora();
+
+    this.lancamento = new Lancamento();
   }
   
 
@@ -1769,8 +1795,23 @@ export class MedicamentosDialog {
       faturacao.ano = ano;
       faturacao.medico_nome = this.medico;
 
+      this.lancamento.dia = new Date().getDate();
+      this.lancamento.ano = ano;
+      this.lancamento.mes = mes+"";
+      this.lancamento.data = this.lancamento.dia+"/"+this.lancamento.mes+"/"+this.lancamento.ano;
+      this.lancamento.descricao = "";
+      this.lancamento.tipo_nome = "2.Entrada";
+      this.lancamento.subtipo_nome = "2.1.Receitas de vendas";
+      this.lancamento.plano_nome = "CONDUTA CLINICA";
+      this.lancamento.valor = this.preco_total;
+      this.lancamento.formaPagamento = this.forma_pagamento;
+      this.lancamento.nr_fatura = this.nr_fatura; 
+
       //Gravando na tabela de faturacao "faturacao"
       updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
+
+      //Gravando na tabela de "lancamentos"
+      updatedUserData['lancamentos/'+this.authService.get_clinica_id + '/'+this.lancamento.ano+"/"+this.lancamento.mes+"/"+this.nr_fatura] = this.lancamento;
 
       let conta = new Conta();
       conta.ano = ano;
@@ -2174,6 +2215,8 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
 
     linhas: Linha[] = [];
 
+    lancamento: Lancamento;
+
   constructor(  public dialogRef: MatDialogRef<ConsultasDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public configServices: ConfiguracoesService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
@@ -2191,6 +2234,8 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
     this.nr_fatura = this.data.nr_fatura; //PDF
 
     this.seguradora = new Seguradora();
+
+    this.lancamento = new Lancamento();
   }
  
   onNoClick(): void {
@@ -2354,8 +2399,23 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
       faturacao.id = this.nr_fatura+"";
       faturacao.medico_nome = this.medico;
 
+      this.lancamento.dia = new Date().getDate();
+      this.lancamento.ano = ano;
+      this.lancamento.mes = mes+"";
+      this.lancamento.data = this.lancamento.dia+"/"+this.lancamento.mes+"/"+this.lancamento.ano;
+      this.lancamento.descricao = "";
+      this.lancamento.tipo_nome = "2.Entrada";
+      this.lancamento.subtipo_nome = "2.1.Receitas de vendas";
+      this.lancamento.plano_nome = "CONSULTA_MEDICA";
+      this.lancamento.valor = faturacao.valor;
+      this.lancamento.formaPagamento = this.forma_pagamento;
+      this.lancamento.nr_fatura = this.nr_fatura;
+
       //Gravando na tabela de faturacao "faturacao"
       updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
+
+      //Gravando na tabela de "lancamentos"
+      updatedUserData['lancamentos/'+this.authService.get_clinica_id + '/'+this.lancamento.ano+"/"+this.lancamento.mes+"/"+this.nr_fatura] = this.lancamento;
 
       let conta = new Conta();
       conta.ano = ano;
@@ -2907,6 +2967,8 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
 
   linhas: Linha[] = [];
 
+  lancamento: Lancamento;
+
   constructor(  public dialogRef: MatDialogRef<DiagnosticosDialog>, private router: Router,
   @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService,
   public pacienteService: PacienteService,  public snackBar: MatSnackBar, 
@@ -2967,6 +3029,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
     this.nr_cotacao = this.data.nr_cotacao; //PDF
     this.nr_fatura = this.data.nr_fatura; //PDF
 
+    this.lancamento = new Lancamento();
   }
 
   precoSegurado = false;
@@ -3165,7 +3228,22 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
 
       faturacao.medico_nome = this.medico;
 
+      this.lancamento.dia = new Date().getDate();
+      this.lancamento.ano = ano;
+      this.lancamento.mes = mes+"";
+      this.lancamento.data = this.lancamento.dia+"/"+this.lancamento.mes+"/"+this.lancamento.ano;
+      this.lancamento.descricao = "";
+      this.lancamento.tipo_nome = "2.Entrada";
+      this.lancamento.subtipo_nome = "2.1.Receitas de vendas";
+      this.lancamento.plano_nome = "DIAGNOSTICO_AUX";
+      this.lancamento.valor = this.preco_total;
+      this.lancamento.formaPagamento = this.forma_pagamento;
+      this.lancamento.nr_fatura = this.nr_fatura;
+
       updatedUserData['faturacao/'+this.authService.get_clinica_id + '/'+faturacao.ano +'/'+this.nr_fatura] = faturacao;
+
+      //Gravando na tabela de "lancamentos"
+      updatedUserData['lancamentos/'+this.authService.get_clinica_id + '/'+this.lancamento.ano+"/"+this.lancamento.mes+"/"+this.nr_fatura] = this.lancamento;
 
       let conta = new Conta();
       conta.ano = ano;
