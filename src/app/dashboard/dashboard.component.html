@@ -368,8 +368,63 @@
 
         
         
+        
 
 </div>
+
+<mat-card class="card-widget" *ngIf='acesso_indicadores'>
+  <div class="example-container mat-elevation-z8">
+    <mat-table [dataSource]="dataSourseLancamentos" matSort>
+      <ng-container matColumnDef="Dia">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Dia </mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.dia}}</mat-cell>
+      </ng-container>
+  
+  
+        <ng-container matColumnDef="Admnistrativa">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Admnistrativa </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.saida_Admnistrativa| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="Energia">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Energia </mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.saida_Energia| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="Salario">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Salario </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.saida_Salario| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="Alimentacao">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Alimentacao </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.saida_Alimentacao| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="Transporte">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Transporte </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.saida_Transporte| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="SaidaOutros">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Outras Saidas </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.saida_Outros| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="SaidaTotal">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Total Saidas </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.saida_total| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+        </ng-container>
+  
+        <mat-header-row *matHeaderRowDef="displayedColumnsLancamentos"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsLancamentos;">
+        </mat-row>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </div>
+</mat-card>
+
+
 
 
 <!--<div class="example-container mat-elevation-z8" *ngIf='acesso_indicadores'>

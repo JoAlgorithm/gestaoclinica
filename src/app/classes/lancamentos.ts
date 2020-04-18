@@ -11,7 +11,11 @@ export class Lancamento {
     tipo_nome: string;
 
     //1.Saida
-    //1.1. Despesas admnistrativas e comerciais
+    //1.1.Despesas admnistrativas (Energia, etc)
+    //1.2.Despesas de transporte
+    //1.3.Despesas de alimentacao
+    //1.4.Outras despesas (Salario, etc)
+
     //1.2. Despesas de produtos vendidos
     //1.3. Despesas financeiras
     //1.4. Investimentos
@@ -32,7 +36,7 @@ export class Lancamento {
     plano?: PlanoConta;
     plano_nome: string;
 
-    data?: string; //Data de lancamento
+    data?: Date; //Data de lancamento
     dia?: number;
     mes?: string; //Mes
     ano?: Number; //Ano

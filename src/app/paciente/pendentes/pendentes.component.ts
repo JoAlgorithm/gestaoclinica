@@ -873,7 +873,7 @@ export class RemoverPendentesDialog {
       this.lancamento.dia = new Date().getDate();
       this.lancamento.ano = faturacao.ano;
       this.lancamento.mes = faturacao.mes+"";
-      this.lancamento.data = this.lancamento.dia+"/"+this.lancamento.mes+"/"+this.lancamento.ano;
+      this.lancamento.data = new Date();
       this.lancamento.descricao = "";
       this.lancamento.tipo_nome = "2.Entrada";
       this.lancamento.subtipo_nome = "2.1.Receitas de vendas";

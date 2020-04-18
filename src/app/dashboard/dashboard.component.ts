@@ -19,6 +19,7 @@ import { AuthService } from '../services/auth.service';
 import { User } from '../classes/user';
 import { Deposito, DepositoRelatorio } from '../classes/deposito';
 import { EstoqueService } from '../services/estoque.service';
+import { Lancamento } from '../classes/lancamentos';
 
 @Component({
   //selector: 'app-dashboard',
@@ -202,6 +203,617 @@ export class DashboardComponent {
   //deposito_nome = ""; 
   deposito = new Deposito();
   depositos_relatorio : DepositoRelatorio[] = [];
+  
+  //LANCAMENTOS =======================
+  lancamentos: Lancamento[] = [];
+  lancamentosConsolidados: LancamentoConsolidado[] = [];
+
+  dataSourseLancamentos: MatTableDataSource<LancamentoConsolidado>;
+  displayedColumnsLancamentos = ['Dia','Admnistrativa','Energia','Salario', 'Alimentacao', 'Transporte', 'SaidaOutros', 'SaidaTotal'];
+  @ViewChild(MatPaginator) paginatorLancamentos: MatPaginator;
+  @ViewChild(MatSort) sortLancamentos: MatSort;
+  
+  saida_Admnistrativa?: number;
+  saida_Energia?: number;
+  saida_Salario?: number;
+  saida_Alimentacao?: number;
+  saida_Transporte?: number;
+  saida_Outros?: number;
+
+  saida_total?: number;
+
+  /*um_entrada_ = 0
+  dois_entrada_ = 0
+  tres_entrada_ = 0
+  quatro_entrada_ = 0
+  cinco_entrada_ = 0
+  seis_entrada_ = 0
+  sete_entrada_ = 0
+  oito_entrada_ = 0
+  nove_entrada_ = 0
+  dez_entrada_ = 0
+  onze_entrada_ = 0
+  doze_entrada_ = 0
+  treze_entrada_ = 0
+  catorze_entrada_ = 0
+  quinze_entrada_ = 0
+  dezasseis_entrada_ = 0
+  dezassete_entrada_ = 0
+  dezoito_entrada_ = 0
+  dezanove_entrada_ = 0
+  vinte_entrada_ = 0
+  vinteum_entrada_ = 0
+  vintedois_entrada_ = 0
+  vintetrez_entrada_ = 0
+  vintequatro_entrada_ = 0
+  vintecinco_entrada_ = 0
+  vinteseis_entrada_ = 0
+  vintesete_entrada_ = 0
+  vinteoito_entrada_ = 0
+  vintenove_entrada_ = 0
+  trinta_entrada_ = 0
+  trintaum_entrada_ = 0*/
+
+  //ENTRADA POS
+  um_entrada_POS = 0
+  dois_entrada_POS = 0
+  tres_entrada_POS = 0
+  quatro_entrada_POS = 0
+  cinco_entrada_POS = 0
+  seis_entrada_POS = 0
+  sete_entrada_POS = 0
+  oito_entrada_POS = 0
+  nove_entrada_POS = 0
+  dez_entrada_POS = 0
+  onze_entrada_POS = 0
+  doze_entrada_POS = 0
+  treze_entrada_POS = 0
+  catorze_entrada_POS = 0
+  quinze_entrada_POS = 0
+  dezasseis_entrada_POS = 0
+  dezassete_entrada_POS = 0
+  dezoito_entrada_POS = 0
+  dezanove_entrada_POS = 0
+  vinte_entrada_POS = 0
+  vinteum_entrada_POS = 0
+  vintedois_entrada_POS = 0
+  vintetrez_entrada_POS = 0
+  vintequatro_entrada_POS = 0
+  vintecinco_entrada_POS = 0
+  vinteseis_entrada_POS = 0
+  vintesete_entrada_POS = 0
+  vinteoito_entrada_POS = 0
+  vintenove_entrada_POS = 0
+  trinta_entrada_POS = 0
+  trintaum_entrada_POS = 0
+
+  //ENTRADA NUMERARIO
+  um_entrada_NUMERARIO = 0
+  dois_entrada_NUMERARIO = 0
+  tres_entrada_NUMERARIO = 0
+  quatro_entrada_NUMERARIO = 0
+  cinco_entrada_NUMERARIO = 0
+  seis_entrada_NUMERARIO = 0
+  sete_entrada_NUMERARIO = 0
+  oito_entrada_NUMERARIO = 0
+  nove_entrada_NUMERARIO = 0
+  dez_entrada_NUMERARIO = 0
+  onze_entrada_NUMERARIO = 0
+  doze_entrada_NUMERARIO = 0
+  treze_entrada_NUMERARIO = 0
+  catorze_entrada_NUMERARIO = 0
+  quinze_entrada_NUMERARIO = 0
+  dezasseis_entrada_NUMERARIO = 0
+  dezassete_entrada_NUMERARIO = 0
+  dezoito_entrada_NUMERARIO = 0
+  dezanove_entrada_NUMERARIO = 0
+  vinte_entrada_NUMERARIO = 0
+  vinteum_entrada_NUMERARIO = 0
+  vintedois_entrada_NUMERARIO = 0
+  vintetrez_entrada_NUMERARIO = 0
+  vintequatro_entrada_NUMERARIO = 0
+  vintecinco_entrada_NUMERARIO = 0
+  vinteseis_entrada_NUMERARIO = 0
+  vintesete_entrada_NUMERARIO = 0
+  vinteoito_entrada_NUMERARIO = 0
+  vintenove_entrada_NUMERARIO = 0
+  trinta_entrada_NUMERARIO = 0
+  trintaum_entrada_NUMERARIO = 0
+
+  //ENTRADA MPESA
+  um_entrada_MPesa = 0
+  dois_entrada_MPesa = 0
+  tres_entrada_MPesa = 0
+  quatro_entrada_MPesa = 0
+  cinco_entrada_MPesa = 0
+  seis_entrada_MPesa = 0
+  sete_entrada_MPesa = 0
+  oito_entrada_MPesa = 0
+  nove_entrada_MPesa = 0
+  dez_entrada_MPesa = 0
+  onze_entrada_MPesa = 0
+  doze_entrada_MPesa = 0
+  treze_entrada_MPesa = 0
+  catorze_entrada_MPesa = 0
+  quinze_entrada_MPesa = 0
+  dezasseis_entrada_MPesa = 0
+  dezassete_entrada_MPesa = 0
+  dezoito_entrada_MPesa = 0
+  dezanove_entrada_MPesa = 0
+  vinte_entrada_MPesa = 0
+  vinteum_entrada_MPesa = 0
+  vintedois_entrada_MPesa = 0
+  vintetrez_entrada_MPesa = 0
+  vintequatro_entrada_MPesa = 0
+  vintecinco_entrada_MPesa = 0
+  vinteseis_entrada_MPesa = 0
+  vintesete_entrada_MPesa = 0
+  vinteoito_entrada_MPesa = 0
+  vintenove_entrada_MPesa = 0
+  trinta_entrada_MPesa = 0
+  trintaum_entrada_MPesa = 0
+
+  //ENTRADA CHEQUE
+  um_entrada_Cheque = 0
+  dois_entrada_Cheque = 0
+  tres_entrada_Cheque = 0
+  quatro_entrada_Cheque = 0
+  cinco_entrada_Cheque = 0
+  seis_entrada_Cheque = 0
+  sete_entrada_Cheque = 0
+  oito_entrada_Cheque = 0
+  nove_entrada_Cheque = 0
+  dez_entrada_Cheque = 0
+  onze_entrada_Cheque = 0
+  doze_entrada_Cheque = 0
+  treze_entrada_Cheque = 0
+  catorze_entrada_Cheque = 0
+  quinze_entrada_Cheque = 0
+  dezasseis_entrada_Cheque = 0
+  dezassete_entrada_Cheque = 0
+  dezoito_entrada_Cheque = 0
+  dezanove_entrada_Cheque = 0
+  vinte_entrada_Cheque = 0
+  vinteum_entrada_Cheque = 0
+  vintedois_entrada_Cheque = 0
+  vintetrez_entrada_Cheque = 0
+  vintequatro_entrada_Cheque = 0
+  vintecinco_entrada_Cheque = 0
+  vinteseis_entrada_Cheque = 0
+  vintesete_entrada_Cheque = 0
+  vinteoito_entrada_Cheque = 0
+  vintenove_entrada_Cheque = 0
+  trinta_entrada_Cheque = 0
+  trintaum_entrada_Cheque = 0
+
+  //ENTRADA CONVEBIO
+  um_entrada_Convenio = 0
+  dois_entrada_Convenio = 0
+  tres_entrada_Convenio = 0
+  quatro_entrada_Convenio = 0
+  cinco_entrada_Convenio = 0
+  seis_entrada_Convenio = 0
+  sete_entrada_Convenio = 0
+  oito_entrada_Convenio = 0
+  nove_entrada_Convenio = 0
+  dez_entrada_Convenio = 0
+  onze_entrada_Convenio = 0
+  doze_entrada_Convenio = 0
+  treze_entrada_Convenio = 0
+  catorze_entrada_Convenio = 0
+  quinze_entrada_Convenio = 0
+  dezasseis_entrada_Convenio = 0
+  dezassete_entrada_Convenio = 0
+  dezoito_entrada_Convenio = 0
+  dezanove_entrada_Convenio = 0
+  vinte_entrada_Convenio = 0
+  vinteum_entrada_Convenio = 0
+  vintedois_entrada_Convenio = 0
+  vintetrez_entrada_Convenio = 0
+  vintequatro_entrada_Convenio = 0
+  vintecinco_entrada_Convenio = 0
+  vinteseis_entrada_Convenio = 0
+  vintesete_entrada_Convenio = 0
+  vinteoito_entrada_Convenio = 0
+  vintenove_entrada_Convenio = 0
+  trinta_entrada_Convenio = 0
+  trintaum_entrada_Convenio = 0
+
+  //ENTRADA CONSULTA
+  um_entrada_Consulta = 0
+  dois_entrada_Consulta = 0
+  tres_entrada_Consulta = 0
+  quatro_entrada_Consulta = 0
+  cinco_entrada_Consulta = 0
+  seis_entrada_Consulta = 0
+  sete_entrada_Consulta = 0
+  oito_entrada_Consulta = 0
+  nove_entrada_Consulta = 0
+  dez_entrada_Consulta = 0
+  onze_entrada_Consulta = 0
+  doze_entrada_Consulta = 0
+  treze_entrada_Consulta = 0
+  catorze_entrada_Consulta = 0
+  quinze_entrada_Consulta = 0
+  dezasseis_entrada_Consulta = 0
+  dezassete_entrada_Consulta = 0
+  dezoito_entrada_Consulta = 0
+  dezanove_entrada_Consulta = 0
+  vinte_entrada_Consulta = 0
+  vinteum_entrada_Consulta = 0
+  vintedois_entrada_Consulta = 0
+  vintetrez_entrada_Consulta = 0
+  vintequatro_entrada_Consulta = 0
+  vintecinco_entrada_Consulta = 0
+  vinteseis_entrada_Consulta = 0
+  vintesete_entrada_Consulta = 0
+  vinteoito_entrada_Consulta = 0
+  vintenove_entrada_Consulta = 0
+  trinta_entrada_Consulta = 0
+  trintaum_entrada_Consulta = 0
+
+  //ENTRADA DIAGNOSTICO AUX
+  um_entrada_Diagnostico = 0
+  dois_entrada_Diagnostico = 0
+  tres_entrada_Diagnostico = 0
+  quatro_entrada_Diagnostico = 0
+  cinco_entrada_Diagnostico = 0
+  seis_entrada_Diagnostico = 0
+  sete_entrada_Diagnostico = 0
+  oito_entrada_Diagnostico = 0
+  nove_entrada_Diagnostico = 0
+  dez_entrada_Diagnostico = 0
+  onze_entrada_Diagnostico = 0
+  doze_entrada_Diagnostico = 0
+  treze_entrada_Diagnostico = 0
+  catorze_entrada_Diagnostico = 0
+  quinze_entrada_Diagnostico = 0
+  dezasseis_entrada_Diagnostico = 0
+  dezassete_entrada_Diagnostico = 0
+  dezoito_entrada_Diagnostico = 0
+  dezanove_entrada_Diagnostico = 0
+  vinte_entrada_Diagnostico = 0
+  vinteum_entrada_Diagnostico = 0
+  vintedois_entrada_Diagnostico = 0
+  vintetrez_entrada_Diagnostico = 0
+  vintequatro_entrada_Diagnostico = 0
+  vintecinco_entrada_Diagnostico = 0
+  vinteseis_entrada_Diagnostico = 0
+  vintesete_entrada_Diagnostico = 0
+  vinteoito_entrada_Diagnostico = 0
+  vintenove_entrada_Diagnostico = 0
+  trinta_entrada_Diagnostico = 0
+  trintaum_entrada_Diagnostico = 0
+
+  //ENTRADA CONDUTAS
+  um_entrada_Conduta = 0
+  dois_entrada_Conduta = 0
+  tres_entrada_Conduta = 0
+  quatro_entrada_Conduta = 0
+  cinco_entrada_Conduta = 0
+  seis_entrada_Conduta = 0
+  sete_entrada_Conduta = 0
+  oito_entrada_Conduta = 0
+  nove_entrada_Conduta = 0
+  dez_entrada_Conduta = 0
+  onze_entrada_Conduta = 0
+  doze_entrada_Conduta = 0
+  treze_entrada_Conduta = 0
+  catorze_entrada_Conduta = 0
+  quinze_entrada_Conduta = 0
+  dezasseis_entrada_Conduta = 0
+  dezassete_entrada_Conduta = 0
+  dezoito_entrada_Conduta = 0
+  dezanove_entrada_Conduta = 0
+  vinte_entrada_Conduta = 0
+  vinteum_entrada_Conduta = 0
+  vintedois_entrada_Conduta = 0
+  vintetrez_entrada_Conduta = 0
+  vintequatro_entrada_Conduta = 0
+  vintecinco_entrada_Conduta = 0
+  vinteseis_entrada_Conduta = 0
+  vintesete_entrada_Conduta = 0
+  vinteoito_entrada_Conduta = 0
+  vintenove_entrada_Conduta = 0
+  trinta_entrada_Conduta = 0
+  trintaum_entrada_Conduta = 0
+
+  //ENTRADA MEDICAMENTO
+  um_entrada_Medicamento = 0
+  dois_entrada_Medicamento = 0
+  tres_entrada_Medicamento = 0
+  quatro_entrada_Medicamento = 0
+  cinco_entrada_Medicamento = 0
+  seis_entrada_Medicamento = 0
+  sete_entrada_Medicamento = 0
+  oito_entrada_Medicamento = 0
+  nove_entrada_Medicamento = 0
+  dez_entrada_Medicamento = 0
+  onze_entrada_Medicamento = 0
+  doze_entrada_Medicamento = 0
+  treze_entrada_Medicamento = 0
+  catorze_entrada_Medicamento = 0
+  quinze_entrada_Medicamento = 0
+  dezasseis_entrada_Medicamento = 0
+  dezassete_entrada_Medicamento = 0
+  dezoito_entrada_Medicamento = 0
+  dezanove_entrada_Medicamento = 0
+  vinte_entrada_Medicamento = 0
+  vinteum_entrada_Medicamento = 0
+  vintedois_entrada_Medicamento = 0
+  vintetrez_entrada_Medicamento = 0
+  vintequatro_entrada_Medicamento = 0
+  vintecinco_entrada_Medicamento = 0
+  vinteseis_entrada_Medicamento = 0
+  vintesete_entrada_Medicamento = 0
+  vinteoito_entrada_Medicamento = 0
+  vintenove_entrada_Medicamento = 0
+  trinta_entrada_Medicamento = 0
+  trintaum_entrada_Medicamento = 0
+
+  //ENTRADA TOTAL
+  um_entrada_Total = 0
+  dois_entrada_Total = 0
+  tres_entrada_Total = 0
+  quatro_entrada_Total = 0
+  cinco_entrada_Total = 0
+  seis_entrada_Total = 0
+  sete_entrada_Total = 0
+  oito_entrada_Total = 0
+  nove_entrada_Total = 0
+  dez_entrada_Total = 0
+  onze_entrada_Total = 0
+  doze_entrada_Total = 0
+  treze_entrada_Total = 0
+  catorze_entrada_Total = 0
+  quinze_entrada_Total = 0
+  dezasseis_entrada_Total = 0
+  dezassete_entrada_Total = 0
+  dezoito_entrada_Total = 0
+  dezanove_entrada_Total = 0
+  vinte_entrada_Total = 0
+  vinteum_entrada_Total = 0
+  vintedois_entrada_Total = 0
+  vintetrez_entrada_Total = 0
+  vintequatro_entrada_Total = 0
+  vintecinco_entrada_Total = 0
+  vinteseis_entrada_Total = 0
+  vintesete_entrada_Total = 0
+  vinteoito_entrada_Total = 0
+  vintenove_entrada_Total = 0
+  trinta_entrada_Total = 0
+  trintaum_entrada_Total = 0
+
+  //SAIDA TOTAL
+  um_saida_Total = 0
+  dois_saida_Total = 0
+  tres_saida_Total = 0
+  quatro_saida_Total = 0
+  cinco_saida_Total = 0
+  seis_saida_Total = 0
+  sete_saida_Total = 0
+  oito_saida_Total = 0
+  nove_saida_Total = 0
+  dez_saida_Total = 0
+  onze_saida_Total = 0
+  doze_saida_Total = 0
+  treze_saida_Total = 0
+  catorze_saida_Total = 0
+  quinze_saida_Total = 0
+  dezasseis_saida_Total = 0
+  dezassete_saida_Total = 0
+  dezoito_saida_Total = 0
+  dezanove_saida_Total = 0
+  vinte_saida_Total = 0
+  vinteum_saida_Total = 0
+  vintedois_saida_Total = 0
+  vintetrez_saida_Total = 0
+  vintequatro_saida_Total = 0
+  vintecinco_saida_Total = 0
+  vinteseis_saida_Total = 0
+  vintesete_saida_Total = 0
+  vinteoito_saida_Total = 0
+  vintenove_saida_Total = 0
+  trinta_saida_Total = 0
+  trintaum_saida_Total = 0
+
+  //SAIDA ENERGIA
+  um_saida_Energia = 0
+  dois_saida_Energia = 0
+  tres_saida_Energia = 0
+  quatro_saida_Energia = 0
+  cinco_saida_Energia = 0
+  seis_saida_Energia = 0
+  sete_saida_Energia = 0
+  oito_saida_Energia = 0
+  nove_saida_Energia = 0
+  dez_saida_Energia = 0
+  onze_saida_Energia = 0
+  doze_saida_Energia = 0
+  treze_saida_Energia = 0
+  catorze_saida_Energia = 0
+  quinze_saida_Energia = 0
+  dezasseis_saida_Energia = 0
+  dezassete_saida_Energia = 0
+  dezoito_saida_Energia = 0
+  dezanove_saida_Energia = 0
+  vinte_saida_Energia = 0
+  vinteum_saida_Energia = 0
+  vintedois_saida_Energia = 0
+  vintetrez_saida_Energia = 0
+  vintequatro_saida_Energia = 0
+  vintecinco_saida_Energia = 0
+  vinteseis_saida_Energia = 0
+  vintesete_saida_Energia = 0
+  vinteoito_saida_Energia = 0
+  vintenove_saida_Energia = 0
+  trinta_saida_Energia = 0
+  trintaum_saida_Energia = 0
+
+  //SAIDA DESPESAS ADMNISTRATIVAS
+  um_saida_Admnistrativas = 0
+  dois_saida_Admnistrativas = 0
+  tres_saida_Admnistrativas = 0
+  quatro_saida_Admnistrativas = 0
+  cinco_saida_Admnistrativas = 0
+  seis_saida_Admnistrativas = 0
+  sete_saida_Admnistrativas = 0
+  oito_saida_Admnistrativas = 0
+  nove_saida_Admnistrativas = 0
+  dez_saida_Admnistrativas = 0
+  onze_saida_Admnistrativas = 0
+  doze_saida_Admnistrativas = 0
+  treze_saida_Admnistrativas = 0
+  catorze_saida_Admnistrativas = 0
+  quinze_saida_Admnistrativas = 0
+  dezasseis_saida_Admnistrativas = 0
+  dezassete_saida_Admnistrativas = 0
+  dezoito_saida_Admnistrativas = 0
+  dezanove_saida_Admnistrativas = 0
+  vinte_saida_Admnistrativas = 0
+  vinteum_saida_Admnistrativas = 0
+  vintedois_saida_Admnistrativas = 0
+  vintetrez_saida_Admnistrativas = 0
+  vintequatro_saida_Admnistrativas = 0
+  vintecinco_saida_Admnistrativas = 0
+  vinteseis_saida_Admnistrativas = 0
+  vintesete_saida_Admnistrativas = 0
+  vinteoito_saida_Admnistrativas = 0
+  vintenove_saida_Admnistrativas = 0
+  trinta_saida_Admnistrativas = 0
+  trintaum_saida_Admnistrativas = 0
+
+  //SAIDA ALIMENTACAO
+  um_saida_Alimentacao = 0
+  dois_saida_Alimentacao = 0
+  tres_saida_Alimentacao = 0
+  quatro_saida_Alimentacao = 0
+  cinco_saida_Alimentacao = 0
+  seis_saida_Alimentacao = 0
+  sete_saida_Alimentacao = 0
+  oito_saida_Alimentacao = 0
+  nove_saida_Alimentacao = 0
+  dez_saida_Alimentacao = 0
+  onze_saida_Alimentacao = 0
+  doze_saida_Alimentacao = 0
+  treze_saida_Alimentacao = 0
+  catorze_saida_Alimentacao = 0
+  quinze_saida_Alimentacao = 0
+  dezasseis_saida_Alimentacao = 0
+  dezassete_saida_Alimentacao = 0
+  dezoito_saida_Alimentacao = 0
+  dezanove_saida_Alimentacao = 0
+  vinte_saida_Alimentacao = 0
+  vinteum_saida_Alimentacao = 0
+  vintedois_saida_Alimentacao = 0
+  vintetrez_saida_Alimentacao = 0
+  vintequatro_saida_Alimentacao = 0
+  vintecinco_saida_Alimentacao = 0
+  vinteseis_saida_Alimentacao = 0
+  vintesete_saida_Alimentacao = 0
+  vinteoito_saida_Alimentacao = 0
+  vintenove_saida_Alimentacao = 0
+  trinta_saida_Alimentacao = 0
+  trintaum_saida_Alimentacao = 0
+
+  //SAIDA TRANSPORTE
+  um_saida_Transporte = 0
+  dois_saida_Transporte = 0
+  tres_saida_Transporte = 0
+  quatro_saida_Transporte = 0
+  cinco_saida_Transporte = 0
+  seis_saida_Transporte = 0
+  sete_saida_Transporte = 0
+  oito_saida_Transporte = 0
+  nove_saida_Transporte = 0
+  dez_saida_Transporte = 0
+  onze_saida_Transporte = 0
+  doze_saida_Transporte = 0
+  treze_saida_Transporte = 0
+  catorze_saida_Transporte = 0
+  quinze_saida_Transporte = 0
+  dezasseis_saida_Transporte = 0
+  dezassete_saida_Transporte = 0
+  dezoito_saida_Transporte = 0
+  dezanove_saida_Transporte = 0
+  vinte_saida_Transporte = 0
+  vinteum_saida_Transporte = 0
+  vintedois_saida_Transporte = 0
+  vintetrez_saida_Transporte = 0
+  vintequatro_saida_Transporte = 0
+  vintecinco_saida_Transporte = 0
+  vinteseis_saida_Transporte = 0
+  vintesete_saida_Transporte = 0
+  vinteoito_saida_Transporte = 0
+  vintenove_saida_Transporte = 0
+  trinta_saida_Transporte = 0
+  trintaum_saida_Transporte = 0
+
+  //SAIDA SALARIOS
+  um_saida_Salario = 0
+  dois_saida_Salario = 0
+  tres_saida_Salario = 0
+  quatro_saida_Salario = 0
+  cinco_saida_Salario = 0
+  seis_saida_Salario = 0
+  sete_saida_Salario = 0
+  oito_saida_Salario = 0
+  nove_saida_Salario = 0
+  dez_saida_Salario = 0
+  onze_saida_Salario = 0
+  doze_saida_Salario = 0
+  treze_saida_Salario = 0
+  catorze_saida_Salario = 0
+  quinze_saida_Salario = 0
+  dezasseis_saida_Salario = 0
+  dezassete_saida_Salario = 0
+  dezoito_saida_Salario = 0
+  dezanove_saida_Salario = 0
+  vinte_saida_Salario = 0
+  vinteum_saida_Salario = 0
+  vintedois_saida_Salario = 0
+  vintetrez_saida_Salario = 0
+  vintequatro_saida_Salario = 0
+  vintecinco_saida_Salario = 0
+  vinteseis_saida_Salario = 0
+  vintesete_saida_Salario = 0
+  vinteoito_saida_Salario = 0
+  vintenove_saida_Salario = 0
+  trinta_saida_Salario = 0
+  trintaum_saida_Salario = 0
+
+  //SAIDA OUTROS
+  um_saida_Outros = 0
+  dois_saida_Outros = 0
+  tres_saida_Outros = 0
+  quatro_saida_Outros = 0
+  cinco_saida_Outros = 0
+  seis_saida_Outros = 0
+  sete_saida_Outros = 0
+  oito_saida_Outros = 0
+  nove_saida_Outros = 0
+  dez_saida_Outros = 0
+  onze_saida_Outros = 0
+  doze_saida_Outros = 0
+  treze_saida_Outros = 0
+  catorze_saida_Outros = 0
+  quinze_saida_Outros = 0
+  dezasseis_saida_Outros = 0
+  dezassete_saida_Outros = 0
+  dezoito_saida_Outros = 0
+  dezanove_saida_Outros = 0
+  vinte_saida_Outros = 0
+  vinteum_saida_Outros = 0
+  vintedois_saida_Outros = 0
+  vintetrez_saida_Outros = 0
+  vintequatro_saida_Outros = 0
+  vintecinco_saida_Outros = 0
+  vinteseis_saida_Outros = 0
+  vintesete_saida_Outros = 0
+  vinteoito_saida_Outros = 0
+  vintenove_saida_Outros = 0
+  trinta_saida_Outros = 0
+  trintaum_saida_Outros = 0
 
   constructor(private pacienteService: PacienteService, private configService: ConfiguracoesService, private estoqueService: EstoqueService,
     public authService: AuthService, public dialog: MatDialog){
@@ -275,6 +887,453 @@ export class DashboardComponent {
       })*/
 
       this.zerarDados();
+
+      this.configService.getLancamentos(this.ano, this.mes).snapshotChanges().subscribe(data => {
+        this.lancamentos = data.map(e => {
+          return {
+            id: e.payload.key,
+            ...e.payload.val(),
+          } as Lancamento;
+        })
+
+        let um_LancamentoConsolidado = new LancamentoConsolidado();
+        let dezassete_LancamentoConsolidado = new LancamentoConsolidado();
+        let dezoito_LancamentoConsolidado = new LancamentoConsolidado();
+
+        //let dia = new Date(element.data).toISOString().substr(8,2);
+
+        this.lancamentos.forEach(element => {
+          //let dia = new Date(element.data).toISOString().substr(8,2);
+
+          switch(element.dia+"") {
+            case "01": { 
+              this.um_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.um_entrada_NUMERARIO + +element.valor : this.um_entrada_NUMERARIO;
+              this.um_entrada_POS = element.formaPagamento == "POS" ? +this.um_entrada_POS + +element.valor : this.um_entrada_POS;
+              this.um_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.um_entrada_MPesa + +element.valor : this.um_entrada_MPesa;
+              this.um_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.um_entrada_Cheque + +element.valor : this.um_entrada_Cheque;
+              this.um_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.um_entrada_Convenio + +element.valor : this.um_entrada_Convenio;
+              
+              this.um_entrada_Consulta = element.plano_nome == "CONSULTA_MEDICA" ? +this.um_entrada_Consulta + +element.valor : this.um_entrada_Consulta;
+              this.um_entrada_Diagnostico = element.plano_nome == "DIAGNOSTICO_AUX" ? +this.um_entrada_Diagnostico + +element.valor : this.um_entrada_Diagnostico;
+              this.um_entrada_Conduta = element.plano_nome == "CONDUTA CLINICA" ? +this.um_entrada_Conduta + +element.valor : this.um_entrada_Conduta;
+              this.um_entrada_Medicamento = element.plano_nome == "MEDICAMENTO" ? +this.um_entrada_Medicamento + +element.valor : this.um_entrada_Medicamento;
+
+              this.um_entrada_Total = element.tipo_nome == "2.Entrada" ? +this.um_entrada_Total + +element.valor : this.um_entrada_Total;
+              
+              this.um_saida_Energia = (element.tipo_nome == "1.Saida" && element.plano_nome == "Energia") ? +this.um_saida_Energia + +element.valor : this.um_saida_Energia;
+              this.um_saida_Salario = (element.tipo_nome == "1.Saida" && element.plano_nome == "Salario") ? +this.um_saida_Salario + +element.valor : this.um_saida_Salario;
+              this.um_saida_Transporte = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && element.subtipo_nome == "1.2.Despesas de transporte") ? +this.um_saida_Transporte + +element.valor : this.um_saida_Transporte;
+              this.um_saida_Alimentacao = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && element.subtipo_nome == "1.3.Despesas de alimentacao") ? +this.um_saida_Alimentacao + +element.valor : this.um_saida_Alimentacao;
+              this.um_saida_Admnistrativas = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && element.subtipo_nome == "1.1.Despesas admnistrativas") ? +this.um_saida_Admnistrativas + +element.valor : this.um_saida_Admnistrativas;
+              this.um_saida_Outros = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && (element.subtipo_nome !== "1.1.Despesas admnistrativas" && element.subtipo_nome !== "1.2.Despesas de transporte" && element.subtipo_nome !== "1.3.Despesas de alimentacao")) ? +this.um_saida_Outros + +element.valor : this.um_saida_Outros;
+              
+              this.um_saida_Total = element.tipo_nome == "1.Saida" ? +this.um_saida_Total + +element.valor : this.um_saida_Total;
+
+              um_LancamentoConsolidado = new LancamentoConsolidado(
+                element.dia, this.um_entrada_NUMERARIO, this.um_entrada_POS, this.um_entrada_MPesa, this.um_entrada_Cheque, this.um_entrada_Convenio,
+                this.um_entrada_Consulta, this.um_entrada_Diagnostico, this.um_entrada_Conduta, this.um_entrada_Medicamento, this.um_entrada_Total,
+                this.um_saida_Energia, this.um_saida_Salario, this.um_saida_Alimentacao, this.um_saida_Transporte, this.um_saida_Admnistrativas,
+                this.um_saida_Outros, this.um_saida_Total);
+              break;
+            } 
+            case "02": {
+              this.dois_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.dois_entrada_NUMERARIO + +element.valor : this.dois_entrada_NUMERARIO;
+              this.dois_entrada_POS = element.formaPagamento == "POS" ? +this.dois_entrada_POS + +element.valor : this.dois_entrada_POS;
+              this.dois_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.dois_entrada_MPesa + +element.valor : this.dois_entrada_MPesa;
+              this.dois_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.dois_entrada_Cheque + +element.valor : this.dois_entrada_Cheque;
+              this.dois_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.dois_entrada_Convenio + +element.valor : this.dois_entrada_Convenio;
+              break;
+            }
+
+            case "03": {
+              this.tres_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.tres_entrada_NUMERARIO + +element.valor : this.tres_entrada_NUMERARIO;
+              this.tres_entrada_POS = element.formaPagamento == "POS" ? +this.tres_entrada_POS + +element.valor : this.tres_entrada_POS;
+              this.tres_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.tres_entrada_MPesa + +element.valor : this.tres_entrada_MPesa;
+              this.tres_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.tres_entrada_Cheque + +element.valor : this.tres_entrada_Cheque;
+              this.tres_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.tres_entrada_Convenio + +element.valor : this.tres_entrada_Convenio;
+              break;
+            }
+            
+            case "04": {
+              this.quatro_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.quatro_entrada_NUMERARIO + +element.valor : this.quatro_entrada_NUMERARIO;
+              this.quatro_entrada_POS = element.formaPagamento == "POS" ? +this.quatro_entrada_POS + +element.valor : this.quatro_entrada_POS;
+              this.quatro_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.quatro_entrada_MPesa + +element.valor : this.quatro_entrada_MPesa;
+              this.quatro_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.quatro_entrada_Cheque + +element.valor : this.quatro_entrada_Cheque;
+              this.quatro_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.quatro_entrada_Convenio + +element.valor : this.quatro_entrada_Convenio;
+              break;
+            }
+
+            case "05": {
+              this.cinco_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.cinco_entrada_NUMERARIO + +element.valor : this.cinco_entrada_NUMERARIO;
+              this.cinco_entrada_POS = element.formaPagamento == "POS" ? +this.cinco_entrada_POS + +element.valor : this.cinco_entrada_POS;
+              this.cinco_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.cinco_entrada_MPesa + +element.valor : this.cinco_entrada_MPesa;
+              this.cinco_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.cinco_entrada_Cheque + +element.valor : this.cinco_entrada_Cheque;
+              this.cinco_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.cinco_entrada_Convenio + +element.valor : this.cinco_entrada_Convenio;
+              break;
+            }
+
+            case "06": {
+              this.seis_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.seis_entrada_NUMERARIO + +element.valor : this.seis_entrada_NUMERARIO;
+              this.seis_entrada_POS = element.formaPagamento == "POS" ? +this.seis_entrada_POS + +element.valor : this.seis_entrada_POS;
+              this.seis_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.seis_entrada_MPesa + +element.valor : this.seis_entrada_MPesa;
+              this.seis_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.seis_entrada_Cheque + +element.valor : this.seis_entrada_Cheque;
+              this.seis_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.seis_entrada_Convenio + +element.valor : this.seis_entrada_Convenio;
+              break;
+            }
+
+            case "07": {
+              this.sete_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.sete_entrada_NUMERARIO + +element.valor : this.sete_entrada_NUMERARIO;
+              this.sete_entrada_POS = element.formaPagamento == "POS" ? +this.sete_entrada_POS + +element.valor : this.sete_entrada_POS;
+              this.sete_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.sete_entrada_MPesa + +element.valor : this.sete_entrada_MPesa;
+              this.sete_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.sete_entrada_Cheque + +element.valor : this.sete_entrada_Cheque;
+              this.sete_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.sete_entrada_Convenio + +element.valor : this.sete_entrada_Convenio;
+              break;
+            }
+
+            case "08": {
+              this.oito_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.oito_entrada_NUMERARIO + +element.valor : this.oito_entrada_NUMERARIO;
+              this.oito_entrada_POS = element.formaPagamento == "POS" ? +this.oito_entrada_POS + +element.valor : this.oito_entrada_POS;
+              this.oito_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.oito_entrada_MPesa + +element.valor : this.oito_entrada_MPesa;
+              this.oito_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.oito_entrada_Cheque + +element.valor : this.oito_entrada_Cheque;
+              this.oito_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.oito_entrada_Convenio + +element.valor : this.oito_entrada_Convenio;
+              break;
+            }
+
+            case "09": {
+              this.nove_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.nove_entrada_NUMERARIO + +element.valor : this.nove_entrada_NUMERARIO;
+              this.nove_entrada_POS = element.formaPagamento == "POS" ? +this.nove_entrada_POS + +element.valor : this.nove_entrada_POS;
+              this.nove_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.nove_entrada_MPesa + +element.valor : this.nove_entrada_MPesa;
+              this.nove_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.nove_entrada_Cheque + +element.valor : this.nove_entrada_Cheque;
+              this.nove_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.nove_entrada_Convenio + +element.valor : this.nove_entrada_Convenio;
+              break;
+            }
+
+            case "10": {
+              this.dez_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.dez_entrada_NUMERARIO + +element.valor : this.dez_entrada_NUMERARIO;
+              this.dez_entrada_POS = element.formaPagamento == "POS" ? +this.dez_entrada_POS + +element.valor : this.dez_entrada_POS;
+              this.dez_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.dez_entrada_MPesa + +element.valor : this.dez_entrada_MPesa;
+              this.dez_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.dez_entrada_Cheque + +element.valor : this.dez_entrada_Cheque;
+              this.dez_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.dez_entrada_Convenio + +element.valor : this.dez_entrada_Convenio;
+              break;
+            }
+
+            case "11": {
+              this.onze_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.onze_entrada_NUMERARIO + +element.valor : this.onze_entrada_NUMERARIO;
+              this.onze_entrada_POS = element.formaPagamento == "POS" ? +this.onze_entrada_POS + +element.valor : this.onze_entrada_POS;
+              this.onze_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.onze_entrada_MPesa + +element.valor : this.onze_entrada_MPesa;
+              this.onze_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.onze_entrada_Cheque + +element.valor : this.onze_entrada_Cheque;
+              this.onze_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.onze_entrada_Convenio + +element.valor : this.onze_entrada_Convenio;
+              break;
+            }
+
+            case "12": {
+              this.doze_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.doze_entrada_NUMERARIO + +element.valor : this.doze_entrada_NUMERARIO;
+              this.doze_entrada_POS = element.formaPagamento == "POS" ? +this.doze_entrada_POS + +element.valor : this.doze_entrada_POS;
+              this.doze_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.doze_entrada_MPesa + +element.valor : this.doze_entrada_MPesa;
+              this.doze_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.doze_entrada_Cheque + +element.valor : this.doze_entrada_Cheque;
+              this.doze_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.doze_entrada_Convenio + +element.valor : this.doze_entrada_Convenio;
+              break;
+            }
+
+            case "13": {
+              this.treze_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.treze_entrada_NUMERARIO + +element.valor : this.treze_entrada_NUMERARIO;
+              this.treze_entrada_POS = element.formaPagamento == "POS" ? +this.treze_entrada_POS + +element.valor : this.treze_entrada_POS;
+              this.treze_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.treze_entrada_MPesa + +element.valor : this.treze_entrada_MPesa;
+              this.treze_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.treze_entrada_Cheque + +element.valor : this.treze_entrada_Cheque;
+              this.treze_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.treze_entrada_Convenio + +element.valor : this.treze_entrada_Convenio;
+              break;
+            }
+
+            case "14": {
+
+              this.catorze_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.catorze_entrada_NUMERARIO + +element.valor : this.catorze_entrada_NUMERARIO;
+              this.catorze_entrada_POS = element.formaPagamento == "POS" ? +this.catorze_entrada_POS + +element.valor : this.catorze_entrada_POS;
+              this.catorze_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.catorze_entrada_MPesa + +element.valor : this.catorze_entrada_MPesa;
+              this.catorze_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.catorze_entrada_Cheque + +element.valor : this.catorze_entrada_Cheque;
+              this.catorze_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.catorze_entrada_Convenio + +element.valor : this.catorze_entrada_Convenio;
+              break;
+            }
+
+            case "15": {
+              this.quinze_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.quinze_entrada_NUMERARIO + +element.valor : this.quinze_entrada_NUMERARIO;
+              this.quinze_entrada_POS = element.formaPagamento == "POS" ? +this.quinze_entrada_POS + +element.valor : this.quinze_entrada_POS;
+              this.quinze_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.quinze_entrada_MPesa + +element.valor : this.quinze_entrada_MPesa;
+              this.quinze_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.quinze_entrada_Cheque + +element.valor : this.quinze_entrada_Cheque;
+              this.quinze_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.quinze_entrada_Convenio + +element.valor : this.quinze_entrada_Convenio;
+              break;
+            }
+
+            case "16": {
+              this.dezasseis_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.dezasseis_entrada_NUMERARIO + +element.valor : this.dezasseis_entrada_NUMERARIO;
+              this.dezasseis_entrada_POS = element.formaPagamento == "POS" ? +this.dezasseis_entrada_POS + +element.valor : this.dezasseis_entrada_POS;
+              this.dezasseis_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.dezasseis_entrada_MPesa + +element.valor : this.dezasseis_entrada_MPesa;
+              this.dezasseis_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.dezasseis_entrada_Cheque + +element.valor : this.dezasseis_entrada_Cheque;
+              this.dezasseis_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.dezasseis_entrada_Convenio + +element.valor : this.dezasseis_entrada_Convenio;
+              
+              this.dezasseis_entrada_Consulta = element.plano_nome == "CONSULTA_MEDICA" ? +this.dezasseis_entrada_Consulta + +element.valor : this.dezasseis_entrada_Consulta;
+              this.dezasseis_entrada_Diagnostico = element.plano_nome == "DIAGNOSTICO_AUX" ? +this.dezasseis_entrada_Diagnostico + +element.valor : this.dezasseis_entrada_Diagnostico;
+              this.dezasseis_entrada_Conduta = element.plano_nome == "CONDUTA CLINICA" ? +this.dezasseis_entrada_Conduta + +element.valor : this.dezasseis_entrada_Conduta;
+              this.dezasseis_entrada_Medicamento = element.plano_nome == "MEDICAMENTO" ? +this.dezasseis_entrada_Medicamento + +element.valor : this.dezasseis_entrada_Medicamento;
+
+              this.dezasseis_entrada_Total = element.tipo_nome == "2.Entrada" ? +this.dezasseis_entrada_Total + +element.valor : this.dezasseis_entrada_Total;
+
+              this.dezasseis_saida_Energia = (element.tipo_nome == "1.Saida" && element.plano_nome == "Energia") ? +this.dezasseis_saida_Energia + +element.valor : this.dezasseis_saida_Energia;
+              this.dezasseis_saida_Salario = (element.tipo_nome == "1.Saida" && element.plano_nome == "Salario") ? +this.dezasseis_saida_Salario + +element.valor : this.dezasseis_saida_Salario;
+              this.dezasseis_saida_Transporte = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && element.subtipo_nome == "1.2.Despesas de transporte") ? +this.dezasseis_saida_Transporte + +element.valor : this.dezasseis_saida_Transporte;
+              this.dezasseis_saida_Alimentacao = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && element.subtipo_nome == "1.3.Despesas de alimentacao") ? +this.dezasseis_saida_Alimentacao + +element.valor : this.dezasseis_saida_Alimentacao;
+              this.dezasseis_saida_Admnistrativas = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && element.subtipo_nome == "1.1.Despesas admnistrativas") ? +this.dezasseis_saida_Admnistrativas + +element.valor : this.dezasseis_saida_Admnistrativas;
+              this.dezasseis_saida_Outros = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && (element.subtipo_nome !== "1.1.Despesas admnistrativas" && element.subtipo_nome !== "1.2.Despesas de transporte" && element.subtipo_nome !== "1.3.Despesas de alimentacao")) ? +this.dezasseis_saida_Outros + +element.valor : this.dezasseis_saida_Outros;
+
+              this.dezasseis_saida_Total = element.tipo_nome == "1.Saida" ? +this.dezasseis_saida_Total + +element.valor : this.dezasseis_saida_Total;
+              break;
+            }
+
+            case "17": {
+              this.dezassete_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.dezassete_entrada_NUMERARIO + +element.valor : this.dezassete_entrada_NUMERARIO;
+              this.dezassete_entrada_POS = element.formaPagamento == "POS" ? +this.dezassete_entrada_POS + +element.valor : this.dezassete_entrada_POS;
+              this.dezassete_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.dezassete_entrada_MPesa + +element.valor : this.dezassete_entrada_MPesa;
+              this.dezassete_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.dezassete_entrada_Cheque + +element.valor : this.dezassete_entrada_Cheque;
+              this.dezassete_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.dezassete_entrada_Convenio + +element.valor : this.dezassete_entrada_Convenio;
+              
+              this.dezassete_entrada_Consulta = element.plano_nome == "CONSULTA_MEDICA" ? +this.dezassete_entrada_Consulta + +element.valor : this.dezassete_entrada_Consulta;
+              this.dezassete_entrada_Diagnostico = element.plano_nome == "DIAGNOSTICO_AUX" ? +this.dezassete_entrada_Diagnostico + +element.valor : this.dezassete_entrada_Diagnostico;
+              this.dezassete_entrada_Conduta = element.plano_nome == "CONDUTA CLINICA" ? +this.dezassete_entrada_Conduta + +element.valor : this.dezassete_entrada_Conduta;
+              this.dezassete_entrada_Medicamento = element.plano_nome == "MEDICAMENTO" ? +this.dezassete_entrada_Medicamento + +element.valor : this.dezassete_entrada_Medicamento;
+              
+              this.dezassete_entrada_Total = element.tipo_nome == "2.Entrada" ? +this.dezassete_entrada_Total + +element.valor : this.dezassete_entrada_Total;
+              
+              this.dezassete_saida_Energia = (element.tipo_nome == "1.Saida" && element.plano_nome == "Energia") ? +this.dezassete_saida_Energia + +element.valor : this.dezassete_saida_Energia;
+              this.dezassete_saida_Salario = (element.tipo_nome == "1.Saida" && element.plano_nome == "Salario") ? +this.dezassete_saida_Salario + +element.valor : this.dezassete_saida_Salario;
+              this.dezassete_saida_Transporte = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && element.subtipo_nome == "1.2.Despesas de transporte") ? +this.dezassete_saida_Transporte + +element.valor : this.dezassete_saida_Transporte;
+              this.dezassete_saida_Alimentacao = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && element.subtipo_nome == "1.3.Despesas de alimentacao") ? +this.dezassete_saida_Alimentacao + +element.valor : this.dezassete_saida_Alimentacao;
+              this.dezassete_saida_Admnistrativas = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && element.subtipo_nome == "1.1.Despesas admnistrativas") ? +this.dezassete_saida_Admnistrativas + +element.valor : this.dezassete_saida_Admnistrativas;
+              this.dezassete_saida_Outros = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && (element.subtipo_nome !== "1.1.Despesas admnistrativas" && element.subtipo_nome !== "1.2.Despesas de transporte" && element.subtipo_nome !== "1.3.Despesas de alimentacao")) ? +this.dezassete_saida_Outros + +element.valor : this.dezassete_saida_Outros;
+              
+              this.dezassete_saida_Total = element.tipo_nome == "1.Saida" ? +this.dezassete_saida_Total + +element.valor : this.dezassete_saida_Total;             
+              
+              dezassete_LancamentoConsolidado = new LancamentoConsolidado(
+                element.dia, this.dezassete_entrada_NUMERARIO, this.dezassete_entrada_POS, this.dezassete_entrada_MPesa, this.dezassete_entrada_Cheque, this.dezassete_entrada_Convenio,
+                this.dezassete_entrada_Consulta, this.dezassete_entrada_Diagnostico, this.dezassete_entrada_Conduta, this.dezassete_entrada_Medicamento, this.dezassete_entrada_Total,
+                this.dezassete_saida_Energia, this.dezassete_saida_Salario, this.dezassete_saida_Alimentacao, this.dezassete_saida_Transporte, this.dezassete_saida_Admnistrativas,
+                this.dezassete_saida_Outros, this.dezassete_saida_Total);
+              break;
+            }
+
+            case "18": {
+              this.dezoito_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.dezoito_entrada_NUMERARIO + +element.valor : this.dezoito_entrada_NUMERARIO;
+              this.dezoito_entrada_POS = element.formaPagamento == "POS" ? +this.dezoito_entrada_POS + +element.valor : this.dezoito_entrada_POS;
+              this.dezoito_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.dezoito_entrada_MPesa + +element.valor : this.dezoito_entrada_MPesa;
+              this.dezoito_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.dezoito_entrada_Cheque + +element.valor : this.dezoito_entrada_Cheque;
+              this.dezoito_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.dezoito_entrada_Convenio + +element.valor : this.dezoito_entrada_Convenio;
+              
+              this.dezoito_entrada_Consulta = element.plano_nome == "CONSULTA_MEDICA" ? +this.dezoito_entrada_Consulta + +element.valor : this.dezoito_entrada_Consulta;
+              this.dezoito_entrada_Diagnostico = element.plano_nome == "DIAGNOSTICO_AUX" ? +this.dezoito_entrada_Diagnostico + +element.valor : this.dezoito_entrada_Diagnostico;
+              this.dezoito_entrada_Conduta = element.plano_nome == "CONDUTA CLINICA" ? +this.dezoito_entrada_Conduta + +element.valor : this.dezoito_entrada_Conduta;
+              this.dezoito_entrada_Medicamento = element.plano_nome == "MEDICAMENTO" ? +this.dezoito_entrada_Medicamento + +element.valor : this.dezoito_entrada_Medicamento;
+
+              this.dezoito_entrada_Total = element.tipo_nome == "2.Entrada" ? +this.dezoito_entrada_Total + +element.valor : this.dezoito_entrada_Total;
+
+              this.dezoito_saida_Energia = (element.tipo_nome == "1.Saida" && element.plano_nome == "Energia") ? +this.dezoito_saida_Energia + +element.valor : this.dezoito_saida_Energia;
+              this.dezoito_saida_Salario = (element.tipo_nome == "1.Saida" && element.plano_nome == "Salario") ? +this.dezoito_saida_Salario + +element.valor : this.dezoito_saida_Salario;
+              this.dezoito_saida_Transporte = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && element.subtipo_nome == "1.2.Despesas de transporte") ? +this.dezoito_saida_Transporte + +element.valor : this.dezoito_saida_Transporte;
+              this.dezoito_saida_Alimentacao = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && element.subtipo_nome == "1.3.Despesas de alimentacao") ? +this.dezoito_saida_Alimentacao + +element.valor : this.dezoito_saida_Alimentacao;
+              this.dezoito_saida_Admnistrativas = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && element.subtipo_nome == "1.1.Despesas admnistrativas") ? +this.dezoito_saida_Admnistrativas + +element.valor : this.dezoito_saida_Admnistrativas;
+              this.dezoito_saida_Outros = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && (element.subtipo_nome !== "1.1.Despesas admnistrativas" && element.subtipo_nome !== "1.2.Despesas de transporte" && element.subtipo_nome !== "1.3.Despesas de alimentacao")) ? +this.dezoito_saida_Outros + +element.valor : this.dezoito_saida_Outros;
+
+              this.dezoito_saida_Total = element.tipo_nome == "1.Saida" ? +this.dezoito_saida_Total + +element.valor : this.dezoito_saida_Total;             
+
+              dezoito_LancamentoConsolidado = new LancamentoConsolidado(
+                element.dia, this.dezoito_entrada_NUMERARIO, this.dezoito_entrada_POS, this.dezoito_entrada_MPesa, this.dezoito_entrada_Cheque, this.dezoito_entrada_Convenio,
+                this.dezoito_entrada_Consulta, this.dezoito_entrada_Diagnostico, this.dezoito_entrada_Conduta, this.dezoito_entrada_Medicamento, this.dezoito_entrada_Total,
+                this.dezoito_saida_Energia, this.dezoito_saida_Salario, this.dezoito_saida_Alimentacao, this.dezoito_saida_Transporte, this.dezoito_saida_Admnistrativas,
+                this.dezoito_saida_Outros, this.dezoito_saida_Total);
+
+              break;
+            }
+
+            case "19": {
+              this.dezanove_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.dezanove_entrada_NUMERARIO + +element.valor : this.dezanove_entrada_NUMERARIO;
+              this.dezanove_entrada_POS = element.formaPagamento == "POS" ? +this.dezanove_entrada_POS + +element.valor : this.dezanove_entrada_POS;
+              this.dezanove_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.dezanove_entrada_MPesa + +element.valor : this.dezanove_entrada_MPesa;
+              this.dezanove_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.dezanove_entrada_Cheque + +element.valor : this.dezanove_entrada_Cheque;
+              this.dezanove_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.dezanove_entrada_Convenio + +element.valor : this.dezanove_entrada_Convenio;
+              break;
+            }
+
+            case "20": {
+              this.vinte_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.vinte_entrada_NUMERARIO + +element.valor : this.vinte_entrada_NUMERARIO;
+              this.vinte_entrada_POS = element.formaPagamento == "POS" ? +this.vinte_entrada_POS + +element.valor : this.vinte_entrada_POS;
+              this.vinte_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.vinte_entrada_MPesa + +element.valor : this.vinte_entrada_MPesa;
+              this.vinte_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.vinte_entrada_Cheque + +element.valor : this.vinte_entrada_Cheque;
+              this.vinte_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.vinte_entrada_Convenio + +element.valor : this.vinte_entrada_Convenio;
+              break;
+            }
+
+            case "21": {
+              this.vinteum_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.vinteum_entrada_NUMERARIO + +element.valor : this.vinteum_entrada_NUMERARIO;
+              this.vinteum_entrada_POS = element.formaPagamento == "POS" ? +this.vinteum_entrada_POS + +element.valor : this.vinteum_entrada_POS;
+              this.vinteum_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.vinteum_entrada_MPesa + +element.valor : this.vinteum_entrada_MPesa;
+              this.vinteum_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.vinteum_entrada_Cheque + +element.valor : this.vinteum_entrada_Cheque;
+              this.vinteum_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.vinteum_entrada_Convenio + +element.valor : this.vinteum_entrada_Convenio;
+              break;
+            }
+
+            case "22": {
+              this.vintedois_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.vintedois_entrada_NUMERARIO + +element.valor : this.vintedois_entrada_NUMERARIO;
+              this.vintedois_entrada_POS = element.formaPagamento == "POS" ? +this.vintedois_entrada_POS + +element.valor : this.vintedois_entrada_POS;
+              this.vintedois_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.vintedois_entrada_MPesa + +element.valor : this.vintedois_entrada_MPesa;
+              this.vintedois_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.vintedois_entrada_Cheque + +element.valor : this.vintedois_entrada_Cheque;
+              this.vintedois_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.vintedois_entrada_Convenio + +element.valor : this.vintedois_entrada_Convenio;
+              break;
+            }
+
+            case "23": {
+              this.vintetrez_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.vintetrez_entrada_NUMERARIO + +element.valor : this.vintetrez_entrada_NUMERARIO;
+              this.vintetrez_entrada_POS = element.formaPagamento == "POS" ? +this.vintetrez_entrada_POS + +element.valor : this.vintetrez_entrada_POS;
+              this.vintetrez_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.vintetrez_entrada_MPesa + +element.valor : this.vintetrez_entrada_MPesa;
+              this.vintetrez_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.vintetrez_entrada_Cheque + +element.valor : this.vintetrez_entrada_Cheque;
+              this.vintetrez_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.vintetrez_entrada_Convenio + +element.valor : this.vintetrez_entrada_Convenio;
+              break;
+            }
+
+            case "24": {
+              this.vintequatro_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.vintequatro_entrada_NUMERARIO + +element.valor : this.vintequatro_entrada_NUMERARIO;
+              this.vintequatro_entrada_POS = element.formaPagamento == "POS" ? +this.vintequatro_entrada_POS + +element.valor : this.vintequatro_entrada_POS;
+              this.vintequatro_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.vintequatro_entrada_MPesa + +element.valor : this.vintequatro_entrada_MPesa;
+              this.vintequatro_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.vintequatro_entrada_Cheque + +element.valor : this.vintequatro_entrada_Cheque;
+              this.vintequatro_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.vintequatro_entrada_Convenio + +element.valor : this.vintequatro_entrada_Convenio;
+              break;
+            }
+
+            case "25": {
+              this.vintecinco_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.vintecinco_entrada_NUMERARIO + +element.valor : this.vintecinco_entrada_NUMERARIO;
+              this.vintecinco_entrada_POS = element.formaPagamento == "POS" ? +this.vintecinco_entrada_POS + +element.valor : this.vintecinco_entrada_POS;
+              this.vintecinco_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.vintecinco_entrada_MPesa + +element.valor : this.vintecinco_entrada_MPesa;
+              this.vintecinco_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.vintecinco_entrada_Cheque + +element.valor : this.vintecinco_entrada_Cheque;
+              this.vintecinco_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.vintecinco_entrada_Convenio + +element.valor : this.vintecinco_entrada_Convenio;
+              break;
+            }
+
+            case "26": {
+              this.vinteseis_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.vinteseis_entrada_NUMERARIO + +element.valor : this.vinteseis_entrada_NUMERARIO;
+              this.vinteseis_entrada_POS = element.formaPagamento == "POS" ? +this.vinteseis_entrada_POS + +element.valor : this.vinteseis_entrada_POS;
+              this.vinteseis_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.vinteseis_entrada_MPesa + +element.valor : this.vinteseis_entrada_MPesa;
+              this.vinteseis_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.vinteseis_entrada_Cheque + +element.valor : this.vinteseis_entrada_Cheque;
+              this.vinteseis_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.vinteseis_entrada_Convenio + +element.valor : this.vinteseis_entrada_Convenio;
+              break;
+            }
+
+            case "27": {
+              this.vintesete_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.vintesete_entrada_NUMERARIO + +element.valor : this.vintesete_entrada_NUMERARIO;
+              this.vintesete_entrada_POS = element.formaPagamento == "POS" ? +this.vintesete_entrada_POS + +element.valor : this.vintesete_entrada_POS;
+              this.vintesete_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.vintesete_entrada_MPesa + +element.valor : this.vintesete_entrada_MPesa;
+              this.vintesete_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.vintesete_entrada_Cheque + +element.valor : this.vintesete_entrada_Cheque;
+              this.vintesete_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.vintesete_entrada_Convenio + +element.valor : this.vintesete_entrada_Convenio;
+              break;
+            }
+
+            case "28": {
+              this.vinteoito_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.vinteoito_entrada_NUMERARIO + +element.valor : this.vinteoito_entrada_NUMERARIO;
+              this.vinteoito_entrada_POS = element.formaPagamento == "POS" ? +this.vinteoito_entrada_POS + +element.valor : this.vinteoito_entrada_POS;
+              this.vinteoito_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.vinteoito_entrada_MPesa + +element.valor : this.vinteoito_entrada_MPesa;
+              this.vinteoito_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.vinteoito_entrada_Cheque + +element.valor : this.vinteoito_entrada_Cheque;
+              this.vinteoito_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.vinteoito_entrada_Convenio + +element.valor : this.vinteoito_entrada_Convenio;
+              break;
+            }
+
+            case "29": {
+              this.vintenove_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.vintenove_entrada_NUMERARIO + +element.valor : this.vintenove_entrada_NUMERARIO;
+              this.vintenove_entrada_POS = element.formaPagamento == "POS" ? +this.vintenove_entrada_POS + +element.valor : this.vintenove_entrada_POS;
+              this.vintenove_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.vintenove_entrada_MPesa + +element.valor : this.vintenove_entrada_MPesa;
+              this.vintenove_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.vintenove_entrada_Cheque + +element.valor : this.vintenove_entrada_Cheque;
+              this.vintenove_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.vintenove_entrada_Convenio + +element.valor : this.vintenove_entrada_Convenio;
+              break;
+            }
+
+            case "30": {
+              this.trinta_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.trinta_entrada_NUMERARIO + +element.valor : this.trinta_entrada_NUMERARIO;
+              this.trinta_entrada_POS = element.formaPagamento == "POS" ? +this.trinta_entrada_POS + +element.valor : this.trinta_entrada_POS;
+              this.trinta_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.trinta_entrada_MPesa + +element.valor : this.trinta_entrada_MPesa;
+              this.trinta_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.trinta_entrada_Cheque + +element.valor : this.trinta_entrada_Cheque;
+              this.trinta_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.trinta_entrada_Convenio + +element.valor : this.trinta_entrada_Convenio;
+              break;
+            }
+
+            case "31": {
+              this.trintaum_entrada_NUMERARIO = element.formaPagamento == "Numerário" ? +this.trintaum_entrada_NUMERARIO + +element.valor : this.trintaum_entrada_NUMERARIO;
+              this.trintaum_entrada_POS = element.formaPagamento == "POS" ? +this.trintaum_entrada_POS + +element.valor : this.trintaum_entrada_POS;
+              this.trintaum_entrada_MPesa = element.formaPagamento == "MPesa" ? +this.trintaum_entrada_MPesa + +element.valor : this.trintaum_entrada_MPesa;
+              this.trintaum_entrada_Cheque = element.formaPagamento == "Cheque" ? +this.trintaum_entrada_Cheque + +element.valor : this.trintaum_entrada_Cheque;
+              this.trintaum_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.trintaum_entrada_Convenio + +element.valor : this.trintaum_entrada_Convenio;
+              break;
+            }
+            default: { 
+               //statements; 
+               break; 
+            } 
+          }
+        });
+        this.lancamentosConsolidados.push(dezassete_LancamentoConsolidado);
+        this.lancamentosConsolidados.push(dezoito_LancamentoConsolidado);
+
+        this.dataSourseLancamentos=new MatTableDataSource(this.lancamentosConsolidados.sort((a, b) => a.dia > b.dia ? 1 : -1));
+        setTimeout(()=> this.dataSourseLancamentos.paginator = this.paginatorLancamentos);
+
+        /*console.log("-------------------------")
+        console.log("16/"+this.mes+"/"+this.ano)
+        console.log("ENTRADAS")
+        console.log("")
+        console.log("Numerario: "+this.dezasseis_entrada_NUMERARIO);
+        console.log("POS: "+this.dezasseis_entrada_POS);
+        console.log("MPesa: "+this.dezasseis_entrada_MPesa);
+        console.log("Cheque: "+this.dezasseis_entrada_Cheque);
+        console.log("Convênio: "+this.dezasseis_entrada_Convenio);
+
+        console.log("")
+        console.log("SAIDAS")
+        console.log("Energia: "+this.dezasseis_saida_Energia);
+        console.log("Salario: "+this.dezasseis_saida_Salario);
+        console.log("Admnistrativas: "+this.dezasseis_saida_Admnistrativas);
+        console.log("Alimentacao: "+this.dezasseis_saida_Alimentacao);
+        console.log("Transporte: "+this.dezasseis_saida_Transporte);
+        console.log("Transporte: "+this.dezasseis_saida_Outros);
+        console.log("Transporte: "+this.dezasseis_saida_Total);
+
+        console.log("-------------------------")
+        console.log("ENTRADAS")
+        console.log("17/"+this.mes+"/"+this.ano)
+        console.log("Numerario: "+this.dezassete_entrada_NUMERARIO);
+        console.log("POS: "+this.dezassete_entrada_POS);
+        console.log("MPesa: "+this.dezassete_entrada_MPesa);
+        console.log("Cheque: "+this.dezassete_entrada_Cheque);
+        console.log("Convênio: "+this.dezassete_entrada_Convenio);
+
+        console.log("17/"+this.mes+"/"+this.ano)
+        console.log("Consulta: "+this.dezassete_entrada_Consulta);
+        console.log("Diagnostico: "+this.dezassete_entrada_Diagnostico);
+        console.log("Conduta: "+this.dezassete_entrada_Conduta);
+        console.log("Medicamento: "+this.dezassete_entrada_Medicamento);
+
+        console.log("")
+        console.log("SAIDAS")
+        console.log("Energia: "+this.dezassete_saida_Energia);
+        console.log("Salario: "+this.dezassete_saida_Salario);
+        console.log("Admnistrativas: "+this.dezassete_saida_Admnistrativas);
+        console.log("Alimentacao: "+this.dezassete_saida_Alimentacao);
+        console.log("Transporte: "+this.dezassete_saida_Transporte);
+        console.log("Outros: "+this.dezassete_saida_Outros);
+        console.log("Total: "+this.dezassete_saida_Total);*/
+
+
+      })
+
+      
+      
+      
+      
+
+
+
 
       this.estoqueService.getDepositos().snapshotChanges().subscribe(data => {
         this.depositos = data.map(e => {
@@ -977,6 +2036,7 @@ export class DashboardComponent {
 
       //console.log("Medicos Total "+this.medicos.length)
     })
+    
 
     });//Fim timeOut
 
@@ -1737,6 +2797,8 @@ export class DashboardComponent {
         } //Fim do IF
         
       });//Fim do loop =======================================================
+
+      
 
       //Info do grafico de linhas com valores faturados
       this.ComboChartData= [{
@@ -2562,6 +3624,61 @@ export class DashboardComponent {
 
  
 
+}
+
+export class LancamentoConsolidado{
+  dia?: number;
+
+  entrada_Numerario?: number;
+  entrada_POS?: number;
+  entrada_MPesa?: number;
+  entrada_Cheque?: number;
+  entrada_Convenio?: number;
+
+  entrada_Consulta?: number;
+  entrada_Diagnostico?: number;
+  entrada_Conduta?: number;
+  entrada_Medicamento?: number;
+
+  entrada_Total?: number;
+
+  saida_Admnistrativa?: number;
+  saida_Energia?: number;
+  saida_Salario?: number;
+  saida_Alimentacao?: number;
+  saida_Transporte?: number;
+  saida_Outros?: number;
+
+  saida_total?: number;
+
+  constructor(dia?: number, entrada_Numerario?: number, entrada_POS?: number, entrada_MPesa?: number, entrada_Cheque?: number, entrada_Convenio?: number,
+  entrada_Consulta?: number, entrada_Diagnostico?: number, entrada_Conduta?: number, entrada_Medicamento?: number, entrada_Total?: number,
+  saida_Energia?: number, saida_Salario?: number, saida_Alimentacao?: number, saida_Transporte?: number, saida_Admnistrativa?: number, 
+  saida_Outros?: number, saida_total?: number){
+    this.dia = dia;
+
+    this.entrada_Numerario = entrada_Numerario;
+    this.entrada_POS = entrada_POS;
+    this.entrada_MPesa = entrada_MPesa;
+    this.entrada_Cheque = entrada_Cheque;
+    this.entrada_Convenio = entrada_Convenio;
+
+    this.entrada_Consulta = entrada_Consulta;
+    this.entrada_Diagnostico = entrada_Diagnostico;
+    this.entrada_Conduta = entrada_Conduta;
+    this.entrada_Medicamento = entrada_Medicamento;
+
+    this.entrada_Total = entrada_Total;
+
+    this.saida_Admnistrativa = saida_Admnistrativa;
+    this.saida_Energia = saida_Energia;
+    this.saida_Salario = saida_Salario;
+    this.saida_Alimentacao = saida_Alimentacao;
+    this.saida_Transporte = saida_Transporte;
+    this.saida_Outros = saida_Outros;
+
+    this.saida_total = saida_total;
+  }
 }
 
 

@@ -177,10 +177,14 @@ export class LancamentoComponent implements OnInit {
   cadastrar(){
     if(this.cadastroFormGroup.valid){
 
-      this.lancamento.dia = new Date().getDate();
+      //this.lancamento.dia = new Date().getDate();
+      this.lancamento.dia = +new Date().toISOString().substr(8,2);
       this.lancamento.ano = this.ano;
       this.lancamento.mes = this.mes;
-      this.lancamento.data = this.lancamento.dia+"/"+this.lancamento.mes+"/"+this.lancamento.ano;
+      this.lancamento.data = new Date();
+
+
+      console.log("this.lancamento.data "+this.lancamento.data );
 
       this.lancamento.descricao = this.lancamento.descricao ? this.lancamento.descricao : "";
 
@@ -192,6 +196,7 @@ export class LancamentoComponent implements OnInit {
       this.lancamento.subtipo = null;
       this.lancamento.plano = null;
 
+      this.lancamento.data = this.lancamento.data;
       let data = Object.assign({}, this.lancamento);
 
       this.configService.createLancamento(data)
@@ -215,6 +220,7 @@ export class LancamentoComponent implements OnInit {
 
   editar(lancamento: Lancamento){
     this.lancamento = lancamento;
+    //this.lancamento.data = new Date();
     this.editando = true;
 
     this.tiposPlanos.forEach(element => {

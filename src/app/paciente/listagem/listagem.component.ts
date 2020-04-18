@@ -1073,7 +1073,7 @@ export class MedicamentosDialog {
       this.lancamento.dia = new Date().getDate();
       this.lancamento.ano = ano;
       this.lancamento.mes = mes+"";
-      this.lancamento.data = this.lancamento.dia+"/"+this.lancamento.mes+"/"+this.lancamento.ano;
+      this.lancamento.data = new Date();
       this.lancamento.descricao = "";
       this.lancamento.tipo_nome = "2.Entrada";
       this.lancamento.subtipo_nome = "2.1.Receitas de vendas";
@@ -1798,7 +1798,7 @@ export class MedicamentosDialog {
       this.lancamento.dia = new Date().getDate();
       this.lancamento.ano = ano;
       this.lancamento.mes = mes+"";
-      this.lancamento.data = this.lancamento.dia+"/"+this.lancamento.mes+"/"+this.lancamento.ano;
+      this.lancamento.data = new Date();
       this.lancamento.descricao = "";
       this.lancamento.tipo_nome = "2.Entrada";
       this.lancamento.subtipo_nome = "2.1.Receitas de vendas";
@@ -2402,7 +2402,7 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
       this.lancamento.dia = new Date().getDate();
       this.lancamento.ano = ano;
       this.lancamento.mes = mes+"";
-      this.lancamento.data = this.lancamento.dia+"/"+this.lancamento.mes+"/"+this.lancamento.ano;
+      this.lancamento.data = new Date();
       this.lancamento.descricao = "";
       this.lancamento.tipo_nome = "2.Entrada";
       this.lancamento.subtipo_nome = "2.1.Receitas de vendas";
@@ -3231,7 +3231,7 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
       this.lancamento.dia = new Date().getDate();
       this.lancamento.ano = ano;
       this.lancamento.mes = mes+"";
-      this.lancamento.data = this.lancamento.dia+"/"+this.lancamento.mes+"/"+this.lancamento.ano;
+      this.lancamento.data = new Date();
       this.lancamento.descricao = "";
       this.lancamento.tipo_nome = "2.Entrada";
       this.lancamento.subtipo_nome = "2.1.Receitas de vendas";
