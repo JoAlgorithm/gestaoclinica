@@ -43,9 +43,9 @@ export class PendentesComponent implements OnInit {
   formas_pagamento = [
     {value: 'Numerário', viewValue: 'Numerário'},
     {value: 'POS', viewValue: 'POS'},
-    {value: 'Convênio', viewValue: 'Convênio'},
+    {value: 'MPesa', viewValue: 'MPesa'},
     {value: 'Cheque', viewValue: 'Cheque'},
-    {value: 'Mpesa', viewValue: 'Mpesa'},
+    {value: 'Convênio', viewValue: 'Convênio'},
   ]
 
   seguradoras: Seguradora[];

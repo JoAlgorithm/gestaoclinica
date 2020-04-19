@@ -372,55 +372,227 @@
 
 </div>
 
-<mat-card class="card-widget" *ngIf='acesso_indicadores'>
+
+<!--CLINICAS-->
+<mat-card>
+  <mat-card-content>
+    <!--<h5>LISTA DE ENTRADAS E SAIDAS DE {{mes | uppercase}}</h5>-->
+  
+    <button mat-icon-button (click)="exportTable()">
+      EXPORTAR RELATORIO DE ENTRADAS E SAIDAS DE {{mes | uppercase}} <mat-icon aria-label="Example icon-button with a heart icon">cloud_download</mat-icon>
+    </button>
+  </mat-card-content>
+</mat-card>
+
+
+<mat-card class="card-widget" *ngIf='acesso_indicadores4'>
+
+  <!--<button mat-raised-button color="primary" (click)="exportAsExcel()">Export as Excel</button>-->
   <div class="example-container mat-elevation-z8">
-    <mat-table [dataSource]="dataSourseLancamentos" matSort>
+    <mat-table [dataSource]="dataSourseLancamentos2">
       <ng-container matColumnDef="Dia">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Dia </mat-header-cell>
-        <mat-cell *matCellDef="let row">{{row.dia}}</mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>DATA </mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.dia}}/{{row.mes}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Consulta">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) Consulta</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_Consulta| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Diagnostico">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) Diagnostico</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_Diagnostico| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Conduta">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) Conduta</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_Conduta| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Medicamento">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) Medicamento</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_Medicamento| currency:' ':'symbol':'1.2-2'}}</mat-cell>
       </ng-container>
   
-  
-        <ng-container matColumnDef="Admnistrativa">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Admnistrativa </mat-header-cell>
-          <mat-cell *matCellDef="let row">{{row.saida_Admnistrativa| currency:' ':'symbol':'1.2-2'}}</mat-cell>
-        </ng-container>
-  
-        <ng-container matColumnDef="Energia">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Energia </mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.saida_Energia| currency:' ':'symbol':'1.2-2'}}</mat-cell>
-        </ng-container>
-  
-        <ng-container matColumnDef="Salario">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Salario </mat-header-cell>
-          <mat-cell *matCellDef="let row">{{row.saida_Salario| currency:' ':'symbol':'1.2-2'}}</mat-cell>
-        </ng-container>
-  
-        <ng-container matColumnDef="Alimentacao">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Alimentacao </mat-header-cell>
-          <mat-cell *matCellDef="let row">{{row.saida_Alimentacao| currency:' ':'symbol':'1.2-2'}}</mat-cell>
-        </ng-container>
-  
-        <ng-container matColumnDef="Transporte">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Transporte </mat-header-cell>
-          <mat-cell *matCellDef="let row">{{row.saida_Transporte| currency:' ':'symbol':'1.2-2'}}</mat-cell>
-        </ng-container>
-  
-        <ng-container matColumnDef="SaidaOutros">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Outras Saidas </mat-header-cell>
-          <mat-cell *matCellDef="let row">{{row.saida_Outros| currency:' ':'symbol':'1.2-2'}}</mat-cell>
-        </ng-container>
-  
-        <ng-container matColumnDef="SaidaTotal">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Total Saidas </mat-header-cell>
-          <mat-cell *matCellDef="let row">{{row.saida_total| currency:' ':'symbol':'1.2-2'}}</mat-cell>
-        </ng-container>
-  
-        <mat-header-row *matHeaderRowDef="displayedColumnsLancamentos"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumnsLancamentos;">
-        </mat-row>
+      <ng-container matColumnDef="Numerario">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) Numerario</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_Numerario| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+      
+      <ng-container matColumnDef="POS">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) POS</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_POS| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Mpesa">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) Mpesa</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_MPesa| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Cheque">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) Cheque</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_Cheque| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Convenio">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) Convenio</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_Convenio| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="EntradaTotal" class="mat-teal">
+        <mat-header-cell *matHeaderCellDef mat-sort-header><b>(+) TOTAL </b></mat-header-cell>
+        <mat-cell *matCellDef="let row"><b>{{row.entrada_Total| currency:' ':'symbol':'1.2-2'}} </b></mat-cell>
+      </ng-container>
+
+      
+
+      <ng-container matColumnDef="Admnistrativa">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(-) Admnistrativa</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.saida_Admnistrativa| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Energia">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>(-) Energia</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.saida_Energia| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Salario">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(-) Salario</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.saida_Salario| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Alimentacao">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(-) Alimentacao</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.saida_Alimentacao| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Transporte">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(-) Transporte</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.saida_Transporte| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="SaidaOutros">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(-) Outras Saidas</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.saida_Outros| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="SaidaTotal">
+        <mat-header-cell *matHeaderCellDef mat-sort-header ><b>(-) TOTAL</b></mat-header-cell>
+        <mat-cell *matCellDef="let row"><b>{{row.saida_total| currency:' ':'symbol':'1.2-2'}}</b></mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumnsLancamentos2"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumnsLancamentos2;">
+      </mat-row>
     </mat-table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </div>
+</mat-card>
+
+
+
+<mat-card class="card-widget" *ngIf='tabela'>
+  <table  id="ExampleTable" style="width:100%">
+    <tr>
+      <th>Dia</th>
+      <th>Consulta</th>
+      <th>Diagnostico</th>
+    </tr>
+    <tr *ngFor="let l of lancamentosConsolidados">
+      <td>{{l.dia}}</td>
+      <td>{{l.entrada_Consulta}}</td>
+      <td>{{l.entrada_Diagnostico}}</td>
+    </tr>
+  </table>
+</mat-card>
+
+
+
+
+<!--FARMACIAS-->
+<mat-card class="card-widget" *ngIf='acesso_indicadores3'>
+
+  <!--<button mat-raised-button color="primary" (click)="exportAsExcel()">Export as Excel</button>-->
+
+  <div class="example-container mat-elevation-z8" #TABLE>
+    <mat-table #table [dataSource]="dataSourseLancamentos">
+      <ng-container matColumnDef="Dia">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Dia</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.dia}}/{{row.mes}}</mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="Numerario">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) Numerario</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_Numerario| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+      
+      <ng-container matColumnDef="POS">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) POS</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_POS| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Mpesa">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) Mpesa</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_MPesa| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Cheque">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) Cheque</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_Cheque| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Convenio">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(+) Convenio</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.entrada_Convenio| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="EntradaTotal" class="mat-teal">
+        <mat-header-cell *matHeaderCellDef mat-sort-header><b>(+) TOTAL </b></mat-header-cell>
+        <mat-cell *matCellDef="let row"><b>{{row.entrada_Total| currency:' ':'symbol':'1.2-2'}} </b></mat-cell>
+      </ng-container>
+
+      
+
+      <ng-container matColumnDef="Admnistrativa">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(-) Admnistrativa</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.saida_Admnistrativa| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Energia">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>(-) Energia</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.saida_Energia| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Salario">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(-) Salario</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.saida_Salario| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Alimentacao">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(-) Alimentacao</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.saida_Alimentacao| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Transporte">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(-) Transporte</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.saida_Transporte| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="SaidaOutros">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>(-) Outras Saidas</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.saida_Outros| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="SaidaTotal">
+        <mat-header-cell *matHeaderCellDef mat-sort-header ><b>(-) TOTAL</b></mat-header-cell>
+        <mat-cell *matCellDef="let row"><b>{{row.saida_total| currency:' ':'symbol':'1.2-2'}}</b></mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumnsLancamentos"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumnsLancamentos;">
+      </mat-row>
+    </mat-table>
+    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
   </div>
 </mat-card>
 

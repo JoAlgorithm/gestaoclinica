@@ -36,7 +36,7 @@ export class LancamentoComponent implements OnInit {
   formas_pagamento = [
     {value: 'Numerário', viewValue: 'Numerário'},
     {value: 'POS', viewValue: 'POS'},
-    {value: 'MPesa', viewValue: 'Mpesa'},
+    {value: 'MPesa', viewValue: 'MPesa'},
     {value: 'Cheque', viewValue: 'Cheque'},
     {value: 'Convênio', viewValue: 'Convênio'},
   ]
