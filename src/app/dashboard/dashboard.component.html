@@ -375,10 +375,8 @@
 
 <!--CLINICAS-->
 <mat-card>
-  <mat-card-content>
-    <!--<h5>LISTA DE ENTRADAS E SAIDAS DE {{mes | uppercase}}</h5>-->
-  
-    <button mat-icon-button (click)="exportTable()">
+  <mat-card-content  *ngIf='acesso_indicadores4'>  
+    <button mat-icon-button (click)="exportTable2()">
       EXPORTAR RELATORIO DE ENTRADAS E SAIDAS DE {{mes | uppercase}} <mat-icon aria-label="Example icon-button with a heart icon">cloud_download</mat-icon>
     </button>
   </mat-card-content>
@@ -387,7 +385,6 @@
 
 <mat-card class="card-widget" *ngIf='acesso_indicadores4'>
 
-  <!--<button mat-raised-button color="primary" (click)="exportAsExcel()">Export as Excel</button>-->
   <div class="example-container mat-elevation-z8">
     <mat-table [dataSource]="dataSourseLancamentos2">
       <ng-container matColumnDef="Dia">
@@ -490,24 +487,70 @@
 </mat-card>
 
 
-
-<mat-card class="card-widget" *ngIf='tabela'>
-  <table  id="ExampleTable" style="width:100%">
+<!--CLINICA-->
+<mat-card class="card-widget" *ngIf='tabela2'>
+  <table  id="ExampleTable2" style="width:100%">
     <tr>
       <th>Dia</th>
-      <th>Consulta</th>
-      <th>Diagnostico</th>
+      <th>(+) Consulta</th>
+      <th>(+) Diagnostico</th>
+      <th>(+) Conduta</th>
+      <th>(+) Medicamento</th>
+      <th>(+) Numerario</th>
+      <th>(+) POS</th>
+      <th>(+) Mpesa</th>
+      <th>(+) Cheque</th>
+      <th>(+) Convenio</th>
+      <th><b>(+) EntradaTotal</b></th>
+      <th>(-) Admnistrativa</th>
+      <th>(-) Energia</th>
+      <th>(-) Salario</th>
+      <th>(-) Alimentacao</th>
+      <th>(-) Transporte</th>
+      <th>(-) Outras Saidas</th>
+      <th><b>(-) TOTAL</b></th>
+
     </tr>
     <tr *ngFor="let l of lancamentosConsolidados">
-      <td>{{l.dia}}</td>
-      <td>{{l.entrada_Consulta}}</td>
-      <td>{{l.entrada_Diagnostico}}</td>
+      <td>{{l.dia}}/{{mes}}</td>
+
+      <td>{{l.entrada_Consulta| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.entrada_Diagnostico| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.entrada_Conduta| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.entrada_Medicamento| currency:' ':'symbol':'1.2-2'}}</td>
+
+      <td>{{l.entrada_Numerario| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.entrada_POS| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.entrada_MPesa| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.entrada_Cheque| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.entrada_Convenio| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.entrada_Total| currency:' ':'symbol':'1.2-2'}}</td>
+
+      <td>{{l.saida_Admnistrativa| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.saida_Energia| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.saida_Salario| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.saida_Alimentacao| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.saida_Transporte| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.saida_Outros| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.saida_total| currency:' ':'symbol':'1.2-2'}}</td>
     </tr>
   </table>
 </mat-card>
 
 
 
+
+
+
+
+
+<mat-card>
+  <mat-card-content  *ngIf='acesso_indicadores3'>  
+    <button mat-icon-button (click)="exportTable()">
+      EXPORTAR RELATORIO DE ENTRADAS E SAIDAS DE {{mes | uppercase}} <mat-icon aria-label="Example icon-button with a heart icon">cloud_download</mat-icon>
+    </button>
+  </mat-card-content>
+</mat-card>
 
 <!--FARMACIAS-->
 <mat-card class="card-widget" *ngIf='acesso_indicadores3'>
@@ -596,6 +639,45 @@
   </div>
 </mat-card>
 
+<!--FARMACIA-->
+<mat-card class="card-widget" *ngIf='tabela'>
+  <table  id="ExampleTable" style="width:100%">
+    <tr>
+      <th>Dia</th>
+      <th>(+) Numerario</th>
+      <th>(+) POS</th>
+      <th>(+) Mpesa</th>
+      <th>(+) Cheque</th>
+      <th>(+) Convenio</th>
+      <th><b>(+) EntradaTotal</b></th>
+      <th>(-) Admnistrativa</th>
+      <th>(-) Energia</th>
+      <th>(-) Salario</th>
+      <th>(-) Alimentacao</th>
+      <th>(-) Transporte</th>
+      <th>(-) Outras Saidas</th>
+      <th><b>(-) TOTAL</b></th>
+
+    </tr>
+    <tr *ngFor="let l of lancamentosConsolidados">
+      <td>{{l.dia}}/{{mes}}</td>
+      <td>{{l.entrada_Numerario| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.entrada_POS| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.entrada_MPesa| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.entrada_Cheque| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.entrada_Convenio| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.entrada_Total| currency:' ':'symbol':'1.2-2'}}</td>
+
+      <td>{{l.saida_Admnistrativa| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.saida_Energia| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.saida_Salario| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.saida_Alimentacao| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.saida_Transporte| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.saida_Outros| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.saida_total| currency:' ':'symbol':'1.2-2'}}</td>
+    </tr>
+  </table>
+</mat-card>
 
 
 

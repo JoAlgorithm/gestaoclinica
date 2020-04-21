@@ -378,6 +378,10 @@ export class VendasComponent implements OnInit {
   }
 
   addMedicamento(){
+    if(this.forma_pagamento == ""){
+      this.openSnackBar("Preencha a forma de pagamento");
+      return;
+    }
     if(this.medicamento.qtd_solicitada){
 
       let check = true;

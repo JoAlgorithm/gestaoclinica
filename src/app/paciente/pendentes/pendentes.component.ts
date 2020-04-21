@@ -777,7 +777,10 @@ export class RemoverPendentesDialog {
     }
 
     faturar(){ 
-      
+      if(!this.forma_pagamento){
+        this.openSnackBar("Preencha a forma de pagamento");
+        return;
+      }
       //INICIO VALIDACOES ===========================================
       //Verificar se pelo menos um item foi selecionado
       let qtd_selecionado = 0;

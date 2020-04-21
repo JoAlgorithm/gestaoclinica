@@ -823,6 +823,10 @@ export class MedicamentosDialog {
   }
 
   addMedicamento(){
+    if(!this.forma_pagamento){
+      this.openSnackBar("Preencha a forma de pagamento");
+      return;
+    }
     if(this.medicamento.qtd_solicitada){
 
       let check = true;
@@ -1670,6 +1674,10 @@ export class MedicamentosDialog {
   }
 
   addConduta(conduta:CondutaClinica){
+    if(!this.forma_pagamento){
+      this.openSnackBar("Preencha a forma de pagamento");
+      return;
+    }
     if(conduta.nome){
       this.condutas.push(conduta);
 
@@ -2316,6 +2324,10 @@ gerarPDF(condutas :CondutaClinica[], paciente: Paciente, nome, id){
   }
 
   marcarConsulta(paciente, tipo){
+    if(!this.forma_pagamento){
+      this.openSnackBar("Preencha a forma de pagamento");
+      return;
+    }
     if(this.categoria.nome && this.medico !== ""){ //Garantir que categoria foi selecionada
       var updatedUserData = {};
 
@@ -3112,6 +3124,10 @@ gerarPDF(categoriaConsulta :CategoriaConsulta, paciente: Paciente, nome, id){
   }
   
   addDiognostico(diagnostico:DiagnosticoAuxiliar){
+    if(!this.forma_pagamento){
+      this.openSnackBar("Preencha a forma de pagamento");
+      return;
+    }
     if(diagnostico.nome){
       this.diagnosticos.push(diagnostico);
 

@@ -27,7 +27,7 @@ import * as XLSX from 'xlsx';
 export class TableUtil {
   static exportToExcel(tableId: string, name?: string) {
     let timeSpan = new Date().toISOString();
-    let prefix = name || "ExportResult";
+    let prefix = "Lista de entradas e saidas" || name;
     let fileName = `${prefix}-${timeSpan}`;
     let targetTableElm = document.getElementById(tableId);
     let wb = XLSX.utils.table_to_book(targetTableElm, <XLSX.Table2SheetOpts>{ sheet: prefix });
@@ -43,13 +43,23 @@ export class TableUtil {
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
-  tabela = false;
+  tabela = false; //Farmacias
+  tabela2 = false; //CLinicas
+
   exportTable(){
       this.tabela = true;
       setTimeout( () => {
-        TableUtil.exportToExcel("ExampleTable",'Tabela Excel');
+        TableUtil.exportToExcel("ExampleTable", " - "+this.mes);
         this.tabela = false;
       }, 500 );
+  }
+
+  exportTable2(){
+    this.tabela2 = true;
+    setTimeout( () => {
+      TableUtil.exportToExcel("ExampleTable2", " - "+this.mes);
+      this.tabela2 = false;
+    }, 500 );
   }
  
   perfil = "";
