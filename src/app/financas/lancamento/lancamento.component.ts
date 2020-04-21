@@ -110,7 +110,6 @@ export class LancamentoComponent implements OnInit {
     this.planosConta = [];
 
     this.habilitar_formas = this.lancamento.tipo.nome == "2.Entrada" ? true : false;
-    
 
     if(this.lancamento.tipo){
       this.subTiposPlanos_Aux.forEach(element => {

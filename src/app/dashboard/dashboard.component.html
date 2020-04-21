@@ -543,7 +543,7 @@
 
 
 
-
+<!--FARMACIAS-->
 <mat-card>
   <mat-card-content  *ngIf='acesso_indicadores3'>  
     <button mat-icon-button (click)="exportTable()">
@@ -554,8 +554,6 @@
 
 <!--FARMACIAS-->
 <mat-card class="card-widget" *ngIf='acesso_indicadores3'>
-
-  <!--<button mat-raised-button color="primary" (click)="exportAsExcel()">Export as Excel</button>-->
 
   <div class="example-container mat-elevation-z8" #TABLE>
     <mat-table #table [dataSource]="dataSourseLancamentos">
@@ -631,6 +629,16 @@
         <mat-cell *matCellDef="let row"><b>{{row.saida_total| currency:' ':'symbol':'1.2-2'}}</b></mat-cell>
       </ng-container>
 
+      <ng-container matColumnDef="Liquido">
+        <mat-header-cell *matHeaderCellDef mat-sort-header >Liquido</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.liquido| currency:' ':'symbol':'1.2-2'}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Sobra">
+        <mat-header-cell *matHeaderCellDef mat-sort-header >Sobra</mat-header-cell>
+        <mat-cell *matCellDef="let row"><b>{{row.sobra| currency:' ':'symbol':'1.2-2'}}</b></mat-cell>
+      </ng-container>
+
       <mat-header-row *matHeaderRowDef="displayedColumnsLancamentos"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumnsLancamentos;">
       </mat-row>
@@ -657,6 +665,8 @@
       <th>(-) Transporte</th>
       <th>(-) Outras Saidas</th>
       <th><b>(-) TOTAL</b></th>
+      <th>Liquido</th>
+      <th>Sobra</th>
 
     </tr>
     <tr *ngFor="let l of lancamentosConsolidados">
@@ -675,6 +685,9 @@
       <td>{{l.saida_Transporte| currency:' ':'symbol':'1.2-2'}}</td>
       <td>{{l.saida_Outros| currency:' ':'symbol':'1.2-2'}}</td>
       <td>{{l.saida_total| currency:' ':'symbol':'1.2-2'}}</td>
+
+      <td>{{l.liquido| currency:' ':'symbol':'1.2-2'}}</td>
+      <td>{{l.sobra| currency:' ':'symbol':'1.2-2'}}</td>
     </tr>
   </table>
 </mat-card>
