@@ -2917,37 +2917,37 @@ export class DashboardComponent {
       } as Lancamento;
     })
 
-    let um_LancamentoConsolidado = new LancamentoConsolidado(1,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let dois_LancamentoConsolidado = new LancamentoConsolidado(2,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let tres_LancamentoConsolidado = new LancamentoConsolidado(3,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let quatro_LancamentoConsolidado = new LancamentoConsolidado(4,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let cinco_LancamentoConsolidado = new LancamentoConsolidado(5,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let seis_LancamentoConsolidado = new LancamentoConsolidado(6,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let sete_LancamentoConsolidado = new LancamentoConsolidado(7,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let oito_LancamentoConsolidado = new LancamentoConsolidado(8,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let nove_LancamentoConsolidado = new LancamentoConsolidado(9,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let dez_LancamentoConsolidado = new LancamentoConsolidado(10,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let onze_LancamentoConsolidado = new LancamentoConsolidado(11,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let doze_LancamentoConsolidado = new LancamentoConsolidado(12,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let treze_LancamentoConsolidado = new LancamentoConsolidado(13,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let catorze_LancamentoConsolidado = new LancamentoConsolidado(14,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let quinze_LancamentoConsolidado = new LancamentoConsolidado(15,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let dezasseis_LancamentoConsolidado = new LancamentoConsolidado(16,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let dezassete_LancamentoConsolidado =  new LancamentoConsolidado(17,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let dezoito_LancamentoConsolidado = new LancamentoConsolidado(18,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let dezanove_LancamentoConsolidado = new LancamentoConsolidado(19,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let vinte_LancamentoConsolidado = new LancamentoConsolidado(20,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let vinteum_LancamentoConsolidado = new LancamentoConsolidado(21,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let vintedois_LancamentoConsolidado = new LancamentoConsolidado(22,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let vintetrez_LancamentoConsolidado = new LancamentoConsolidado(23,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let vintequatro_LancamentoConsolidado = new LancamentoConsolidado(24,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let vintecinco_LancamentoConsolidado = new LancamentoConsolidado(25,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let vinteseis_LancamentoConsolidado = new LancamentoConsolidado(26,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let vintesete_LancamentoConsolidado = new LancamentoConsolidado(27,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let vinteoito_LancamentoConsolidado = new LancamentoConsolidado(28,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let vintenove_LancamentoConsolidado = new LancamentoConsolidado(29,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let trinta_LancamentoConsolidado = new LancamentoConsolidado(30,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
-    let trintaum_LancamentoConsolidado = new LancamentoConsolidado(31,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0);
+    let um_LancamentoConsolidado = new LancamentoConsolidado(1,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let dois_LancamentoConsolidado = new LancamentoConsolidado(2,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let tres_LancamentoConsolidado = new LancamentoConsolidado(3,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let quatro_LancamentoConsolidado = new LancamentoConsolidado(4,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let cinco_LancamentoConsolidado = new LancamentoConsolidado(5,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let seis_LancamentoConsolidado = new LancamentoConsolidado(6,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let sete_LancamentoConsolidado = new LancamentoConsolidado(7,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let oito_LancamentoConsolidado = new LancamentoConsolidado(8,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let nove_LancamentoConsolidado = new LancamentoConsolidado(9,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let dez_LancamentoConsolidado = new LancamentoConsolidado(10,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let onze_LancamentoConsolidado = new LancamentoConsolidado(11,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let doze_LancamentoConsolidado = new LancamentoConsolidado(12,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let treze_LancamentoConsolidado = new LancamentoConsolidado(13,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let catorze_LancamentoConsolidado = new LancamentoConsolidado(14,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let quinze_LancamentoConsolidado = new LancamentoConsolidado(15,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let dezasseis_LancamentoConsolidado = new LancamentoConsolidado(16,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let dezassete_LancamentoConsolidado =  new LancamentoConsolidado(17,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let dezoito_LancamentoConsolidado = new LancamentoConsolidado(18,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let dezanove_LancamentoConsolidado = new LancamentoConsolidado(19,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let vinte_LancamentoConsolidado = new LancamentoConsolidado(20,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let vinteum_LancamentoConsolidado = new LancamentoConsolidado(21,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let vintedois_LancamentoConsolidado = new LancamentoConsolidado(22,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let vintetrez_LancamentoConsolidado = new LancamentoConsolidado(23,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let vintequatro_LancamentoConsolidado = new LancamentoConsolidado(24,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let vintecinco_LancamentoConsolidado = new LancamentoConsolidado(25,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let vinteseis_LancamentoConsolidado = new LancamentoConsolidado(26,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let vintesete_LancamentoConsolidado = new LancamentoConsolidado(27,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let vinteoito_LancamentoConsolidado = new LancamentoConsolidado(28,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let vintenove_LancamentoConsolidado = new LancamentoConsolidado(29,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let trinta_LancamentoConsolidado = new LancamentoConsolidado(30,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
+    let trintaum_LancamentoConsolidado = new LancamentoConsolidado(31,this.mes, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0);
 
     this.resetDadosLancamentos();
 
@@ -2980,11 +2980,14 @@ export class DashboardComponent {
           
           this.um_saida_Total = element.tipo_nome == "1.Saida" ? +this.um_saida_Total + +element.valor : this.um_saida_Total;
 
+          this.um_liquido = +this.um_entrada_NUMERARIO - +this.um_saida_Total; 
+          this.um_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.um_sobra + +element.valor : this.um_sobra;
+
           um_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia, element.mes, this.um_entrada_NUMERARIO, this.um_entrada_POS, this.um_entrada_MPesa, this.um_entrada_Cheque, this.um_entrada_Convenio,
             this.um_entrada_Consulta, this.um_entrada_Diagnostico, this.um_entrada_Conduta, this.um_entrada_Medicamento, this.um_entrada_Total,
             this.um_saida_Energia, this.um_saida_Salario, this.um_saida_Alimentacao, this.um_saida_Transporte, this.um_saida_Admnistrativas,
-            this.um_saida_Outros, this.um_saida_Total);
+            this.um_saida_Outros, this.um_saida_Total, this.um_liquido, this.um_sobra);
           break;
         } 
         case "02": {
@@ -3010,11 +3013,14 @@ export class DashboardComponent {
 
           this.dois_saida_Total = element.tipo_nome == "1.Saida" ? +this.dois_saida_Total + +element.valor : this.dois_saida_Total;             
 
+          this.dois_liquido = +this.dois_entrada_NUMERARIO - +this.dois_saida_Total; 
+          this.dois_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.dois_sobra + +element.valor : this.dois_sobra;
+
           dois_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.dois_entrada_NUMERARIO, this.dois_entrada_POS, this.dois_entrada_MPesa, this.dois_entrada_Cheque, this.dois_entrada_Convenio,
             this.dois_entrada_Consulta, this.dois_entrada_Diagnostico, this.dois_entrada_Conduta, this.dois_entrada_Medicamento, this.dois_entrada_Total,
             this.dois_saida_Energia, this.dois_saida_Salario, this.dois_saida_Alimentacao, this.dois_saida_Transporte, this.dois_saida_Admnistrativas,
-            this.dois_saida_Outros, this.dois_saida_Total);
+            this.dois_saida_Outros, this.dois_saida_Total, this.dois_liquido, this.dois_sobra);
           break;
         }
 
@@ -3041,11 +3047,14 @@ export class DashboardComponent {
 
           this.tres_saida_Total = element.tipo_nome == "1.Saida" ? +this.tres_saida_Total + +element.valor : this.tres_saida_Total;             
 
+          this.tres_liquido = +this.tres_entrada_NUMERARIO - +this.tres_saida_Total; 
+          this.tres_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.tres_sobra + +element.valor : this.tres_sobra;
+
           tres_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.tres_entrada_NUMERARIO, this.tres_entrada_POS, this.tres_entrada_MPesa, this.tres_entrada_Cheque, this.tres_entrada_Convenio,
             this.tres_entrada_Consulta, this.tres_entrada_Diagnostico, this.tres_entrada_Conduta, this.tres_entrada_Medicamento, this.tres_entrada_Total,
             this.tres_saida_Energia, this.tres_saida_Salario, this.tres_saida_Alimentacao, this.tres_saida_Transporte, this.tres_saida_Admnistrativas,
-            this.tres_saida_Outros, this.tres_saida_Total);
+            this.tres_saida_Outros, this.tres_saida_Total, this.tres_liquido, this.tres_sobra);
          
           break;
         }
@@ -3073,11 +3082,14 @@ export class DashboardComponent {
 
           this.quatro_saida_Total = element.tipo_nome == "1.Saida" ? +this.quatro_saida_Total + +element.valor : this.quatro_saida_Total;             
 
+          this.quatro_liquido = +this.quatro_entrada_NUMERARIO - +this.quatro_saida_Total; 
+          this.quatro_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.quatro_sobra + +element.valor : this.quatro_sobra;
+
           quatro_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.quatro_entrada_NUMERARIO, this.quatro_entrada_POS, this.quatro_entrada_MPesa, this.quatro_entrada_Cheque, this.quatro_entrada_Convenio,
             this.quatro_entrada_Consulta, this.quatro_entrada_Diagnostico, this.quatro_entrada_Conduta, this.quatro_entrada_Medicamento, this.quatro_entrada_Total,
             this.quatro_saida_Energia, this.quatro_saida_Salario, this.quatro_saida_Alimentacao, this.quatro_saida_Transporte, this.quatro_saida_Admnistrativas,
-            this.quatro_saida_Outros, this.quatro_saida_Total);
+            this.quatro_saida_Outros, this.quatro_saida_Total, this.quatro_liquido, this.quatro_sobra);
           break;
         }
 
@@ -3104,11 +3116,14 @@ export class DashboardComponent {
 
           this.cinco_saida_Total = element.tipo_nome == "1.Saida" ? +this.cinco_saida_Total + +element.valor : this.cinco_saida_Total;             
 
+          this.cinco_liquido = +this.cinco_entrada_NUMERARIO - +this.cinco_saida_Total; 
+          this.cinco_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.cinco_sobra + +element.valor : this.cinco_sobra;
+
           cinco_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.cinco_entrada_NUMERARIO, this.cinco_entrada_POS, this.cinco_entrada_MPesa, this.cinco_entrada_Cheque, this.cinco_entrada_Convenio,
             this.cinco_entrada_Consulta, this.cinco_entrada_Diagnostico, this.cinco_entrada_Conduta, this.cinco_entrada_Medicamento, this.cinco_entrada_Total,
             this.cinco_saida_Energia, this.cinco_saida_Salario, this.cinco_saida_Alimentacao, this.cinco_saida_Transporte, this.cinco_saida_Admnistrativas,
-            this.cinco_saida_Outros, this.cinco_saida_Total);
+            this.cinco_saida_Outros, this.cinco_saida_Total, this.cinco_liquido, this.cinco_sobra);
           break;
         }
 
@@ -3135,11 +3150,14 @@ export class DashboardComponent {
 
           this.seis_saida_Total = element.tipo_nome == "1.Saida" ? +this.seis_saida_Total + +element.valor : this.seis_saida_Total;             
 
+          this.seis_liquido = +this.seis_entrada_NUMERARIO - +this.seis_saida_Total; 
+          this.seis_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.seis_sobra + +element.valor : this.seis_sobra;
+
           seis_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.seis_entrada_NUMERARIO, this.seis_entrada_POS, this.seis_entrada_MPesa, this.seis_entrada_Cheque, this.seis_entrada_Convenio,
             this.seis_entrada_Consulta, this.seis_entrada_Diagnostico, this.seis_entrada_Conduta, this.seis_entrada_Medicamento, this.seis_entrada_Total,
             this.seis_saida_Energia, this.seis_saida_Salario, this.seis_saida_Alimentacao, this.seis_saida_Transporte, this.seis_saida_Admnistrativas,
-            this.seis_saida_Outros, this.seis_saida_Total);
+            this.seis_saida_Outros, this.seis_saida_Total, this.seis_liquido, this.seis_sobra);
           break;
         }
 
@@ -3166,11 +3184,14 @@ export class DashboardComponent {
 
           this.sete_saida_Total = element.tipo_nome == "1.Saida" ? +this.sete_saida_Total + +element.valor : this.sete_saida_Total;             
 
+          this.sete_liquido = +this.sete_entrada_NUMERARIO - +this.sete_saida_Total; 
+          this.sete_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.sete_sobra + +element.valor : this.sete_sobra;
+          
           sete_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.sete_entrada_NUMERARIO, this.sete_entrada_POS, this.sete_entrada_MPesa, this.sete_entrada_Cheque, this.sete_entrada_Convenio,
             this.sete_entrada_Consulta, this.sete_entrada_Diagnostico, this.sete_entrada_Conduta, this.sete_entrada_Medicamento, this.sete_entrada_Total,
             this.sete_saida_Energia, this.sete_saida_Salario, this.sete_saida_Alimentacao, this.sete_saida_Transporte, this.sete_saida_Admnistrativas,
-            this.sete_saida_Outros, this.sete_saida_Total);
+            this.sete_saida_Outros, this.sete_saida_Total, this.sete_liquido, this.sete_sobra);
           break;
         }
 
@@ -3197,11 +3218,14 @@ export class DashboardComponent {
 
           this.oito_saida_Total = element.tipo_nome == "1.Saida" ? +this.oito_saida_Total + +element.valor : this.oito_saida_Total;             
 
+          this.oito_liquido = +this.oito_entrada_NUMERARIO - +this.oito_saida_Total; 
+          this.oito_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.oito_sobra + +element.valor : this.oito_sobra;
+
           oito_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.oito_entrada_NUMERARIO, this.oito_entrada_POS, this.oito_entrada_MPesa, this.oito_entrada_Cheque, this.oito_entrada_Convenio,
             this.oito_entrada_Consulta, this.oito_entrada_Diagnostico, this.oito_entrada_Conduta, this.oito_entrada_Medicamento, this.oito_entrada_Total,
             this.oito_saida_Energia, this.oito_saida_Salario, this.oito_saida_Alimentacao, this.oito_saida_Transporte, this.oito_saida_Admnistrativas,
-            this.oito_saida_Outros, this.oito_saida_Total);
+            this.oito_saida_Outros, this.oito_saida_Total, this.oito_liquido, this.oito_sobra);
           break;
         }
 
@@ -3228,11 +3252,14 @@ export class DashboardComponent {
 
           this.nove_saida_Total = element.tipo_nome == "1.Saida" ? +this.nove_saida_Total + +element.valor : this.nove_saida_Total;             
 
+          this.nove_liquido = +this.nove_entrada_NUMERARIO - +this.nove_saida_Total; 
+          this.nove_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.nove_sobra + +element.valor : this.nove_sobra;
+
           nove_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.nove_entrada_NUMERARIO, this.nove_entrada_POS, this.nove_entrada_MPesa, this.nove_entrada_Cheque, this.nove_entrada_Convenio,
             this.nove_entrada_Consulta, this.nove_entrada_Diagnostico, this.nove_entrada_Conduta, this.nove_entrada_Medicamento, this.nove_entrada_Total,
             this.nove_saida_Energia, this.nove_saida_Salario, this.nove_saida_Alimentacao, this.nove_saida_Transporte, this.nove_saida_Admnistrativas,
-            this.nove_saida_Outros, this.nove_saida_Total);
+            this.nove_saida_Outros, this.nove_saida_Total, this.nove_liquido, this.nove_sobra);
           break;
         }
 
@@ -3259,11 +3286,14 @@ export class DashboardComponent {
 
           this.dez_saida_Total = element.tipo_nome == "1.Saida" ? +this.dez_saida_Total + +element.valor : this.dez_saida_Total;             
 
+          this.dez_liquido = +this.dez_entrada_NUMERARIO - +this.dez_saida_Total; 
+          this.dez_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.dez_sobra + +element.valor : this.dez_sobra;
+
           dez_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.dez_entrada_NUMERARIO, this.dez_entrada_POS, this.dez_entrada_MPesa, this.dez_entrada_Cheque, this.dez_entrada_Convenio,
             this.dez_entrada_Consulta, this.dez_entrada_Diagnostico, this.dez_entrada_Conduta, this.dez_entrada_Medicamento, this.dez_entrada_Total,
             this.dez_saida_Energia, this.dez_saida_Salario, this.dez_saida_Alimentacao, this.dez_saida_Transporte, this.dez_saida_Admnistrativas,
-            this.dez_saida_Outros, this.dez_saida_Total);
+            this.dez_saida_Outros, this.dez_saida_Total, this.dez_liquido, this.dez_sobra);
           break;
         }
 
@@ -3275,7 +3305,7 @@ export class DashboardComponent {
           this.onze_entrada_Convenio= element.formaPagamento == "Convênio" ? +this.onze_entrada_Convenio + +element.valor : this.onze_entrada_Convenio;
           
           this.onze_entrada_Consulta = element.plano_nome == "CONSULTA_MEDICA" ? +this.onze_entrada_Consulta + +element.valor : this.onze_entrada_Consulta;
-         this.onze_entrada_Diagnostico = element.plano_nome == "DIAGNOSTICO_AUX" ? +this.onze_entrada_Diagnostico + +element.valor : this.onze_entrada_Diagnostico;
+          this.onze_entrada_Diagnostico = element.plano_nome == "DIAGNOSTICO_AUX" ? +this.onze_entrada_Diagnostico + +element.valor : this.onze_entrada_Diagnostico;
           this.onze_entrada_Conduta = element.plano_nome == "CONDUTA CLINICA" ? +this.onze_entrada_Conduta + +element.valor : this.onze_entrada_Conduta;
           this.onze_entrada_Medicamento = element.plano_nome == "MEDICAMENTO" ? +this.onze_entrada_Medicamento + +element.valor : this.onze_entrada_Medicamento;
 
@@ -3290,11 +3320,14 @@ export class DashboardComponent {
 
           this.onze_saida_Total = element.tipo_nome == "1.Saida" ? +this.onze_saida_Total + +element.valor : this.onze_saida_Total;             
 
+          this.onze_liquido = +this.onze_entrada_NUMERARIO - +this.onze_saida_Total; 
+          this.onze_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.onze_sobra + +element.valor : this.onze_sobra;
+          
           onze_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.onze_entrada_NUMERARIO, this.onze_entrada_POS, this.onze_entrada_MPesa, this.onze_entrada_Cheque, this.onze_entrada_Convenio,
             this.onze_entrada_Consulta, this.onze_entrada_Diagnostico, this.onze_entrada_Conduta, this.onze_entrada_Medicamento, this.onze_entrada_Total,
             this.onze_saida_Energia, this.onze_saida_Salario, this.onze_saida_Alimentacao, this.onze_saida_Transporte, this.onze_saida_Admnistrativas,
-            this.onze_saida_Outros, this.onze_saida_Total);
+            this.onze_saida_Outros, this.onze_saida_Total, this.onze_liquido, this.onze_sobra);
           break;
         }
 
@@ -3321,11 +3354,14 @@ export class DashboardComponent {
 
           this.doze_saida_Total = element.tipo_nome == "1.Saida" ? +this.doze_saida_Total + +element.valor : this.doze_saida_Total;             
 
+          this.doze_liquido = +this.doze_entrada_NUMERARIO - +this.doze_saida_Total; 
+          this.doze_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.doze_sobra + +element.valor : this.doze_sobra;
+
           doze_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.doze_entrada_NUMERARIO, this.doze_entrada_POS, this.doze_entrada_MPesa, this.doze_entrada_Cheque, this.doze_entrada_Convenio,
             this.doze_entrada_Consulta, this.doze_entrada_Diagnostico, this.doze_entrada_Conduta, this.doze_entrada_Medicamento, this.doze_entrada_Total,
             this.doze_saida_Energia, this.doze_saida_Salario, this.doze_saida_Alimentacao, this.doze_saida_Transporte, this.doze_saida_Admnistrativas,
-            this.doze_saida_Outros, this.doze_saida_Total);
+            this.doze_saida_Outros, this.doze_saida_Total, this.doze_liquido, this.doze_sobra);
           break;
         }
 
@@ -3352,11 +3388,14 @@ export class DashboardComponent {
 
           this.treze_saida_Total = element.tipo_nome == "1.Saida" ? +this.treze_saida_Total + +element.valor : this.treze_saida_Total;             
 
+          this.treze_liquido = +this.treze_entrada_NUMERARIO - +this.treze_saida_Total; 
+          this.treze_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.treze_sobra + +element.valor : this.treze_sobra;
+
           treze_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.treze_entrada_NUMERARIO, this.treze_entrada_POS, this.treze_entrada_MPesa, this.treze_entrada_Cheque, this.treze_entrada_Convenio,
             this.treze_entrada_Consulta, this.treze_entrada_Diagnostico, this.treze_entrada_Conduta, this.treze_entrada_Medicamento, this.treze_entrada_Total,
             this.treze_saida_Energia, this.treze_saida_Salario, this.treze_saida_Alimentacao, this.treze_saida_Transporte, this.treze_saida_Admnistrativas,
-            this.treze_saida_Outros, this.treze_saida_Total);
+            this.treze_saida_Outros, this.treze_saida_Total, this.treze_liquido, this.treze_sobra);
           break;
         }
 
@@ -3383,11 +3422,14 @@ export class DashboardComponent {
 
           this.catorze_saida_Total = element.tipo_nome == "1.Saida" ? +this.catorze_saida_Total + +element.valor : this.catorze_saida_Total;             
 
+          this.catorze_liquido = +this.catorze_entrada_NUMERARIO - +this.catorze_saida_Total; 
+          this.catorze_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.catorze_sobra + +element.valor : this.catorze_sobra;              
+          
           catorze_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.catorze_entrada_NUMERARIO, this.catorze_entrada_POS, this.catorze_entrada_MPesa, this.catorze_entrada_Cheque, this.catorze_entrada_Convenio,
             this.catorze_entrada_Consulta, this.catorze_entrada_Diagnostico, this.catorze_entrada_Conduta, this.catorze_entrada_Medicamento, this.catorze_entrada_Total,
             this.catorze_saida_Energia, this.catorze_saida_Salario, this.catorze_saida_Alimentacao, this.catorze_saida_Transporte, this.catorze_saida_Admnistrativas,
-            this.catorze_saida_Outros, this.catorze_saida_Total);
+            this.catorze_saida_Outros, this.catorze_saida_Total, this.catorze_liquido, this.catorze_sobra);
           break;
         }
 
@@ -3414,11 +3456,14 @@ export class DashboardComponent {
 
           this.quinze_saida_Total = element.tipo_nome == "1.Saida" ? +this.quinze_saida_Total + +element.valor : this.quinze_saida_Total;             
 
+          this.quinze_liquido = +this.quinze_entrada_NUMERARIO - +this.quinze_saida_Total; 
+          this.quinze_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.quinze_sobra + +element.valor : this.quinze_sobra;
+
           quinze_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.quinze_entrada_NUMERARIO, this.quinze_entrada_POS, this.quinze_entrada_MPesa, this.quinze_entrada_Cheque, this.quinze_entrada_Convenio,
             this.quinze_entrada_Consulta, this.quinze_entrada_Diagnostico, this.quinze_entrada_Conduta, this.quinze_entrada_Medicamento, this.quinze_entrada_Total,
             this.quinze_saida_Energia, this.quinze_saida_Salario, this.quinze_saida_Alimentacao, this.quinze_saida_Transporte, this.quinze_saida_Admnistrativas,
-            this.quinze_saida_Outros, this.quinze_saida_Total);
+            this.quinze_saida_Outros, this.quinze_saida_Total, this.quinze_liquido, this.quinze_sobra);
           break;
         }
 
@@ -3445,11 +3490,14 @@ export class DashboardComponent {
 
           this.dezasseis_saida_Total = element.tipo_nome == "1.Saida" ? +this.dezasseis_saida_Total + +element.valor : this.dezasseis_saida_Total;             
 
+          this.dezasseis_liquido = +this.dezasseis_entrada_NUMERARIO - +this.dezasseis_saida_Total; 
+          this.dezasseis_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.dezasseis_sobra + +element.valor : this.dezasseis_sobra;
+
           dezasseis_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.dezasseis_entrada_NUMERARIO, this.dezasseis_entrada_POS, this.dezasseis_entrada_MPesa, this.dezasseis_entrada_Cheque, this.dezasseis_entrada_Convenio,
             this.dezasseis_entrada_Consulta, this.dezasseis_entrada_Diagnostico, this.dezasseis_entrada_Conduta, this.dezasseis_entrada_Medicamento, this.dezasseis_entrada_Total,
             this.dezasseis_saida_Energia, this.dezasseis_saida_Salario, this.dezasseis_saida_Alimentacao, this.dezasseis_saida_Transporte, this.dezasseis_saida_Admnistrativas,
-            this.dezasseis_saida_Outros, this.dezasseis_saida_Total);
+            this.dezasseis_saida_Outros, this.dezasseis_saida_Total, this.dezasseis_liquido, this.dezasseis_sobra);
           break;
         }
 
@@ -3476,11 +3524,14 @@ export class DashboardComponent {
 
           this.dezassete_saida_Total = element.tipo_nome == "1.Saida" ? +this.dezassete_saida_Total + +element.valor : this.dezassete_saida_Total;             
 
+          this.dezassete_liquido = +this.dezassete_entrada_NUMERARIO - +this.dezassete_saida_Total; 
+          this.dezassete_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.dezassete_sobra + +element.valor : this.dezassete_sobra;
+
           dezassete_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.dezassete_entrada_NUMERARIO, this.dezassete_entrada_POS, this.dezassete_entrada_MPesa, this.dezassete_entrada_Cheque, this.dezassete_entrada_Convenio,
             this.dezassete_entrada_Consulta, this.dezassete_entrada_Diagnostico, this.dezassete_entrada_Conduta, this.dezassete_entrada_Medicamento, this.dezassete_entrada_Total,
             this.dezassete_saida_Energia, this.dezassete_saida_Salario, this.dezassete_saida_Alimentacao, this.dezassete_saida_Transporte, this.dezassete_saida_Admnistrativas,
-            this.dezassete_saida_Outros, this.dezassete_saida_Total);
+            this.dezassete_saida_Outros, this.dezassete_saida_Total, this.dezassete_liquido, this.dezassete_sobra);
           break;
         }
 
@@ -3507,11 +3558,14 @@ export class DashboardComponent {
 
           this.dezoito_saida_Total = element.tipo_nome == "1.Saida" ? +this.dezoito_saida_Total + +element.valor : this.dezoito_saida_Total;             
 
+          this.dezoito_liquido = +this.dezoito_entrada_NUMERARIO - +this.dezoito_saida_Total; 
+          this.dezoito_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.dezoito_sobra + +element.valor : this.dezoito_sobra;
+
           dezoito_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.dezoito_entrada_NUMERARIO, this.dezoito_entrada_POS, this.dezoito_entrada_MPesa, this.dezoito_entrada_Cheque, this.dezoito_entrada_Convenio,
             this.dezoito_entrada_Consulta, this.dezoito_entrada_Diagnostico, this.dezoito_entrada_Conduta, this.dezoito_entrada_Medicamento, this.dezoito_entrada_Total,
             this.dezoito_saida_Energia, this.dezoito_saida_Salario, this.dezoito_saida_Alimentacao, this.dezoito_saida_Transporte, this.dezoito_saida_Admnistrativas,
-            this.dezoito_saida_Outros, this.dezoito_saida_Total);
+            this.dezoito_saida_Outros, this.dezoito_saida_Total, this.dezoito_liquido, this.dezoito_sobra);
 
           break;
         }
@@ -3539,11 +3593,15 @@ export class DashboardComponent {
 
           this.dezanove_saida_Total = element.tipo_nome == "1.Saida" ? +this.dezanove_saida_Total + +element.valor : this.dezanove_saida_Total;             
 
+          this.dezanove_liquido = +this.dezanove_entrada_NUMERARIO - +this.dezanove_saida_Total; 
+          this.dezanove_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.dezanove_sobra + +element.valor : this.dezanove_sobra;
+
+
           dezanove_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.dezanove_entrada_NUMERARIO, this.dezanove_entrada_POS, this.dezanove_entrada_MPesa, this.dezanove_entrada_Cheque, this.dezanove_entrada_Convenio,
             this.dezanove_entrada_Consulta, this.dezanove_entrada_Diagnostico, this.dezanove_entrada_Conduta, this.dezanove_entrada_Medicamento, this.dezanove_entrada_Total,
             this.dezanove_saida_Energia, this.dezanove_saida_Salario, this.dezanove_saida_Alimentacao, this.dezanove_saida_Transporte, this.dezanove_saida_Admnistrativas,
-            this.dezanove_saida_Outros, this.dezanove_saida_Total);
+            this.dezanove_saida_Outros, this.dezanove_saida_Total, this.dezanove_liquido, this.dezanove_sobra);
           break;
         }
 
@@ -3570,11 +3628,14 @@ export class DashboardComponent {
 
           this.vinte_saida_Total = element.tipo_nome == "1.Saida" ? +this.vinte_saida_Total + +element.valor : this.vinte_saida_Total;             
 
+          this.vinte_liquido = +this.vinte_entrada_NUMERARIO - +this.vinte_saida_Total; 
+          this.vinte_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.vinte_sobra + +element.valor : this.vinte_sobra;
+
           vinte_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.vinte_entrada_NUMERARIO, this.vinte_entrada_POS, this.vinte_entrada_MPesa, this.vinte_entrada_Cheque, this.vinte_entrada_Convenio,
             this.vinte_entrada_Consulta, this.vinte_entrada_Diagnostico, this.vinte_entrada_Conduta, this.vinte_entrada_Medicamento, this.vinte_entrada_Total,
             this.vinte_saida_Energia, this.vinte_saida_Salario, this.vinte_saida_Alimentacao, this.vinte_saida_Transporte, this.vinte_saida_Admnistrativas,
-            this.vinte_saida_Outros, this.vinte_saida_Total);
+            this.vinte_saida_Outros, this.vinte_saida_Total, this.vinte_liquido, this.vinte_sobra);
 
           break;
         }
@@ -3602,11 +3663,14 @@ export class DashboardComponent {
 
           this.vinteum_saida_Total = element.tipo_nome == "1.Saida" ? +this.vinteum_saida_Total + +element.valor : this.vinteum_saida_Total;             
 
+          this.vinteum_liquido = this.vinteum_entrada_NUMERARIO - this.vinteum_saida_Total; 
+          this.vinteum_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.vinteum_sobra + +element.valor : this.vinteum_sobra;
+
           vinteum_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.vinteum_entrada_NUMERARIO, this.vinteum_entrada_POS, this.vinteum_entrada_MPesa, this.vinteum_entrada_Cheque, this.vinteum_entrada_Convenio,
             this.vinteum_entrada_Consulta, this.vinteum_entrada_Diagnostico, this.vinteum_entrada_Conduta, this.vinteum_entrada_Medicamento, this.vinteum_entrada_Total,
             this.vinteum_saida_Energia, this.vinteum_saida_Salario, this.vinteum_saida_Alimentacao, this.vinteum_saida_Transporte, this.vinteum_saida_Admnistrativas,
-            this.vinteum_saida_Outros, this.vinteum_saida_Total);
+            this.vinteum_saida_Outros, this.vinteum_saida_Total, this.vinteum_liquido, this.vinteum_sobra);
 
           break;
         }
@@ -3633,12 +3697,15 @@ export class DashboardComponent {
           this.vintedois_saida_Outros = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && (element.subtipo_nome !== "1.1.Despesas admnistrativas" && element.subtipo_nome !== "1.2.Despesas de transporte" && element.subtipo_nome !== "1.3.Despesas de alimentacao")) ? +this.vintedois_saida_Outros + +element.valor : this.vintedois_saida_Outros;
 
           this.vintedois_saida_Total = element.tipo_nome == "1.Saida" ? +this.vintedois_saida_Total + +element.valor : this.vintedois_saida_Total;             
+          
+          this.vintedois_liquido = +this.vintedois_entrada_NUMERARIO - +this.vintedois_saida_Total; 
+          this.vintedois_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.vintedois_sobra + +element.valor : this.vintedois_sobra;       
 
           vintedois_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.vintedois_entrada_NUMERARIO, this.vintedois_entrada_POS, this.vintedois_entrada_MPesa, this.vintedois_entrada_Cheque, this.vintedois_entrada_Convenio,
             this.vintedois_entrada_Consulta, this.vintedois_entrada_Diagnostico, this.vintedois_entrada_Conduta, this.vintedois_entrada_Medicamento, this.vintedois_entrada_Total,
             this.vintedois_saida_Energia, this.vintedois_saida_Salario, this.vintedois_saida_Alimentacao, this.vintedois_saida_Transporte, this.vintedois_saida_Admnistrativas,
-            this.vintedois_saida_Outros, this.vintedois_saida_Total);
+            this.vintedois_saida_Outros, this.vintedois_saida_Total, this.vintedois_liquido, this.vintedois_sobra);
           break;
         }
 
@@ -3665,11 +3732,14 @@ export class DashboardComponent {
 
           this.vintetrez_saida_Total = element.tipo_nome == "1.Saida" ? +this.vintetrez_saida_Total + +element.valor : this.vintetrez_saida_Total;             
 
+          this.vintetrez_liquido = +this.vintetrez_entrada_NUMERARIO - +this.vintetrez_saida_Total; 
+          this.vintetrez_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.vintetrez_sobra + +element.valor : this.vintetrez_sobra;
+
           vintetrez_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.vintetrez_entrada_NUMERARIO, this.vintetrez_entrada_POS, this.vintetrez_entrada_MPesa, this.vintetrez_entrada_Cheque, this.vintetrez_entrada_Convenio,
             this.vintetrez_entrada_Consulta, this.vintetrez_entrada_Diagnostico, this.vintetrez_entrada_Conduta, this.vintetrez_entrada_Medicamento, this.vintetrez_entrada_Total,
             this.vintetrez_saida_Energia, this.vintetrez_saida_Salario, this.vintetrez_saida_Alimentacao, this.vintetrez_saida_Transporte, this.vintetrez_saida_Admnistrativas,
-            this.vintetrez_saida_Outros, this.vintetrez_saida_Total);
+            this.vintetrez_saida_Outros, this.vintetrez_saida_Total, this.vintetrez_liquido, this.vintetrez_sobra);
 
           break;
         }
@@ -3697,11 +3767,14 @@ export class DashboardComponent {
 
           this.vintequatro_saida_Total = element.tipo_nome == "1.Saida" ? +this.vintequatro_saida_Total + +element.valor : this.vintequatro_saida_Total;             
 
+          this.vintequatro_liquido = +this.vintequatro_entrada_NUMERARIO - +this.vintequatro_saida_Total; 
+          this.vintequatro_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.vintequatro_sobra + +element.valor : this.vintequatro_sobra;
+
           vintequatro_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.vintequatro_entrada_NUMERARIO, this.vintequatro_entrada_POS, this.vintequatro_entrada_MPesa, this.vintequatro_entrada_Cheque, this.vintequatro_entrada_Convenio,
             this.vintequatro_entrada_Consulta, this.vintequatro_entrada_Diagnostico, this.vintequatro_entrada_Conduta, this.vintequatro_entrada_Medicamento, this.vintequatro_entrada_Total,
             this.vintequatro_saida_Energia, this.vintequatro_saida_Salario, this.vintequatro_saida_Alimentacao, this.vintequatro_saida_Transporte, this.vintequatro_saida_Admnistrativas,
-            this.vintequatro_saida_Outros, this.vintequatro_saida_Total);
+            this.vintequatro_saida_Outros, this.vintequatro_saida_Total, this.vintequatro_liquido, this.vintequatro_sobra);
           break;
         }
 
@@ -3728,11 +3801,14 @@ export class DashboardComponent {
 
           this.vintecinco_saida_Total = element.tipo_nome == "1.Saida" ? +this.vintecinco_saida_Total + +element.valor : this.vintecinco_saida_Total;             
 
+          this.vintecinco_liquido = +this.vintecinco_entrada_NUMERARIO - +this.vintecinco_saida_Total; 
+          this.vintecinco_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.vintecinco_sobra + +element.valor : this.vintecinco_sobra;
+
           vintecinco_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.vintecinco_entrada_NUMERARIO, this.vintecinco_entrada_POS, this.vintecinco_entrada_MPesa, this.vintecinco_entrada_Cheque, this.vintecinco_entrada_Convenio,
             this.vintecinco_entrada_Consulta, this.vintecinco_entrada_Diagnostico, this.vintecinco_entrada_Conduta, this.vintecinco_entrada_Medicamento, this.vintecinco_entrada_Total,
             this.vintecinco_saida_Energia, this.vintecinco_saida_Salario, this.vintecinco_saida_Alimentacao, this.vintecinco_saida_Transporte, this.vintecinco_saida_Admnistrativas,
-            this.vintecinco_saida_Outros, this.vintecinco_saida_Total);
+            this.vintecinco_saida_Outros, this.vintecinco_saida_Total, this.vintecinco_liquido, this.vintecinco_sobra);
           break;
         }
 
@@ -3759,11 +3835,14 @@ export class DashboardComponent {
 
           this.vinteseis_saida_Total = element.tipo_nome == "1.Saida" ? +this.vinteseis_saida_Total + +element.valor : this.vinteseis_saida_Total;             
 
+          this.vinteseis_liquido = +this.vinteseis_entrada_NUMERARIO - +this.vinteseis_saida_Total; 
+          this.vinteseis_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.vinteseis_sobra + +element.valor : this.vinteseis_sobra;
+
           vinteseis_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.vinteseis_entrada_NUMERARIO, this.vinteseis_entrada_POS, this.vinteseis_entrada_MPesa, this.vinteseis_entrada_Cheque, this.vinteseis_entrada_Convenio,
             this.vinteseis_entrada_Consulta, this.vinteseis_entrada_Diagnostico, this.vinteseis_entrada_Conduta, this.vinteseis_entrada_Medicamento, this.vinteseis_entrada_Total,
             this.vinteseis_saida_Energia, this.vinteseis_saida_Salario, this.vinteseis_saida_Alimentacao, this.vinteseis_saida_Transporte, this.vinteseis_saida_Admnistrativas,
-            this.vinteseis_saida_Outros, this.vinteseis_saida_Total);
+            this.vinteseis_saida_Outros, this.vinteseis_saida_Total, this.vinteseis_liquido, this.vinteseis_sobra);
           break;
         }
 
@@ -3790,11 +3869,14 @@ export class DashboardComponent {
 
           this.vintesete_saida_Total = element.tipo_nome == "1.Saida" ? +this.vintesete_saida_Total + +element.valor : this.vintesete_saida_Total;             
 
+          this.vintesete_liquido = +this.vintesete_entrada_NUMERARIO - +this.vintesete_saida_Total; 
+          this.vintesete_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.vintesete_sobra + +element.valor : this.vintesete_sobra;
+
           vintesete_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.vintesete_entrada_NUMERARIO, this.vintesete_entrada_POS, this.vintesete_entrada_MPesa, this.vintesete_entrada_Cheque, this.vintesete_entrada_Convenio,
             this.vintesete_entrada_Consulta, this.vintesete_entrada_Diagnostico, this.vintesete_entrada_Conduta, this.vintesete_entrada_Medicamento, this.vintesete_entrada_Total,
             this.vintesete_saida_Energia, this.vintesete_saida_Salario, this.vintesete_saida_Alimentacao, this.vintesete_saida_Transporte, this.vintesete_saida_Admnistrativas,
-            this.vintesete_saida_Outros, this.vintesete_saida_Total);
+            this.vintesete_saida_Outros, this.vintesete_saida_Total, this.vintesete_liquido, this.vintesete_sobra);
           break;
         }
 
@@ -3821,11 +3903,14 @@ export class DashboardComponent {
 
           this.vinteoito_saida_Total = element.tipo_nome == "1.Saida" ? +this.vinteoito_saida_Total + +element.valor : this.vinteoito_saida_Total;             
 
+          this.vinteoito_liquido = +this.vinteoito_entrada_NUMERARIO - +this.vinteoito_saida_Total; 
+          this.vinteoito_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.vinteoito_sobra + +element.valor : this.vinteoito_sobra;
+
           vinteoito_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.vinteoito_entrada_NUMERARIO, this.vinteoito_entrada_POS, this.vinteoito_entrada_MPesa, this.vinteoito_entrada_Cheque, this.vinteoito_entrada_Convenio,
             this.vinteoito_entrada_Consulta, this.vinteoito_entrada_Diagnostico, this.vinteoito_entrada_Conduta, this.vinteoito_entrada_Medicamento, this.vinteoito_entrada_Total,
             this.vinteoito_saida_Energia, this.vinteoito_saida_Salario, this.vinteoito_saida_Alimentacao, this.vinteoito_saida_Transporte, this.vinteoito_saida_Admnistrativas,
-            this.vinteoito_saida_Outros, this.vinteoito_saida_Total);
+            this.vinteoito_saida_Outros, this.vinteoito_saida_Total, this.vinteoito_liquido, this.vinteoito_sobra);
           break;
         }
 
@@ -3852,11 +3937,14 @@ export class DashboardComponent {
 
           this.vintenove_saida_Total = element.tipo_nome == "1.Saida" ? +this.vintenove_saida_Total + +element.valor : this.vintenove_saida_Total;             
 
+          this.vintenove_liquido = +this.vintenove_entrada_NUMERARIO - +this.vintenove_saida_Total; 
+          this.vintenove_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.vintenove_sobra + +element.valor : this.vintenove_sobra;
+
           vintenove_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.vintenove_entrada_NUMERARIO, this.vintenove_entrada_POS, this.vintenove_entrada_MPesa, this.vintenove_entrada_Cheque, this.vintenove_entrada_Convenio,
             this.vintenove_entrada_Consulta, this.vintenove_entrada_Diagnostico, this.vintenove_entrada_Conduta, this.vintenove_entrada_Medicamento, this.vintenove_entrada_Total,
             this.vintenove_saida_Energia, this.vintenove_saida_Salario, this.vintenove_saida_Alimentacao, this.vintenove_saida_Transporte, this.vintenove_saida_Admnistrativas,
-            this.vintenove_saida_Outros, this.vintenove_saida_Total);
+            this.vintenove_saida_Outros, this.vintenove_saida_Total, this.vintenove_liquido, this.vintenove_sobra);
           
           break;
         }
@@ -3884,11 +3972,14 @@ export class DashboardComponent {
 
           this.trinta_saida_Total = element.tipo_nome == "1.Saida" ? +this.trinta_saida_Total + +element.valor : this.trinta_saida_Total;             
 
+          this.trinta_liquido = +this.trinta_entrada_NUMERARIO - +this.trinta_saida_Total; 
+          this.trinta_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.trinta_sobra + +element.valor : this.trinta_sobra;
+
           trinta_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.trinta_entrada_NUMERARIO, this.trinta_entrada_POS, this.trinta_entrada_MPesa, this.trinta_entrada_Cheque, this.trinta_entrada_Convenio,
             this.trinta_entrada_Consulta, this.trinta_entrada_Diagnostico, this.trinta_entrada_Conduta, this.trinta_entrada_Medicamento, this.trinta_entrada_Total,
             this.trinta_saida_Energia, this.trinta_saida_Salario, this.trinta_saida_Alimentacao, this.trinta_saida_Transporte, this.trinta_saida_Admnistrativas,
-            this.trinta_saida_Outros, this.trinta_saida_Total);
+            this.trinta_saida_Outros, this.trinta_saida_Total, this.trinta_liquido, this.trinta_sobra);
           
           break;
         }
@@ -3915,6 +4006,9 @@ export class DashboardComponent {
           this.trintaum_saida_Outros = (element.tipo_nome == "1.Saida" && (element.plano_nome !== "Energia" && element.plano_nome !="Salario") && (element.subtipo_nome !== "1.1.Despesas admnistrativas" && element.subtipo_nome !== "1.2.Despesas de transporte" && element.subtipo_nome !== "1.3.Despesas de alimentacao")) ? +this.trintaum_saida_Outros + +element.valor : this.trintaum_saida_Outros;
 
           this.trintaum_saida_Total = element.tipo_nome == "1.Saida" ? +this.trintaum_saida_Total + +element.valor : this.trintaum_saida_Total;             
+
+          this.trintaum_liquido = +this.trintaum_entrada_NUMERARIO - +this.trintaum_saida_Total; 
+          this.trintaum_sobra = (element.tipo_nome == "1.Saida" && element.plano_nome == "Sobra") ? +this.trintaum_sobra + +element.valor : this.trintaum_sobra;
 
           trintaum_LancamentoConsolidado = new LancamentoConsolidado(
             element.dia,element.mes, this.trintaum_entrada_NUMERARIO, this.trintaum_entrada_POS, this.trintaum_entrada_MPesa, this.trintaum_entrada_Cheque, this.trintaum_entrada_Convenio,
@@ -4948,566 +5042,632 @@ export class DashboardComponent {
 
 
   resetDadosLancamentos(){
-      //ENTRADA POS
-  this.um_entrada_POS = 0
-  this.dois_entrada_POS = 0
-  this.tres_entrada_POS = 0
-  this.quatro_entrada_POS = 0
-  this.cinco_entrada_POS = 0
-  this.seis_entrada_POS = 0
-  this.sete_entrada_POS = 0
-  this.oito_entrada_POS = 0
-  this.nove_entrada_POS = 0
-  this.dez_entrada_POS = 0
-  this.onze_entrada_POS = 0
-  this.doze_entrada_POS = 0
-  this.treze_entrada_POS = 0
-  this.catorze_entrada_POS = 0
-  this.quinze_entrada_POS = 0
-  this.dezasseis_entrada_POS = 0
-  this.dezassete_entrada_POS = 0
-  this.dezoito_entrada_POS = 0
-  this.dezanove_entrada_POS = 0
-  this.vinte_entrada_POS = 0
-  this.vinteum_entrada_POS = 0
-  this.vintedois_entrada_POS = 0
-  this.vintetrez_entrada_POS = 0
-  this.vintequatro_entrada_POS = 0
-  this.vintecinco_entrada_POS = 0
-  this.vinteseis_entrada_POS = 0
-  this.vintesete_entrada_POS = 0
-  this.vinteoito_entrada_POS = 0
-  this.vintenove_entrada_POS = 0
-  this.trinta_entrada_POS = 0
-  this.trintaum_entrada_POS = 0
+    //ENTRADA POS
+    this.um_entrada_POS = 0
+    this.dois_entrada_POS = 0
+    this.tres_entrada_POS = 0
+    this.quatro_entrada_POS = 0
+    this.cinco_entrada_POS = 0
+    this.seis_entrada_POS = 0
+    this.sete_entrada_POS = 0
+    this.oito_entrada_POS = 0
+    this.nove_entrada_POS = 0
+    this.dez_entrada_POS = 0
+    this.onze_entrada_POS = 0
+    this.doze_entrada_POS = 0
+    this.treze_entrada_POS = 0
+    this.catorze_entrada_POS = 0
+    this.quinze_entrada_POS = 0
+    this.dezasseis_entrada_POS = 0
+    this.dezassete_entrada_POS = 0
+    this.dezoito_entrada_POS = 0
+    this.dezanove_entrada_POS = 0
+    this.vinte_entrada_POS = 0
+    this.vinteum_entrada_POS = 0
+    this.vintedois_entrada_POS = 0
+    this.vintetrez_entrada_POS = 0
+    this.vintequatro_entrada_POS = 0
+    this.vintecinco_entrada_POS = 0
+    this.vinteseis_entrada_POS = 0
+    this.vintesete_entrada_POS = 0
+    this.vinteoito_entrada_POS = 0
+    this.vintenove_entrada_POS = 0
+    this.trinta_entrada_POS = 0
+    this.trintaum_entrada_POS = 0
 
-  //ENTRADA NUMERARIO
-  this.um_entrada_NUMERARIO = 0
-  this.dois_entrada_NUMERARIO = 0
-  this.tres_entrada_NUMERARIO = 0
-  this.quatro_entrada_NUMERARIO = 0
-  this.cinco_entrada_NUMERARIO = 0
-  this.seis_entrada_NUMERARIO = 0
-  this.sete_entrada_NUMERARIO = 0
-  this.oito_entrada_NUMERARIO = 0
-  this.nove_entrada_NUMERARIO = 0
-  this.dez_entrada_NUMERARIO = 0
-  this.onze_entrada_NUMERARIO = 0
-  this.doze_entrada_NUMERARIO = 0
-  this.treze_entrada_NUMERARIO = 0
-  this.catorze_entrada_NUMERARIO = 0
-  this.quinze_entrada_NUMERARIO = 0
-  this.dezasseis_entrada_NUMERARIO = 0
-  this.dezassete_entrada_NUMERARIO = 0
-  this.dezoito_entrada_NUMERARIO = 0
-  this.dezanove_entrada_NUMERARIO = 0
-  this.vinte_entrada_NUMERARIO = 0
-  this.vinteum_entrada_NUMERARIO = 0
-  this.vintedois_entrada_NUMERARIO = 0
-  this.vintetrez_entrada_NUMERARIO = 0
-  this.vintequatro_entrada_NUMERARIO = 0
-  this.vintecinco_entrada_NUMERARIO = 0
-  this.vinteseis_entrada_NUMERARIO = 0
-  this.vintesete_entrada_NUMERARIO = 0
-  this.vinteoito_entrada_NUMERARIO = 0
-  this.vintenove_entrada_NUMERARIO = 0
-  this.trinta_entrada_NUMERARIO = 0
-  this.trintaum_entrada_NUMERARIO = 0
+    //ENTRADA NUMERARIO
+    this.um_entrada_NUMERARIO = 0
+    this.dois_entrada_NUMERARIO = 0
+    this.tres_entrada_NUMERARIO = 0
+    this.quatro_entrada_NUMERARIO = 0
+    this.cinco_entrada_NUMERARIO = 0
+    this.seis_entrada_NUMERARIO = 0
+    this.sete_entrada_NUMERARIO = 0
+    this.oito_entrada_NUMERARIO = 0
+    this.nove_entrada_NUMERARIO = 0
+    this.dez_entrada_NUMERARIO = 0
+    this.onze_entrada_NUMERARIO = 0
+    this.doze_entrada_NUMERARIO = 0
+    this.treze_entrada_NUMERARIO = 0
+    this.catorze_entrada_NUMERARIO = 0
+    this.quinze_entrada_NUMERARIO = 0
+    this.dezasseis_entrada_NUMERARIO = 0
+    this.dezassete_entrada_NUMERARIO = 0
+    this.dezoito_entrada_NUMERARIO = 0
+    this.dezanove_entrada_NUMERARIO = 0
+    this.vinte_entrada_NUMERARIO = 0
+    this.vinteum_entrada_NUMERARIO = 0
+    this.vintedois_entrada_NUMERARIO = 0
+    this.vintetrez_entrada_NUMERARIO = 0
+    this.vintequatro_entrada_NUMERARIO = 0
+    this.vintecinco_entrada_NUMERARIO = 0
+    this.vinteseis_entrada_NUMERARIO = 0
+    this.vintesete_entrada_NUMERARIO = 0
+    this.vinteoito_entrada_NUMERARIO = 0
+    this.vintenove_entrada_NUMERARIO = 0
+    this.trinta_entrada_NUMERARIO = 0
+    this.trintaum_entrada_NUMERARIO = 0
 
-  //ENTRADA MPESA
-  this.um_entrada_MPesa = 0
-  this.dois_entrada_MPesa = 0
-  this.tres_entrada_MPesa = 0
-  this.quatro_entrada_MPesa = 0
-  this.cinco_entrada_MPesa = 0
-  this.seis_entrada_MPesa = 0
-  this.sete_entrada_MPesa = 0
-  this.oito_entrada_MPesa = 0
-  this.nove_entrada_MPesa = 0
-  this.dez_entrada_MPesa = 0
-  this.onze_entrada_MPesa = 0
-  this.doze_entrada_MPesa = 0
-  this.treze_entrada_MPesa = 0
-  this.catorze_entrada_MPesa = 0
-  this.quinze_entrada_MPesa = 0
-  this.dezasseis_entrada_MPesa = 0
-  this.dezassete_entrada_MPesa = 0
-  this.dezoito_entrada_MPesa = 0
-  this.dezanove_entrada_MPesa = 0
-  this.vinte_entrada_MPesa = 0
-  this.vinteum_entrada_MPesa = 0
-  this.vintedois_entrada_MPesa = 0
-  this.vintetrez_entrada_MPesa = 0
-  this.vintequatro_entrada_MPesa = 0
-  this.vintecinco_entrada_MPesa = 0
-  this.vinteseis_entrada_MPesa = 0
-  this.vintesete_entrada_MPesa = 0
-  this.vinteoito_entrada_MPesa = 0
-  this.vintenove_entrada_MPesa = 0
-  this.trinta_entrada_MPesa = 0
-  this.trintaum_entrada_MPesa = 0
+    //ENTRADA MPESA
+    this.um_entrada_MPesa = 0
+    this.dois_entrada_MPesa = 0
+    this.tres_entrada_MPesa = 0
+    this.quatro_entrada_MPesa = 0
+    this.cinco_entrada_MPesa = 0
+    this.seis_entrada_MPesa = 0
+    this.sete_entrada_MPesa = 0
+    this.oito_entrada_MPesa = 0
+    this.nove_entrada_MPesa = 0
+    this.dez_entrada_MPesa = 0
+    this.onze_entrada_MPesa = 0
+    this.doze_entrada_MPesa = 0
+    this.treze_entrada_MPesa = 0
+    this.catorze_entrada_MPesa = 0
+    this.quinze_entrada_MPesa = 0
+    this.dezasseis_entrada_MPesa = 0
+    this.dezassete_entrada_MPesa = 0
+    this.dezoito_entrada_MPesa = 0
+    this.dezanove_entrada_MPesa = 0
+    this.vinte_entrada_MPesa = 0
+    this.vinteum_entrada_MPesa = 0
+    this.vintedois_entrada_MPesa = 0
+    this.vintetrez_entrada_MPesa = 0
+    this.vintequatro_entrada_MPesa = 0
+    this.vintecinco_entrada_MPesa = 0
+    this.vinteseis_entrada_MPesa = 0
+    this.vintesete_entrada_MPesa = 0
+    this.vinteoito_entrada_MPesa = 0
+    this.vintenove_entrada_MPesa = 0
+    this.trinta_entrada_MPesa = 0
+    this.trintaum_entrada_MPesa = 0
 
-  //ENTRADA CHEQUE
-  this.um_entrada_Cheque = 0
-  this.dois_entrada_Cheque = 0
-  this.tres_entrada_Cheque = 0
-  this.quatro_entrada_Cheque = 0
-  this.cinco_entrada_Cheque = 0
-  this.seis_entrada_Cheque = 0
-  this.sete_entrada_Cheque = 0
-  this.oito_entrada_Cheque = 0
-  this.nove_entrada_Cheque = 0
-  this.dez_entrada_Cheque = 0
-  this.onze_entrada_Cheque = 0
-  this.doze_entrada_Cheque = 0
-  this.treze_entrada_Cheque = 0
-  this.catorze_entrada_Cheque = 0
-  this.quinze_entrada_Cheque = 0
-  this.dezasseis_entrada_Cheque = 0
-  this.dezassete_entrada_Cheque = 0
-  this.dezoito_entrada_Cheque = 0
-  this.dezanove_entrada_Cheque = 0
-  this.vinte_entrada_Cheque = 0
-  this.vinteum_entrada_Cheque = 0
-  this.vintedois_entrada_Cheque = 0
-  this.vintetrez_entrada_Cheque = 0
-  this.vintequatro_entrada_Cheque = 0
-  this.vintecinco_entrada_Cheque = 0
-  this.vinteseis_entrada_Cheque = 0
-  this.vintesete_entrada_Cheque = 0
-  this.vinteoito_entrada_Cheque = 0
-  this.vintenove_entrada_Cheque = 0
-  this.trinta_entrada_Cheque = 0
-  this.trintaum_entrada_Cheque = 0
+    //ENTRADA CHEQUE
+    this.um_entrada_Cheque = 0
+    this.dois_entrada_Cheque = 0
+    this.tres_entrada_Cheque = 0
+    this.quatro_entrada_Cheque = 0
+    this.cinco_entrada_Cheque = 0
+    this.seis_entrada_Cheque = 0
+    this.sete_entrada_Cheque = 0
+    this.oito_entrada_Cheque = 0
+    this.nove_entrada_Cheque = 0
+    this.dez_entrada_Cheque = 0
+    this.onze_entrada_Cheque = 0
+    this.doze_entrada_Cheque = 0
+    this.treze_entrada_Cheque = 0
+    this.catorze_entrada_Cheque = 0
+    this.quinze_entrada_Cheque = 0
+    this.dezasseis_entrada_Cheque = 0
+    this.dezassete_entrada_Cheque = 0
+    this.dezoito_entrada_Cheque = 0
+    this.dezanove_entrada_Cheque = 0
+    this.vinte_entrada_Cheque = 0
+    this.vinteum_entrada_Cheque = 0
+    this.vintedois_entrada_Cheque = 0
+    this.vintetrez_entrada_Cheque = 0
+    this.vintequatro_entrada_Cheque = 0
+    this.vintecinco_entrada_Cheque = 0
+    this.vinteseis_entrada_Cheque = 0
+    this.vintesete_entrada_Cheque = 0
+    this.vinteoito_entrada_Cheque = 0
+    this.vintenove_entrada_Cheque = 0
+    this.trinta_entrada_Cheque = 0
+    this.trintaum_entrada_Cheque = 0
 
-  //ENTRADA CONVEBIO
-  this.um_entrada_Convenio = 0
-  this.dois_entrada_Convenio = 0
-  this.tres_entrada_Convenio = 0
-  this.quatro_entrada_Convenio = 0
-  this.cinco_entrada_Convenio = 0
-  this.seis_entrada_Convenio = 0
-  this.sete_entrada_Convenio = 0
-  this.oito_entrada_Convenio = 0
-  this.nove_entrada_Convenio = 0
-  this.dez_entrada_Convenio = 0
-  this.onze_entrada_Convenio = 0
-  this.doze_entrada_Convenio = 0
-  this.treze_entrada_Convenio = 0
-  this.catorze_entrada_Convenio = 0
-  this.quinze_entrada_Convenio = 0
-  this.dezasseis_entrada_Convenio = 0
-  this.dezassete_entrada_Convenio = 0
-  this.dezoito_entrada_Convenio = 0
-  this.dezanove_entrada_Convenio = 0
-  this.vinte_entrada_Convenio = 0
-  this.vinteum_entrada_Convenio = 0
-  this.vintedois_entrada_Convenio = 0
-  this.vintetrez_entrada_Convenio = 0
-  this.vintequatro_entrada_Convenio = 0
-  this.vintecinco_entrada_Convenio = 0
-  this.vinteseis_entrada_Convenio = 0
-  this.vintesete_entrada_Convenio = 0
-  this.vinteoito_entrada_Convenio = 0
-  this.vintenove_entrada_Convenio = 0
-  this.trinta_entrada_Convenio = 0
-  this.trintaum_entrada_Convenio = 0
+    //ENTRADA CONVEBIO
+    this.um_entrada_Convenio = 0
+    this.dois_entrada_Convenio = 0
+    this.tres_entrada_Convenio = 0
+    this.quatro_entrada_Convenio = 0
+    this.cinco_entrada_Convenio = 0
+    this.seis_entrada_Convenio = 0
+    this.sete_entrada_Convenio = 0
+    this.oito_entrada_Convenio = 0
+    this.nove_entrada_Convenio = 0
+    this.dez_entrada_Convenio = 0
+    this.onze_entrada_Convenio = 0
+    this.doze_entrada_Convenio = 0
+    this.treze_entrada_Convenio = 0
+    this.catorze_entrada_Convenio = 0
+    this.quinze_entrada_Convenio = 0
+    this.dezasseis_entrada_Convenio = 0
+    this.dezassete_entrada_Convenio = 0
+    this.dezoito_entrada_Convenio = 0
+    this.dezanove_entrada_Convenio = 0
+    this.vinte_entrada_Convenio = 0
+    this.vinteum_entrada_Convenio = 0
+    this.vintedois_entrada_Convenio = 0
+    this.vintetrez_entrada_Convenio = 0
+    this.vintequatro_entrada_Convenio = 0
+    this.vintecinco_entrada_Convenio = 0
+    this.vinteseis_entrada_Convenio = 0
+    this.vintesete_entrada_Convenio = 0
+    this.vinteoito_entrada_Convenio = 0
+    this.vintenove_entrada_Convenio = 0
+    this.trinta_entrada_Convenio = 0
+    this.trintaum_entrada_Convenio = 0
 
-  //ENTRADA CONSULTA
-  this.um_entrada_Consulta = 0
-  this.dois_entrada_Consulta = 0
-  this.tres_entrada_Consulta = 0
-  this.quatro_entrada_Consulta = 0
-  this.cinco_entrada_Consulta = 0
-  this.seis_entrada_Consulta = 0
-  this.sete_entrada_Consulta = 0
-  this.oito_entrada_Consulta = 0
-  this.nove_entrada_Consulta = 0
-  this.dez_entrada_Consulta = 0
-  this.onze_entrada_Consulta = 0
-  this.doze_entrada_Consulta = 0
-  this.treze_entrada_Consulta = 0
-  this.catorze_entrada_Consulta = 0
-  this.quinze_entrada_Consulta = 0
-  this.dezasseis_entrada_Consulta = 0
-  this.dezassete_entrada_Consulta = 0
-  this.dezoito_entrada_Consulta = 0
-  this.dezanove_entrada_Consulta = 0
-  this.vinte_entrada_Consulta = 0
-  this.vinteum_entrada_Consulta = 0
-  this.vintedois_entrada_Consulta = 0
-  this.vintetrez_entrada_Consulta = 0
-  this.vintequatro_entrada_Consulta = 0
-  this.vintecinco_entrada_Consulta = 0
-  this.vinteseis_entrada_Consulta = 0
-  this.vintesete_entrada_Consulta = 0
-  this.vinteoito_entrada_Consulta = 0
-  this.vintenove_entrada_Consulta = 0
-  this.trinta_entrada_Consulta = 0
-  this.trintaum_entrada_Consulta = 0
+    //ENTRADA CONSULTA
+    this.um_entrada_Consulta = 0
+    this.dois_entrada_Consulta = 0
+    this.tres_entrada_Consulta = 0
+    this.quatro_entrada_Consulta = 0
+    this.cinco_entrada_Consulta = 0
+    this.seis_entrada_Consulta = 0
+    this.sete_entrada_Consulta = 0
+    this.oito_entrada_Consulta = 0
+    this.nove_entrada_Consulta = 0
+    this.dez_entrada_Consulta = 0
+    this.onze_entrada_Consulta = 0
+    this.doze_entrada_Consulta = 0
+    this.treze_entrada_Consulta = 0
+    this.catorze_entrada_Consulta = 0
+    this.quinze_entrada_Consulta = 0
+    this.dezasseis_entrada_Consulta = 0
+    this.dezassete_entrada_Consulta = 0
+    this.dezoito_entrada_Consulta = 0
+    this.dezanove_entrada_Consulta = 0
+    this.vinte_entrada_Consulta = 0
+    this.vinteum_entrada_Consulta = 0
+    this.vintedois_entrada_Consulta = 0
+    this.vintetrez_entrada_Consulta = 0
+    this.vintequatro_entrada_Consulta = 0
+    this.vintecinco_entrada_Consulta = 0
+    this.vinteseis_entrada_Consulta = 0
+    this.vintesete_entrada_Consulta = 0
+    this.vinteoito_entrada_Consulta = 0
+    this.vintenove_entrada_Consulta = 0
+    this.trinta_entrada_Consulta = 0
+    this.trintaum_entrada_Consulta = 0
 
-  //ENTRADA DIAGNOSTICO AUX
-  this.um_entrada_Diagnostico = 0
-  this.dois_entrada_Diagnostico = 0
-  this.tres_entrada_Diagnostico = 0
-  this.quatro_entrada_Diagnostico = 0
-  this.cinco_entrada_Diagnostico = 0
-  this.seis_entrada_Diagnostico = 0
-  this.sete_entrada_Diagnostico = 0
-  this.oito_entrada_Diagnostico = 0
-  this.nove_entrada_Diagnostico = 0
-  this.dez_entrada_Diagnostico = 0
-  this.onze_entrada_Diagnostico = 0
-  this.doze_entrada_Diagnostico = 0
-  this.treze_entrada_Diagnostico = 0
-  this.catorze_entrada_Diagnostico = 0
-  this.quinze_entrada_Diagnostico = 0
-  this.dezasseis_entrada_Diagnostico = 0
-  this.dezassete_entrada_Diagnostico = 0
-  this.dezoito_entrada_Diagnostico = 0
-  this.dezanove_entrada_Diagnostico = 0
-  this.vinte_entrada_Diagnostico = 0
-  this.vinteum_entrada_Diagnostico = 0
-  this.vintedois_entrada_Diagnostico = 0
-  this.vintetrez_entrada_Diagnostico = 0
-  this.vintequatro_entrada_Diagnostico = 0
-  this.vintecinco_entrada_Diagnostico = 0
-  this.vinteseis_entrada_Diagnostico = 0
-  this.vintesete_entrada_Diagnostico = 0
-  this.vinteoito_entrada_Diagnostico = 0
-  this.vintenove_entrada_Diagnostico = 0
-  this.trinta_entrada_Diagnostico = 0
-  this.trintaum_entrada_Diagnostico = 0
+    //ENTRADA DIAGNOSTICO AUX
+    this.um_entrada_Diagnostico = 0
+    this.dois_entrada_Diagnostico = 0
+    this.tres_entrada_Diagnostico = 0
+    this.quatro_entrada_Diagnostico = 0
+    this.cinco_entrada_Diagnostico = 0
+    this.seis_entrada_Diagnostico = 0
+    this.sete_entrada_Diagnostico = 0
+    this.oito_entrada_Diagnostico = 0
+    this.nove_entrada_Diagnostico = 0
+    this.dez_entrada_Diagnostico = 0
+    this.onze_entrada_Diagnostico = 0
+    this.doze_entrada_Diagnostico = 0
+    this.treze_entrada_Diagnostico = 0
+    this.catorze_entrada_Diagnostico = 0
+    this.quinze_entrada_Diagnostico = 0
+    this.dezasseis_entrada_Diagnostico = 0
+    this.dezassete_entrada_Diagnostico = 0
+    this.dezoito_entrada_Diagnostico = 0
+    this.dezanove_entrada_Diagnostico = 0
+    this.vinte_entrada_Diagnostico = 0
+    this.vinteum_entrada_Diagnostico = 0
+    this.vintedois_entrada_Diagnostico = 0
+    this.vintetrez_entrada_Diagnostico = 0
+    this.vintequatro_entrada_Diagnostico = 0
+    this.vintecinco_entrada_Diagnostico = 0
+    this.vinteseis_entrada_Diagnostico = 0
+    this.vintesete_entrada_Diagnostico = 0
+    this.vinteoito_entrada_Diagnostico = 0
+    this.vintenove_entrada_Diagnostico = 0
+    this.trinta_entrada_Diagnostico = 0
+    this.trintaum_entrada_Diagnostico = 0
 
-  //ENTRADA CONDUTAS
-  this.um_entrada_Conduta = 0
-  this.dois_entrada_Conduta = 0
-  this.tres_entrada_Conduta = 0
-  this.quatro_entrada_Conduta = 0
-  this.cinco_entrada_Conduta = 0
-  this.seis_entrada_Conduta = 0
-  this.sete_entrada_Conduta = 0
-  this.oito_entrada_Conduta = 0
-  this.nove_entrada_Conduta = 0
-  this.dez_entrada_Conduta = 0
-  this.onze_entrada_Conduta = 0
-  this.doze_entrada_Conduta = 0
-  this.treze_entrada_Conduta = 0
-  this.catorze_entrada_Conduta = 0
-  this.quinze_entrada_Conduta = 0
-  this.dezasseis_entrada_Conduta = 0
-  this.dezassete_entrada_Conduta = 0
-  this.dezoito_entrada_Conduta = 0
-  this.dezanove_entrada_Conduta = 0
-  this.vinte_entrada_Conduta = 0
-  this.vinteum_entrada_Conduta = 0
-  this.vintedois_entrada_Conduta = 0
-  this.vintetrez_entrada_Conduta = 0
-  this.vintequatro_entrada_Conduta = 0
-  this.vintecinco_entrada_Conduta = 0
-  this.vinteseis_entrada_Conduta = 0
-  this.vintesete_entrada_Conduta = 0
-  this.vinteoito_entrada_Conduta = 0
-  this.vintenove_entrada_Conduta = 0
-  this.trinta_entrada_Conduta = 0
-  this.trintaum_entrada_Conduta = 0
+    //ENTRADA CONDUTAS
+    this.um_entrada_Conduta = 0
+    this.dois_entrada_Conduta = 0
+    this.tres_entrada_Conduta = 0
+    this.quatro_entrada_Conduta = 0
+    this.cinco_entrada_Conduta = 0
+    this.seis_entrada_Conduta = 0
+    this.sete_entrada_Conduta = 0
+    this.oito_entrada_Conduta = 0
+    this.nove_entrada_Conduta = 0
+    this.dez_entrada_Conduta = 0
+    this.onze_entrada_Conduta = 0
+    this.doze_entrada_Conduta = 0
+    this.treze_entrada_Conduta = 0
+    this.catorze_entrada_Conduta = 0
+    this.quinze_entrada_Conduta = 0
+    this.dezasseis_entrada_Conduta = 0
+    this.dezassete_entrada_Conduta = 0
+    this.dezoito_entrada_Conduta = 0
+    this.dezanove_entrada_Conduta = 0
+    this.vinte_entrada_Conduta = 0
+    this.vinteum_entrada_Conduta = 0
+    this.vintedois_entrada_Conduta = 0
+    this.vintetrez_entrada_Conduta = 0
+    this.vintequatro_entrada_Conduta = 0
+    this.vintecinco_entrada_Conduta = 0
+    this.vinteseis_entrada_Conduta = 0
+    this.vintesete_entrada_Conduta = 0
+    this.vinteoito_entrada_Conduta = 0
+    this.vintenove_entrada_Conduta = 0
+    this.trinta_entrada_Conduta = 0
+    this.trintaum_entrada_Conduta = 0
 
-  //ENTRADA MEDICAMENTO
-  this.um_entrada_Medicamento = 0
-  this.dois_entrada_Medicamento = 0
-  this.tres_entrada_Medicamento = 0
-  this.quatro_entrada_Medicamento = 0
-  this.cinco_entrada_Medicamento = 0
-  this.seis_entrada_Medicamento = 0
-  this.sete_entrada_Medicamento = 0
-  this.oito_entrada_Medicamento = 0
-  this.nove_entrada_Medicamento = 0
-  this.dez_entrada_Medicamento = 0
-  this.onze_entrada_Medicamento = 0
-  this.doze_entrada_Medicamento = 0
-  this.treze_entrada_Medicamento = 0
-  this.catorze_entrada_Medicamento = 0
-  this.quinze_entrada_Medicamento = 0
-  this.dezasseis_entrada_Medicamento = 0
-  this.dezassete_entrada_Medicamento = 0
-  this.dezoito_entrada_Medicamento = 0
-  this.dezanove_entrada_Medicamento = 0
-  this.vinte_entrada_Medicamento = 0
-  this.vinteum_entrada_Medicamento = 0
-  this.vintedois_entrada_Medicamento = 0
-  this.vintetrez_entrada_Medicamento = 0
-  this.vintequatro_entrada_Medicamento = 0
-  this.vintecinco_entrada_Medicamento = 0
-  this.vinteseis_entrada_Medicamento = 0
-  this.vintesete_entrada_Medicamento = 0
-  this.vinteoito_entrada_Medicamento = 0
-  this.vintenove_entrada_Medicamento = 0
-  this.trinta_entrada_Medicamento = 0
-  this.trintaum_entrada_Medicamento = 0
+    //ENTRADA MEDICAMENTO
+    this.um_entrada_Medicamento = 0
+    this.dois_entrada_Medicamento = 0
+    this.tres_entrada_Medicamento = 0
+    this.quatro_entrada_Medicamento = 0
+    this.cinco_entrada_Medicamento = 0
+    this.seis_entrada_Medicamento = 0
+    this.sete_entrada_Medicamento = 0
+    this.oito_entrada_Medicamento = 0
+    this.nove_entrada_Medicamento = 0
+    this.dez_entrada_Medicamento = 0
+    this.onze_entrada_Medicamento = 0
+    this.doze_entrada_Medicamento = 0
+    this.treze_entrada_Medicamento = 0
+    this.catorze_entrada_Medicamento = 0
+    this.quinze_entrada_Medicamento = 0
+    this.dezasseis_entrada_Medicamento = 0
+    this.dezassete_entrada_Medicamento = 0
+    this.dezoito_entrada_Medicamento = 0
+    this.dezanove_entrada_Medicamento = 0
+    this.vinte_entrada_Medicamento = 0
+    this.vinteum_entrada_Medicamento = 0
+    this.vintedois_entrada_Medicamento = 0
+    this.vintetrez_entrada_Medicamento = 0
+    this.vintequatro_entrada_Medicamento = 0
+    this.vintecinco_entrada_Medicamento = 0
+    this.vinteseis_entrada_Medicamento = 0
+    this.vintesete_entrada_Medicamento = 0
+    this.vinteoito_entrada_Medicamento = 0
+    this.vintenove_entrada_Medicamento = 0
+    this.trinta_entrada_Medicamento = 0
+    this.trintaum_entrada_Medicamento = 0
 
-  //ENTRADA TOTAL
-  this.um_entrada_Total = 0
-  this.dois_entrada_Total = 0
-  this.tres_entrada_Total = 0
-  this.quatro_entrada_Total = 0
-  this.cinco_entrada_Total = 0
-  this.seis_entrada_Total = 0
-  this.sete_entrada_Total = 0
-  this.oito_entrada_Total = 0
-  this.nove_entrada_Total = 0
-  this.dez_entrada_Total = 0
-  this.onze_entrada_Total = 0
-  this.doze_entrada_Total = 0
-  this.treze_entrada_Total = 0
-  this.catorze_entrada_Total = 0
-  this.quinze_entrada_Total = 0
-  this.dezasseis_entrada_Total = 0
-  this.dezassete_entrada_Total = 0
-  this.dezoito_entrada_Total = 0
-  this.dezanove_entrada_Total = 0
-  this.vinte_entrada_Total = 0
-  this.vinteum_entrada_Total = 0
-  this.vintedois_entrada_Total = 0
-  this.vintetrez_entrada_Total = 0
-  this.vintequatro_entrada_Total = 0
-  this.vintecinco_entrada_Total = 0
-  this.vinteseis_entrada_Total = 0
-  this.vintesete_entrada_Total = 0
-  this.vinteoito_entrada_Total = 0
-  this.vintenove_entrada_Total = 0
-  this.trinta_entrada_Total = 0
-  this.trintaum_entrada_Total = 0
+    //ENTRADA TOTAL
+    this.um_entrada_Total = 0
+    this.dois_entrada_Total = 0
+    this.tres_entrada_Total = 0
+    this.quatro_entrada_Total = 0
+    this.cinco_entrada_Total = 0
+    this.seis_entrada_Total = 0
+    this.sete_entrada_Total = 0
+    this.oito_entrada_Total = 0
+    this.nove_entrada_Total = 0
+    this.dez_entrada_Total = 0
+    this.onze_entrada_Total = 0
+    this.doze_entrada_Total = 0
+    this.treze_entrada_Total = 0
+    this.catorze_entrada_Total = 0
+    this.quinze_entrada_Total = 0
+    this.dezasseis_entrada_Total = 0
+    this.dezassete_entrada_Total = 0
+    this.dezoito_entrada_Total = 0
+    this.dezanove_entrada_Total = 0
+    this.vinte_entrada_Total = 0
+    this.vinteum_entrada_Total = 0
+    this.vintedois_entrada_Total = 0
+    this.vintetrez_entrada_Total = 0
+    this.vintequatro_entrada_Total = 0
+    this.vintecinco_entrada_Total = 0
+    this.vinteseis_entrada_Total = 0
+    this.vintesete_entrada_Total = 0
+    this.vinteoito_entrada_Total = 0
+    this.vintenove_entrada_Total = 0
+    this.trinta_entrada_Total = 0
+    this.trintaum_entrada_Total = 0
 
-  //SAIDA TOTAL
-  this.um_saida_Total = 0
-  this.dois_saida_Total = 0
-  this.tres_saida_Total = 0
-  this.quatro_saida_Total = 0
-  this.cinco_saida_Total = 0
-  this.seis_saida_Total = 0
-  this.sete_saida_Total = 0
-  this.oito_saida_Total = 0
-  this.nove_saida_Total = 0
-  this.dez_saida_Total = 0
-  this.onze_saida_Total = 0
-  this.doze_saida_Total = 0
-  this.treze_saida_Total = 0
-  this.catorze_saida_Total = 0
-  this.quinze_saida_Total = 0
-  this.dezasseis_saida_Total = 0
-  this.dezassete_saida_Total = 0
-  this.dezoito_saida_Total = 0
-  this.dezanove_saida_Total = 0
-  this.vinte_saida_Total = 0
-  this.vinteum_saida_Total = 0
-  this.vintedois_saida_Total = 0
-  this.vintetrez_saida_Total = 0
-  this.vintequatro_saida_Total = 0
-  this.vintecinco_saida_Total = 0
-  this.vinteseis_saida_Total = 0
-  this.vintesete_saida_Total = 0
-  this.vinteoito_saida_Total = 0
-  this.vintenove_saida_Total = 0
-  this.trinta_saida_Total = 0
-  this.trintaum_saida_Total = 0
+    //SAIDA TOTAL
+    this.um_saida_Total = 0
+    this.dois_saida_Total = 0
+    this.tres_saida_Total = 0
+    this.quatro_saida_Total = 0
+    this.cinco_saida_Total = 0
+    this.seis_saida_Total = 0
+    this.sete_saida_Total = 0
+    this.oito_saida_Total = 0
+    this.nove_saida_Total = 0
+    this.dez_saida_Total = 0
+    this.onze_saida_Total = 0
+    this.doze_saida_Total = 0
+    this.treze_saida_Total = 0
+    this.catorze_saida_Total = 0
+    this.quinze_saida_Total = 0
+    this.dezasseis_saida_Total = 0
+    this.dezassete_saida_Total = 0
+    this.dezoito_saida_Total = 0
+    this.dezanove_saida_Total = 0
+    this.vinte_saida_Total = 0
+    this.vinteum_saida_Total = 0
+    this.vintedois_saida_Total = 0
+    this.vintetrez_saida_Total = 0
+    this.vintequatro_saida_Total = 0
+    this.vintecinco_saida_Total = 0
+    this.vinteseis_saida_Total = 0
+    this.vintesete_saida_Total = 0
+    this.vinteoito_saida_Total = 0
+    this.vintenove_saida_Total = 0
+    this.trinta_saida_Total = 0
+    this.trintaum_saida_Total = 0
 
-  //SAIDA ENERGIA
-  this.um_saida_Energia = 0
-  this.dois_saida_Energia = 0
-  this.tres_saida_Energia = 0
-  this.quatro_saida_Energia = 0
-  this.cinco_saida_Energia = 0
-  this.seis_saida_Energia = 0
-  this.sete_saida_Energia = 0
-  this.oito_saida_Energia = 0
-  this.nove_saida_Energia = 0
-  this.dez_saida_Energia = 0
-  this.onze_saida_Energia = 0
-  this.doze_saida_Energia = 0
-  this.treze_saida_Energia = 0
-  this.catorze_saida_Energia = 0
-  this.quinze_saida_Energia = 0
-  this.dezasseis_saida_Energia = 0
-  this.dezassete_saida_Energia = 0
-  this.dezoito_saida_Energia = 0
-  this.dezanove_saida_Energia = 0
-  this.vinte_saida_Energia = 0
-  this.vinteum_saida_Energia = 0
-  this.vintedois_saida_Energia = 0
-  this.vintetrez_saida_Energia = 0
-  this.vintequatro_saida_Energia = 0
-  this.vintecinco_saida_Energia = 0
-  this.vinteseis_saida_Energia = 0
-  this.vintesete_saida_Energia = 0
-  this.vinteoito_saida_Energia = 0
-  this.vintenove_saida_Energia = 0
-  this.trinta_saida_Energia = 0
-  this.trintaum_saida_Energia = 0
+    //SAIDA ENERGIA
+    this.um_saida_Energia = 0
+    this.dois_saida_Energia = 0
+    this.tres_saida_Energia = 0
+    this.quatro_saida_Energia = 0
+    this.cinco_saida_Energia = 0
+    this.seis_saida_Energia = 0
+    this.sete_saida_Energia = 0
+    this.oito_saida_Energia = 0
+    this.nove_saida_Energia = 0
+    this.dez_saida_Energia = 0
+    this.onze_saida_Energia = 0
+    this.doze_saida_Energia = 0
+    this.treze_saida_Energia = 0
+    this.catorze_saida_Energia = 0
+    this.quinze_saida_Energia = 0
+    this.dezasseis_saida_Energia = 0
+    this.dezassete_saida_Energia = 0
+    this.dezoito_saida_Energia = 0
+    this.dezanove_saida_Energia = 0
+    this.vinte_saida_Energia = 0
+    this.vinteum_saida_Energia = 0
+    this.vintedois_saida_Energia = 0
+    this.vintetrez_saida_Energia = 0
+    this.vintequatro_saida_Energia = 0
+    this.vintecinco_saida_Energia = 0
+    this.vinteseis_saida_Energia = 0
+    this.vintesete_saida_Energia = 0
+    this.vinteoito_saida_Energia = 0
+    this.vintenove_saida_Energia = 0
+    this.trinta_saida_Energia = 0
+    this.trintaum_saida_Energia = 0
 
-  //SAIDA DESPESAS ADMNISTRATIVAS
-  this.um_saida_Admnistrativas = 0
-  this.dois_saida_Admnistrativas = 0
-  this.tres_saida_Admnistrativas = 0
-  this.quatro_saida_Admnistrativas = 0
-  this.cinco_saida_Admnistrativas = 0
-  this.seis_saida_Admnistrativas = 0
-  this.sete_saida_Admnistrativas = 0
-  this.oito_saida_Admnistrativas = 0
-  this.nove_saida_Admnistrativas = 0
-  this.dez_saida_Admnistrativas = 0
-  this.onze_saida_Admnistrativas = 0
-  this.doze_saida_Admnistrativas = 0
-  this.treze_saida_Admnistrativas = 0
-  this.catorze_saida_Admnistrativas = 0
-  this.quinze_saida_Admnistrativas = 0
-  this.dezasseis_saida_Admnistrativas = 0
-  this.dezassete_saida_Admnistrativas = 0
-  this.dezoito_saida_Admnistrativas = 0
-  this.dezanove_saida_Admnistrativas = 0
-  this.vinte_saida_Admnistrativas = 0
-  this.vinteum_saida_Admnistrativas = 0
-  this.vintedois_saida_Admnistrativas = 0
-  this.vintetrez_saida_Admnistrativas = 0
-  this.vintequatro_saida_Admnistrativas = 0
-  this.vintecinco_saida_Admnistrativas = 0
-  this.vinteseis_saida_Admnistrativas = 0
-  this.vintesete_saida_Admnistrativas = 0
-  this.vinteoito_saida_Admnistrativas = 0
-  this.vintenove_saida_Admnistrativas = 0
-  this.trinta_saida_Admnistrativas = 0
-  this.trintaum_saida_Admnistrativas = 0
+    //SAIDA DESPESAS ADMNISTRATIVAS
+    this.um_saida_Admnistrativas = 0
+    this.dois_saida_Admnistrativas = 0
+    this.tres_saida_Admnistrativas = 0
+    this.quatro_saida_Admnistrativas = 0
+    this.cinco_saida_Admnistrativas = 0
+    this.seis_saida_Admnistrativas = 0
+    this.sete_saida_Admnistrativas = 0
+    this.oito_saida_Admnistrativas = 0
+    this.nove_saida_Admnistrativas = 0
+    this.dez_saida_Admnistrativas = 0
+    this.onze_saida_Admnistrativas = 0
+    this.doze_saida_Admnistrativas = 0
+    this.treze_saida_Admnistrativas = 0
+    this.catorze_saida_Admnistrativas = 0
+    this.quinze_saida_Admnistrativas = 0
+    this.dezasseis_saida_Admnistrativas = 0
+    this.dezassete_saida_Admnistrativas = 0
+    this.dezoito_saida_Admnistrativas = 0
+    this.dezanove_saida_Admnistrativas = 0
+    this.vinte_saida_Admnistrativas = 0
+    this.vinteum_saida_Admnistrativas = 0
+    this.vintedois_saida_Admnistrativas = 0
+    this.vintetrez_saida_Admnistrativas = 0
+    this.vintequatro_saida_Admnistrativas = 0
+    this.vintecinco_saida_Admnistrativas = 0
+    this.vinteseis_saida_Admnistrativas = 0
+    this.vintesete_saida_Admnistrativas = 0
+    this.vinteoito_saida_Admnistrativas = 0
+    this.vintenove_saida_Admnistrativas = 0
+    this.trinta_saida_Admnistrativas = 0
+    this.trintaum_saida_Admnistrativas = 0
 
-  //SAIDA ALIMENTACAO
-  this.um_saida_Alimentacao = 0
-  this.dois_saida_Alimentacao = 0
-  this.tres_saida_Alimentacao = 0
-  this.quatro_saida_Alimentacao = 0
-  this.cinco_saida_Alimentacao = 0
-  this.seis_saida_Alimentacao = 0
-  this.sete_saida_Alimentacao = 0
-  this.oito_saida_Alimentacao = 0
-  this.nove_saida_Alimentacao = 0
-  this.dez_saida_Alimentacao = 0
-  this.onze_saida_Alimentacao = 0
-  this.doze_saida_Alimentacao = 0
-  this.treze_saida_Alimentacao = 0
-  this.catorze_saida_Alimentacao = 0
-  this.quinze_saida_Alimentacao = 0
-  this.dezasseis_saida_Alimentacao = 0
-  this.dezassete_saida_Alimentacao = 0
-  this.dezoito_saida_Alimentacao = 0
-  this.dezanove_saida_Alimentacao = 0
-  this.vinte_saida_Alimentacao = 0
-  this.vinteum_saida_Alimentacao = 0
-  this.vintedois_saida_Alimentacao = 0
-  this.vintetrez_saida_Alimentacao = 0
-  this.vintequatro_saida_Alimentacao = 0
-  this.vintecinco_saida_Alimentacao = 0
-  this.vinteseis_saida_Alimentacao = 0
-  this.vintesete_saida_Alimentacao = 0
-  this.vinteoito_saida_Alimentacao = 0
-  this.vintenove_saida_Alimentacao = 0
-  this.trinta_saida_Alimentacao = 0
-  this.trintaum_saida_Alimentacao = 0
+    //SAIDA ALIMENTACAO
+    this.um_saida_Alimentacao = 0
+    this.dois_saida_Alimentacao = 0
+    this.tres_saida_Alimentacao = 0
+    this.quatro_saida_Alimentacao = 0
+    this.cinco_saida_Alimentacao = 0
+    this.seis_saida_Alimentacao = 0
+    this.sete_saida_Alimentacao = 0
+    this.oito_saida_Alimentacao = 0
+    this.nove_saida_Alimentacao = 0
+    this.dez_saida_Alimentacao = 0
+    this.onze_saida_Alimentacao = 0
+    this.doze_saida_Alimentacao = 0
+    this.treze_saida_Alimentacao = 0
+    this.catorze_saida_Alimentacao = 0
+    this.quinze_saida_Alimentacao = 0
+    this.dezasseis_saida_Alimentacao = 0
+    this.dezassete_saida_Alimentacao = 0
+    this.dezoito_saida_Alimentacao = 0
+    this.dezanove_saida_Alimentacao = 0
+    this.vinte_saida_Alimentacao = 0
+    this.vinteum_saida_Alimentacao = 0
+    this.vintedois_saida_Alimentacao = 0
+    this.vintetrez_saida_Alimentacao = 0
+    this.vintequatro_saida_Alimentacao = 0
+    this.vintecinco_saida_Alimentacao = 0
+    this.vinteseis_saida_Alimentacao = 0
+    this.vintesete_saida_Alimentacao = 0
+    this.vinteoito_saida_Alimentacao = 0
+    this.vintenove_saida_Alimentacao = 0
+    this.trinta_saida_Alimentacao = 0
+    this.trintaum_saida_Alimentacao = 0
 
-  //SAIDA TRANSPORTE
-  this.um_saida_Transporte = 0
-  this.dois_saida_Transporte = 0
-  this.tres_saida_Transporte = 0
-  this.quatro_saida_Transporte = 0
-  this.cinco_saida_Transporte = 0
-  this.seis_saida_Transporte = 0
-  this.sete_saida_Transporte = 0
-  this.oito_saida_Transporte = 0
-  this.nove_saida_Transporte = 0
-  this.dez_saida_Transporte = 0
-  this.onze_saida_Transporte = 0
-  this.doze_saida_Transporte = 0
-  this.treze_saida_Transporte = 0
-  this.catorze_saida_Transporte = 0
-  this.quinze_saida_Transporte = 0
-  this.dezasseis_saida_Transporte = 0
-  this.dezassete_saida_Transporte = 0
-  this.dezoito_saida_Transporte = 0
-  this.dezanove_saida_Transporte = 0
-  this.vinte_saida_Transporte = 0
-  this.vinteum_saida_Transporte = 0
-  this.vintedois_saida_Transporte = 0
-  this.vintetrez_saida_Transporte = 0
-  this.vintequatro_saida_Transporte = 0
-  this.vintecinco_saida_Transporte = 0
-  this.vinteseis_saida_Transporte = 0
-  this.vintesete_saida_Transporte = 0
-  this.vinteoito_saida_Transporte = 0
-  this.vintenove_saida_Transporte = 0
-  this.trinta_saida_Transporte = 0
-  this.trintaum_saida_Transporte = 0
+    //SAIDA TRANSPORTE
+    this.um_saida_Transporte = 0
+    this.dois_saida_Transporte = 0
+    this.tres_saida_Transporte = 0
+    this.quatro_saida_Transporte = 0
+    this.cinco_saida_Transporte = 0
+    this.seis_saida_Transporte = 0
+    this.sete_saida_Transporte = 0
+    this.oito_saida_Transporte = 0
+    this.nove_saida_Transporte = 0
+    this.dez_saida_Transporte = 0
+    this.onze_saida_Transporte = 0
+    this.doze_saida_Transporte = 0
+    this.treze_saida_Transporte = 0
+    this.catorze_saida_Transporte = 0
+    this.quinze_saida_Transporte = 0
+    this.dezasseis_saida_Transporte = 0
+    this.dezassete_saida_Transporte = 0
+    this.dezoito_saida_Transporte = 0
+    this.dezanove_saida_Transporte = 0
+    this.vinte_saida_Transporte = 0
+    this.vinteum_saida_Transporte = 0
+    this.vintedois_saida_Transporte = 0
+    this.vintetrez_saida_Transporte = 0
+    this.vintequatro_saida_Transporte = 0
+    this.vintecinco_saida_Transporte = 0
+    this.vinteseis_saida_Transporte = 0
+    this.vintesete_saida_Transporte = 0
+    this.vinteoito_saida_Transporte = 0
+    this.vintenove_saida_Transporte = 0
+    this.trinta_saida_Transporte = 0
+    this.trintaum_saida_Transporte = 0
 
-  //SAIDA SALARIOS
-  this.um_saida_Salario = 0
-  this.dois_saida_Salario = 0
-  this.tres_saida_Salario = 0
-  this.quatro_saida_Salario = 0
-  this.cinco_saida_Salario = 0
-  this.seis_saida_Salario = 0
-  this.sete_saida_Salario = 0
-  this.oito_saida_Salario = 0
-  this.nove_saida_Salario = 0
-  this.dez_saida_Salario = 0
-  this.onze_saida_Salario = 0
-  this.doze_saida_Salario = 0
-  this.treze_saida_Salario = 0
-  this.catorze_saida_Salario = 0
-  this.quinze_saida_Salario = 0
-  this.dezasseis_saida_Salario = 0
-  this.dezassete_saida_Salario = 0
-  this.dezoito_saida_Salario = 0
-  this.dezanove_saida_Salario = 0
-  this.vinte_saida_Salario = 0
-  this.vinteum_saida_Salario = 0
-  this.vintedois_saida_Salario = 0
-  this.vintetrez_saida_Salario = 0
-  this.vintequatro_saida_Salario = 0
-  this.vintecinco_saida_Salario = 0
-  this.vinteseis_saida_Salario = 0
-  this.vintesete_saida_Salario = 0
-  this.vinteoito_saida_Salario = 0
-  this.vintenove_saida_Salario = 0
-  this.trinta_saida_Salario = 0
-  this.trintaum_saida_Salario = 0
+    //SAIDA SALARIOS
+    this.um_saida_Salario = 0
+    this.dois_saida_Salario = 0
+    this.tres_saida_Salario = 0
+    this.quatro_saida_Salario = 0
+    this.cinco_saida_Salario = 0
+    this.seis_saida_Salario = 0
+    this.sete_saida_Salario = 0
+    this.oito_saida_Salario = 0
+    this.nove_saida_Salario = 0
+    this.dez_saida_Salario = 0
+    this.onze_saida_Salario = 0
+    this.doze_saida_Salario = 0
+    this.treze_saida_Salario = 0
+    this.catorze_saida_Salario = 0
+    this.quinze_saida_Salario = 0
+    this.dezasseis_saida_Salario = 0
+    this.dezassete_saida_Salario = 0
+    this.dezoito_saida_Salario = 0
+    this.dezanove_saida_Salario = 0
+    this.vinte_saida_Salario = 0
+    this.vinteum_saida_Salario = 0
+    this.vintedois_saida_Salario = 0
+    this.vintetrez_saida_Salario = 0
+    this.vintequatro_saida_Salario = 0
+    this.vintecinco_saida_Salario = 0
+    this.vinteseis_saida_Salario = 0
+    this.vintesete_saida_Salario = 0
+    this.vinteoito_saida_Salario = 0
+    this.vintenove_saida_Salario = 0
+    this.trinta_saida_Salario = 0
+    this.trintaum_saida_Salario = 0
 
-  //SAIDA OUTROS
-  this.um_saida_Outros = 0
-  this.dois_saida_Outros = 0
-  this.tres_saida_Outros = 0
-  this.quatro_saida_Outros = 0
-  this.cinco_saida_Outros = 0
-  this.seis_saida_Outros = 0
-  this.sete_saida_Outros = 0
-  this.oito_saida_Outros = 0
-  this.nove_saida_Outros = 0
-  this.dez_saida_Outros = 0
-  this.onze_saida_Outros = 0
-  this.doze_saida_Outros = 0
-  this.treze_saida_Outros = 0
-  this.catorze_saida_Outros = 0
-  this.quinze_saida_Outros = 0
-  this.dezasseis_saida_Outros = 0
-  this.dezassete_saida_Outros = 0
-  this.dezoito_saida_Outros = 0
-  this.dezanove_saida_Outros = 0
-  this.vinte_saida_Outros = 0
-  this.vinteum_saida_Outros = 0
-  this.vintedois_saida_Outros = 0
-  this.vintetrez_saida_Outros = 0
-  this.vintequatro_saida_Outros = 0
-  this.vintecinco_saida_Outros = 0
-  this.vinteseis_saida_Outros = 0
-  this.vintesete_saida_Outros = 0
-  this.vinteoito_saida_Outros = 0
-  this.vintenove_saida_Outros = 0
-  this.trinta_saida_Outros = 0
-  this.trintaum_saida_Outros = 0
+    //SAIDA OUTROS
+    this.um_saida_Outros = 0
+    this.dois_saida_Outros = 0
+    this.tres_saida_Outros = 0
+    this.quatro_saida_Outros = 0
+    this.cinco_saida_Outros = 0
+    this.seis_saida_Outros = 0
+    this.sete_saida_Outros = 0
+    this.oito_saida_Outros = 0
+    this.nove_saida_Outros = 0
+    this.dez_saida_Outros = 0
+    this.onze_saida_Outros = 0
+    this.doze_saida_Outros = 0
+    this.treze_saida_Outros = 0
+    this.catorze_saida_Outros = 0
+    this.quinze_saida_Outros = 0
+    this.dezasseis_saida_Outros = 0
+    this.dezassete_saida_Outros = 0
+    this.dezoito_saida_Outros = 0
+    this.dezanove_saida_Outros = 0
+    this.vinte_saida_Outros = 0
+    this.vinteum_saida_Outros = 0
+    this.vintedois_saida_Outros = 0
+    this.vintetrez_saida_Outros = 0
+    this.vintequatro_saida_Outros = 0
+    this.vintecinco_saida_Outros = 0
+    this.vinteseis_saida_Outros = 0
+    this.vintesete_saida_Outros = 0
+    this.vinteoito_saida_Outros = 0
+    this.vintenove_saida_Outros = 0
+    this.trinta_saida_Outros = 0
+    this.trintaum_saida_Outros = 0
+
+    //CALCULO LIQUIDO
+    this.um_liquido = 0
+    this.dois_liquido = 0
+    this.tres_liquido = 0
+    this.quatro_liquido = 0
+    this.cinco_liquido = 0
+    this.seis_liquido = 0
+    this.sete_liquido = 0
+    this.oito_liquido = 0
+    this.nove_liquido = 0
+    this.dez_liquido = 0
+    this.onze_liquido = 0
+    this.doze_liquido = 0
+    this.treze_liquido = 0
+    this.catorze_liquido = 0
+    this.quinze_liquido = 0
+    this.dezasseis_liquido = 0
+    this.dezassete_liquido = 0
+    this.dezoito_liquido = 0
+    this.dezanove_liquido = 0
+    this.vinte_liquido = 0
+    this.vinteum_liquido = 0
+    this.vintedois_liquido = 0
+    this.vintetrez_liquido = 0
+    this.vintequatro_liquido = 0
+    this.vintecinco_liquido = 0
+    this.vinteseis_liquido = 0
+    this.vintesete_liquido = 0
+    this.vinteoito_liquido = 0
+    this.vintenove_liquido = 0
+    this.trinta_liquido = 0
+    this.trintaum_liquido = 0
+
+    //CALCULO SOBRA
+    this.um_sobra = 0
+    this.dois_sobra = 0
+    this.tres_sobra = 0
+    this.quatro_sobra = 0
+    this.cinco_sobra = 0
+    this.seis_sobra = 0
+    this.sete_sobra = 0
+    this.oito_sobra = 0
+    this.nove_sobra = 0
+    this.dez_sobra = 0
+    this.onze_sobra = 0
+    this.doze_sobra = 0
+    this.treze_sobra = 0
+    this.catorze_sobra = 0
+    this.quinze_sobra = 0
+    this.dezasseis_sobra = 0
+    this.dezassete_sobra = 0
+    this.dezoito_sobra = 0
+    this.dezanove_sobra = 0
+    this.vinte_sobra = 0
+    this.vinteum_sobra = 0
+    this.vintedois_sobra = 0
+    this.vintetrez_sobra = 0
+    this.vintequatro_sobra = 0
+    this.vintecinco_sobra = 0
+    this.vinteseis_sobra = 0
+    this.vintesete_sobra = 0
+    this.vinteoito_sobra = 0
+    this.vintenove_sobra = 0
+    this.trinta_sobra = 0
+    this.trintaum_sobra = 0
   }
 
 

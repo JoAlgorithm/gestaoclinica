@@ -64,8 +64,8 @@ import { AuthService } from '../services/auth.service';
 import { ContaReceberComponent, ConfirmacaoDialog } from './conta-receber/conta-receber.component';
 import { ContaRecebidaComponent } from './conta-recebida/conta-recebida.component';
 import { FinancasRoutes } from './financas.routing';
-import { PlanoContaComponent } from './plano-conta/plano-conta.component';
-import { LancamentoComponent } from './lancamento/lancamento.component';
+import { PlanoContaComponent, ConfirmacaoDialog2 } from './plano-conta/plano-conta.component';
+import { LancamentoComponent, ConfirmacaoDialog1 } from './lancamento/lancamento.component';
 
 
 
@@ -137,10 +137,14 @@ import { LancamentoComponent } from './lancamento/lancamento.component';
     ContaRecebidaComponent,
     ConfirmacaoDialog,
     PlanoContaComponent,
-    LancamentoComponent
+    LancamentoComponent,
+    ConfirmacaoDialog1,
+    ConfirmacaoDialog2
   ],
   entryComponents: [
-    ConfirmacaoDialog
+    ConfirmacaoDialog,
+    ConfirmacaoDialog1,
+    ConfirmacaoDialog2
   ],
 })
 

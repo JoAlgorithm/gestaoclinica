@@ -124,9 +124,12 @@ export class ContaReceberComponent implements OnInit {
       '#editor': function(element,renderer){return true;} 
     }
   
-    var img = new Image();
-    img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
-    doc.addImage(img,"PNG", 300, 40,90, 90);
+    if(this.clinica.logo_pdf){
+      var img = new Image();
+      img.src ="../../../assets/images/1 - logo - vitalle.jpg"; 
+      doc.addImage(img,"PNG", 300, 40,90, 90);
+    }
+    
   
     doc.setFont("Courier");
     doc.setFontStyle("normal"); 

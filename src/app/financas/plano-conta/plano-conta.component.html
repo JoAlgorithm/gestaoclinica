@@ -72,7 +72,7 @@
             <ng-container matColumnDef="remover">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Remover </mat-header-cell>
                 <!--<mat-cell *matCellDef="let row">{{row.segunda_via}}</mat-cell>-->
-              <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Remover {{row.nome}}">  
+              <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Remover {{row.nome}}" (click)="removeItem(row)">  
                   <mat-icon>delete</mat-icon>
               </button></mat-cell>
             </ng-container>

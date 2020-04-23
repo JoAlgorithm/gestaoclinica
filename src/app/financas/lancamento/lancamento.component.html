@@ -50,7 +50,7 @@
       <mat-table [dataSource]="dataSourse" matSort>
             <ng-container matColumnDef="data">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Data </mat-header-cell>
-              <mat-cell *matCellDef="let row">{{row.data}}</mat-cell>
+              <mat-cell *matCellDef="let row">{{row.dia}}/{{row.mes}}/{{row.ano}}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="tipo">
@@ -81,15 +81,15 @@
 
             <ng-container matColumnDef="editar">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Editar </mat-header-cell>
-              <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="editar(row)" matTooltip="Editar {{row.nome}}">
+              <mat-cell *matCellDef="let row"> <button mat-icon-button (click)="editar(row)" matTooltip="Editar {{row.plano_nome}}">
                   <mat-icon>create</mat-icon>
                 </button></mat-cell>
             </ng-container>
             
             <ng-container matColumnDef="remover">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Remover </mat-header-cell>
-              <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Remover {{row.nome}}">  
-                  <mat-icon>delete</mat-icon>
+              <mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Remover {{row.plano_nome}}" (click)="removeItem(row)">  
+                <mat-icon>delete</mat-icon>
               </button></mat-cell>
             </ng-container>
 

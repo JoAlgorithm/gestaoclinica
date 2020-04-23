@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { Lancamento } from '../../classes/lancamentos';
 import { PlanoConta } from '../../classes/plano_conta';
 import { TipoPlanoConta } from '../../classes/tipo_plano_conta';
 import { SubTipoPlanoConta } from '../../classes/subtipo_plano_conta';
-import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { ConfiguracoesService } from '../../services/configuracoes.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lancamento',
@@ -88,7 +89,12 @@ export class LancamentoComponent implements OnInit {
           ...e.payload.val(),
         } as Lancamento;
       });
-      this.dataSourse=new MatTableDataSource(this.lancamentos.sort((a, b) => a.data > b.data ? 1 : -1));
+      /*this.lancamentos.forEach(element => {
+        if(element.tipo_nome == "2.Entrada")
+          this.lancamentos.
+      });*/
+      this.lancamentos = this.lancamentos.filter(item => item.tipo_nome.indexOf("1.Saida") > -1);     
+      this.dataSourse=new MatTableDataSource(this.lancamentos.sort((a, b) => a.dia > b.dia ? -1 : 1));
       setTimeout(()=> this.dataSourse.paginator = this.paginator);
     })
 
@@ -240,6 +246,53 @@ export class LancamentoComponent implements OnInit {
       }
     });
 
+  }
+
+  openSnackBar(mensagem) {
+    this.snackBar.open(mensagem, null,{
+      duration: 2000
+    })
+  }
+
+  removeItem(lancamento: Lancamento){
+    const dialogRef = this.dialog.open(ConfirmacaoDialog1, {
+      width: '500px',
+      data:{lancamento: lancamento}
+    });
+    dialogRef.afterClosed().subscribe(result => {  
+    });
+  }
+
+}
+
+//ConfirmacaoDialog --------------------------------------------------------
+@Component({
+  selector: 'confirmacao-dialog1',
+  templateUrl: 'confirmar.component.html',
+})
+export class ConfirmacaoDialog1 {
+
+  constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<ConfirmacaoDialog1>, private router: Router,
+  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public snackBar: MatSnackBar,
+  private _formBuilder: FormBuilder, private configService: ConfiguracoesService)
+  {
+
+  }
+
+  remover(lancamento: Lancamento){
+    let d = Object.assign({}, lancamento);
+
+    this.configService.removeLancamento(lancamento)
+    .then(r =>{
+      this.dialogRef.close();
+      this.openSnackBar("Lancamento removido com sucesso.");
+    }, err =>{
+      this.openSnackBar("Ocorreu um erro ao remover. Tente novamente ou contacte a equipe de suporte.");
+    })
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
   openSnackBar(mensagem) {

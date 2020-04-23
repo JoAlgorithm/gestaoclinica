@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SubTipoPlanoConta } from '../../classes/subtipo_plano_conta';
-import { MatTableDataSource, MatPaginator, MatSort, MatDialog, MatSnackBar } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatDialog, MatSnackBar, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { TipoPlanoConta } from '../../classes/tipo_plano_conta';
 import { AuthService } from '../../services/auth.service';
 import { ConfiguracoesService } from '../../services/configuracoes.service';
@@ -146,6 +146,53 @@ export class PlanoContaComponent implements OnInit {
         this.planoConta.subtipo = element;
       }
     });
+  }
+
+  openSnackBar(mensagem) {
+    this.snackBar.open(mensagem, null,{
+      duration: 2000
+    })
+  }
+
+  removeItem(planoConta: PlanoConta){
+    const dialogRef = this.dialog.open(ConfirmacaoDialog2, {
+      width: '500px',
+      data:{planoConta: planoConta}
+    });
+    dialogRef.afterClosed().subscribe(result => {  
+    });
+  }
+
+}
+
+//ConfirmacaoDialog --------------------------------------------------------
+@Component({
+  selector: 'confirmacao-dialog2',
+  templateUrl: 'confirmar.component.html',
+})
+export class ConfirmacaoDialog2 {
+
+  constructor(public dialog: MatDialog,public dialogRef: MatDialogRef<ConfirmacaoDialog2>, //private router: Router,
+  @Inject(MAT_DIALOG_DATA) public data: any, public authService:AuthService, public snackBar: MatSnackBar,
+  private _formBuilder: FormBuilder, private configService: ConfiguracoesService)
+  {
+
+  }
+
+  remover(planoConta: PlanoConta){
+    let d = Object.assign({}, planoConta);
+
+    this.configService.removePlanoConta(planoConta)
+    .then(r =>{
+      this.dialogRef.close();
+      this.openSnackBar("Plano de conta removido com sucesso.");
+    }, err =>{
+      this.openSnackBar("Ocorreu um erro ao remover. Tente novamente ou contacte a equipe de suporte.");
+    })
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
   openSnackBar(mensagem) {

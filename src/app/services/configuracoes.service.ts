@@ -234,6 +234,10 @@ export class ConfiguracoesService {
     return this.db.list('planosConta/'+this.authService.get_clinica_id + '/');
   }
 
+  removePlanoConta(planoConta){
+    return this.db.list('planosConta/'+this.authService.get_clinica_id + '/').remove(planoConta.id+"");
+  }
+
   getTiposPlanosConta() {
     return this.db.list('tiposPlanoConta/'+this.authService.get_clinica_id + '/');
   }
@@ -256,6 +260,10 @@ export class ConfiguracoesService {
 
   updateLancamento(lancamento){
     return this.db.list('lancamentos/'+this.authService.get_clinica_id + '/'+lancamento.ano+"/"+lancamento.mes+"/").update(lancamento.id, lancamento);
+  }
+
+  removeLancamento(lancamento){
+    return this.db.list('lancamentos/'+this.authService.get_clinica_id + '/'+lancamento.ano+"/"+lancamento.mes+"/").remove(lancamento.id+"");
   }
 
   /*createFormaPagamento(planoConta: PlanoConta){

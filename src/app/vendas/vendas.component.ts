@@ -715,7 +715,9 @@ export class VendasComponent implements OnInit {
     this.forma_pagamento = "";
     this.formas_pagamento = [
       {value: 'Numerário', viewValue: 'Numerário'},
-      {value: 'Cartão de crédito', viewValue: 'Cartão de crédito'},
+      {value: 'POS', viewValue: 'POS'},
+      {value: 'MPesa', viewValue: 'MPesa'},
+      {value: 'Cheque', viewValue: 'Cheque'},
       {value: 'Convênio', viewValue: 'Convênio'},
     ]
     this.medicamentos = [];
@@ -857,10 +859,14 @@ export class VendasComponent implements OnInit {
     let ano = new Date().getFullYear();
     let dataemisao = dia +"/"+mes+"/"+ano;  
   
-    var img = new Image();
-    img.src ="../../../assets/images/FarmaciaBEM_SAUDE.png"; 
-    doc.addImage(img,"PNG", 300, 40,90, 90);
-    console.log("Fatura verio daqui");
+    if(this.clinica.logo_pdf){
+      var img = new Image();
+      img.src ="../../../assets/images/FarmaciaBEM_SAUDE.png"; 
+      doc.addImage(img,"PNG", 300, 40,90, 90);
+      console.log("Fatura verio daqui");
+    }
+
+    
   
     doc.setFont("Courier");
     doc.setFontStyle("normal"); 
