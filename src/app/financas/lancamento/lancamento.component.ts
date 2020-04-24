@@ -8,6 +8,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { ConfiguracoesService } from '../../services/configuracoes.service';
 import { Router } from '@angular/router';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-lancamento',
@@ -43,7 +44,7 @@ export class LancamentoComponent implements OnInit {
   ]
 
   anos = [];
-  ano:number = (new Date()).getFullYear();
+  ano:string = (new Date()).getFullYear()+"";
   meses = ['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
   mes = this.meses[+(new Date().getMonth())];
 
@@ -62,6 +63,14 @@ export class LancamentoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.configService.getAnos().snapshotChanges().subscribe(data => {
+      this.anos = data.map(e => {
+        return {
+          id: e.payload.key
+        }
+      })
+    })
+
     this.configService.getSubTiposPlanosConta().snapshotChanges().subscribe(data => {
       this.subTiposPlanos_Aux = data.map(e => {
         return {
@@ -89,10 +98,7 @@ export class LancamentoComponent implements OnInit {
           ...e.payload.val(),
         } as Lancamento;
       });
-      /*this.lancamentos.forEach(element => {
-        if(element.tipo_nome == "2.Entrada")
-          this.lancamentos.
-      });*/
+
       this.lancamentos = this.lancamentos.filter(item => item.tipo_nome.indexOf("1.Saida") > -1);     
       this.dataSourse=new MatTableDataSource(this.lancamentos.sort((a, b) => a.dia > b.dia ? -1 : 1));
       setTimeout(()=> this.dataSourse.paginator = this.paginator);
@@ -184,7 +190,7 @@ export class LancamentoComponent implements OnInit {
 
       //this.lancamento.dia = new Date().getDate();
       this.lancamento.dia = +new Date().toISOString().substr(8,2);
-      this.lancamento.ano = this.ano;
+      this.lancamento.ano = +this.ano;
       this.lancamento.mes = this.mes;
       this.lancamento.data = new Date();
 
@@ -248,6 +254,31 @@ export class LancamentoComponent implements OnInit {
 
   }
 
+  onSelect(ano, mes){
+    this.lancamentos = [];
+    this.configService.getLancamentos(this.ano, this.mes).snapshotChanges().subscribe(data => {
+      this.lancamentos = data.map(e => {
+        return {
+          id: e.payload.key,
+          ...e.payload.val(),
+        } as Lancamento;
+      });
+
+      this.lancamentos = this.lancamentos.filter(item => item.tipo_nome.indexOf("1.Saida") > -1);     
+      this.dataSourse=new MatTableDataSource(this.lancamentos.sort((a, b) => a.dia > b.dia ? -1 : 1));
+      setTimeout(()=> this.dataSourse.paginator = this.paginator);
+    })
+  }
+
+  tabela = false;
+  imprimir(){
+    this.tabela = true;
+      setTimeout( () => {
+        TableUtil.exportToExcel("ExampleTable", " - "+this.mes);
+        this.tabela = false;
+      }, 500 );
+  }
+
   openSnackBar(mensagem) {
     this.snackBar.open(mensagem, null,{
       duration: 2000
@@ -263,6 +294,18 @@ export class LancamentoComponent implements OnInit {
     });
   }
 
+}
+
+export class TableUtil {
+  static exportToExcel(tableId: string, name?: string) {
+    let timeSpan = new Date().toISOString();
+    let prefix = "Lista de lancamentos" || name;
+    let fileName = `${prefix}-${timeSpan}`;
+    let targetTableElm = document.getElementById(tableId);
+    let wb = XLSX.utils.table_to_book(targetTableElm, <XLSX.Table2SheetOpts>{ sheet: prefix });
+    XLSX.writeFile(wb, `${fileName}.xlsx`);
+    //XLSX.write(wb, {bookType: 'xlsx' , bookSST: false, type: 'binary'});
+  }
 }
 
 //ConfirmacaoDialog --------------------------------------------------------

@@ -46,7 +46,32 @@
 
     </form>
 
+    
+
     <div class="example-container mat-elevation-z8">
+      <mat-card-content>
+        <h5>FILTRE OS DADOS DA TABELA POR MES E ANO</h5>
+        <mat-form-field style="width: 33%">
+          <mat-select placeholder="Ano de analise" [(ngModel)]="ano" [(value)]="ano"  (selectionChange)="onSelect(ano, mes)"> 
+              <mat-option *ngFor="let ano of anos" [value]="ano.id">
+                {{ano.id}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field style="width: 33%">
+          <mat-select placeholder="Mes de analise" [(ngModel)]="mes" [(value)]="mes" (selectionChange)="onSelect(ano, mes)"> 
+              <mat-option *ngFor="let mes of meses" [value]="mes">
+                {{mes}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-icon-button (click)="imprimir()" matTooltip="Imprimir lancamentos de {{mes}}">  
+          <mat-icon>print</mat-icon>
+      </button>
+      </mat-card-content>
+
       <mat-table [dataSource]="dataSourse" matSort>
             <ng-container matColumnDef="data">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Data </mat-header-cell>
@@ -101,4 +126,23 @@
     </div>
 
   </mat-card-content>
+</mat-card>
+
+<mat-card class="card-widget" *ngIf='tabela'>
+  <table  id="ExampleTable" style="width:100%">
+    <tr>
+      <th>Data</th>
+      <th>Tipo</th>
+      <th>Sub-Tipo</th>
+      <th>Plano</th>
+      <th>Valor</th>
+    </tr>
+    <tr *ngFor="let l of lancamentos">
+      <td>{{l.dia}}/{{l.mes}}/{{l.ano}}</td>
+      <td>{{l.tipo_nome}}</td>
+      <td>{{l.subtipo_nome}}</td>
+      <td>{{l.plano_nome}}</td>
+      <td>{{l.valor| currency:' ':'symbol':'1.2-2'}}</td>
+    </tr>
+  </table>
 </mat-card>
