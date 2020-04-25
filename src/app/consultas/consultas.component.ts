@@ -180,6 +180,23 @@ export class ConsultasComponent implements OnInit, AfterViewInit {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
     this.dataSoursePendentes.filter = filterValue;
+  }
+
+  applyFilter2(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSourseAndamento.filter = filterValue;
+  }
+
+  applyFilter3(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSourseEncerradas.filter = filterValue;
+  }
+
+  applyFilter4(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
     this.dataSourseCanceladas.filter = filterValue;
   }
 
