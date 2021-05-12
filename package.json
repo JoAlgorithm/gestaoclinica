@@ -40,7 +40,7 @@
     "angular-tree-component": "7.0.1",
     "angular2-ladda": "^2.0.2",
     "angularfire2": "^5.2.1",
-    "chart.js": "2.7.2",
+    "chart.js": "2.9.4",
     "core-js": "2.5.3",
     "cors": "^2.8.5",
     "d3": "4.13.0",
